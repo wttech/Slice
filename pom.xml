@@ -1,0 +1,597 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.cognifide.slice</groupId>
+	<artifactId>slice-parent</artifactId>
+	<version>2.0.0</version>
+
+	<name>Slice - Parent</name>
+	<url>http://cognifide.com/</url>
+	<description>parent project for Slice framework</description>
+	<packaging>pom</packaging>
+
+	<inceptionYear>2012</inceptionYear>
+	<organization>
+		<name>Cognifide Limited</name>
+		<url>http://www.cognifide.com</url>
+	</organization>
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<modules>
+		<module>slice-core-api</module>
+		<module>slice-core</module>
+		<module>slice-mapper-api</module>
+		<module>slice-mapper</module>
+		<module>slice-cq</module>
+		<module>slice-cq-taglib</module>
+		<module>slice-assembly</module>
+	</modules>
+
+	<properties>
+		<file.encoding>UTF-8</file.encoding>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compile.source>1.6</maven.compile.source>
+		<maven.compile.target>1.6</maven.compile.target>
+		<maven.compiler.version>1.6</maven.compiler.version>
+		<maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+		<maven.test.skip>false</maven.test.skip>
+		<site.root>.\src\main\resources</site.root>
+		<sling.install.skip>true</sling.install.skip>
+
+		<assembly.descriptor.file>cq.xml</assembly.descriptor.file>
+		<assembly.path>${project.build.directory}/${project.build.finalName}-cq.zip</assembly.path>
+		<crx.package.name>${project.artifactId}</crx.package.name>
+		<cq.package.name>slice</cq.package.name>
+
+		<slice.instance.url>http://localhost:5402</slice.instance.url>
+		<slice.crx.username>admin</slice.crx.username>
+		<slice.crx.password>admin</slice.crx.password>
+	</properties>
+
+	<!--
+		////////////////////////////////////////////////////////////////////////
+		// build
+		//////////////////////////////////////////////////////////////////////
+	-->
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>1.0.1</version>
+				<executions>
+					<execution>
+						<id>enforce-property</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<requireProperty>
+									<property>crx.username</property>
+									<message>Using default crx.username = admin</message>
+								</requireProperty>
+								<requireProperty>
+									<property>crx.password</property>
+									<message>Using default crx.password = admin</message>
+								</requireProperty>
+								<requireProperty>
+									<property>cq.url</property>
+									<message>Using default cq.url = http://localhost:4502</message>
+								</requireProperty>
+							</rules>
+							<fail>false</fail>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>		
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<fork>false</fork>
+					<source>${maven.compile.source}</source>
+					<target>${maven.compile.target}</target>
+					<compilerVersion>${maven.compiler.version}</compilerVersion>
+					<encoding>${maven.compiler.encoding}</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<!-- skipping the assembly in root pom (but not in children) -->
+				<artifactId>maven-assembly-plugin</artifactId>
+				<inherited>false</inherited>
+				<configuration>
+					<skipAssembly>true</skipAssembly>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.8</version>
+				<configuration>
+					<downloadSources>true</downloadSources>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<username>${scm.username}</username>
+					<password>${scm.password}</password>
+					<preparationGoals>clean install</preparationGoals>
+				</configuration>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>2.2.1</version>
+					<configuration>
+						<runOnlyAtExecutionRoot>true</runOnlyAtExecutionRoot>
+						<descriptors>
+							<descriptor>src/main/assembly/${assembly.descriptor.file}</descriptor>
+						</descriptors>
+					</configuration>
+					<executions>
+						<execution>
+							<id>cq</id>
+							<phase>package</phase>
+							<goals>
+								<goal>single</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.sling</groupId>
+					<artifactId>maven-sling-plugin</artifactId>
+					<version>2.0.4-incubator</version>
+					<configuration>
+						<bundleFileName>${project.build.directory}/${project.build.finalName}.jar</bundleFileName>
+						<user>${slice.crx.username}</user>
+						<password>${slice.crx.password}</password>
+						<usePut>true</usePut>
+						<slingUrl>${slice.sling.url}</slingUrl>
+					</configuration>
+					<executions>
+						<execution>
+							<id>uninstall-bundle</id>
+							<goals>
+								<goal>uninstall</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>install-bundle</id>
+							<goals>
+								<goal>install</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<!-- Felix OSGi descriptor parser -->
+				<plugin>
+					<groupId>org.apache.felix</groupId>
+					<artifactId>maven-scr-plugin</artifactId>
+					<version>1.7.4</version>
+					<executions>
+						<execution>
+							<id>generate-scr-scrdescriptor</id>
+							<goals>
+								<goal>scr</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.felix</groupId>
+					<artifactId>maven-bundle-plugin</artifactId>
+					<version>2.0.1</version>
+					<extensions>true</extensions>
+					<configuration>
+						<instructions>
+							<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+							<Bundle-Name>${project.name}</Bundle-Name>
+							<Bundle-Vendor>Cognifide Ltd.</Bundle-Vendor>
+						</instructions>
+					</configuration>
+				</plugin>
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.felix
+										</groupId>
+										<artifactId>
+											maven-scr-plugin
+										</artifactId>
+										<versionRange>
+											[1.7.4,)
+										</versionRange>
+										<goals>
+											<goal>scr</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<dependencies>
+		<!-- Apache Sling -->
+		<dependency>
+			<groupId>org.apache.sling</groupId>
+			<artifactId>org.apache.sling.api</artifactId>
+			<version>2.2.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Apache Commons -->
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Logging -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.6.1</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Test -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.10</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.9.0</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- Guice -->
+			<dependency>
+				<groupId>com.google.inject</groupId>
+				<artifactId>guice</artifactId>
+				<version>3.0</version>
+				<exclusions>
+					<exclusion>
+						<groupId>javax.inject</groupId>
+						<artifactId>javax.inject</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>aopalliance</groupId>
+						<artifactId>aopalliance</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.ops4j</groupId>
+				<artifactId>peaberry</artifactId>
+				<version>1.1.1</version>
+			</dependency>
+			<!-- Guice's dependency (provided by Spring repository) -->
+			<dependency>
+				<groupId>org.aopalliance</groupId>
+				<artifactId>com.springsource.org.aopalliance</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.inject</groupId>
+				<artifactId>com.springsource.javax.inject</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+
+			<!-- OSGi -->
+			<dependency>
+				<groupId>org.osgi</groupId>
+				<artifactId>org.osgi.core</artifactId>
+				<version>4.2.0</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<!-- javax -->
+			<dependency>
+				<groupId>javax.jcr</groupId>
+				<artifactId>jcr</artifactId>
+				<version>2.0</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>jsp-api</artifactId>
+				<version>2.0</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>servlet-api</artifactId>
+				<version>2.4</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<!-- Apache felix scr -->
+			<dependency>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>org.apache.felix.scr</artifactId>
+				<version>1.6.0</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>org.apache.felix.scr.annotations</artifactId>
+				<version>1.6.0</version>
+				<scope>provided</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<repositories>
+		<repository>
+			<id>adobe-public-releases</id>
+			<name>Adobe Public Repository</name>
+			<url>http://repo.adobe.com/nexus/content/groups/public</url>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>com.springsource.repository.bundles.external</id>
+			<name>SpringSource Enterprise Bundle Repository - SpringSource Bundle Releases</name>
+			<url>http://repository.springsource.com/maven/bundles/external/</url>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>adobe-public-releases</id>
+			<name>Adobe Public Repository</name>
+			<url>http://repo.adobe.com/nexus/content/groups/public</url>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<!--
+		////////////////////////////////////////////////////////////////////////
+		// reporting
+		//////////////////////////////////////////////////////////////////////
+	-->
+	<reporting>
+		<plugins>
+			<!-- site -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>2.0.1</version>
+				<configuration>
+					<outputEncoding>utf-8</outputEncoding>
+				</configuration>
+			</plugin>
+			<!-- project-info -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>2.1.2</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<!--
+							<report>dependencies</report>
+							-->
+							<report>project-team</report>
+							<report>cim</report>
+							<report>issue-tracking</report>
+							<report>scm</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<!-- surefire -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>2.5</version>
+			</plugin>
+			<!-- cobertura -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.3</version>
+			</plugin>
+			<!-- javadoc -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.6.1</version>
+				<configuration>
+					<noindex>false</noindex>
+					<show>publish</show>
+					<nodeprecated>true</nodeprecated>
+				</configuration>
+			</plugin>
+			<!-- jxr -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+					<aggregate>false</aggregate>
+				</configuration>
+			</plugin>
+			<!-- taglist -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>taglist-maven-plugin</artifactId>
+				<version>2.4</version>
+			</plugin>
+			<!-- changelog -->
+			<!-- 
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>changelog-maven-plugin</artifactId>
+				<reportSets>
+					<reportSet>
+						<id>changelog-report</id>
+						<reports>
+							<report>changelog</report>
+							<report>file-activity</report>
+							<report>dev-activity</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+				<configuration>
+					<type>date</type>
+					<dates>
+						<date implementation="java.lang.String">2007-09-01</date>
+					</dates>
+					<dateFormat>yyyy-MM-dd</dateFormat>
+				</configuration>
+			</plugin>
+			 -->
+			<!-- checkstyle - disabled due to weird bugs -->
+			<!--
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>2.5</version>
+				<configuration>
+					<configLocation>${site.root}\checkstyle.xml</configLocation>
+					<suppressionsLocation>${site.root}\checkstyle-suppressions.xml</suppressionsLocation>
+				</configuration>
+			</plugin>
+			-->
+			<!-- pmd - disabled due to memory errors
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<configuration>
+					<rulesets>
+						<ruleset>${site.root}\pmd\PSbasic.xml</ruleset>
+						<ruleset>${site.root}\pmd\PSnaming.xml</ruleset>
+						<ruleset>${site.root}\pmd\PSunusedcode.xml</ruleset>
+						<ruleset>${site.root}\pmd\PSdesign.xml</ruleset>
+						<ruleset>${site.root}\pmd\PSimports.xml</ruleset>
+						<ruleset>${site.root}\pmd\PSjunit.xml</ruleset>
+						<ruleset>${site.root}\pmd\PSstrings.xml</ruleset>
+						<ruleset>${site.root}\pmd\PSbraces.xml</ruleset>
+						<ruleset>${site.root}\pmd\PScodesize.xml</ruleset>
+						<ruleset>${site.root}\pmd\PSjavabeans.xml</ruleset>
+						<ruleset>${site.root}\pmd\PScoupling.xml</ruleset>
+						<ruleset>${site.root}\pmd\PScontroversial.xml</ruleset>
+						<ruleset>${site.root}\pmd\PSstrictexception.xml</ruleset>
+					</rulesets>
+					<linkXref>true</linkXref>
+					<sourceEncoding>utf-8</sourceEncoding>
+					<minimumTokens>100</minimumTokens>
+					<targetJdk>1.5</targetJdk>
+					<excludes>
+						<exclude>**/Test*.java</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+				-->
+		</plugins>
+	</reporting>
+
+	<profiles>
+		<profile>
+			<id>obfuscate</id>
+			<activation>
+				<property>
+					<name>obfuscate</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.pyx4me</groupId>
+						<artifactId>proguard-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>proguard</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<options>
+								<option>-allowaccessmodification</option>
+								<option>-renamesourcefileattribute SourceFile</option>
+								<option>-keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod</option>
+								<option>-keep public class * {public protected *;}</option>
+								<option>-keepclassmembernames class * {
+									java.lang.Class class$(java.lang.String);
+									java.lang.Class class$(java.lang.String, boolean);}</option>
+								<option>-keepclassmembers class * implements java.io.Serializable {
+									static final long serialVersionUID;
+									private void writeObject(java.io.ObjectOutputStream);
+									private void readObject(java.io.ObjectInputStream);
+									java.lang.Object writeReplace();
+									java.lang.Object readResolve();}</option>
+							</options>
+							<outjar>${project.build.finalName}-obfuscated.jar</outjar>
+							<libs>
+								<lib>${java.home}/lib/rt.jar</lib>
+							</libs>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>sling</id>
+			<activation>
+				<property>
+					<name>sling</name>
+				</property>
+			</activation>
+			<properties>
+				<sling.install.skip>false</sling.install.skip>
+			</properties>
+		</profile>
+	</profiles>
+
+</project>

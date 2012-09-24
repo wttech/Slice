@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+	version="2.0">
+	<description>Cognifide framework library</description>
+	<display-name>cognifide framework</display-name>
+	<tlib-version>1.1</tlib-version>
+	<short-name>cf</short-name>
+	<uri>http://cognifide.com/jsp/slice/cq</uri>
+	<!-- <cf:a /> -->
+	<tag>
+		<description>
+			Renders HTML anchor but does not render empty attributes. In other words, the tag can have
+			attribute defined, but if it's value is empty, it will not be rendered.
+			Additionally, this tag supports externalisation of handles passed in a href attribute.
+		</description>
+		<name>a</name>
+		<tag-class>com.cognifide.slice.cq.taglib.AnchorTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<description>href attribute of the &lt;a&gt; tag - specifies the destination of a link</description>
+			<name>href</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>id attribute of the &lt;a&gt; tag - specifies a unique id for an element</description>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>class attribute of the &lt;a&gt; tag - specifies a class name for an element</description>
+			<name>clazz</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>title attribute of the &lt;a&gt; tag - specifies extra information about an element</description>
+			<name>title</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>target attribute of the &lt;a&gt; tag - specifies where to open the linked document</description>
+			<name>target</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>name attribute of the &lt;a&gt; tag - specifies the name of an anchor</description>
+			<name>name</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				rel attribute of the &lt;a&gt; tag - specifies the relationship between the current 
+				document and the linked document
+			</description>
+			<name>rel</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>onclick attribute of the &lt;a&gt; tag - script to be run on a mouse click</description>
+			<name>onclick</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>specifies extension to be used when externalising if a handle was passed as href</description>
+			<name>extension</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>specifies selector to be used when externalising if a handle was passed as href</description>
+			<name>selector</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>if true - the href value will be externalised</description>
+			<name>externalise</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>if false, tag does not render; true by default</description>
+			<name>render</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<!-- <cf:catch /> -->
+	<tag>
+		<description>
+			Catches exceptions and renders their stack traces surrounded with &lt;pre&gt; tags, or as HTML 
+			comments.
+		</description>
+		<name>catch</name>
+		<tag-class>com.cognifide.slice.cq.taglib.CatchTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<description>specifies name under which throwable variable is stored</description>
+			<name>throwableVariableName</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>if false, tag does not render; true by default</description>
+			<name>render</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<!-- <cf:clearFloat /> -->
+	<tag>
+		<description>Inserts &lt;div style="clear:both;font-size:1px"&gt;&amp;nbsp;&lt;/div&gt; in edit mode.</description>
+		<name>clearFloat</name>
+		<tag-class>com.cognifide.slice.cq.taglib.ClearFloatTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<description>if false, tag does not render; true by default</description>
+			<name>render</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<!-- <cf:externalise /> -->
+	<tag>
+		<description>
+			Externalises given handle, i.e. changes it into an absolute link. Only content handles are
+			externalised, anything that doesn't start with /content/ is treated as external link and
+			ignored (the handle attribute is returned). It is assumed that the content handle is valid 
+			according to the JSR 170 path specification (http://www.day.com/specs/jcr/1.0/4.6_Path_Syntax.html).
+			This tag does not validate the handle.
+			
+			Externalised link consists of the original handle, followed by '.', then selector, another '.' and 
+			extension. Example: for handle=/content/cognifide/en_gb/home, selector=print, extension=html,
+			output link is: /content/cognifide/en_gb/home.print.html
+		</description>
+		<name>externalise</name>
+		<tag-class>com.cognifide.slice.cq.taglib.ExternaliseTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>handle to be externalised</description>
+			<name>handle</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>extension extension if required, can be null or empty, should not contain dots</description>
+			<name>extension</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>selector selector if required, can be null or empty, should not contain dots</description>
+			<name>selector</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>if false, tag does not render; true by default</description>
+			<name>render</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<!-- <cf:disableWcm /> -->
+	<tag>
+		<description>Disables edit mode of components &lt;b&gt;included&lt;/b&gt; within the tag.</description>
+		<name>disableWcm</name>
+		<tag-class>com.cognifide.slice.cq.taglib.DisableWcmTag</tag-class>
+		<body-content>empty</body-content>
+	</tag>
+	<!-- <cf:include /> -->
+	<tag>
+		<description>
+			Extended version of the cq:include tag. In addition to the original behaviour allows controlling
+			the WCM mode inside the include, and disabling the decoration markup that's added by WCM by
+			default. The control is done either at component level - using custom properties stored in a
+			component's node, or at the include level - using tag's attributes. Tag's attributes have higher
+			priority than component's meta-data. To force WCM disable / enable set the cog:disableWcm property
+			to true / false respectively (String and Boolean property supported). To set in which modes the 
+			decoration is enabled, set the cog:enableDecorationInModes property either as String or 
+			multi-value String with one or more of following: disabled, edit, read-only, preview, design, 
+			author, publish, all, none.
+			
+		</description>
+		<name>include</name>
+		<tag-class>com.cognifide.slice.cq.taglib.include.IncludeTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>
+				Comma separated list of additional CSS class names that will be added to wrapping markup. 
+			</description>
+			<name>additionalCssClassNames</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				If true, the component is always included with WCM disabled (WCMMode.fromRequest(request) == 
+				WCMMode.Disabled). If false - the current WCM mode is passed. False by default. Note, that 
+				thanks to the include hierarchy, this setting is populated to all child components. 
+				This attribute overrides component's cog:disableWcm property.
+			</description>
+			<name>disableWcm</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				A decoration is an additional markup required by WCM to draw dialog box and added around the 
+				include. If true, the decoration  of current component is applied as in default cq:include. 
+				If false, no decoration is added. True by default. This configuration setting is not populated
+				to children components.
+				This attribute overrides component's cog:disableDecorationInModes property.
+			</description>
+			<name>enableDecoration</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>if true, tag flushes the output before including the target; false by default</description>
+			<name>flush</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description>
+				A boolean controlling whether the component hierarchy should be ignored for script resolution. 
+				If true, only the search paths are respected. False by default.
+			</description>
+			<name>ignoreComponentHierarchy</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				The path to the resource object to include in the current request processing. If this path is 
+				relative it is appended to the path of the current resource whose script is including the 
+				given resource. Either resource or path must be specified. If both are specified, the resource 
+				takes precedences.
+			</description>
+			<name>path</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>if false, tag does not render; true by default</description>
+			<name>render</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				The resource type of a resource to include. If the resource to be included is specified with 
+				the path attribute, which cannot be resolved to a resource, the tag may create a synthetic 
+				resource object out of the path and this resource type. If the resource type is set the path 
+				must be the exact path to a resource object. That is, adding parameters, selectors and 
+					extensions to the path is not supported if the resource type is set.
+			</description>
+			<name>resourceType</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				The JSP script to include. Either path and resourceType, or script must be specified.
+			</description>
+			<name>script</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<!-- <cf:imageDraw /> -->
+	<tag>
+		<description>Draws the given image.</description>
+		<name>imageDraw</name>
+		<tag-class>com.cognifide.slice.cq.taglib.ImageDrawTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<name>image</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>	
+	<!-- <cf:includeEmulator /> -->
+	<tag>
+		<description>Inserts CQ5.4 mobile emulator includes - to be used in the head section.</description>
+		<name>includeEmulator</name>
+		<tag-class>com.cognifide.slice.cq.taglib.mobile.IncludeEmulatorTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<description>if false, tag does not render; true by default</description>
+			<name>render</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+</taglib>
