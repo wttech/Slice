@@ -1,8 +1,8 @@
-package com.cognifide.slice.mapper.annotation;
+package com.cognifide.slice.validation.api;
 
 /*
  * #%L
- * Slice - Mapper API
+ * Slice - Core API
  * $Id:$
  * $HeadURL:$
  * %%
@@ -23,22 +23,19 @@ package com.cognifide.slice.mapper.annotation;
  */
 
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+/**
+ * Represents single error message model object. Error message consists of a mandatory message text, and
+ * optional throwable - if the error message was caused by an exception.
+ * 
+ * @author Marcin Cenkier
+ * @author Jan Kuźniak
+ */
+public interface ErrorMessage {
 
-@Documented
-@Target(ElementType.FIELD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface JcrProperty {
+	String getMessage();
 
-	/**
-	 * Custom property name. If empty, property name is read from field's name.
-	 * 
-	 * @return
-	 */
-	String value() default "";
+	Throwable getThrowable();
+
+	ErrorLevel getErrorLevel();
 
 }

@@ -1,8 +1,8 @@
-package com.cognifide.slice.api.model;
+package com.cognifide.slice.core.internal.context;
 
 /*
  * #%L
- * Slice - Core API
+ * Slice - Core
  * $Id:$
  * $HeadURL:$
  * %%
@@ -23,20 +23,14 @@ package com.cognifide.slice.api.model;
  */
 
 
-public enum ErrorLevel {
+import com.cognifide.slice.api.context.ContextProviderFactory;
+import com.cognifide.slice.api.context.SimpleContextProvider;
 
-	ERROR("error"), //
-	WARNING("warning"), //
-	INFORMATION("information");
+public class ContextProviderFactoryImpl implements ContextProviderFactory {
 
-	private String cssClassName;
-
-	private ErrorLevel(final String cssClassName) {
-		this.cssClassName = cssClassName;
-	}
-
-	public String getCssClassName() {
-		return cssClassName;
+	@Override
+	public SimpleContextProvider getSimpleContextProvider() {
+		return new SimpleContextProviderImpl();
 	}
 
 }

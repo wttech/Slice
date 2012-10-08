@@ -1,4 +1,4 @@
-package com.cognifide.slice.core.internal.model;
+package com.cognifide.slice.validation;
 
 /*
  * #%L
@@ -23,8 +23,8 @@ package com.cognifide.slice.core.internal.model;
  */
 
 
-import com.cognifide.slice.api.model.ErrorLevel;
-import com.cognifide.slice.api.model.ErrorMessage;
+import com.cognifide.slice.validation.api.ErrorLevel;
+import com.cognifide.slice.validation.api.ErrorMessage;
 
 /**
  * Represents single error message model object. Error message consists of a mandatory message text, and
@@ -45,7 +45,7 @@ public class ErrorMessageImpl implements ErrorMessage {
 	 * 
 	 * @param message mandatory message text.
 	 * @param throwable optional throwable (use if the error message was caused by an exception).
-	 * @param errorLevel mandatory error level {@link com.cognifide.slice.api.model.ErrorLevel}
+	 * @param errorLevel mandatory error level {@link com.cognifide.slice.validation.api.ErrorLevel}
 	 */
 	public ErrorMessageImpl(String message, Throwable throwable, ErrorLevel errorLevel) {
 		this.message = message;

@@ -1,8 +1,8 @@
-package com.cognifide.slice.mapper.annotation;
+package com.cognifide.slice.validation.api;
 
 /*
  * #%L
- * Slice - Mapper API
+ * Slice - CQ Add-on
  * $Id:$
  * $HeadURL:$
  * %%
@@ -23,22 +23,16 @@ package com.cognifide.slice.mapper.annotation;
  */
 
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.cognifide.slice.api.injector.InjectorServiceRunner;
 
-@Documented
-@Target(ElementType.FIELD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface JcrProperty {
+// @formatter:off
+/**
+ * @author Rafał Malinowski
+ * @class ValidationModulesInstaller
+ */
+// @formatter:on
+public interface ValidationModulesInstaller {
 
-	/**
-	 * Custom property name. If empty, property name is read from field's name.
-	 * 
-	 * @return
-	 */
-	String value() default "";
+	void installValidationModules(final InjectorServiceRunner injectorServiceRunner);
 
 }
