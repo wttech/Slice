@@ -1,4 +1,4 @@
-package com.cognifide.slice.commons.model;
+package com.cognifide.slice.validation;
 
 /*
  * #%L
@@ -25,11 +25,10 @@ package com.cognifide.slice.commons.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.cognifide.slice.api.model.ErrorLevel;
-import com.cognifide.slice.api.model.ErrorMessage;
-import com.cognifide.slice.api.model.ValidatableModel;
-import com.cognifide.slice.core.internal.model.ErrorMessageImpl;
 import com.cognifide.slice.mapper.annotation.IgnoreProperty;
+import com.cognifide.slice.validation.api.ErrorLevel;
+import com.cognifide.slice.validation.api.ErrorMessage;
+import com.cognifide.slice.validation.api.ValidatableModel;
 
 public abstract class SimpleValidatableObject implements ValidatableModel {
 

@@ -1,4 +1,4 @@
-package com.cognifide.slice.api.model;
+package com.cognifide.slice.validation.api;
 
 /*
  * #%L

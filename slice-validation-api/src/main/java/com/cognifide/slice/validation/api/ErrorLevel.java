@@ -1,4 +1,4 @@
-package com.cognifide.slice.api.model;
+package com.cognifide.slice.validation.api;
 
 /*
  * #%L
@@ -23,19 +23,20 @@ package com.cognifide.slice.api.model;
  */
 
 
-/**
- * Represents single error message model object. Error message consists of a mandatory message text, and
- * optional throwable - if the error message was caused by an exception.
- * 
- * @author Marcin Cenkier
- * @author Jan Kuźniak
- */
-public interface ErrorMessage {
+public enum ErrorLevel {
 
-	String getMessage();
+	ERROR("error"), //
+	WARNING("warning"), //
+	INFORMATION("information");
 
-	Throwable getThrowable();
+	private String cssClassName;
 
-	ErrorLevel getErrorLevel();
+	private ErrorLevel(final String cssClassName) {
+		this.cssClassName = cssClassName;
+	}
+
+	public String getCssClassName() {
+		return cssClassName;
+	}
 
 }

@@ -1,4 +1,4 @@
-package com.cognifide.slice.api.tag;
+package com.cognifide.slice.validation.api.tag;
 
 /*
  * #%L
@@ -35,9 +35,9 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.cognifide.slice.api.model.ErrorLevel;
-import com.cognifide.slice.api.model.ErrorMessage;
-import com.cognifide.slice.api.model.ValidatableModel;
+import com.cognifide.slice.validation.api.ErrorLevel;
+import com.cognifide.slice.validation.api.ErrorMessage;
+import com.cognifide.slice.validation.api.ValidatableModel;
 
 /**
  * If given model is valid - does nothing but evaluates body. If given model is empty - displays "empty model"

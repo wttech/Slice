@@ -30,6 +30,8 @@
 		<module>slice-mapper</module>
 		<module>slice-cq</module>
 		<module>slice-cq-taglib</module>
+		<module>slice-validation</module>
+		<module>slice-validation-api</module>
 		<module>slice-assembly</module>
 	</modules>
 

@@ -1,0 +1,108 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.cognifide.slice</groupId>
+	<artifactId>slice-core</artifactId>
+	<version>1.9.3-SNAPSHOT</version>
+	<parent>
+		<groupId>com.cognifide.slice</groupId>
+		<artifactId>slice-parent</artifactId>
+		<version>1.9.3-SNAPSHOT</version>
+	</parent>
+	<name>Slice - Core</name>
+	<description>Slice core</description>
+	<packaging>bundle</packaging>
+	<properties>
+		<site.root>${project.parent.build.sourceDirectory}/../resources</site.root>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.sling</groupId>
+				<artifactId>maven-sling-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-scr-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<configuration>
+					<instructions>
+						<Bundle-Activator>com.cognifide.slice.core.internal.SliceActivator</Bundle-Activator>
+						<Export-Package>
+							com.cognifide.slice.api*;version="${project.version}",
+							com.cognifide.slice.commons*;version="${project.version}",
+							com.cognifide.slice.core*;version="${project.version}"
+						</Export-Package>
+						<Private-Package>com.cognifide.slice.core.internal</Private-Package>
+						<Embed-Dependency>asm</Embed-Dependency>
+					</instructions>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<!-- Slice -->	
+		<dependency>
+			<groupId>com.cognifide.slice</groupId>
+			<artifactId>slice-mapper</artifactId>
+			<version>1.9.3-SNAPSHOT</version>
+		</dependency>
+
+		<!-- Asm -->	
+		<dependency>
+			<groupId>asm</groupId>
+			<artifactId>asm</artifactId>
+			<version>3.3.1</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Guice -->
+		<dependency>
+			<groupId>com.google.inject</groupId>
+			<artifactId>guice</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.ops4j</groupId>
+			<artifactId>peaberry</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>com.springsource.javax.inject</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.aopalliance</groupId>
+			<artifactId>com.springsource.org.aopalliance</artifactId>
+		</dependency>
+
+		<!-- OSGi -->
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.core</artifactId>
+		</dependency>
+
+		<!-- javax -->
+		<dependency>
+			<groupId>javax.jcr</groupId>
+			<artifactId>jcr</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jsp-api</artifactId>
+		</dependency>
+
+		<!-- Apache felix scr -->
+		<dependency>
+			<groupId>org.apache.felix</groupId>
+			<artifactId>org.apache.felix.scr</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.felix</groupId>
+			<artifactId>org.apache.felix.scr.annotations</artifactId>
+		</dependency>
+	</dependencies>
+
+</project>
