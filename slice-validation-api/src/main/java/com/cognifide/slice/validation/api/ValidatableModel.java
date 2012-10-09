@@ -30,11 +30,7 @@ import java.util.List;
  * logic adds meaning to raw data (for example, calculating whether today is the user's birthday, or the
  * totals, taxes, and shipping charges for shopping cart items).
  * 
- * It's advised that model objects can validate themselves, contain default values and model-specific logic,
- * to avoid anaemic domain model anti-pattern. Adding logic to models should however be done with caution, not
- * to overload them with logic that should be in presenters.
- * 
- * The model object can be in three states:
+ * The object can be in three states:
  * <ul>
  * <li><b>valid</b> - model can be displayed in the view,</li>
  * <li><b>invalid</b> - populated incorrectly; error message should be displayed in the view,</li>
@@ -43,12 +39,10 @@ import java.util.List;
  * </ul>
  * 
  * @author Jan Kuźniak
- * 
- * It will be removed in M2, validation should be done using annotations
  */
 public interface ValidatableModel {
 	/**
-	 * Validates model object.
+	 * Validates object.
 	 * 
 	 * @return true if model object is valid, false otherwise.
 	 */
