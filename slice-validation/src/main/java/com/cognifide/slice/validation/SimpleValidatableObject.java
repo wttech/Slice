@@ -28,9 +28,9 @@ import java.util.List;
 import com.cognifide.slice.mapper.annotation.IgnoreProperty;
 import com.cognifide.slice.validation.api.ErrorLevel;
 import com.cognifide.slice.validation.api.ErrorMessage;
-import com.cognifide.slice.validation.api.ValidatableModel;
+import com.cognifide.slice.validation.api.ValidatableObject;
 
-public abstract class SimpleValidatableObject implements ValidatableModel {
+public abstract class SimpleValidatableObject implements ValidatableObject {
 
 	private final List<ErrorMessage> errorMessages = new ArrayList<ErrorMessage>();
 

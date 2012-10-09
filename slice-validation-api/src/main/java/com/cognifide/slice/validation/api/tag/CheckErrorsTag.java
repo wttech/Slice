@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 
 import com.cognifide.slice.validation.api.ErrorLevel;
 import com.cognifide.slice.validation.api.ErrorMessage;
-import com.cognifide.slice.validation.api.ValidatableModel;
+import com.cognifide.slice.validation.api.ValidatableObject;
 
 /**
  * If given model is valid - does nothing but evaluates body. If given model is empty - displays "empty model"
@@ -59,7 +59,7 @@ public class CheckErrorsTag extends BodyTagSupport {
 	public static final String CLEAR_BOTH_DIV = "<div style=\"clear:both;font-size:1px\">&nbsp;</div>";
 
 	/** model object that contains validation error messages (if any) */
-	private transient ValidatableModel model;
+	private transient ValidatableObject model;
 
 	/** information message - displayed to the author */
 	private String title = "Validation messages:";
@@ -196,12 +196,12 @@ public class CheckErrorsTag extends BodyTagSupport {
 	}
 
 	/** @return the model */
-	public ValidatableModel getModel() {
+	public ValidatableObject getModel() {
 		return model;
 	}
 
 	/** @param model the model to set */
-	public void setModel(ValidatableModel model) {
+	public void setModel(ValidatableObject model) {
 		this.model = model;
 	}
 

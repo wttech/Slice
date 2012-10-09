@@ -40,7 +40,7 @@ import java.util.List;
  * 
  * @author Jan Kuźniak
  */
-public interface ValidatableModel {
+public interface ValidatableObject {
 	/**
 	 * Validates object.
 	 * 
