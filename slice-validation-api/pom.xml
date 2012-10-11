@@ -31,6 +31,9 @@
 						<Export-Package>
 							com.cognifide.slice.validation.api*;version="${project.version}",
 						</Export-Package>
+						<Private-Package>
+							com.cognifide.slice.validation.api.tag.internal;version="${project.version}",
+						</Private-Package>
 					</instructions>
 				</configuration>
 			</plugin>
@@ -38,6 +41,12 @@
 	</build>
 
 	<dependencies>
+		<!-- Slice -->
+		<dependency>
+			<groupId>com.cognifide.slice</groupId>
+			<artifactId>slice-core-api</artifactId>
+			<version>2.1.0-SNAPSHOT</version>
+		</dependency>
 		<!-- javax -->
 		<dependency>
 			<groupId>javax.servlet</groupId>

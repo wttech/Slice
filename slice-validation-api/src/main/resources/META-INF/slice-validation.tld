@@ -7,18 +7,18 @@
 	<tlib-version>1.1</tlib-version>
 	<short-name>slice-validation</short-name>
 	<uri>http://cognifide.com/jsp/slice-validation</uri>
-	<!-- <slice-validation:checkErrors /> -->
+	<!-- <slice-validation:validate /> -->
 	<tag>
 		<description>
 			If given model is valid - does nothing but evaluates body. If given model is empty - displays 
 			"empty model" message. If model is invalid, displays all validation errors.
 		</description>
-		<name>checkErrors</name>
-		<tag-class>com.cognifide.slice.api.tag.CheckErrorsTag</tag-class>
+		<name>validate</name>
+		<tag-class>com.cognifide.slice.validation.api.tag.ValidateTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
-			<description>model object that contains validation error messages (if any)</description>
-			<name>model</name>
+			<description>object that needs to be validated</description>
+			<name>object</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -31,10 +31,20 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>if false, tag does not render as plain HTML, but as HTML comment instead.</description>
-			<name>render</name>
+			<description>
+				if true, errors will be displayed as HTML code
+			</description>
+			<name>displayErrors</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				Variable with validation result
+			</description>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 	</tag>
 </taglib>
