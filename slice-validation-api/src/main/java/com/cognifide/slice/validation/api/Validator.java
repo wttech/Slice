@@ -23,12 +23,17 @@ package com.cognifide.slice.validation.api;
  */
 
 /**
- * Builds result of validation.
+ * Validates given Validatable object.
  * 
  * @author Rafał Malinowski
  */
 public interface Validator {
 
+	/**
+	 * Validate given Validatable object.
+	 * @param validatable object to validate
+	 * @return result  of validation
+	 */
 	ValidationResult validate(Validatable validatable);
 
 }

@@ -27,6 +27,11 @@ import com.cognifide.slice.validation.api.ErrorMessage;
  * #L%
  */
 
+/**
+ * Write list of ErrorMessage objects to a target.
+ * 
+ * @author Rafał Malinowski
+ */
 public interface ErrorMessageListWriter {
 
 	void writeErrorMessageList(List<ErrorMessage> errorMessageList) throws IOException;

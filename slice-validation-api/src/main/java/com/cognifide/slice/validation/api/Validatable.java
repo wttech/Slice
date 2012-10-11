@@ -22,9 +22,19 @@ package com.cognifide.slice.validation.api;
  * #L%
  */
 
-
+/**
+ * Any object that can be validated.
+ * 
+ * @author Rafał Malinowski
+ */
 public interface Validatable {
 
+	/**
+	 * Validate this object. Use ValidationResultBuilder to set up any error
+	 * messages and blank values.
+	 * 
+	 * @param validationResultBuilder
+	 */
 	void validate(ValidationResultBuilder validationResultBuilder);
 
 }

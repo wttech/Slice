@@ -8,6 +8,12 @@ import java.util.List;
 import com.cognifide.slice.validation.api.ErrorLevel;
 import com.cognifide.slice.validation.api.ErrorMessage;
 
+/**
+ * Write list of error messages to a writer as a HTML div element. Messages will
+ * be grouped basing on error levels.
+ * 
+ * @author Rafał Malinowski
+ */
 public class HtmlErrorMessageListWriter implements ErrorMessageListWriter {
 
 	private static final String CLEAR_BOTH_DIV = "<div style=\"clear:both;font-size:1px\">&nbsp;</div>";
@@ -32,9 +38,9 @@ public class HtmlErrorMessageListWriter implements ErrorMessageListWriter {
 		writer.write(title);
 		writer.write("</div>\n");
 
-		writeErrorMessageList(errorMessageList, ErrorLevel.ERROR);
-		writeErrorMessageList(errorMessageList, ErrorLevel.WARNING);
-		writeErrorMessageList(errorMessageList, ErrorLevel.INFORMATION);
+		for (final ErrorLevel errorLevel : ErrorLevel.values()) {
+			writeErrorMessageList(errorMessageList, errorLevel);
+		}
 
 		writer.write("</div>\n");
 		writer.write(CLEAR_BOTH_DIV);

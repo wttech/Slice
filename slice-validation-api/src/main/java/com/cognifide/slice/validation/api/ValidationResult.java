@@ -38,8 +38,14 @@ public interface ValidationResult {
 	 */
 	ValidationState getValidationState();
 
+	/**
+	 * Checks if object is blank.
+	 */
 	boolean isBlank();
 
+	/**
+	 * Check if object is valid.
+	 */
 	boolean isValid();
 
 	/**

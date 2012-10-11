@@ -8,6 +8,12 @@ import java.util.List;
 import com.cognifide.slice.validation.api.ErrorLevel;
 import com.cognifide.slice.validation.api.ErrorMessage;
 
+/**
+ * Write list of error messages to a writer as a HTML comment. Messages will be
+ * grouped basing on error levels.
+ * 
+ * @author Rafał Malinowski
+ */
 public class HtmlCommentErrorMessageListWriter implements
 		ErrorMessageListWriter {
 
@@ -25,9 +31,9 @@ public class HtmlCommentErrorMessageListWriter implements
 			throws IOException {
 		writer.write("\n<!--");
 
-		writeErrorMessageList(errorMessageList, ErrorLevel.ERROR);
-		writeErrorMessageList(errorMessageList, ErrorLevel.WARNING);
-		writeErrorMessageList(errorMessageList, ErrorLevel.INFORMATION);
+		for (final ErrorLevel errorLevel : ErrorLevel.values()) {
+			writeErrorMessageList(errorMessageList, errorLevel);
+		}
 
 		writer.write("\n-->\n");
 	}

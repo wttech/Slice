@@ -28,7 +28,7 @@ import com.cognifide.slice.api.injector.InjectorServiceRunner;
 // @formatter:off
 /**
  * @author Rafał Malinowski
- * @class CQModulesFactory
+ * @class ValidationModulesInstaller
  */
 // @formatter:on
 public interface ValidationModulesInstaller {

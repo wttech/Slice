@@ -8,6 +8,12 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 import com.cognifide.slice.validation.api.ErrorMessage;
 
+/**
+ * Write error message to a writer as a HTML comment. All code will be HTML
+ * escaped.
+ * 
+ * @author Rafał Malinowski
+ */
 public class HtmlCommentErrorMessageWriter implements ErrorMessageWriter {
 
 	private final Writer writer;

@@ -28,7 +28,7 @@ package com.cognifide.slice.validation.api;
  * <ul>
  * <li><b>valid</b> - validation passed,</li>
  * <li><b>invalid</b> - validation not passed, object is invalid,</li>
- * <li><b>empty</b> - not populated at all; specific error message should be
+ * <li><b>blank</b> - not populated at all; specific error message should be
  * displayed in the view - most likely user didn't do anything wrong yet, just
  * created empty component and has to pick it up.</li>
  * </ul>

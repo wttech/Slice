@@ -26,6 +26,11 @@ import com.cognifide.slice.validation.api.ErrorMessage;
  * #L%
  */
 
+/**
+ * Write one ErrorMessage object to a target.
+ * 
+ * @author Rafał Malinowski
+ */
 public interface ErrorMessageWriter {
 
 	void writeErrorMessage(ErrorMessage errorMessage) throws IOException;

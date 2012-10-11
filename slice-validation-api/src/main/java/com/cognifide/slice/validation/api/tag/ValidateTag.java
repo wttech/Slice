@@ -41,12 +41,15 @@ import com.cognifide.slice.validation.api.tag.internal.HtmlCommentErrorMessageLi
 import com.cognifide.slice.validation.api.tag.internal.HtmlErrorMessageListWriter;
 
 /**
- * If given model is valid - does nothing but evaluates body. If given model is
- * empty - displays "empty model" message. If model is invalid, displays all
+ * If given object is valid - does nothing but evaluates body. If given model is
+ * blank - displays "blank model" message. If model is invalid, displays all
  * validation errors.
+ * 
+ * It can also write result of validation to variable accessible in JSP code.
  * 
  * @author Albert Cenkier
  * @author Jan Kuźniak
+ * @author Rafał Malinowski
  */
 public class ValidateTag extends BodyTagSupport {
 
@@ -61,11 +64,16 @@ public class ValidateTag extends BodyTagSupport {
 
 	public static final String CLEAR_BOTH_DIV = "<div style=\"clear:both;font-size:1px\">&nbsp;</div>";
 
-	private String var;
-
 	/** model object that contains validation error messages (if any) */
 	private transient Validatable object;
 
+	/** variable on page to store validation result to */
+	private String var;
+
+	/**
+	 * if true errors will be visible to users, if false, will be visible only
+	 * in HTML comments
+	 */
 	private boolean displayErrors = false;
 
 	/** information message - displayed to the author */

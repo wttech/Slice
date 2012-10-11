@@ -22,7 +22,6 @@ package com.cognifide.slice.validation.api;
  * #L%
  */
 
-
 public enum ErrorLevel {
 
 	ERROR("error"), //
