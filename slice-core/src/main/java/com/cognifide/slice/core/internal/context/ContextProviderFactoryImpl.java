@@ -26,7 +26,7 @@ package com.cognifide.slice.core.internal.context;
 import com.cognifide.slice.api.context.ContextProviderFactory;
 import com.cognifide.slice.api.context.SimpleContextProvider;
 
-public class ContextProviderFactoryImple implements ContextProviderFactory {
+public class ContextProviderFactoryImpl implements ContextProviderFactory {
 
 	@Override
 	public SimpleContextProvider getSimpleContextProvider() {

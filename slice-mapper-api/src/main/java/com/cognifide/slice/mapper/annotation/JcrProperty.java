@@ -40,4 +40,5 @@ public @interface JcrProperty {
 	 * @return
 	 */
 	String value() default "";
+
 }

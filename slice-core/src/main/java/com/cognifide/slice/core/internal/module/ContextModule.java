@@ -24,14 +24,14 @@ package com.cognifide.slice.core.internal.module;
 
 
 import com.cognifide.slice.api.context.ContextProviderFactory;
-import com.cognifide.slice.core.internal.context.ContextProviderFactoryImple;
+import com.cognifide.slice.core.internal.context.ContextProviderFactoryImpl;
 import com.google.inject.AbstractModule;
 
 public final class ContextModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(ContextProviderFactory.class).to(ContextProviderFactoryImple.class);
+		bind(ContextProviderFactory.class).to(ContextProviderFactoryImpl.class);
 	}
 
 }
