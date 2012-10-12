@@ -22,7 +22,6 @@ package com.cognifide.slice.cq.module;
  * #L%
  */
 
-
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
@@ -42,20 +41,22 @@ import com.cognifide.slice.cq.api.CQModulesInstaller;
 @Component(immediate = true)
 @Service
 @Properties({ //
-@Property(name = Constants.SERVICE_DESCRIPTION, value = "Factory of CQ modules."), //
+		@Property(name = Constants.SERVICE_DESCRIPTION, value = "Factory of CQ modules."), //
 		@Property(name = Constants.SERVICE_VENDOR, value = "Cognifide") })
 // @formatter:on
 public class CQModulesInstallerImpl implements CQModulesInstaller {
 
 	@Override
-	public void installCQModules(final InjectorServiceRunner injectorServiceRunner) {
-		final ServiceReference sliceModulesInstallerService = injectorServiceRunner.getBundleContext()
-				.getServiceReference(SliceModulesInstaller.class.getName());
+	public void installCQModules(
+			final InjectorServiceRunner injectorServiceRunner) {
+		final ServiceReference sliceModulesInstallerService = injectorServiceRunner
+				.getBundleContext().getServiceReference(
+						SliceModulesInstaller.class.getName());
 		final SliceModulesInstaller sliceModulesInstaller = (SliceModulesInstaller) injectorServiceRunner
 				.getBundleContext().getService(sliceModulesInstallerService);
 		sliceModulesInstaller.installSliceModules(injectorServiceRunner);
 
-		injectorServiceRunner.installModule(new CQModule(injectorServiceRunner.getContextScope()));
+		injectorServiceRunner.installModule(new CQModule());
 		injectorServiceRunner.installModule(new CQMapperModule());
 		injectorServiceRunner.installModule(new DamModule());
 		injectorServiceRunner.installModule(new CurrentPageModule());
