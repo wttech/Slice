@@ -117,4 +117,5 @@ public final class SlingModule extends ContextScopeModule {
 	public String getSelectorsString(final RequestPathInfo requestPathInfo) {
 		return requestPathInfo.getSelectorString();
 	}
+
 }

@@ -1,4 +1,8 @@
-package com.cognifide.slice.api.model;
+package com.cognifide.slice.validation.api.tag.internal;
+
+import java.io.IOException;
+
+import com.cognifide.slice.validation.api.ErrorMessage;
 
 /*
  * #%L
@@ -22,20 +26,13 @@ package com.cognifide.slice.api.model;
  * #L%
  */
 
-
 /**
- * Represents single error message model object. Error message consists of a mandatory message text, and
- * optional throwable - if the error message was caused by an exception.
+ * Write one ErrorMessage object to a target.
  * 
- * @author Marcin Cenkier
- * @author Jan Kuźniak
+ * @author Rafał Malinowski
  */
-public interface ErrorMessage {
+public interface ErrorMessageWriter {
 
-	String getMessage();
-
-	Throwable getThrowable();
-
-	ErrorLevel getErrorLevel();
+	void writeErrorMessage(ErrorMessage errorMessage) throws IOException;
 
 }

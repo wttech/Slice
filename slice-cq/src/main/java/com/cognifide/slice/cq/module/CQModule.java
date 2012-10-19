@@ -26,20 +26,15 @@ package com.cognifide.slice.cq.module;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.ResourceResolver;
 
-import com.cognifide.slice.api.context.ContextScope;
 import com.cognifide.slice.api.scope.ContextScoped;
-import com.cognifide.slice.commons.module.ContextScopeModule;
 import com.cognifide.slice.cq.PageChildrenProvider;
 import com.cognifide.slice.cq.impl.PageChildrenProviderImpl;
 import com.day.cq.wcm.api.PageManager;
 import com.day.cq.wcm.api.WCMMode;
+import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
-public final class CQModule extends ContextScopeModule {
-
-	public CQModule(final ContextScope contextScope) {
-		super(contextScope);
-	}
+public final class CQModule extends AbstractModule {
 
 	@Override
 	protected void configure() {

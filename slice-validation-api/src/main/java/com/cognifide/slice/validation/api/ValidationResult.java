@@ -1,8 +1,8 @@
-package com.cognifide.slice.mapper.annotation;
+package com.cognifide.slice.validation.api;
 
 /*
  * #%L
- * Slice - Mapper API
+ * Slice - Core API
  * $Id:$
  * $HeadURL:$
  * %%
@@ -22,23 +22,35 @@ package com.cognifide.slice.mapper.annotation;
  * #L%
  */
 
+import java.util.List;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-@Documented
-@Target(ElementType.FIELD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface JcrProperty {
+/**
+ * Result of validation.
+ * 
+ * @author Jan Kuźniak
+ * @author Rafał Malinowski
+ */
+public interface ValidationResult {
+	/**
+	 * Validates object.
+	 * 
+	 * @return true if model object is valid, false otherwise.
+	 */
+	ValidationState getValidationState();
 
 	/**
-	 * Custom property name. If empty, property name is read from field's name.
-	 * 
-	 * @return
+	 * Checks if object is blank.
 	 */
-	String value() default "";
+	boolean isBlank();
+
+	/**
+	 * Check if object is valid.
+	 */
+	boolean isValid();
+
+	/**
+	 * @return list of error messages. Can be empty or null.
+	 */
+	List<ErrorMessage> getErrorMessages();
 
 }

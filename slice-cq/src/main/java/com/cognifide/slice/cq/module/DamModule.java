@@ -22,7 +22,6 @@ package com.cognifide.slice.cq.module;
  * #L%
  */
 
-
 import org.apache.sling.api.resource.Resource;
 
 import com.cognifide.slice.api.qualifier.Nullable;
@@ -38,11 +37,10 @@ public final class DamModule extends AbstractModule {
 
 	@Provides
 	public Asset getAsset(@Nullable Resource resource) {
-		Asset asset = null;
-		if (resource != null) {
-			asset = resource.adaptTo(Asset.class);
+		if (null != resource) {
+			return resource.adaptTo(Asset.class);
 		}
-		return asset;
+		return null;
 	}
 
 }

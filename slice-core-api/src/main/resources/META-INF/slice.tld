@@ -34,34 +34,4 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
-	<!-- <slice:checkErrors /> -->
-	<tag>
-		<description>
-			If given model is valid - does nothing but evaluates body. If given model is empty - displays 
-			"empty model" message. If model is invalid, displays all validation errors.
-		</description>
-		<name>checkErrors</name>
-		<tag-class>com.cognifide.slice.api.tag.CheckErrorsTag</tag-class>
-		<body-content>JSP</body-content>
-		<attribute>
-			<description>model object that contains validation error messages (if any)</description>
-			<name>model</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description>
-				information message - displayed to the author, "Validation messages:" by default
-			</description>
-			<name>title</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description>if false, tag does not render as plain HTML, but as HTML comment instead.</description>
-			<name>render</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>
 </taglib>

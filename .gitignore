@@ -28,10 +28,6 @@ local.properties
 # PDT-specific
 .buildpath
 
-# Cognifide
-*.versionsBackup
-target
-
 #################
 ## Visual Studio
 #################
@@ -164,3 +160,7 @@ pip-log.txt
 
 # Mac crap
 .DS_Store
+
+# Cognifide
+*.versionsBackup
+target

@@ -1,8 +1,8 @@
-package com.cognifide.slice.mapper.annotation;
+package com.cognifide.slice.validation.api;
 
 /*
  * #%L
- * Slice - Mapper API
+ * Slice - Core API
  * $Id:$
  * $HeadURL:$
  * %%
@@ -22,23 +22,19 @@ package com.cognifide.slice.mapper.annotation;
  * #L%
  */
 
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-@Documented
-@Target(ElementType.FIELD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface JcrProperty {
+/**
+ * Any object that can be validated.
+ * 
+ * @author Rafał Malinowski
+ */
+public interface Validatable {
 
 	/**
-	 * Custom property name. If empty, property name is read from field's name.
+	 * Validate this object. Use ValidationResultBuilder to set up any error
+	 * messages and blank values.
 	 * 
-	 * @return
+	 * @param validationResultBuilder
 	 */
-	String value() default "";
+	void validate(ValidationResultBuilder validationResultBuilder);
 
 }

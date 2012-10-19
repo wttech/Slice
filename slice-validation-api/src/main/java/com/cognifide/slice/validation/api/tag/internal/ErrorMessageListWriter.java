@@ -1,8 +1,13 @@
-package com.cognifide.slice.mapper.annotation;
+package com.cognifide.slice.validation.api.tag.internal;
+
+import java.io.IOException;
+import java.util.List;
+
+import com.cognifide.slice.validation.api.ErrorMessage;
 
 /*
  * #%L
- * Slice - Mapper API
+ * Slice - Core API
  * $Id:$
  * $HeadURL:$
  * %%
@@ -22,23 +27,13 @@ package com.cognifide.slice.mapper.annotation;
  * #L%
  */
 
+/**
+ * Write list of ErrorMessage objects to a target.
+ * 
+ * @author Rafał Malinowski
+ */
+public interface ErrorMessageListWriter {
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-@Documented
-@Target(ElementType.FIELD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface JcrProperty {
-
-	/**
-	 * Custom property name. If empty, property name is read from field's name.
-	 * 
-	 * @return
-	 */
-	String value() default "";
+	void writeErrorMessageList(List<ErrorMessage> errorMessageList) throws IOException;
 
 }
