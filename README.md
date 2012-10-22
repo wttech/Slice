@@ -16,7 +16,7 @@ Checkout the source code:
 
     cd [folder of your choice]
     git clone git://github.com/Cognifide/Slice.git
-    cd Maven-CRX-Plugin
+    cd Slice
 
 Compile and install:
 
