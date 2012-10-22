@@ -2,11 +2,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.cognifide.slice</groupId>
 	<artifactId>slice-cq</artifactId>
-	<version>3.0.0-incubator-SNAPSHOT</version>
+	<version>3.0.0-incubator</version>
 	<parent>
 		<groupId>com.cognifide.slice</groupId>
 		<artifactId>slice-parent</artifactId>
-		<version>3.0.0-incubator-SNAPSHOT</version>
+		<version>3.0.0-incubator</version>
 	</parent>
 	<name>Slice - CQ Add-on</name>
 	<description>Slice CQ Add-on</description>
@@ -44,17 +44,17 @@
 		<dependency>
 			<groupId>com.cognifide.slice</groupId>
 			<artifactId>slice-core</artifactId>
-			<version>3.0.0-incubator-SNAPSHOT</version>
+			<version>3.0.0-incubator</version>
 		</dependency>
 		<dependency>
 			<groupId>com.cognifide.slice</groupId>
 			<artifactId>slice-mapper-api</artifactId>
-			<version>3.0.0-incubator-SNAPSHOT</version>
+			<version>3.0.0-incubator</version>
 		</dependency>
 		<dependency>
 			<groupId>com.cognifide.slice</groupId>
 			<artifactId>slice-mapper</artifactId>
-			<version>3.0.0-incubator-SNAPSHOT</version>
+			<version>3.0.0-incubator</version>
 		</dependency>
 
 		<!-- Guice -->
