@@ -3,7 +3,7 @@
 
 	<groupId>com.cognifide.slice</groupId>
 	<artifactId>slice-parent</artifactId>
-	<version>3.0.1-incubator-SNAPSHOT</version>
+	<version>3.0.1-incubator</version>
 
 	<name>Slice - Parent</name>
 	<url>http://cognifide.com/</url>
