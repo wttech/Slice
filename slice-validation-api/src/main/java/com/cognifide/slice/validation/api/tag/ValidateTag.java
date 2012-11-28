@@ -102,13 +102,15 @@ public class ValidateTag extends BodyTagSupport {
 			}
 
 			if (validationResult.getValidationState().isBlank()) {
-				out.write(EMPTY_MODEL_MESSAGE);
-				return SKIP_BODY;
+				if (displayErrors) {
+					out.write(EMPTY_MODEL_MESSAGE);
+				}
+			} else {
+				final ErrorMessageListWriter writer = displayErrors ? new HtmlErrorMessageListWriter(
+						out, title) : new HtmlCommentErrorMessageListWriter(out);
+				writer.writeErrorMessageList(validationResult.getErrorMessages());
 			}
 
-			final ErrorMessageListWriter writer = displayErrors ? new HtmlErrorMessageListWriter(
-					out, title) : new HtmlCommentErrorMessageListWriter(out);
-			writer.writeErrorMessageList(validationResult.getErrorMessages());
 			return SKIP_BODY;
 		} catch (IOException e) {
 			// should never occur
