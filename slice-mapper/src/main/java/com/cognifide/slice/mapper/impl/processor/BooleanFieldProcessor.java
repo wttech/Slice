@@ -1,6 +1,6 @@
 package com.cognifide.slice.mapper.impl.processor;
 
-/*
+/*-
  * #%L
  * Slice - Mapper
  * $Id:$
@@ -22,7 +22,6 @@ package com.cognifide.slice.mapper.impl.processor;
  * #L%
  */
 
-
 import java.lang.reflect.Field;
 
 import org.apache.sling.api.resource.Resource;
@@ -42,18 +41,19 @@ public class BooleanFieldProcessor implements FieldProcessor {
 	@Override
 	public Object mapResourceToField(Resource resource, ValueMap valueMap, Field field, String propertyName) {
 		Boolean result = null;
-
-		Object value = valueMap.get(propertyName);
-		if (value instanceof Boolean) {
-			result = (Boolean) value;
-		} else if (value instanceof String) {
-			String stringValue = valueMap.get(propertyName, String.class);
-			if (stringValue != null) {
-				stringValue = stringValue.toLowerCase();
-				if ("true".equals(stringValue)) {
-					result = Boolean.TRUE;
-				} else if ("false".equals(stringValue)) {
-					result = Boolean.FALSE;
+		if (valueMap != null) {
+			Object value = valueMap.get(propertyName);
+			if (value instanceof Boolean) {
+				result = (Boolean) value;
+			} else if (value instanceof String) {
+				String stringValue = valueMap.get(propertyName, String.class);
+				if (stringValue != null) {
+					stringValue = stringValue.toLowerCase();
+					if ("true".equals(stringValue)) {
+						result = Boolean.TRUE;
+					} else if ("false".equals(stringValue)) {
+						result = Boolean.FALSE;
+					}
 				}
 			}
 		}

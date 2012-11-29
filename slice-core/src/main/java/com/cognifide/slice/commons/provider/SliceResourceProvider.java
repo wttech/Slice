@@ -1,6 +1,6 @@
 package com.cognifide.slice.commons.provider;
 
-/*
+/*-
  * #%L
  * Slice - Core
  * $Id:$
@@ -22,9 +22,7 @@ package com.cognifide.slice.commons.provider;
  * #L%
  */
 
-
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ValueMap;
 
 import com.cognifide.slice.api.model.InitializableModel;
 import com.cognifide.slice.api.qualifier.EmptyObject;
@@ -64,7 +62,7 @@ public class SliceResourceProvider {
 
 	public <T> T get(final Class<T> sliceResourceClass, final Resource resource) {
 		T instance = newInstance(sliceResourceClass);
-		if ((resource != null) && (resource.adaptTo(ValueMap.class) != null)) {
+		if (resource != null) {
 			instance = mapper.get(resource, instance);
 		}
 		if (InitializableModel.class.isAssignableFrom(sliceResourceClass)) {

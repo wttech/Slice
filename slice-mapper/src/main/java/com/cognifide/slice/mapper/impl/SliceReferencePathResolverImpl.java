@@ -1,6 +1,6 @@
 package com.cognifide.slice.mapper.impl;
 
-/*
+/*-
  * #%L
  * Slice - Mapper
  * $Id:$
@@ -22,7 +22,6 @@ package com.cognifide.slice.mapper.impl;
  * #L%
  */
 
-
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +31,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
 
 import com.cognifide.slice.api.scope.ContextScoped;
-import com.cognifide.slice.mapper.SliceReferencePathResolver;
+import com.cognifide.slice.mapper.api.SliceReferencePathResolver;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Key;

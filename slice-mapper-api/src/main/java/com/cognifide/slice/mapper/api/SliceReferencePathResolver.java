@@ -1,6 +1,6 @@
-package com.cognifide.slice.mapper;
+package com.cognifide.slice.mapper.api;
 
-/*
+/*-
  * #%L
  * Slice - Mapper
  * $Id:$
@@ -22,8 +22,9 @@ package com.cognifide.slice.mapper;
  * #L%
  */
 
-
 import java.lang.annotation.Annotation;
+
+import com.cognifide.slice.mapper.annotation.SliceReference;
 
 /**
  * Stores placeholders which are used to resolves paths used within {@link SliceReference}. It also resolve

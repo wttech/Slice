@@ -1,6 +1,6 @@
 package com.cognifide.slice.mapper.impl.processor;
 
-/*
+/*-
  * #%L
  * Slice - Mapper
  * $Id:$
@@ -22,7 +22,6 @@ package com.cognifide.slice.mapper.impl.processor;
  * #L%
  */
 
-
 import java.lang.reflect.Field;
 
 import org.apache.sling.api.resource.Resource;
@@ -40,6 +39,9 @@ public class DefaultFieldProcessor implements FieldProcessor {
 
 	@Override
 	public Object mapResourceToField(Resource resource, ValueMap valueMap, Field field, String propertyName) {
+		if (valueMap == null) {
+			return null;
+		}
 		Class<?> propertyType = ReflectionHelper.getFieldType(field);
 		return valueMap.get(propertyName, propertyType);
 	}
