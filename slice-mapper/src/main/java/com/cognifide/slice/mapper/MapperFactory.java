@@ -1,4 +1,4 @@
-package com.cognifide.slice.mapper.api;
+package com.cognifide.slice.mapper;
 
 /*
  * #%L
@@ -23,6 +23,7 @@ package com.cognifide.slice.mapper.api;
  */
 
 
+import com.cognifide.slice.mapper.api.Mapper;
 import com.cognifide.slice.mapper.impl.GenericSlingMapper;
 
 

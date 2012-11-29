@@ -28,7 +28,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.cognifide.slice.mapper.api.SliceReferencePathResolver;
+import com.cognifide.slice.mapper.SliceReferencePathResolver;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 

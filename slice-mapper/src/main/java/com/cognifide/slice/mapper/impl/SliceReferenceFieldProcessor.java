@@ -30,8 +30,8 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 
 import com.cognifide.slice.api.provider.ModelProvider;
+import com.cognifide.slice.mapper.SliceReferencePathResolver;
 import com.cognifide.slice.mapper.annotation.SliceReference;
-import com.cognifide.slice.mapper.api.SliceReferencePathResolver;
 import com.cognifide.slice.mapper.api.processor.FieldProcessor;
 import com.google.inject.Inject;
 import com.google.inject.Injector;

@@ -24,8 +24,8 @@ package com.cognifide.slice.cq.mapper;
 
 
 import com.cognifide.slice.cq.mapper.processor.ImageFieldProcessor;
+import com.cognifide.slice.mapper.SlingMapperFactory;
 import com.cognifide.slice.mapper.api.Mapper;
-import com.cognifide.slice.mapper.api.SlingMapperFactory;
 import com.google.inject.Inject;
 
 public class CQMapperFactory {

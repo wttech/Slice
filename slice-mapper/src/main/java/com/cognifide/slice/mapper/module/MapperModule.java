@@ -24,8 +24,8 @@ package com.cognifide.slice.mapper.module;
 
 
 import com.cognifide.slice.api.scope.ContextScoped;
+import com.cognifide.slice.mapper.SlingMapperFactory;
 import com.cognifide.slice.mapper.api.Mapper;
-import com.cognifide.slice.mapper.api.SlingMapperFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
