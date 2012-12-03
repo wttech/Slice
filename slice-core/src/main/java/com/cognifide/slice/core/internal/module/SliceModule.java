@@ -1,6 +1,6 @@
 package com.cognifide.slice.core.internal.module;
 
-/*
+/*-
  * #%L
  * Slice - Core
  * $Id:$
@@ -21,7 +21,6 @@ package com.cognifide.slice.core.internal.module;
  * limitations under the License.
  * #L%
  */
-
 
 import org.apache.sling.api.resource.Resource;
 
@@ -81,8 +80,7 @@ public final class SliceModule extends ContextScopeModule {
 
 	@Provides
 	@CurrentResourcePath
-	public String getCurrentResourcePath(final ContextScope contextScope,
-			final ExecutionContextStack currentExecutionContext) {
+	public String getCurrentResourcePath(final ExecutionContextStack currentExecutionContext) {
 		return currentExecutionContext.peek().getPath();
 	}
 
