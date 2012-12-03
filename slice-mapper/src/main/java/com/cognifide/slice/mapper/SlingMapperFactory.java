@@ -1,6 +1,6 @@
 package com.cognifide.slice.mapper;
 
-/*
+/*-
  * #%L
  * Slice - Mapper
  * $Id:$
@@ -22,12 +22,11 @@ package com.cognifide.slice.mapper;
  * #L%
  */
 
-
 import com.cognifide.slice.mapper.api.Mapper;
-import com.cognifide.slice.mapper.impl.SliceReferenceFieldProcessor;
-import com.cognifide.slice.mapper.impl.SliceResourceFieldProcessor;
 import com.cognifide.slice.mapper.impl.postprocessor.EscapeValuePostProcessor;
 import com.cognifide.slice.mapper.impl.processor.BooleanFieldProcessor;
+import com.cognifide.slice.mapper.impl.processor.SliceReferenceFieldProcessor;
+import com.cognifide.slice.mapper.impl.processor.SliceResourceFieldProcessor;
 import com.google.inject.Inject;
 
 public final class SlingMapperFactory {
@@ -50,7 +49,6 @@ public final class SlingMapperFactory {
 	public Mapper getMapper() {
 		final Mapper mapper = mapperFactory.getMapper();
 
-		mapper.registerFieldProcessor(new BooleanFieldProcessor());
 		mapper.registerFieldProcessor(new BooleanFieldProcessor());
 		mapper.registerFieldProcessor(sliceResourceFieldProcessor);
 		mapper.registerFieldProcessor(sliceReferenceFieldProcessor);

@@ -1,6 +1,6 @@
 package com.cognifide.slice.mapper.impl;
 
-/*
+/*-
  * #%L
  * Slice - Mapper
  * $Id:$
@@ -22,7 +22,6 @@ package com.cognifide.slice.mapper.impl;
  * #L%
  */
 
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.text.MessageFormat;
@@ -36,7 +35,12 @@ import org.apache.sling.api.resource.ValueMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.cognifide.slice.mapper.annotation.IgnoreProperty;
+import com.cognifide.slice.mapper.annotation.ImagePath;
 import com.cognifide.slice.mapper.annotation.JcrProperty;
+import com.cognifide.slice.mapper.annotation.MappingStrategy;
+import com.cognifide.slice.mapper.annotation.SliceResource;
+import com.cognifide.slice.mapper.annotation.Unescaped;
 import com.cognifide.slice.mapper.api.Mapper;
 import com.cognifide.slice.mapper.api.processor.FieldPostProcessor;
 import com.cognifide.slice.mapper.api.processor.FieldProcessor;
@@ -157,10 +161,6 @@ public class GenericSlingMapper implements Mapper {
 	 */
 	private <T> T mapResourceToObject(final Resource resource, final T object) {
 		ValueMap valueMap = resource.adaptTo(ValueMap.class);
-		if (valueMap == null) {
-			throw new IllegalArgumentException("ValueMap cannot be null!");
-		}
-
 		try {
 			Class<?> type = object.getClass();
 			MapperStrategy mapperStrategy = mapperStrategyFactory.getMapperStrategy(type);
