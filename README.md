@@ -30,86 +30,106 @@ Add dependencied to your POM file:
     <dependency>
         <groupId>com.cognifide.slice</groupId>
         <artifactId>slice-core-api</artifactId>
-        <version>2.0.0</version>
+        <version>3.0.0</version>
         <scope>compile</scope>
     </dependency>
     <dependency>
         <groupId>com.cognifide.slice</groupId>
         <artifactId>slice-core</artifactId>
-        <version>2.0.0</version>
+        <version>3.0.0</version>
         <scope>compile</scope>
     </dependency>
     <dependency>
         <groupId>com.cognifide.slice</groupId>
         <artifactId>slice-mapper</artifactId>
-        <version>2.0.0</version>
+        <version>3.0.0</version>
         <scope>compile</scope>
     </dependency>
     <dependency>
         <groupId>com.cognifide.slice</groupId>
         <artifactId>slice-mapper-api</artifactId>
-        <version>2.0.0</version>
+        <version>3.0.0</version>
         <scope>compile</scope>
     </dependency>
     <dependency>
         <groupId>com.cognifide.slice</groupId>
         <artifactId>slice-cq</artifactId>
-        <version>2.0.0</version>
+        <version>3.0.0</version>
         <scope>compile</scope>
     </dependency>
     <dependency>
         <groupId>com.cognifide.slice</groupId>
         <artifactId>slice-cq-taglib</artifactId>
-        <version>2.0.0</version>
+        <version>3.0.0</version>
+        <scope>compile</scope>
+    </dependency>
+    <dependency>
+        <groupId>com.cognifide.slice</groupId>
+        <artifactId>slice-validation-api</artifactId>
+        <version>3.0.0</version>
+        <scope>compile</scope>
+    </dependency>
+    <dependency>
+        <groupId>com.cognifide.slice</groupId>
+        <artifactId>slice-validation</artifactId>
+        <version>3.0.0</version>
         <scope>compile</scope>
     </dependency>
     (...)
 
-Prepare Injector service in Activator:
+Prepare Injector of your application in Activator. Example activator:
 
-    private static final String INJECTOR_NAME = "injectorName";
+	import java.util.ArrayList;
+	import java.util.List;
+	
+	import org.osgi.framework.BundleActivator;
+	import org.osgi.framework.BundleContext;
+	
+	import com.cognifide.slice.api.context.ContextScope;
+	import com.cognifide.slice.api.injector.InjectorRunner;
+	import com.cognifide.slice.commons.SliceModulesFactory;
+	import com.cognifide.slice.core.internal.context.SliceContextScope;
+	import com.cognifide.slice.cq.module.CQModulesFactory;
+	import com.cognifide.slice.validation.ValidationModulesFactory;
+	import com.google.inject.Module;
 
-    final ServiceReference injectorServiceRunnerFactoryService = bundleContext
-        .getServiceReference(InjectorServiceRunnerFactory.class.getName());
-    final InjectorServiceRunnerFactory injectorServiceRunnerFactory = (InjectorServiceRunnerFactory) bundleContext
-        .getService(injectorServiceRunnerFactoryService);
-    final InjectorServiceRunner injectorServiceRunner = injectorServiceRunnerFactory
-        .getInjectorServiceRunner(bundleContext, INJECTOR_NAME);
+	public class Activator implements BundleActivator {
+	
+		private static final String BUNDLE_NAME_FILTER = "com\\.company\\.application\\.webapp\\..*";
+	
+		private static final String BASE_PACKAGE = "com.company.application";
+	
+		private static final String INJECTOR_NAME = "injectorName";
+	
+		@Override
+		public void start(BundleContext bundleContext) throws Exception {
+			final ContextScope scope = new SliceContextScope();
+			final InjectorRunner injectorRunner = new InjectorRunner(bundleContext, INJECTOR_NAME, scope);
+			
+			List<Module> sliceModules = SliceModulesFactory.createModules(bundleContext, INJECTOR_NAME,
+					BUNDLE_NAME_FILTER, BASE_PACKAGE);
+			List<Module> cqModules = CQModulesFactory.createModules();
+			List<Module> validationModules = ValidationModulesFactory.createModules();
+			List<Module> customModules = createCustomModules();
+			
+			injectorRunner.installModules(sliceModules);
+			injectorRunner.installModules(cqModules);
+			injectorRunner.installModules(validationModules);
+			injectorRunner.installModules(customModules);
+			
+			injectorRunner.start();
+		}
+	
+		private List<Module> createCustomModules() {
+			List<Module> applicationModules = new ArrayList<Module>();
+			//populate list with your modules
+			return applicationModules;
+		}
+	}
 
-Install CQ modules:
-
-    final ServiceReference cqModulesInstallerService = bundleContext
-        .getServiceReference(CQModulesInstaller.class.getName());
-    final CQModulesInstaller cqModulesFactory = (CQModulesInstaller) bundleContext
-        .getService(cqModulesInstallerService);
-    cqModulesFactory.installCQModules(injectorServiceRunner);
-
-If you want to use Slice with Sling only, install Sling modules instead of CQ one:
-
-    final ServiceReference sliceModulesInstallerService = bundleContext
-        .getServiceReference(SliceModulesInstaller.class.getName());
-    final SliceModulesInstaller sliceModulesInstaller = (SliceModulesInstaller) bundleContext
-        .getService(sliceModulesInstallerService);
-    sliceModulesInstaller.installSliceModules(injectorServiceRunner);
-
-Install Slice Resource module:
-
-    private static final String BUNDLE_NAME_FILTER = "com\\.company\\.application\\.webapp\\..*";
-    private static final String BASE_PACKAGE = "com.company.application";
-
-    final ServiceReference sliceModulesInstallerService = bundleContext
-        .getServiceReference(SliceModulesInstaller.class.getName());
-    final SliceModulesInstaller sliceModulesInstaller = (SliceModulesInstaller) bundleContext
-        .getService(sliceModulesInstallerService);
-    sliceModulesInstaller.installSliceResourceModule(injectorServiceRunner, BUNDLE_NAME_FILTER, BASE_PACKAGE);
-
-It will look for any classes in filters matching BUNDLE_NAME_FILTER under package BASE_PACKAGE for classes
+SliceModulesFactory requires some String parameters. It will look for any classes in filters matching BUNDLE_NAME_FILTER under package BASE_PACKAGE for classes
 annotated with @SliceResource and bind them to provider that automatically maps resource properties to fields.
 You can install many Slice Resource modules on one Injector.
-
-Finally, start the Injector service:
-
-    injectorServiceRunner.start();
 
 ## Mapping Slice Resources
 
