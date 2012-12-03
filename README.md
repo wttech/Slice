@@ -86,7 +86,7 @@ Prepare Injector of your application in Activator. Example activator:
 	import org.osgi.framework.BundleContext;
 	
 	import com.cognifide.slice.api.context.ContextScope;
-	import com.cognifide.slice.api.injector.InjectorBuilder;
+	import com.cognifide.slice.api.injector.InjectorRunner;
 	import com.cognifide.slice.commons.SliceModulesFactory;
 	import com.cognifide.slice.core.internal.context.SliceContextScope;
 	import com.cognifide.slice.cq.module.CQModulesFactory;
@@ -104,7 +104,7 @@ Prepare Injector of your application in Activator. Example activator:
 		@Override
 		public void start(BundleContext bundleContext) throws Exception {
 			final ContextScope scope = new SliceContextScope();
-			final InjectorBuilder injectorBuilder = new InjectorBuilder(bundleContext, INJECTOR_NAME, scope);
+			final InjectorRunner injectorRunner = new InjectorRunner(bundleContext, INJECTOR_NAME, scope);
 			
 			List<Module> sliceModules = SliceModulesFactory.createModules(bundleContext, INJECTOR_NAME,
 					BUNDLE_NAME_FILTER, BASE_PACKAGE);
@@ -112,12 +112,12 @@ Prepare Injector of your application in Activator. Example activator:
 			List<Module> validationModules = ValidationModulesFactory.createModules();
 			List<Module> customModules = createCustomModules();
 			
-			injectorBuilder.installModules(sliceModules);
-			injectorBuilder.installModules(cqModules);
-			injectorBuilder.installModules(validationModules);
-			injectorBuilder.installModules(customModules);
+			injectorRunner.installModules(sliceModules);
+			injectorRunner.installModules(cqModules);
+			injectorRunner.installModules(validationModules);
+			injectorRunner.installModules(customModules);
 			
-			injectorBuilder.start();
+			injectorRunner.start();
 		}
 	
 		private List<Module> createCustomModules() {
