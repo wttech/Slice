@@ -40,7 +40,6 @@ import com.cognifide.slice.validation.api.Validator;
 import com.cognifide.slice.validation.api.tag.internal.BlankMessageWriter;
 import com.cognifide.slice.validation.api.tag.internal.ErrorMessageListWriter;
 import com.cognifide.slice.validation.api.tag.internal.HtmlBlankMessageWriter;
-import com.cognifide.slice.validation.api.tag.internal.HtmlCommentErrorMessageListWriter;
 import com.cognifide.slice.validation.api.tag.internal.HtmlErrorMessageListWriter;
 
 /**
@@ -49,7 +48,6 @@ import com.cognifide.slice.validation.api.tag.internal.HtmlErrorMessageListWrite
  * 
  * It can also write result of validation to variable accessible in JSP code.
  * 
- * @author Albert Cenkier
  * @author Jan Kuźniak
  * @author Rafał Malinowski
  * @author Jakub Małecki
@@ -92,30 +90,22 @@ public class ValidateTag extends BodyTagSupport {
 			final Writer out = pageContext.getOut();
 
 			final ValidationResult validationResult = validateObject(validatable);
-			if (null != var) {
+			if (var != null) {
 				pageContext.setAttribute(var, validationResult, PageContext.PAGE_SCOPE);
 			}
-			if (null == validationResult || validationResult.getValidationState().isValid()) {
-				return EVAL_BODY_INCLUDE;
-			}
 
-			if (validationResult.getValidationState().isBlank()) {
-				if (displayErrors) {
-					final BlankMessageWriter writer = new HtmlBlankMessageWriter(pageContext);
-					writer.writeBlankMessage();
+			if (validationResult != null) {
+				if (validationResult.getValidationState().isBlank()) {
+					return displayBlanks();
+				} else if (!validationResult.getValidationState().isValid()) {
+					return displayErrors(out, validationResult);
 				}
-			} else {
-				final ErrorMessageListWriter writer = displayErrors ? new HtmlErrorMessageListWriter(out,
-						title) : new HtmlCommentErrorMessageListWriter(out);
-				writer.writeErrorMessageList(validationResult.getErrorMessages());
 			}
+			return EVAL_BODY_INCLUDE;
 
-			return SKIP_BODY;
 		} catch (IOException e) {
-			// should never occur
 			LOG.error("Unexpected exception occured", e);
 		} catch (RepositoryException e) {
-			// should never occur
 			LOG.error("Repository exception occured", e);
 		} finally {
 			clean();
@@ -123,8 +113,24 @@ public class ValidateTag extends BodyTagSupport {
 		return SKIP_BODY;
 	}
 
+	private int displayErrors(final Writer out, final ValidationResult validationResult) throws IOException {
+		if (displayErrors) {
+			final ErrorMessageListWriter writer = new HtmlErrorMessageListWriter(out, title);
+			writer.writeErrorMessageList(validationResult.getErrorMessages());
+		}
+		return SKIP_BODY;
+	}
+
+	private int displayBlanks() throws IOException, RepositoryException {
+		if (displayErrors) {
+			final BlankMessageWriter writer = new HtmlBlankMessageWriter(pageContext);
+			writer.writeBlankMessage();
+		}
+		return SKIP_BODY;
+	}
+
 	private ValidationResult validateObject(final Validatable validatable) {
-		if (null == validatable) {
+		if (validatable == null) {
 			return null;
 		}
 
