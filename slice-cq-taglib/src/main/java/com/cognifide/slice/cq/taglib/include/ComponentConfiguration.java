@@ -3,7 +3,7 @@
  */
 package com.cognifide.slice.cq.taglib.include;
 
-/*
+/*-
  * #%L
  * Slice - CQ Taglib
  * $Id:$
@@ -24,17 +24,15 @@ package com.cognifide.slice.cq.taglib.include;
  * limitations under the License.
  * #L%
  */
-
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.slf4j.Logger;
 
 import com.cognifide.slice.cq.taglib.include.IncludeTag.DecorationMode;
+import com.day.cq.wcm.api.components.Component;
 
 /**
  * Represents tag specific's configuration stored in a component node. Has both default values and read logic.
@@ -67,20 +65,10 @@ class ComponentConfiguration {
 		this.logger = logger;
 	}
 
-	/**
-	 * Reads configuration from given component's resource
-	 * 
-	 * @param resource resource representing a component
-	 */
-	public void readFromContent(Resource resource) {
-		ValueMap valueMap = null;
-		if (resource != null) {
-			this.path = resource.getPath();
-			valueMap = resource.adaptTo(ValueMap.class);
-		}
-
+	public void readFromComponent(Component component) {
+		ValueMap valueMap = component.getProperties();
 		if (valueMap == null) {
-			logger.warn("Resource '{}' adapts to null value map, skipping", new Object[] { resource });
+			logger.warn("Resource '{}' adapts to null value map, skipping", component.getPath());
 		} else {
 			readDisableWcm(valueMap.get(DISABLE_WCM_PROPERTY));
 			readDecorationModes(valueMap.get(DECORATION_MODES_PROPERTY));

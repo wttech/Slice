@@ -1,6 +1,6 @@
 package com.cognifide.slice.cq.taglib.include;
 
-/*
+/*-
  * #%L
  * Slice - CQ Taglib
  * $Id:$
@@ -30,11 +30,11 @@ import javax.servlet.jsp.tagext.Tag;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
-import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ResourceResolver;
 
 import com.cognifide.slice.cq.taglib.AbstractBodyTag;
 import com.day.cq.wcm.api.WCMMode;
+import com.day.cq.wcm.api.components.Component;
+import com.day.cq.wcm.api.components.ComponentManager;
 import com.day.cq.wcm.api.components.IncludeOptions;
 
 /**
@@ -45,6 +45,7 @@ import com.day.cq.wcm.api.components.IncludeOptions;
  * 
  * @author Jan Kuźniak
  * @author Witold Szczerba
+ * @author maciej.majchrzak
  */
 public class IncludeTag extends AbstractBodyTag {
 
@@ -174,15 +175,8 @@ public class IncludeTag extends AbstractBodyTag {
 		// we consider removing decoration only if we're including a component
 		SlingHttpServletRequest request = getRequest();
 		WCMMode wcmMode = WCMMode.fromRequest(request);
-		// WcmModeModel wcmModeModel = new WcmModeModel(wcmMode);
-		ComponentConfiguration componentConfiguration = new ComponentConfiguration(logger);
 
-		if ((resourceType != null) && (path != null)) {
-			Resource resource = getComponentConfigurationResource(request);
-			if (resource != null) {
-				componentConfiguration.readFromContent(resource);
-			}
-		}
+		ComponentConfiguration componentConfiguration = readComponentConfiguration(request);
 
 		boolean decorationEnabled;
 		if (this.enableDecoration == null) {
@@ -225,21 +219,23 @@ public class IncludeTag extends AbstractBodyTag {
 		}
 	}
 
-	/**
-	 * Reads component node's resource from path given in the {{resourceType}} parameter. Returns null if no
-	 * resource can be found.
-	 * 
-	 * @param request the current request used to access the resource
-	 * @return resource representing included component or {{null}} if doesn't exist
-	 */
-	private Resource getComponentConfigurationResource(SlingHttpServletRequest request) {
-		ResourceResolver resourceResolver = request.getResourceResolver();
-		Resource resource = resourceResolver.getResource(resourceType);
-		if (null == resource) {
-			logger.debug("Resource path does not resolve to a resource: '{}'", new Object[] { resourceType });
-			return null;
+	private ComponentConfiguration readComponentConfiguration(SlingHttpServletRequest request) {
+		ComponentConfiguration componentConfiguration = new ComponentConfiguration(logger);
+
+		if ((resourceType != null) && (path != null)) {
+			ComponentManager componentManager = request.getResourceResolver().adaptTo(ComponentManager.class);
+			if (componentManager != null) {
+				Component component = componentManager.getComponent(resourceType);
+				if (component != null) {
+					componentConfiguration.readFromComponent(component);
+				} else {
+					logger.warn("Cannot read component configuration for '{}' at {}", resourceType, path);
+				}
+			} else {
+				logger.warn("Unable to obtain component manager for '{}' at {}", resourceType, path);
+			}
 		}
-		return resource;
+		return componentConfiguration;
 	}
 
 	private boolean isDecorationEnabled(DecorationMode[] decorationModes, WCMMode wcmMode) {
