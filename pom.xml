@@ -57,9 +57,9 @@
 	</properties>
 	
 	<scm>
-		<connection>scm:git:git://github.com/Cognifide/Slice.git</connection>
-		<url>scm:git:git://github.com/Cognifide/Slice.git</url>
-		<developerConnection>scm:git:git://github.com/Cognifide/Slice.git</developerConnection>
+		<connection>scm:git:git@github.com:Cognifide/Slice.git</connection>
+		<url>scm:git:git@github.com:Cognifide/Slice.git</url>
+		<developerConnection>scm:git:git@github.com:Cognifide/Slice.git</developerConnection>
 	</scm>
 
 	<!--
