@@ -55,6 +55,12 @@
 		<slice.crx.username>admin</slice.crx.username>
 		<slice.crx.password>admin</slice.crx.password>
 	</properties>
+	
+	<scm>
+		<connection>scm:git:git://github.com/Cognifide/Slice.git</connection>
+		<url>scm:git:git://github.com/Cognifide/Slice.git</url>
+		<developerConnection>scm:git:git://github.com/Cognifide/Slice.git</developerConnection>
+	</scm>
 
 	<!--
 		////////////////////////////////////////////////////////////////////////
