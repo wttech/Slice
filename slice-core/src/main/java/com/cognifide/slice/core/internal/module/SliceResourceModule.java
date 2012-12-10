@@ -1,6 +1,6 @@
 package com.cognifide.slice.core.internal.module;
 
-/*
+/*-
  * #%L
  * Slice - Core
  * $Id:$
@@ -22,7 +22,6 @@ package com.cognifide.slice.core.internal.module;
  * #L%
  */
 
-
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,9 +35,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.cognifide.slice.api.qualifier.EmptyObject;
+import com.cognifide.slice.commons.provider.SliceResourceProvider;
 import com.cognifide.slice.core.internal.BundleClassesFinder;
 import com.cognifide.slice.core.internal.BundleClassesFinder.ClassFilter;
 import com.cognifide.slice.mapper.annotation.SliceResource;
+import com.cognifide.slice.mapper.api.Mapper;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
@@ -112,7 +113,7 @@ public class SliceResourceModule extends AbstractModule {
 	 * @param sliceResourceClass
 	 */
 	private <T> void bindEmptyObject(final Class<T> sliceResourceClass) {
-		Constructor<T> constructor = getGuiceInjectConstructor(sliceResourceClass);
+		Constructor<T> constructor = getInjectConstructor(sliceResourceClass);
 		if (constructor == null) {
 			throw new IllegalArgumentException(
 					"Class must have either one (and only one) constructor annotated with @Inject or a zero-argument constructor that is not private");
@@ -133,10 +134,10 @@ public class SliceResourceModule extends AbstractModule {
 	}
 
 	@SuppressWarnings("unchecked")
-	private <T> Constructor<T> getGuiceInjectConstructor(final Class<T> sliceResourceClass) {
+	private <T> Constructor<T> getInjectConstructor(final Class<T> sliceResourceClass) {
 		final Constructor<?>[] constructors = sliceResourceClass.getConstructors();
 		for (final Constructor<?> c : constructors) {
-			if (c.isAnnotationPresent(Inject.class)) {
+			if (c.isAnnotationPresent(Inject.class) || c.isAnnotationPresent(javax.inject.Inject.class)) {
 				return (Constructor<T>) c;
 			}
 		}
