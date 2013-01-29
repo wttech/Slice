@@ -29,7 +29,6 @@ import java.util.Deque;
 import java.util.LinkedList;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.reflect.FieldUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.slf4j.Logger;
@@ -49,6 +48,7 @@ import com.cognifide.slice.mapper.helper.ReflectionHelper;
 import com.cognifide.slice.mapper.impl.processor.DefaultFieldProcessor;
 import com.cognifide.slice.mapper.strategy.MapperStrategy;
 import com.cognifide.slice.mapper.strategy.MapperStrategyFactory;
+import com.cognifide.slice.mapper.util.FieldUtils;
 
 /**
  * Generic implementation of {@link Mapper} that maps Sling {@link Resource} to a {@link SliceResource} using

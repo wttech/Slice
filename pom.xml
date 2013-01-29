@@ -3,7 +3,7 @@
 
 	<groupId>com.cognifide.slice</groupId>
 	<artifactId>slice-parent</artifactId>
-	<version>3.0.1-SNAPSHOT</version>
+	<version>3.0.0-cq54-SNAPSHOT</version>
 
 	<name>Slice - Parent</name>
 	<url>http://cognifide.com/</url>
@@ -354,7 +354,7 @@
 		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
-			<version>2.5</version>
+			<version>2.4</version>
 			<scope>provided</scope>
 		</dependency>
 

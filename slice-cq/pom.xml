@@ -2,11 +2,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.cognifide.slice</groupId>
 	<artifactId>slice-cq</artifactId>
-	<version>3.0.1-SNAPSHOT</version>
+	<version>3.0.0-cq54-SNAPSHOT</version>
 	<parent>
 		<groupId>com.cognifide.slice</groupId>
 		<artifactId>slice-parent</artifactId>
-		<version>3.0.1-SNAPSHOT</version>
+		<version>3.0.0-cq54-SNAPSHOT</version>
 	</parent>
 	<name>Slice - CQ Add-on</name>
 	<description>Slice CQ Add-on</description>
@@ -44,17 +44,17 @@
 		<dependency>
 			<groupId>com.cognifide.slice</groupId>
 			<artifactId>slice-core</artifactId>
-			<version>3.0.1-SNAPSHOT</version>
+			<version>3.0.0-cq54-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.cognifide.slice</groupId>
 			<artifactId>slice-mapper-api</artifactId>
-			<version>3.0.1-SNAPSHOT</version>
+			<version>3.0.0-cq54-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.cognifide.slice</groupId>
 			<artifactId>slice-mapper</artifactId>
-			<version>3.0.1-SNAPSHOT</version>
+			<version>3.0.0-cq54-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Guice -->
@@ -73,27 +73,27 @@
 		<dependency>
 			<groupId>com.day.cq</groupId>
 			<artifactId>cq-commons</artifactId>
-			<version>5.5.0</version>
+			<version>5.4.6</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- Adobe CQ5 DAM -->
 		<dependency>
 			<groupId>com.day.cq.dam</groupId>
 			<artifactId>cq-dam-api</artifactId>
-			<version>5.5.0</version>
+			<version>5.4.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- Adobe CQ5 WCM -->
 		<dependency>
 			<groupId>com.day.cq.wcm</groupId>
 			<artifactId>cq-wcm-api</artifactId>
-			<version>5.5.0</version>
+			<version>5.4.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.day.cq.wcm</groupId>
 			<artifactId>cq-wcm-foundation</artifactId>
-			<version>5.5.2</version>
+			<version>5.4.14</version>
 			<scope>provided</scope>
 		</dependency>
 
