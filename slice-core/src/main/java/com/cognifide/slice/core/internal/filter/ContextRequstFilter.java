@@ -62,7 +62,7 @@ import com.cognifide.slice.core.internal.context.SliceContextFactory;
 // @formatter:on
 public class ContextRequstFilter implements Filter, ContextProvider {
 
-	public static final int RANKING = -800;
+	public static final int RANKING = -650;
 
 	private final ThreadLocal<Context> contexts = new ThreadLocal<Context>();
 

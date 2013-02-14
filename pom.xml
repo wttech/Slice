@@ -61,6 +61,19 @@
 		<url>scm:git:git@github.com:Cognifide/Slice.git</url>
 		<developerConnection>scm:git|ssh://git@github.com/Cognifide/Slice.git</developerConnection>
 	</scm>
+	
+	<developers>
+		<developer>
+			<id>maciej.majchrzak</id>
+			<name>Maciej Majchrzak</name>
+			<email>maciej.majchrzak@cognifide.com</email>
+		</developer>
+		<developer>
+			<id>rafal.malinowski</id>
+			<name>Rafal Malinowski</name>
+			<email>rafal.malinowski@cognifide.com</email>
+		</developer>
+	</developers>
 
 	<!--
 		////////////////////////////////////////////////////////////////////////
@@ -134,6 +147,8 @@
 					<username>${scm.username}</username>
 					<password>${scm.password}</password>
 					<preparationGoals>clean install</preparationGoals>
+					<useReleaseProfile>false</useReleaseProfile>
+					<arguments>-Psonatype-oss-release</arguments>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -247,46 +262,6 @@
 		</pluginManagement>
 	</build>
 
-	<dependencies>
-		<!-- Apache Sling -->
-		<dependency>
-			<groupId>org.apache.sling</groupId>
-			<artifactId>org.apache.sling.api</artifactId>
-			<version>2.2.0</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<!-- Apache Commons -->
-		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-			<version>2.5</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<!-- Logging -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.6.1</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<!-- Test -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.10</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<version>1.9.0</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
-
 	<dependencyManagement>
 		<dependencies>
 			<!-- Guice -->
@@ -365,6 +340,59 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+	
+	<dependencies>
+		<!-- Apache Sling -->
+		<dependency>
+			<groupId>org.apache.sling</groupId>
+			<artifactId>org.apache.sling.api</artifactId>
+			<version>2.2.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Apache Commons -->
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Logging -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.6.1</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Test -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.10</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.9.0</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	
+	<distributionManagement>
+		<snapshotRepository>
+			<id>sonatype-nexus-snapshots</id>
+			<name>Sonatype Nexus Snapshots</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+		</snapshotRepository>
+		<repository>
+			<id>sonatype-nexus-staging</id>
+			<name>Nexus Release Repository</name>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
 
 	<repositories>
 		<repository>
@@ -408,46 +436,6 @@
 	-->
 	<reporting>
 		<plugins>
-			<!-- site -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-site-plugin</artifactId>
-				<version>2.0.1</version>
-				<configuration>
-					<outputEncoding>utf-8</outputEncoding>
-				</configuration>
-			</plugin>
-			<!-- project-info -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.1.2</version>
-				<reportSets>
-					<reportSet>
-						<reports>
-							<!--
-							<report>dependencies</report>
-							-->
-							<report>project-team</report>
-							<report>cim</report>
-							<report>issue-tracking</report>
-							<report>scm</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-			</plugin>
-			<!-- surefire -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>2.5</version>
-			</plugin>
-			<!-- cobertura -->
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>cobertura-maven-plugin</artifactId>
-				<version>2.3</version>
-			</plugin>
 			<!-- javadoc -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -459,132 +447,53 @@
 					<nodeprecated>true</nodeprecated>
 				</configuration>
 			</plugin>
-			<!-- jxr -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jxr-plugin</artifactId>
-				<version>2.1</version>
-				<configuration>
-					<aggregate>false</aggregate>
-				</configuration>
-			</plugin>
-			<!-- taglist -->
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>taglist-maven-plugin</artifactId>
-				<version>2.4</version>
-			</plugin>
-			<!-- changelog -->
-			<!-- 
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>changelog-maven-plugin</artifactId>
-				<reportSets>
-					<reportSet>
-						<id>changelog-report</id>
-						<reports>
-							<report>changelog</report>
-							<report>file-activity</report>
-							<report>dev-activity</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-				<configuration>
-					<type>date</type>
-					<dates>
-						<date implementation="java.lang.String">2007-09-01</date>
-					</dates>
-					<dateFormat>yyyy-MM-dd</dateFormat>
-				</configuration>
-			</plugin>
-			 -->
-			<!-- checkstyle - disabled due to weird bugs -->
-			<!--
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>2.5</version>
-				<configuration>
-					<configLocation>${site.root}\checkstyle.xml</configLocation>
-					<suppressionsLocation>${site.root}\checkstyle-suppressions.xml</suppressionsLocation>
-				</configuration>
-			</plugin>
-			-->
-			<!-- pmd - disabled due to memory errors
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-pmd-plugin</artifactId>
-				<configuration>
-					<rulesets>
-						<ruleset>${site.root}\pmd\PSbasic.xml</ruleset>
-						<ruleset>${site.root}\pmd\PSnaming.xml</ruleset>
-						<ruleset>${site.root}\pmd\PSunusedcode.xml</ruleset>
-						<ruleset>${site.root}\pmd\PSdesign.xml</ruleset>
-						<ruleset>${site.root}\pmd\PSimports.xml</ruleset>
-						<ruleset>${site.root}\pmd\PSjunit.xml</ruleset>
-						<ruleset>${site.root}\pmd\PSstrings.xml</ruleset>
-						<ruleset>${site.root}\pmd\PSbraces.xml</ruleset>
-						<ruleset>${site.root}\pmd\PScodesize.xml</ruleset>
-						<ruleset>${site.root}\pmd\PSjavabeans.xml</ruleset>
-						<ruleset>${site.root}\pmd\PScoupling.xml</ruleset>
-						<ruleset>${site.root}\pmd\PScontroversial.xml</ruleset>
-						<ruleset>${site.root}\pmd\PSstrictexception.xml</ruleset>
-					</rulesets>
-					<linkXref>true</linkXref>
-					<sourceEncoding>utf-8</sourceEncoding>
-					<minimumTokens>100</minimumTokens>
-					<targetJdk>1.5</targetJdk>
-					<excludes>
-						<exclude>**/Test*.java</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-				-->
 		</plugins>
 	</reporting>
 
 	<profiles>
 		<profile>
-			<id>obfuscate</id>
-			<activation>
-				<property>
-					<name>obfuscate</name>
-				</property>
-			</activation>
+			<id>sonatype-oss-release</id>
 			<build>
 				<plugins>
 					<plugin>
-						<groupId>com.pyx4me</groupId>
-						<artifactId>proguard-maven-plugin</artifactId>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>2.1.2</version>
 						<executions>
 							<execution>
-								<phase>package</phase>
+								<id>attach-sources</id>
 								<goals>
-									<goal>proguard</goal>
+									<goal>jar-no-fork</goal>
 								</goals>
 							</execution>
 						</executions>
-						<configuration>
-							<options>
-								<option>-allowaccessmodification</option>
-								<option>-renamesourcefileattribute SourceFile</option>
-								<option>-keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod</option>
-								<option>-keep public class * {public protected *;}</option>
-								<option>-keepclassmembernames class * {
-									java.lang.Class class$(java.lang.String);
-									java.lang.Class class$(java.lang.String, boolean);}</option>
-								<option>-keepclassmembers class * implements java.io.Serializable {
-									static final long serialVersionUID;
-									private void writeObject(java.io.ObjectOutputStream);
-									private void readObject(java.io.ObjectInputStream);
-									java.lang.Object writeReplace();
-									java.lang.Object readResolve();}</option>
-							</options>
-							<outjar>${project.build.finalName}-obfuscated.jar</outjar>
-							<libs>
-								<lib>${java.home}/lib/rt.jar</lib>
-							</libs>
-						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>2.7</version>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.1</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
 					</plugin>
 				</plugins>
 			</build>

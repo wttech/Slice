@@ -25,7 +25,5 @@
     Defines which repository items are generally included
 -->
 <workspaceFilter version="1.0">
-    <filter root="/apps">
-      <include pattern="/apps/slice/install(/.*)?"/>
-    </filter>
+    <filter root="/apps/slice"/>
 </workspaceFilter>

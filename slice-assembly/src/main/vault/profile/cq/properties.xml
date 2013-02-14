@@ -28,7 +28,6 @@
 <entry key="groupId">${project.groupId}</entry>
 <entry key="name">${project.artifactId}</entry>
 <entry key="version">${project.version}</entry>
-<entry key="buildCount">${svn.revision}</entry>
 <entry key="createdBy">${project.organization.name}</entry>
 <entry key="description">${project.description}</entry>
 <entry key="packageFormatVersion">2</entry>
