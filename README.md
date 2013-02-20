@@ -12,6 +12,8 @@ resources to classed and to using dependency injection inside Sling and CQ appli
 
 ## Installation
 
+Slice is available from Maven Central Repo. However if you want to check out the newest development version, do the folling:
+
 Checkout the source code:
 
     cd [folder of your choice]
@@ -175,8 +177,12 @@ We can:
 
 More documentation
 ------------------
-* [Slice Wiki](https://github.com/Cognifide/Slice/wiki)
+* [Full introduction to Slice](https://cognifide.atlassian.net/wiki/display/SLICE/About+Slice)
+* [Slice Wiki](https://cognifide.atlassian.net/wiki/display/SLICE)
+* [Slice Issue tracking](https://cognifide.atlassian.net/browse/SLICE)
+
 * [Cognifide.com](http://cognifide.com)
+
 * [Maven](http://maven.apache.org)
 * [CRX](http://www.day.com/day/en/products/crx.html)
 * [CRX API](http://dev.day.com/content/docs/en/crx/current/how_to/package_manager.html#Package%20Manager%20HTTP%20Service%20API)
