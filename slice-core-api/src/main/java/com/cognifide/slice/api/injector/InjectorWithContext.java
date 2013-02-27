@@ -1,27 +1,16 @@
 package com.cognifide.slice.api.injector;
 
 /*
- * #%L
- * Slice - Core API
- * $Id:$
- * $HeadURL:$
- * %%
- * Copyright (C) 2012 Cognifide Limited
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * #%L Slice - Core API $Id:$ $HeadURL:$ %% Copyright (C) 2012 Cognifide Limited %% Licensed under the Apache
+ * License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You
+ * may obtain a copy of the License at
  * 
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License. #L%
  */
-
 
 import com.cognifide.slice.api.context.ContextProvider;
 import com.google.inject.Injector;
@@ -84,5 +73,14 @@ public interface InjectorWithContext {
 	 * Return new instance by given key using Guice Injector.
 	 */
 	Object getInstance(final Key<?> key);
+
+	/**
+	 * Creates an object of the given class.
+	 * 
+	 * @param className fully qualified class name.
+	 * @return new instance of an object, never null.
+	 * @throws ClassNotFoundException if the class cannot be located.
+	 */
+	Object getInstance(String className) throws ClassNotFoundException;
 
 }
