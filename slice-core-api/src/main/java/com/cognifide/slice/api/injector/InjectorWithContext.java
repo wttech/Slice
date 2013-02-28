@@ -1,22 +1,31 @@
 package com.cognifide.slice.api.injector;
 
-/*
- * #%L Slice - Core API $Id:$ $HeadURL:$ %% Copyright (C) 2012 Cognifide Limited %% Licensed under the Apache
- * License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You
- * may obtain a copy of the License at
+/*-
+ * #%L
+ * Slice - Core API
+ * $Id:$
+ * $HeadURL:$
+ * %%
+ * Copyright (C) 2012 Cognifide Limited
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  * 
- * http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software distributed under the License is
- * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the License. #L%
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
  */
 
 import com.cognifide.slice.api.context.ContextProvider;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 
-// @formatter:off
 /**
  * @author Rafał Malinowski
  * @class InjectorWithContext
@@ -24,29 +33,30 @@ import com.google.inject.Key;
  * Decoration for Guice Injector class with simple access to modyfing and restoring ContextProvider. For use
  * in Servlets or Services use following code:
  * 
- * <code>
- *   @Reference
- *   private InjectorsRepository injectorsRepository;
- *
- *   final InjectorWithContext injector = injectorsRepository.getInjector(APP_NAME);
- *   final ContextProviderFactory contextProviderFactory = injector.getInstance(ContextProviderFactory.class);
- *   final SimpleContextProvider simpleContextProvider = contextProviderFactory.getSimpleContextProvider();
- *   final ContextFactory contextFactory = injector.getInstance(ContextFactory.class);
- *   simpleContextProvider.setContext(contextFactory.getServletRequestContext(request, response));
+ * <pre>
+ * {@code
+ * @Reference
+ * private InjectorsRepository injectorsRepository;
  * 
- *   injector.pushContextProvider(simpleContextProvider);
- *   try {
- *     ...
- *   } finally {
- *     injector.popContextProvider();
- *   }
- * </code>
+ * final InjectorWithContext injector = injectorsRepository.getInjector(APP_NAME);
+ * final ContextProviderFactory contextProviderFactory = injector.getInstance(ContextProviderFactory.class);
+ * final SimpleContextProvider simpleContextProvider = contextProviderFactory.getSimpleContextProvider();
+ * final ContextFactory contextFactory = injector.getInstance(ContextFactory.class);
+ * simpleContextProvider.setContext(contextFactory.getServletRequestContext(request, response));
+ * 
+ * injector.pushContextProvider(simpleContextProvider);
+ * try {
+ *   ...
+ * } finally {
+ *   injector.popContextProvider();
+ * }
+ * }
+ * </pre>
  * 
  * to ensure that injector is left in a state that is was before.
  * 
  * This decoration has two delegate getInstance() methods added for convenience.
  */
-// @formatter:on
 public interface InjectorWithContext {
 
 	/**
@@ -82,5 +92,4 @@ public interface InjectorWithContext {
 	 * @throws ClassNotFoundException if the class cannot be located.
 	 */
 	Object getInstance(String className) throws ClassNotFoundException;
-
 }
