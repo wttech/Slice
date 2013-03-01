@@ -46,9 +46,9 @@ public class PageChildrenProviderImpl implements PageChildrenProvider {
 	private final PageManager pageManager;
 
 	@Inject
-	public PageChildrenProviderImpl(final PageManager pageManger,
+	public PageChildrenProviderImpl(final PageManager pageManager,
 			final ExecutionContextStack currentExecutionContext) {
-		this.pageManager = pageManger;
+		this.pageManager = pageManager;
 		this.currentExecutionContext = currentExecutionContext;
 	}
 
