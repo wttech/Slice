@@ -51,7 +51,7 @@
 		<crx.package.name>${project.artifactId}</crx.package.name>
 		<cq.package.name>slice</cq.package.name>
 
-		<slice.instance.url>http://localhost:5402</slice.instance.url>
+		<slice.instance.url>http://localhost:5502</slice.instance.url>
 		<slice.crx.username>admin</slice.crx.username>
 		<slice.crx.password>admin</slice.crx.password>
 	</properties>
@@ -103,7 +103,7 @@
 								</requireProperty>
 								<requireProperty>
 									<property>cq.url</property>
-									<message>Using default cq.url = http://localhost:4502</message>
+									<message>Using default cq.url = http://localhost:5502</message>
 								</requireProperty>
 							</rules>
 							<fail>false</fail>
@@ -258,6 +258,20 @@
 						</lifecycleMappingMetadata>
 					</configuration>
 				</plugin>
+				<plugin>
+					<groupId>com.cognifide.maven.plugins</groupId>
+					<artifactId>maven-crx-plugin</artifactId>
+					<version>1.0.3</version>
+					<configuration>
+						<runOnlyAtExecutionRoot>${maven-crx-plugin.runOnlyAtExecutionRoot}</runOnlyAtExecutionRoot>
+						<skip>true</skip>
+						<packageFileName>${assembly.path}</packageFileName>
+						<packageName>${project.artifactId}</packageName>
+						<url>${instance.url}</url>
+						<user>${instance.username}</user>
+						<password>${instance.password}</password>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -378,6 +392,14 @@
 			<artifactId>mockito-all</artifactId>
 			<version>1.9.0</version>
 			<scope>test</scope>
+		</dependency>
+		
+		<!-- Day -->
+		<dependency>
+			<groupId>com.day.crx.sling</groupId>
+			<artifactId>crx-auth-token</artifactId>
+			<version>2.2.0</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	

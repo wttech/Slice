@@ -35,6 +35,7 @@ import org.apache.sling.api.resource.ValueMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.cognifide.slice.mapper.annotation.Children;
 import com.cognifide.slice.mapper.annotation.IgnoreProperty;
 import com.cognifide.slice.mapper.annotation.ImagePath;
 import com.cognifide.slice.mapper.annotation.JcrProperty;
@@ -216,7 +217,7 @@ public class GenericSlingMapper implements Mapper {
 		Object value = null;
 		String propertyName = getPropertyName(field);
 		for (FieldProcessor fieldProcessor : processors) {
-			if (fieldProcessor.accepts(resource, field)) {
+			if (fieldProcessor.accepts(resource, field)) {		
 				value = fieldProcessor.mapResourceToField(resource, valueMap, field, propertyName);
 				break;
 			}
