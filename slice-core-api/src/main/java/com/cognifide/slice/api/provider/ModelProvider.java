@@ -53,8 +53,8 @@ public interface ModelProvider {
 	 * @parem T type of model object to create
 	 * @param type class of model object to create
 	 * @param path CRX repository path to create object from
-	 * @return model object from given CRX repository path. According to used Model Provider can return
-	 * <code>null</code>.
+	 * @return model object from given CRX repository path. It may return <code>null</code> depending on
+	 * provider implementation for specified class.
 	 * @see com.google.inject.Injector#getInstance(com.google.inject.Key) Injector.getInstance.
 	 */
 	<T> T get(final Class<T> type, final String path);
@@ -69,7 +69,8 @@ public interface ModelProvider {
 	 * @parem T type of model object to create
 	 * @param type class of model object to create
 	 * @param resource Sling resource to create object from
-	 * @return model object from given resource. According to used Model Provider can return <code>null</code>
+	 * @return model object from given resource. It may return <code>null</code> depending on provider
+	 * implementation for specified class.
 	 * @see com.google.inject.Injector#getInstance(com.google.inject.Key) Injector.getInstance.
 	 */
 	<T> T get(final Class<T> type, final Resource resource);
@@ -81,8 +82,8 @@ public interface ModelProvider {
 	 * 
 	 * @param className canonical name of a class to be resolved, e.g. com.cognifide.slice.api.ModelProvider
 	 * @param path CRX repository path to create object from
-	 * @return model object of specified className from given CRX repository path. According to used Model
-	 * Provider can return <code>null</code>.
+	 * @return model object of specified className from given CRX repository path. It may return
+	 * <code>null</code> depending on provider implementation for specified class.
 	 * @see com.google.inject.Injector#getInstance(com.google.inject.Key) Injector.getInstance.
 	 * @throws ClassNotFoundException if specified className cannot be resolved by Injector.
 	 * {@link ClassNotFoundException} is thrown
