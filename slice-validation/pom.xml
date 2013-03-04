@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.cognifide.slice</groupId>
 		<artifactId>slice-parent</artifactId>
-		<version>3.0.1-SNAPSHOT</version>
+		<version>3.0.1</version>
 	</parent>
 	<name>Slice - Validation</name>
 	<description>Slice validation</description>
@@ -43,12 +43,12 @@
 		<dependency>
 			<groupId>com.cognifide.slice</groupId>
 			<artifactId>slice-core-api</artifactId>
-			<version>3.0.1-SNAPSHOT</version>
+			<version>3.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.cognifide.slice</groupId>
 			<artifactId>slice-validation-api</artifactId>
-			<version>3.0.1-SNAPSHOT</version>
+			<version>3.0.1</version>
 		</dependency>
 
 		<!-- OSGi -->

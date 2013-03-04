@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.cognifide.slice</groupId>
 	<artifactId>slice-assembly</artifactId>
-	<version>3.0.1-SNAPSHOT</version>
+	<version>3.0.1</version>
 	<parent>
 		<groupId>com.cognifide.slice</groupId>
 		<artifactId>slice-parent</artifactId>
-		<version>3.0.1-SNAPSHOT</version>
+		<version>3.0.1</version>
 	</parent>
 	<name>Slice - Assembly</name>
 	<description>Slice assembly</description>
