@@ -3,7 +3,7 @@
 
 	<groupId>com.cognifide.slice</groupId>
 	<artifactId>slice-parent</artifactId>
-	<version>3.0.1-SNAPSHOT</version>
+	<version>3.0.1</version>
 
 	<name>Slice - Parent</name>
 	<url>http://cognifide.com/</url>
@@ -148,6 +148,7 @@
 					<password>${scm.password}</password>
 					<preparationGoals>clean install</preparationGoals>
 					<useReleaseProfile>false</useReleaseProfile>
+					<mavenExecutorId>forked-path</mavenExecutorId>
 					<arguments>-Psonatype-oss-release</arguments>
 				</configuration>
 			</plugin>
