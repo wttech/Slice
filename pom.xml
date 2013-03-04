@@ -146,6 +146,7 @@
 				<configuration>
 					<username>${scm.username}</username>
 					<password>${scm.password}</password>
+					<mavenExecutorId>forked-path</mavenExecutorId>
 					<preparationGoals>clean install</preparationGoals>
 					<useReleaseProfile>false</useReleaseProfile>
 					<arguments>-Psonatype-oss-release</arguments>
