@@ -1,15 +1,25 @@
 package com.cognifide.slice.api.provider;
 
-/*
- * #%L Slice - Core API $Id:$ $HeadURL:$ %% Copyright (C) 2012 Cognifide Limited %% Licensed under the Apache
- * License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You
- * may obtain a copy of the License at
+/*-
+ * #%L
+ * Slice - Core API
+ * $Id:$
+ * $HeadURL:$
+ * %%
+ * Copyright (C) 2012 Cognifide Limited
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  * 
- * http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software distributed under the License is
- * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the License. #L%
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
  */
 
 import java.util.Iterator;
@@ -43,9 +53,9 @@ public interface ModelProvider {
 	 * @parem T type of model object to create
 	 * @param type class of model object to create
 	 * @param path CRX repository path to create object from
-	 * @return model object from given CRX repository path.Cannot return code>null</code>.
-	 * @throws ConfigurationException - if this injector cannot find or create the provider.
-	 * @throws ProvisionException - if there was a runtime failure while providing an instance.
+	 * @return model object from given CRX repository path. According to used Model Provider can return
+	 * <code>null</code>.
+	 * @see com.google.inject.Injector#getInstance(com.google.inject.Key) Injector.getInstance.
 	 */
 	<T> T get(final Class<T> type, final String path);
 
@@ -59,9 +69,8 @@ public interface ModelProvider {
 	 * @parem T type of model object to create
 	 * @param type class of model object to create
 	 * @param resource Sling resource to create object from
-	 * @return model object from given resource. Cannot return code>null</code>.
-	 * @throws ConfigurationException - if this injector cannot find or create the provider.
-	 * @throws ProvisionException - if there was a runtime failure while providing an instance.
+	 * @return model object from given resource. According to used Model Provider can return <code>null</code>
+	 * @see com.google.inject.Injector#getInstance(com.google.inject.Key) Injector.getInstance.
 	 */
 	<T> T get(final Class<T> type, final Resource resource);
 
@@ -72,11 +81,10 @@ public interface ModelProvider {
 	 * 
 	 * @param className canonical name of a class to be resolved, e.g. com.cognifide.slice.api.ModelProvider
 	 * @param path CRX repository path to create object from
-	 * @return model object of specified className from given CRX repository path. Cannot return
-	 * code>null</code>.
-	 * @throws ClassNotFoundException if specified className cannot be resolved by Injector
-	 * @throws ConfigurationException - if this injector cannot find or create the provider.
-	 * @throws ProvisionException - if there was a runtime failure while providing an instance.
+	 * @return model object of specified className from given CRX repository path. According to used Model
+	 * Provider can return <code>null</code>.
+	 * @see com.google.inject.Injector#getInstance(com.google.inject.Key) Injector.getInstance.
+	 * @throws ClassNotFoundException if specified className cannot be resolved by Injector.
 	 * {@link ClassNotFoundException} is thrown
 	 */
 	Object get(final String className, final String path) throws ClassNotFoundException;
@@ -91,7 +99,7 @@ public interface ModelProvider {
 	 * @param T type of model objects to create
 	 * @param type class of model objects to create
 	 * @param paths iterator that returns CRX repository paths to create objects from
-	 * @return list of model objects from given CRX repository paths .Returns empty list if <i>paths</i>
+	 * @return list of model objects from given CRX repository paths. Returns empty list if <i>paths</i>
 	 * argument is <code>null</code>.
 	 */
 	<T> List<T> getList(final Class<T> type, final Iterator<String> paths);
