@@ -100,8 +100,8 @@ public interface ModelProvider {
 	 * @param T type of model objects to create
 	 * @param type class of model objects to create
 	 * @param paths iterator that returns CRX repository paths to create objects from
-	 * @return list of model objects from given CRX repository paths. Returns empty list if <i>paths</i>
-	 * argument is <code>null</code>.
+	 * @return list of model objects from given CRX repository paths. Returns empty list if <i>paths</i> is
+	 * <code>null</code> or there are no resources under specified paths. Never returns <code>null</code>.
 	 */
 	<T> List<T> getList(final Class<T> type, final Iterator<String> paths);
 
@@ -111,8 +111,8 @@ public interface ModelProvider {
 	 * @param T type of model objects to create
 	 * @param type class of model objects to create
 	 * @param paths array of CRX repository paths to create objects from
-	 * @return list of model objects from given CRX repository paths. Returns empty list if <i>paths</i>
-	 * argument is <code>null</code>.
+	 * @return list of model objects from given CRX repository paths. Returns empty list if <i>paths</i> is
+	 * <code>null</code> or there are no resources under specified paths. Never returns <code>null</code>.
 	 */
 	<T> List<T> getList(final Class<T> type, final String[] paths);
 }
