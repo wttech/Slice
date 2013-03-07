@@ -1,6 +1,6 @@
 package com.cognifide.slice.cq.model;
 
-/*
+/*-
  * #%L
  * Slice - CQ Add-on
  * $Id:$
@@ -22,7 +22,6 @@ package com.cognifide.slice.cq.model;
  * #L%
  */
 
-
 import com.day.cq.wcm.api.WCMMode;
 import com.google.inject.Inject;
 
@@ -34,6 +33,8 @@ import com.google.inject.Inject;
  * <li>PREVIEW - default mode for author's preview, should render exactly what DISABLED does</li>
  * <li>READ_ONLY - default mode for author when a permission to write is not granted</li>
  * <li>DESIGN - allows setting e.g. paragraph system design properties on author instance</li>
+ * <li>ANALYTICS - WCM is in analytics mode, added in AEM5.6</li>
+ * </ul>
  * 
  * The class stores the raw WCM mode and a set of boolean variables to be set for ease of access in the view.
  * 
@@ -87,6 +88,11 @@ public class WcmModeModel {
 	/** @return true if WCM is in design, false otherwise */
 	public boolean isDesign() {
 		return wcmMode == WCMMode.DESIGN;
+	}
+
+	/** @return true if WCM is in analytics, false otherwise */
+	public boolean isAnalytics() {
+		return wcmMode == WCMMode.ANALYTICS;
 	}
 
 	/** @return true if WCM is in edit mode or design mode, false otherwise */
