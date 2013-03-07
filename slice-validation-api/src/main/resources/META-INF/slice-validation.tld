@@ -23,6 +23,12 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Application name (optional)</description>
+			<name>appName</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<description>
 				information message - displayed to the author, "Validation messages:" by default
 			</description>
