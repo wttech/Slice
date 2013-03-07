@@ -24,6 +24,7 @@ package com.cognifide.slice.mapper;
 
 import com.cognifide.slice.mapper.api.Mapper;
 import com.cognifide.slice.mapper.impl.postprocessor.EscapeValuePostProcessor;
+import com.cognifide.slice.mapper.impl.processor.ChildrenFieldProcessor;
 import com.cognifide.slice.mapper.impl.processor.BooleanFieldProcessor;
 import com.cognifide.slice.mapper.impl.processor.SliceReferenceFieldProcessor;
 import com.cognifide.slice.mapper.impl.processor.SliceResourceFieldProcessor;
@@ -36,20 +37,25 @@ public final class SlingMapperFactory {
 	private final SliceResourceFieldProcessor sliceResourceFieldProcessor;
 
 	private final SliceReferenceFieldProcessor sliceReferenceFieldProcessor;
+	
+	private final ChildrenFieldProcessor childrenFieldProcessor;
 
 	@Inject
 	public SlingMapperFactory(final MapperFactory mapperFactory,
 			final SliceResourceFieldProcessor sliceResourceFieldProcessor,
-			final SliceReferenceFieldProcessor sliceReferenceFieldProcessor) {
+			final SliceReferenceFieldProcessor sliceReferenceFieldProcessor, 
+	 		final ChildrenFieldProcessor childrenFieldProcessor) {
 		this.mapperFactory = mapperFactory;
 		this.sliceResourceFieldProcessor = sliceResourceFieldProcessor;
 		this.sliceReferenceFieldProcessor = sliceReferenceFieldProcessor;
+		this.childrenFieldProcessor = childrenFieldProcessor;
 	}
 
 	public Mapper getMapper() {
 		final Mapper mapper = mapperFactory.getMapper();
 
 		mapper.registerFieldProcessor(new BooleanFieldProcessor());
+		mapper.registerFieldProcessor(childrenFieldProcessor);
 		mapper.registerFieldProcessor(sliceResourceFieldProcessor);
 		mapper.registerFieldProcessor(sliceReferenceFieldProcessor);
 		mapper.registerFieldPostProcessor(new EscapeValuePostProcessor());

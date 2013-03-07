@@ -1,8 +1,8 @@
-package com.cognifide.slice.mapper.strategy.impl;
+package com.cognifide.slice.mapper.annotation;
 
 /*-
  * #%L
- * Slice - Mapper
+ * Slice - Mapper API
  * $Id:$
  * $HeadURL:$
  * %%
@@ -22,22 +22,18 @@ package com.cognifide.slice.mapper.strategy.impl;
  * #L%
  */
 
-import java.lang.reflect.Field;
-
-import com.cognifide.slice.mapper.annotation.Children;
-import com.cognifide.slice.mapper.annotation.JcrProperty;
-import com.cognifide.slice.mapper.strategy.MapperStrategy;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * AnnotatedFieldMapperStrategy defines a strategy where only fields annotated by {@link JcrProperty} are
- * mapped.
+ * Allows mapper to map all child resources of current resource into array/list
  * 
+ * @author Kamil Ciecierski
  */
-public class AnnotatedFieldMapperStrategy implements MapperStrategy {
-
-	@Override
-	public boolean shouldFieldBeMapped(Field field) {
-		return (field.isAnnotationPresent(JcrProperty.class) || field.isAnnotationPresent(Children.class));
-	}
-
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface Children {
+	Class<?> type() default Object.class;
 }
