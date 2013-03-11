@@ -22,11 +22,13 @@ package com.cognifide.slice.mapper.impl;
  * #L%
  */
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.text.MessageFormat;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.reflect.FieldUtils;
@@ -35,6 +37,7 @@ import org.apache.sling.api.resource.ValueMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.cognifide.slice.mapper.annotation.Children;
 import com.cognifide.slice.mapper.annotation.IgnoreProperty;
 import com.cognifide.slice.mapper.annotation.ImagePath;
 import com.cognifide.slice.mapper.annotation.JcrProperty;
@@ -168,7 +171,14 @@ public class GenericSlingMapper implements Mapper {
 			for (Field field : fields) {
 				if (shouldFieldBeMapped(field, mapperStrategy)) {
 					Object value = mapResourceToField(resource, valueMap, field);
-					FieldUtils.writeField(field, object, value, ReflectionHelper.FORCE_ACCESS);
+					if (field.isAnnotationPresent(Children.class) && field.getType().isArray()) {
+						Class<?> ofArray = field.getType().getComponentType();
+						FieldUtils.writeField(field, object,
+								getCastedArray(value, ofArray.getConstructor().newInstance()),
+								ReflectionHelper.FORCE_ACCESS);
+					} else {
+						FieldUtils.writeField(field, object, value, ReflectionHelper.FORCE_ACCESS);
+					}
 				}
 			}
 			return object;
@@ -179,6 +189,11 @@ public class GenericSlingMapper implements Mapper {
 			logger.warn(message);
 			throw new MapperException("mapResourceToObject failed", e);
 		}
+	}
+
+	private <T> T[] getCastedArray(Object object, T type) {
+		List<T> list = (List<T>) object;
+		return (T[]) list.toArray((T[]) Array.newInstance(type.getClass(), list.size()));
 	}
 
 	private boolean shouldFieldBeMapped(Field field, MapperStrategy mapperStrategy) {
@@ -217,6 +232,8 @@ public class GenericSlingMapper implements Mapper {
 		String propertyName = getPropertyName(field);
 		for (FieldProcessor fieldProcessor : processors) {
 			if (fieldProcessor.accepts(resource, field)) {
+				logger.warn(fieldProcessor.getClass().toString() + ":"
+						+ field.isAnnotationPresent(Children.class));
 				value = fieldProcessor.mapResourceToField(resource, valueMap, field, propertyName);
 				break;
 			}
