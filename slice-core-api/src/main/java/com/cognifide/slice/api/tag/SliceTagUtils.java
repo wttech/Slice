@@ -62,17 +62,19 @@ public final class SliceTagUtils {
 
 		if (appName != null) {
 			applicationName = appName;
+			if (StringUtils.isBlank(applicationName)) {
+				throw new IllegalStateException("Guice injector name not available");
+			}
 		} else {
 			String value = (String) request.getAttribute("injectorName");
 			if (value == null) {
 				value = InjectorNameUtil.getFromRequest(request);
+				if (StringUtils.isBlank(value)) {
+					throw new IllegalStateException("Guice injector name not available");
+				}
 				request.setAttribute("injectorName", value);
 			}
 			applicationName = value;
-		}
-
-		if (StringUtils.isBlank(applicationName)) {
-			throw new IllegalStateException("Guice injector name not available");
 		}
 
 		if (null == contextProvider) {
