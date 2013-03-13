@@ -232,8 +232,6 @@ public class GenericSlingMapper implements Mapper {
 		String propertyName = getPropertyName(field);
 		for (FieldProcessor fieldProcessor : processors) {
 			if (fieldProcessor.accepts(resource, field)) {
-				logger.warn(fieldProcessor.getClass().toString() + ":"
-						+ field.isAnnotationPresent(Children.class));
 				value = fieldProcessor.mapResourceToField(resource, valueMap, field, propertyName);
 				break;
 			}
@@ -244,7 +242,6 @@ public class GenericSlingMapper implements Mapper {
 			}
 		}
 		return value;
-
 	}
 
 	/**
