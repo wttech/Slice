@@ -23,6 +23,9 @@ package com.cognifide.slice.mapper.impl.processor;
  */
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
@@ -42,8 +45,17 @@ public class DefaultFieldProcessor implements FieldProcessor {
 		if (valueMap == null) {
 			return null;
 		}
-		Class<?> propertyType = ReflectionHelper.getFieldType(field);
+		Class<?> propertyType  = ReflectionHelper.getFieldType(field);
+		if (Collection.class.isAssignableFrom(propertyType)) {
+			Object[] array = (Object[]) valueMap.get(propertyName);
+			if (ArrayList.class.isAssignableFrom(propertyType)) 
+			{
+				ArrayList<Object> list = new ArrayList<Object>(Arrays.asList(array));
+				return list;
+			}
+			return Arrays.asList(array);
+		}
+		
 		return valueMap.get(propertyName, propertyType);
 	}
-
 }
