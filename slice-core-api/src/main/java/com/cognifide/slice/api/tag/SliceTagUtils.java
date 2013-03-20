@@ -37,6 +37,8 @@ import com.cognifide.slice.util.InjectorNameUtil;
 
 public final class SliceTagUtils {
 
+	private final static String sliceInjectorName = "sliceInjectorName";
+
 	private SliceTagUtils() {
 		// hidden constructor
 	}
@@ -66,15 +68,7 @@ public final class SliceTagUtils {
 				throw new IllegalStateException("Guice injector name not available");
 			}
 		} else {
-			String value = (String) request.getAttribute("injectorName");
-			if (value == null) {
-				value = InjectorNameUtil.getFromRequest(request);
-				if (StringUtils.isBlank(value)) {
-					throw new IllegalStateException("Guice injector name not available");
-				}
-				request.setAttribute("injectorName", value);
-			}
-			applicationName = value;
+			applicationName = getInjectorName(request);
 		}
 
 		if (null == contextProvider) {
@@ -95,6 +89,18 @@ public final class SliceTagUtils {
 		} finally {
 			injector.popContextProvider();
 		}
+	}
+
+	private static String getInjectorName(final SlingHttpServletRequest request) {
+		String value = (String) request.getAttribute(sliceInjectorName);
+		if (value == null) {
+			value = InjectorNameUtil.getFromRequest(request);
+			if (StringUtils.isBlank(value)) {
+				throw new IllegalStateException("Guice injector name not available");
+			}
+			request.setAttribute(sliceInjectorName, value);
+		}
+		return value;
 	}
 
 	public static SlingHttpServletRequest slingRequestFrom(final PageContext pageContext) {
