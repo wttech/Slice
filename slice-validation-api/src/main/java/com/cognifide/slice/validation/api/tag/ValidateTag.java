@@ -30,12 +30,9 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
-import org.apache.sling.api.SlingHttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.cognifide.slice.api.context.ContextProvider;
-import com.cognifide.slice.api.injector.InjectorsRepository;
 import com.cognifide.slice.api.tag.SliceTagUtils;
 import com.cognifide.slice.validation.api.Validatable;
 import com.cognifide.slice.validation.api.ValidationResult;
@@ -140,12 +137,7 @@ public class ValidateTag extends BodyTagSupport {
 			return null;
 		}
 
-		final SlingHttpServletRequest request = SliceTagUtils.slingRequestFrom(pageContext);
-		final InjectorsRepository injectorsRepository = SliceTagUtils.injectorsRepositoryFrom(pageContext);
-		final ContextProvider contextProvider = SliceTagUtils.contextProviderFrom(pageContext);
-		
-		final Validator validator = SliceTagUtils.getFromCurrentPath(request, injectorsRepository,
-				contextProvider, Validator.class, appName);
+		final Validator validator = SliceTagUtils.getFromCurrentPath(pageContext, Validator.class, appName);
 		final ValidationResult validationResult = validator.validate(validatable);
 		return validationResult;
 	}
@@ -184,7 +176,7 @@ public class ValidateTag extends BodyTagSupport {
 	public void setDisplayErrors(boolean displayErrors) {
 		this.displayErrors = displayErrors;
 	}
-	
+
 	public void setAppName(String appName) {
 		this.appName = appName;
 	}
