@@ -1,6 +1,8 @@
 package com.cognifide.slice.mapper.impl.processor;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,41 +23,69 @@ public class ChildrenFieldProcessor implements FieldProcessor {
 	@Inject
 	private Provider<ModelProvider> modelProvider;
 
-	private Class<?> fieldType = null;
-
 	@Override
 	public boolean accepts(Resource resource, Field field) {
 		if (!field.isAnnotationPresent(Children.class)) {
 			return false;
 		}
-		fieldType = field.getType();
+		Class<?> fieldType = field.getType();
 		return Collection.class.isAssignableFrom(fieldType) || fieldType.isArray();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Object mapResourceToField(Resource resource, ValueMap valueMap, Field field, String propertyName) {
-		if (fieldType == null) {
-			String message = MessageFormat
-					.format("The resource {0} is not an array or a list.", propertyName);
-			throw new MapperException(message, new Exception());
+		final Class<?> fieldType = field.getType();
+		final String fieldName = field.getName();
+		propertyName = (fieldName.equals(propertyName) ? "." : propertyName);
+
+		@SuppressWarnings("rawtypes")
+		List children = getChildrenList(resource, field, propertyName);
+
+		if (fieldType.isArray()) {
+			return getArrayFromList(fieldType, children);
+		} else {
+			return children;
 		}
 
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private List getChildrenList(Resource resource, Field field, String propertyName) {
+		final Resource childResource = resource.getChild(propertyName);
 		final Children childrenAnnotation = field.getAnnotation(Children.class);
-		final Class<?> childrenType = childrenAnnotation.type();
-		Resource childResource = resource.getChild(propertyName);
+		final Class<?> childrenType = childrenAnnotation.value();
 
 		if (childResource != null) {
 			Iterator<Resource> childrenIterator = childResource.listChildren();
-			@SuppressWarnings("rawtypes")
 			List children = new ArrayList();
 			while (childrenIterator.hasNext()) {
-				children.add(modelProvider.get().get(childrenType, childrenIterator.next().getPath()));
+				String childrenPath = childrenIterator.next().getPath();
+				Object child = modelProvider.get().get(childrenType, childrenPath);
+				if (child != null) {
+					children.add(child);
+				}
 			}
 			return children;
 		} else {
 			String message = MessageFormat.format("The resource {0} does not exists.", propertyName);
 			throw new MapperException(message, new Exception());
 		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	private Object getArrayFromList(Class<?> fieldType, List children) {
+		Class<?> ofArray = fieldType.getComponentType();
+		try {
+			return getCastedArray(children, ofArray.getConstructor().newInstance());
+		} catch (Exception e) {
+			String message = "Cannot cast from list to array";
+			throw new MapperException(message, e);
+		}
+
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private <T> T[] getCastedArray(List list, T type) {
+		return (T[]) list.toArray((T[]) Array.newInstance(type.getClass(), list.size()));
 	}
 }

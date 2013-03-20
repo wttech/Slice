@@ -35,7 +35,7 @@ public class DefaultFieldProcessor implements FieldProcessor {
 
 	@Override
 	public boolean accepts(Resource resource, Field field) {
-		return !field.isAnnotationPresent(Children.class);
+		return true;
 	}
 
 	@Override

@@ -171,14 +171,7 @@ public class GenericSlingMapper implements Mapper {
 			for (Field field : fields) {
 				if (shouldFieldBeMapped(field, mapperStrategy)) {
 					Object value = mapResourceToField(resource, valueMap, field);
-					if (field.isAnnotationPresent(Children.class) && field.getType().isArray()) {
-						Class<?> ofArray = field.getType().getComponentType();
-						FieldUtils.writeField(field, object,
-								getCastedArray(value, ofArray.getConstructor().newInstance()),
-								ReflectionHelper.FORCE_ACCESS);
-					} else {
-						FieldUtils.writeField(field, object, value, ReflectionHelper.FORCE_ACCESS);
-					}
+					FieldUtils.writeField(field, object, value, ReflectionHelper.FORCE_ACCESS);
 				}
 			}
 			return object;
@@ -189,11 +182,6 @@ public class GenericSlingMapper implements Mapper {
 			logger.warn(message);
 			throw new MapperException("mapResourceToObject failed", e);
 		}
-	}
-
-	private <T> T[] getCastedArray(Object object, T type) {
-		List<T> list = (List<T>) object;
-		return (T[]) list.toArray((T[]) Array.newInstance(type.getClass(), list.size()));
 	}
 
 	private boolean shouldFieldBeMapped(Field field, MapperStrategy mapperStrategy) {

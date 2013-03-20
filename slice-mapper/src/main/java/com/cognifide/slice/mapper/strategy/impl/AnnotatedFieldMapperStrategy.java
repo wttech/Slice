@@ -37,7 +37,7 @@ public class AnnotatedFieldMapperStrategy implements MapperStrategy {
 
 	@Override
 	public boolean shouldFieldBeMapped(Field field) {
-		return (field.isAnnotationPresent(JcrProperty.class) || field.isAnnotationPresent(Children.class));
+		return field.isAnnotationPresent(JcrProperty.class);
 	}
 
 }

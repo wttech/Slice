@@ -35,5 +35,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Children {
-	Class<?> type() default Object.class;
+	/**
+	 * Type children to be mapped.
+	 */
+	Class<?> value();
 }
