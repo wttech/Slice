@@ -22,8 +22,6 @@ package com.cognifide.slice.mapper.strategy;
  * #L%
  */
 
-import java.lang.ref.SoftReference;
-import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -42,7 +40,7 @@ public class MapperStrategyFactory {
 	 * Map caching class mapping strategy. Used to reduce usage of reflection and expensive annotation
 	 * parsing.
 	 */
-	private static Map<Class<?>, SoftReference<MappingStrategy>> mappingStrategyCache = new ConcurrentHashMap<Class<?>, SoftReference<MappingStrategy>>(
+	private static Map<Class<?>, MapperStrategy> mappingStrategyCache = new ConcurrentHashMap<Class<?>, MapperStrategy>(
 			256);
 
 	/**
@@ -55,16 +53,17 @@ public class MapperStrategyFactory {
 	public MapperStrategy getMapperStrategy(Class<?> type) {
 		MapperStrategy defaultStrategy = annotatedFieldMapperStrategy;
 
-		MappingStrategy cacheMappingStrategy = getFieldsFromCache(type);
-		if (cacheMappingStrategy != null) {
-			return getStrategy(cacheMappingStrategy, defaultStrategy);
+		MapperStrategy cacheMapperStrategy = getFieldsFromCache(type);
+		if (cacheMapperStrategy != null) {
+			return cacheMapperStrategy;
 		}
 
 		SliceResource sliceResource = type.getAnnotation(SliceResource.class);
 		if (sliceResource != null) {
 			final MappingStrategy mappingStrategy = sliceResource.value();
-			putFieldsIntoCache(type, mappingStrategy);
-			return getStrategy(mappingStrategy, defaultStrategy);
+			MapperStrategy mapperStrategy = getStrategy(mappingStrategy, defaultStrategy);
+			putFieldsIntoCache(type, mapperStrategy);
+			return mapperStrategy;
 		}
 
 		return defaultStrategy;
@@ -81,17 +80,12 @@ public class MapperStrategyFactory {
 		}
 	}
 
-	private static MappingStrategy getFieldsFromCache(Class<?> clazz) {
-		SoftReference<MappingStrategy> softReferenceFields = mappingStrategyCache.get(clazz);
-		MappingStrategy mappingStrategy = null;
-		if (softReferenceFields != null) {
-			mappingStrategy = softReferenceFields.get();
-		}
-		return mappingStrategy;
+	private static MapperStrategy getFieldsFromCache(Class<?> clazz) {	
+		return mappingStrategyCache.get(clazz);
 	}
 
-	private static void putFieldsIntoCache(Class<?> clazz, MappingStrategy mappingStrategy) {
-		mappingStrategyCache.put(clazz, new SoftReference<MappingStrategy>(mappingStrategy));
+	private static void putFieldsIntoCache(Class<?> clazz, MapperStrategy mapperStrategy) {
+		mappingStrategyCache.put(clazz, mapperStrategy);
 	}
 
 }
