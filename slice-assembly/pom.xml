@@ -21,6 +21,14 @@
 					<runOnlyAtExecutionRoot>false</runOnlyAtExecutionRoot>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>com.cognifide.maven.plugins</groupId>
+				<artifactId>maven-crx-plugin</artifactId>
+				<inherited>false</inherited>
+				<configuration>
+					<skip>false</skip>
+				</configuration>
+			</plugin>
 		</plugins>
 		<extensions>
 			<extension>
