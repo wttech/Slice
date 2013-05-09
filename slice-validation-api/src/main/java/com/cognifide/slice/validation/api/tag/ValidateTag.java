@@ -73,6 +73,8 @@ public class ValidateTag extends BodyTagSupport {
 	 */
 	private boolean displayErrors = false;
 
+	private String appName; // auto-detected when null
+
 	/** information message - displayed to the author */
 	private String title = "Validation messages:";
 
@@ -80,6 +82,7 @@ public class ValidateTag extends BodyTagSupport {
 		var = null;
 		object = null;
 		validatable = null;
+		appName = null;
 		displayErrors = false;
 		title = "Validation messages:";
 	}
@@ -134,7 +137,7 @@ public class ValidateTag extends BodyTagSupport {
 			return null;
 		}
 
-		final Validator validator = SliceTagUtils.getFromCurrentPath(pageContext, Validator.class);
+		final Validator validator = SliceTagUtils.getFromCurrentPath(pageContext, Validator.class, appName);
 		final ValidationResult validationResult = validator.validate(validatable);
 		return validationResult;
 	}
@@ -172,6 +175,10 @@ public class ValidateTag extends BodyTagSupport {
 
 	public void setDisplayErrors(boolean displayErrors) {
 		this.displayErrors = displayErrors;
+	}
+
+	public void setAppName(String appName) {
+		this.appName = appName;
 	}
 
 }
