@@ -23,7 +23,7 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Application name (optional), allows specify the injector name</description>
+			<description>Application name (optional), allows specifying the injector name</description>
 			<name>appName</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
