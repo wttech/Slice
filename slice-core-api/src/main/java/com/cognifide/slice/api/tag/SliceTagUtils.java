@@ -22,11 +22,13 @@ package com.cognifide.slice.api.tag;
  * #L%
  */
 
+import javax.servlet.ServletRequest;
 import javax.servlet.jsp.PageContext;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.scripting.SlingBindings;
 import org.apache.sling.api.scripting.SlingScriptHelper;
 
 import com.cognifide.slice.api.context.ContextProvider;
@@ -108,13 +110,18 @@ public final class SliceTagUtils {
 	}
 
 	public static ContextProvider contextProviderFrom(final PageContext pageContext) {
-		final SlingScriptHelper slingScriptHelper = (SlingScriptHelper) pageContext.getAttribute("sling");
+		final SlingScriptHelper slingScriptHelper = getSlingScriptHelper(pageContext);
 		return slingScriptHelper.getService(ContextProvider.class);
 	}
 
 	public static InjectorsRepository injectorsRepositoryFrom(final PageContext pageContext) {
-		final SlingScriptHelper slingScriptHelper = (SlingScriptHelper) pageContext.getAttribute("sling");
+		final SlingScriptHelper slingScriptHelper = getSlingScriptHelper(pageContext);
 		return slingScriptHelper.getService(InjectorsRepository.class);
 	}
 
+	private static SlingScriptHelper getSlingScriptHelper(final PageContext pageContext) {
+		ServletRequest request = pageContext.getRequest();
+		SlingBindings bindings = (SlingBindings) request.getAttribute(SlingBindings.class.getName());
+		return bindings.getSling();
+	}
 }

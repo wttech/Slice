@@ -5,6 +5,10 @@
 Slice is a framework that glues Sling and Google Guice together. It eases mapping between
 resources to classed and to using dependency injection inside Sling and CQ applications.
 
+In 3.1.0 version of Slice the CQ related modules has been extracted to separate projects:
+* Slice CQ v5.5 Addon: https://github.com/Cognifide/Slice-CQ55/
+* Slice CQ v5.6 Addon: https://github.com/Cognifide/Slice-CQ56/
+
 ## Prerequisites
 
 * CQ / Apache Sling 2
@@ -32,49 +36,37 @@ Add dependencied to your POM file:
     <dependency>
         <groupId>com.cognifide.slice</groupId>
         <artifactId>slice-core-api</artifactId>
-        <version>3.0.0</version>
+        <version>3.1.0</version>
         <scope>compile</scope>
     </dependency>
     <dependency>
         <groupId>com.cognifide.slice</groupId>
         <artifactId>slice-core</artifactId>
-        <version>3.0.0</version>
+        <version>3.1.0</version>
         <scope>compile</scope>
     </dependency>
     <dependency>
         <groupId>com.cognifide.slice</groupId>
         <artifactId>slice-mapper</artifactId>
-        <version>3.0.0</version>
+        <version>3.1.0</version>
         <scope>compile</scope>
     </dependency>
     <dependency>
         <groupId>com.cognifide.slice</groupId>
         <artifactId>slice-mapper-api</artifactId>
-        <version>3.0.0</version>
-        <scope>compile</scope>
-    </dependency>
-    <dependency>
-        <groupId>com.cognifide.slice</groupId>
-        <artifactId>slice-cq</artifactId>
-        <version>3.0.0</version>
-        <scope>compile</scope>
-    </dependency>
-    <dependency>
-        <groupId>com.cognifide.slice</groupId>
-        <artifactId>slice-cq-taglib</artifactId>
-        <version>3.0.0</version>
+        <version>3.1.0</version>
         <scope>compile</scope>
     </dependency>
     <dependency>
         <groupId>com.cognifide.slice</groupId>
         <artifactId>slice-validation-api</artifactId>
-        <version>3.0.0</version>
+        <version>3.1.0</version>
         <scope>compile</scope>
     </dependency>
     <dependency>
         <groupId>com.cognifide.slice</groupId>
         <artifactId>slice-validation</artifactId>
-        <version>3.0.0</version>
+        <version>3.1.0</version>
         <scope>compile</scope>
     </dependency>
     (...)
