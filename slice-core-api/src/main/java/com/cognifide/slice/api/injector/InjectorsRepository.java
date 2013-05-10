@@ -1,5 +1,6 @@
 package com.cognifide.slice.api.injector;
 
+//@formatter:off
 /*
  * #%L
  * Slice - Core API
@@ -21,33 +22,52 @@ package com.cognifide.slice.api.injector;
  * limitations under the License.
  * #L%
  */
+//@formatter:on
 
-// @formatter:off
+import org.apache.sling.api.resource.Resource;
+
 /**
  * @author Witold Szczerba
  * @author Rafał Malinowski
  * @class InjectorsRepository
  * 
- * Helper class to get Injector instances. Injector can be retreived in thtree different ways:
+ * Helper class to get Injector instances. Slice supports multiple injectors installed on one instance, with
+ * each injector being tagged with name of the application that created it. By standard, the application name
+ * is the name of its folder under /apps.
+ * 
+ * Injector can be retrieved in three different ways:
  * <ul>
- * <li>using getInjector(String appName) - get standard Injector for application with appName</li>
- * <li>using getInjectorWithContextProvider(String appName, ContextProvider contextProvider) - get Injector
- * for application with appName with custom ContextProvider</li>
- * <li>using getInjectorWithContext(String appName, Context context) - get Injector for application with
- * appName with ContextProvider that will always return provided context</li>
+ * <li>by specifying injector / application name ({@link #getInjector(String injectorName)}),</li>
+ * <li>for specific resource, by passing the resource ({@link #getInjectorForResource(Resource resource)}), or
+ * </li>
+ * <li>for specific resource, by passing it's path ({@link #getInjectorForResource(String resourcePath)}).</li>
  * </ul>
  */
-// @formatter:on
 public interface InjectorsRepository {
 
 	/**
-	 * Get InjectorWithContext for application with name appName. If Sluice is not running then
-	 * IllegalStateException will be thrown. If Injector for given application is not register in OSGI then
-	 * null will be returned.
+	 * Returns injector (with context) for specific application, or null if no such injector was registered.
 	 * 
-	 * @param injectorName name of required injector
+	 * @param injectorName name of required injector (same as application name)
 	 * @return InjectorWithContext for given application
+	 * @throws IllegalStateException if Slice is not running
 	 */
 	InjectorWithContext getInjector(final String injectorName);
 
+	/**
+	 * Returns the default injector for the provided resource, or null if no feasible injector was registered.
+	 * 
+	 * @param resource resource to find the default injector for.
+	 * @return default injector for the specified resource, or null if no feasible injector was registered.
+	 */
+	InjectorWithContext getInjectorForResource(final Resource resource);
+
+	/**
+	 * Returns the default injector for the resource under provided path, or null if no feasible injector was
+	 * registered.
+	 * 
+	 * @param resourcePath path to the resource to find the default injector for.
+	 * @return default injector for the specified resource, or null if no feasible injector was registered.
+	 */
+	InjectorWithContext getInjectorForResource(final String resourcePath);
 }
