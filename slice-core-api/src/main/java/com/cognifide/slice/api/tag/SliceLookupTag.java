@@ -28,10 +28,6 @@ import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.sling.api.SlingHttpServletRequest;
-
-import com.cognifide.slice.api.context.ContextProvider;
-import com.cognifide.slice.api.injector.InjectorsRepository;
 
 public class SliceLookupTag extends SimpleTagSupport {
 
@@ -55,13 +51,7 @@ public class SliceLookupTag extends SimpleTagSupport {
 			}
 
 			final PageContext pageContext = (PageContext) getJspContext();
-			final SlingHttpServletRequest request = SliceTagUtils.slingRequestFrom(pageContext);
-			final InjectorsRepository injectorsRepository = SliceTagUtils
-					.injectorsRepositoryFrom(pageContext);
-			final ContextProvider contextProvider = SliceTagUtils.contextProviderFrom(pageContext);
-
-			final Object model = SliceTagUtils.getFromCurrentPath(request, injectorsRepository,
-					contextProvider, type, appName);
+			final Object model = SliceTagUtils.getFromCurrentPath(pageContext, type, appName);
 			pageContext.setAttribute(var, model, PageContext.PAGE_SCOPE);
 		} finally {
 			clean();
