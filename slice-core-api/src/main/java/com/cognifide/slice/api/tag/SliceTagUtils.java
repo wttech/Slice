@@ -45,18 +45,8 @@ public final class SliceTagUtils {
 		// hidden constructor
 	}
 
-	public static <T> T getFromCurrentPath(final SlingHttpServletRequest request,
-			final InjectorsRepository injectorsRepository, final ContextProvider contextProvider,
-			final Class<T> type) {
-		return getFromCurrentPath(request, injectorsRepository, contextProvider, type, null);
-	}
-
 	public static <T> T getFromCurrentPath(final PageContext pageContext, final Class<T> type) {
-		final SlingHttpServletRequest request = SliceTagUtils.slingRequestFrom(pageContext);
-		final InjectorsRepository injectorsRepository = SliceTagUtils.injectorsRepositoryFrom(pageContext);
-		final ContextProvider contextProvider = SliceTagUtils.contextProviderFrom(pageContext);
-
-		return getFromCurrentPath(request, injectorsRepository, contextProvider, type);
+		return getFromCurrentPath(pageContext, type, null);
 	}
 
 	public static <T> T getFromCurrentPath(final PageContext pageContext, final Class<T> type,
@@ -66,6 +56,12 @@ public final class SliceTagUtils {
 		final ContextProvider contextProvider = SliceTagUtils.contextProviderFrom(pageContext);
 
 		return getFromCurrentPath(request, injectorsRepository, contextProvider, type, appName);
+	}
+
+	public static <T> T getFromCurrentPath(final SlingHttpServletRequest request,
+			final InjectorsRepository injectorsRepository, final ContextProvider contextProvider,
+			final Class<T> type) {
+		return getFromCurrentPath(request, injectorsRepository, contextProvider, type, null);
 	}
 
 	public static <T> T getFromCurrentPath(final SlingHttpServletRequest request,
