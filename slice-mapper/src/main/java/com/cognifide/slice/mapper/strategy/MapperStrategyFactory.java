@@ -37,10 +37,9 @@ public class MapperStrategyFactory {
 	private final AnnotatedFieldMapperStrategy annotatedFieldMapperStrategy = new AnnotatedFieldMapperStrategy();
 
 	/**
-	 * Map caching class mapping strategy. Used to reduce usage of reflection and expensive annotation
-	 * parsing.
+	 * Caching map for mapper strategy. Used to reduce usage of expensive annotation parsing.
 	 */
-	private static Map<Class<?>, MapperStrategy> mappingStrategyCache = new ConcurrentHashMap<Class<?>, MapperStrategy>(
+	private static final Map<Class<?>, MapperStrategy> MAPPER_STRATEGY_CACHE = new ConcurrentHashMap<Class<?>, MapperStrategy>(
 			256);
 
 	/**
@@ -53,16 +52,16 @@ public class MapperStrategyFactory {
 	public MapperStrategy getMapperStrategy(Class<?> type) {
 		MapperStrategy defaultStrategy = annotatedFieldMapperStrategy;
 
-		MapperStrategy cacheMapperStrategy = getFieldsFromCache(type);
-		if (cacheMapperStrategy != null) {
-			return cacheMapperStrategy;
+		MapperStrategy cachedMapperStrategy = getStrategyFromCache(type);
+		if (cachedMapperStrategy != null) {
+			return cachedMapperStrategy;
 		}
 
 		SliceResource sliceResource = type.getAnnotation(SliceResource.class);
 		if (sliceResource != null) {
 			final MappingStrategy mappingStrategy = sliceResource.value();
 			MapperStrategy mapperStrategy = getStrategy(mappingStrategy, defaultStrategy);
-			putFieldsIntoCache(type, mapperStrategy);
+			putStrategyIntoCache(type, mapperStrategy);
 			return mapperStrategy;
 		}
 
@@ -80,12 +79,12 @@ public class MapperStrategyFactory {
 		}
 	}
 
-	private static MapperStrategy getFieldsFromCache(Class<?> clazz) {	
-		return mappingStrategyCache.get(clazz);
+	private static MapperStrategy getStrategyFromCache(Class<?> clazz) {
+		return MAPPER_STRATEGY_CACHE.get(clazz);
 	}
 
-	private static void putFieldsIntoCache(Class<?> clazz, MapperStrategy mapperStrategy) {
-		mappingStrategyCache.put(clazz, mapperStrategy);
+	private static void putStrategyIntoCache(Class<?> clazz, MapperStrategy mapperStrategy) {
+		MAPPER_STRATEGY_CACHE.put(clazz, mapperStrategy);
 	}
 
 }
