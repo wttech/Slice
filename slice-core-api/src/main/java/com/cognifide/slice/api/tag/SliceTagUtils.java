@@ -39,7 +39,7 @@ import com.cognifide.slice.util.InjectorNameUtil;
 
 public final class SliceTagUtils {
 
-	private final static String sliceInjectorName = "sliceInjectorName";
+	private final static String SLICE_INJECTOR_NAME = "SLICE_INJECTOR_NAME";
 
 	private SliceTagUtils() {
 		// hidden constructor
@@ -56,30 +56,26 @@ public final class SliceTagUtils {
 		final InjectorsRepository injectorsRepository = SliceTagUtils.injectorsRepositoryFrom(pageContext);
 		final ContextProvider contextProvider = SliceTagUtils.contextProviderFrom(pageContext);
 
-		return SliceTagUtils.getFromCurrentPath(request, injectorsRepository, contextProvider, type);
+		return getFromCurrentPath(request, injectorsRepository, contextProvider, type);
 	}
 
 	public static <T> T getFromCurrentPath(final SlingHttpServletRequest request,
 			final InjectorsRepository injectorsRepository, final ContextProvider contextProvider,
 			final Class<T> type, final String appName) {
-		final String applicationName;
-
-		if (appName != null) {
-			applicationName = appName;
-			if (StringUtils.isBlank(applicationName)) {
-				throw new IllegalStateException("Guice injector name not available");
-			}
+		final String injectorName = getInjectorName(request, appName);
+		if (StringUtils.isBlank(injectorName)) {
+			throw new IllegalStateException("Guice injector name not available");
 		} else {
-			applicationName = getInjectorName(request);
+			request.setAttribute(SLICE_INJECTOR_NAME, injectorName);
 		}
 
 		if (null == contextProvider) {
 			throw new IllegalStateException("ContextProvider is not available");
 		}
 
-		final InjectorWithContext injector = injectorsRepository.getInjector(applicationName);
+		final InjectorWithContext injector = injectorsRepository.getInjector(injectorName);
 		if (injector == null) {
-			throw new IllegalStateException("Guice injector not found: " + applicationName);
+			throw new IllegalStateException("Guice injector not found: " + injectorName);
 		}
 
 		injector.pushContextProvider(contextProvider);
@@ -93,16 +89,20 @@ public final class SliceTagUtils {
 		}
 	}
 
-	private static String getInjectorName(final SlingHttpServletRequest request) {
-		String value = (String) request.getAttribute(sliceInjectorName);
-		if (value == null) {
-			value = InjectorNameUtil.getFromRequest(request);
-			if (StringUtils.isBlank(value)) {
-				throw new IllegalStateException("Guice injector name not available");
+	@SuppressWarnings("deprecation")
+	private static String getInjectorName(final SlingHttpServletRequest request, final String appName) {
+		String injectorName;
+		if (StringUtils.isNotBlank(appName)) {
+			injectorName = appName;
+		} else {
+			String cachedInjectorName = (String) request.getAttribute(SLICE_INJECTOR_NAME);
+			if (StringUtils.isNotBlank(cachedInjectorName)) {
+				injectorName = cachedInjectorName;
+			} else {
+				injectorName = InjectorNameUtil.getFromRequest(request);
 			}
-			request.setAttribute(sliceInjectorName, value);
 		}
-		return value;
+		return injectorName;
 	}
 
 	public static SlingHttpServletRequest slingRequestFrom(final PageContext pageContext) {
