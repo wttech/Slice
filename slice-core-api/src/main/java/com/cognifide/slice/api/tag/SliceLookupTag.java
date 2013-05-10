@@ -1,6 +1,6 @@
 package com.cognifide.slice.api.tag;
 
-/*
+/*-
  * #%L
  * Slice - Core API
  * $Id:$
