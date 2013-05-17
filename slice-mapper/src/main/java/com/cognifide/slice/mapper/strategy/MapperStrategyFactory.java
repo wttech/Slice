@@ -79,11 +79,11 @@ public class MapperStrategyFactory {
 		}
 	}
 
-	private static MapperStrategy getStrategyFromCache(Class<?> clazz) {
+	private MapperStrategy getStrategyFromCache(Class<?> clazz) {
 		return MAPPER_STRATEGY_CACHE.get(clazz);
 	}
 
-	private static void putStrategyIntoCache(Class<?> clazz, MapperStrategy mapperStrategy) {
+	private void putStrategyIntoCache(Class<?> clazz, MapperStrategy mapperStrategy) {
 		MAPPER_STRATEGY_CACHE.put(clazz, mapperStrategy);
 	}
 
