@@ -1,6 +1,6 @@
 package com.cognifide.slice.core.internal.injector;
 
-/*
+/*-
  * #%L
  * Slice - Core
  * $Id:$
@@ -22,7 +22,6 @@ package com.cognifide.slice.core.internal.injector;
  * #L%
  */
 
-
 import java.util.Stack;
 
 import com.cognifide.slice.api.context.ContextProvider;
@@ -31,7 +30,6 @@ import com.cognifide.slice.api.injector.InjectorWithContext;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 
-// @formatter:off
 /**
  * @author Rafał Malinowski
  * @class InjectorWithContext
@@ -39,24 +37,25 @@ import com.google.inject.Key;
  * Decoration for Guice Injector class with simple access to modyfing and restoring ContextProvider. For use
  * in Servlets or Services use following idiom:
  * 
- * <code>
- *   final InjectorWithContext injector = InjectorsRepository.getInjector(APP_NAME);
- *   final SimpleContextProvider simpleContextProvider = new SimpleContextProvider();
- *   simpleContextProvider.setContext(ContextFactory.getServletRequestContext(request, response));
+ * <pre>
+ * {@code
+ * final InjectorWithContext injector = InjectorsRepository.getInjector(APP_NAME);
+ * final SimpleContextProvider simpleContextProvider = new SimpleContextProvider();
+ * simpleContextProvider.setContext(ContextFactory.getServletRequestContext(request, response));
  * 
- *   injector.pushContextProvider(simpleContextProvider);
- *   try {
- *     ...
- *   } finally {
- *     injector.popContextProvider();
- *   }
- * </code>
+ * injector.pushContextProvider(simpleContextProvider);
+ * try {
+ *   ...
+ * } finally {
+ *   injector.popContextProvider();
+ * }
+ * }
+ * </pre>
  * 
  * to ensure that injector is left in a state that is was before.
  * 
  * This decoration has two delegate getInstance() methods added for convenience.
  */
-// @formatter:on
 public class InjectorWithContextImpl implements InjectorWithContext {
 
 	private final Injector injector;
@@ -118,4 +117,10 @@ public class InjectorWithContextImpl implements InjectorWithContext {
 		return injector.getInstance(key);
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public Object getInstance(String className) throws ClassNotFoundException {
+		Class<?> clazz = Class.forName(className);
+		return getInstance(clazz);
+	}
 }

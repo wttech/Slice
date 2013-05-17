@@ -1,6 +1,6 @@
 package com.cognifide.slice.mapper.strategy;
 
-/*
+/*-
  * #%L
  * Slice - Mapper
  * $Id:$
@@ -22,6 +22,8 @@ package com.cognifide.slice.mapper.strategy;
  * #L%
  */
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.cognifide.slice.mapper.annotation.MappingStrategy;
 import com.cognifide.slice.mapper.annotation.SliceResource;
@@ -35,19 +37,34 @@ public class MapperStrategyFactory {
 	private final AnnotatedFieldMapperStrategy annotatedFieldMapperStrategy = new AnnotatedFieldMapperStrategy();
 
 	/**
+	 * Caching map for mapper strategy. Used to reduce usage of expensive annotation parsing.
+	 */
+	private static final Map<Class<?>, MapperStrategy> MAPPER_STRATEGY_CACHE = new ConcurrentHashMap<Class<?>, MapperStrategy>(
+			256);
+
+	/**
 	 * Returns appropriate {@link MapperStrategy} for specified class. The decision which strategy to choose
 	 * is made basing on {@link SliceResource} parameter
 	 * 
 	 * @param type
-	 * @return
+	 * @return mapperStrategy
 	 */
 	public MapperStrategy getMapperStrategy(Class<?> type) {
 		MapperStrategy defaultStrategy = annotatedFieldMapperStrategy;
+
+		MapperStrategy cachedMapperStrategy = getStrategyFromCache(type);
+		if (cachedMapperStrategy != null) {
+			return cachedMapperStrategy;
+		}
+
 		SliceResource sliceResource = type.getAnnotation(SliceResource.class);
 		if (sliceResource != null) {
 			final MappingStrategy mappingStrategy = sliceResource.value();
-			return getStrategy(mappingStrategy, defaultStrategy);
+			MapperStrategy mapperStrategy = getStrategy(mappingStrategy, defaultStrategy);
+			putStrategyIntoCache(type, mapperStrategy);
+			return mapperStrategy;
 		}
+
 		return defaultStrategy;
 	}
 
@@ -60,6 +77,14 @@ public class MapperStrategyFactory {
 			default:
 				return defaultStrategy;
 		}
+	}
+
+	private MapperStrategy getStrategyFromCache(Class<?> clazz) {
+		return MAPPER_STRATEGY_CACHE.get(clazz);
+	}
+
+	private void putStrategyIntoCache(Class<?> clazz, MapperStrategy mapperStrategy) {
+		MAPPER_STRATEGY_CACHE.put(clazz, mapperStrategy);
 	}
 
 }
