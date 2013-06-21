@@ -30,7 +30,8 @@
 		</attribute>
 		<attribute>
 			<description>
-				information message - displayed to the author, "Validation messages:" by default
+				Heading included at the top of error list displayed in case of errors. By default "Validation
+				 messages:"
 			</description>
 			<name>title</name>
 			<required>false</required>
@@ -38,7 +39,10 @@
 		</attribute>
 		<attribute>
 			<description>
-				if true, errors will be displayed as HTML code
+				Indicates if validation errors should be displayed. If it's set to false and there are
+				validation errors, neither body of the tag will be evaluated, nor error messages listed,
+				resulting in blank area. If it's set to true and there are validation errors, they will be
+				listed instead of tag body.
 			</description>
 			<name>displayErrors</name>
 			<required>false</required>
