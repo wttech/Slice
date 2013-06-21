@@ -2,11 +2,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.cognifide.slice</groupId>
 	<artifactId>slice-mapper</artifactId>
-	<version>3.2.0-SNAPSHOT</version>
+	<version>3.2.0</version>
 	<parent>
 		<groupId>com.cognifide.slice</groupId>
 		<artifactId>slice-parent</artifactId>
-		<version>3.2.0-SNAPSHOT</version>
+		<version>3.2.0</version>
 	</parent>
 	<name>Slice - Mapper</name>
 	<description>Slice - Mapper</description>
