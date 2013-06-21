@@ -28,7 +28,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Allows mapper to map all child resources of current resource into array/list
+ * Allows mapper to map all child resources of a parent resource into array/list. The parent resource is the
+ * one indicated by the name of the field or {@link JcrProperty}.
  * 
  * @author Kamil Ciecierski
  */
@@ -36,7 +37,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface Children {
 	/**
-	 * Type children to be mapped.
+	 * Expected type of models which all child resources will be mapped to.
 	 */
 	Class<?> value();
 }
