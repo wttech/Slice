@@ -39,8 +39,6 @@ import com.cognifide.slice.util.InjectorNameUtil;
 
 public final class SliceTagUtils {
 
-	private final static String SLICE_INJECTOR_NAME = "SLICE_INJECTOR_NAME";
-
 	private SliceTagUtils() {
 		// hidden constructor
 	}
@@ -70,8 +68,6 @@ public final class SliceTagUtils {
 		final String injectorName = getInjectorName(request, appName);
 		if (StringUtils.isBlank(injectorName)) {
 			throw new IllegalStateException("Guice injector name not available");
-		} else {
-			request.setAttribute(SLICE_INJECTOR_NAME, injectorName);
 		}
 
 		if (null == contextProvider) {
@@ -100,12 +96,7 @@ public final class SliceTagUtils {
 		if (StringUtils.isNotBlank(appName)) {
 			injectorName = appName;
 		} else {
-			String cachedInjectorName = (String) request.getAttribute(SLICE_INJECTOR_NAME);
-			if (StringUtils.isNotBlank(cachedInjectorName)) {
-				injectorName = cachedInjectorName;
-			} else {
-				injectorName = InjectorNameUtil.getFromRequest(request);
-			}
+			injectorName = InjectorNameUtil.getFromRequest(request);
 		}
 		return injectorName;
 	}
