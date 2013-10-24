@@ -182,7 +182,7 @@
 						<user>${slice.crx.username}</user>
 						<password>${slice.crx.password}</password>
 						<usePut>true</usePut>
-						<slingUrl>${slice.sling.url}</slingUrl>
+						<slingUrl>${slice.instance.url}/system/console</slingUrl>
 					</configuration>
 					<executions>
 						<execution>
@@ -266,9 +266,9 @@
 						<skip>true</skip>
 						<packageFileName>${assembly.path}</packageFileName>
 						<packageName>${project.artifactId}</packageName>
-						<url>${instance.url}</url>
-						<user>${instance.username}</user>
-						<password>${instance.password}</password>
+						<url>${slice.instance.url}</url>
+						<user>${slice.crx.username}</user>
+						<password>${slice.crx.password}</password>
 					</configuration>
 				</plugin>
 			</plugins>
