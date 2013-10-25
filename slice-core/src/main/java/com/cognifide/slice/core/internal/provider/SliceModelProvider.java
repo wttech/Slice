@@ -37,7 +37,6 @@ import com.cognifide.slice.api.context.ContextScope;
 import com.cognifide.slice.api.execution.ExecutionContextStack;
 import com.cognifide.slice.api.provider.ClassToKeyMapper;
 import com.cognifide.slice.api.provider.ModelProvider;
-import com.cognifide.slice.api.scope.ContextScoped;
 import com.cognifide.slice.core.internal.execution.ExecutionContextImpl;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -49,7 +48,6 @@ import com.google.inject.Key;
  * @author Witold Szczerba
  * @author Rafał Malinowski
  */
-@ContextScoped
 public class SliceModelProvider implements ModelProvider {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SliceModelProvider.class);
