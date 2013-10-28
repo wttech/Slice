@@ -51,45 +51,8 @@ public final class InjectorNameUtil {
 	 */
 	@Deprecated
 	public static String getFromRequest(final SlingHttpServletRequest request) {
-		final ResourceResolver resourceResolver = request.getResourceResolver();
-
-		Resource currentResource = request.getResource();
-
-		while (null != currentResource) {
-			final String result = getFromResource(currentResource);
-			if (StringUtils.isNotBlank(result)) {
-				return result;
-			}
-
-			final String jcrContentResult = getFromResource(resourceResolver.getResource(currentResource,
-					JCR_CONTENT_NODE_NAME));
-			if (StringUtils.isNotBlank(jcrContentResult)) {
-				return jcrContentResult;
-			}
-
-			currentResource = currentResource.getParent();
-		}
-
 		if (null != request.getResource()) {
 			return getFromResourceType(request.getResource().getResourceType());
-		}
-
-		return StringUtils.EMPTY;
-	}
-
-	@Deprecated
-	// left only for compatibility reasons; to be removed with getFromRequest
-	private static String getFromResource(final Resource currentResource) {
-		if (null == currentResource) {
-			return StringUtils.EMPTY;
-		}
-
-		final ValueMap resourceValueMap = currentResource.adaptTo(ValueMap.class);
-		if (null != resourceValueMap) {
-			final String injectorName = resourceValueMap.get("injectorName", String.class);
-			if (null != injectorName) {
-				return injectorName;
-			}
 		}
 
 		return StringUtils.EMPTY;
