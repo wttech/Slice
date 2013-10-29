@@ -80,7 +80,6 @@ public final class SliceTagUtils {
 		}
 
 		injector.pushContextProvider(contextProvider);
-
 		try {
 			final ModelProvider modelProvider = injector.getInstance(ModelProvider.class);
 			final Resource resource = request.getResource();

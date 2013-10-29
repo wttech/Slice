@@ -113,4 +113,9 @@ public final class InjectorsRepositoryService implements InjectorsRepository {
 	protected void unbindInjectors(final InjectorConfig config) {
 		injectors.unregisterInjector(config);
 	}
+
+	@Override
+	public String getInjectorName(Injector injector) {
+		return injectors.getName(injector);
+	}
 }

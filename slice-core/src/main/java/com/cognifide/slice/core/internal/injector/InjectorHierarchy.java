@@ -7,6 +7,7 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import com.cognifide.slice.api.injector.InjectorConfig;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Module;
 
 public class InjectorHierarchy {
 
@@ -60,23 +62,30 @@ public class InjectorHierarchy {
 
 	private void refreshInjectors(List<InjectorConfig> injectors) {
 		for (InjectorConfig config : injectors) {
-			Injector injector = null;
-			if (config.hasParent()) {
-				String parentName = config.getParentName();
-				Injector parent = injectorByName.get(parentName);
-				if (parent == null) {
-					LOG.info("Can't create injector " + injector + " as its parent " + parentName
-							+ " is not yet registered");
-				} else {
-					injector = parent.createChildInjector(config.getModules());
-				}
-			} else {
-				injector = Guice.createInjector(config.getModules());
-			}
+			Injector injector = createInjector(config);
 			if (injector != null) {
 				injectorByName.put(config.getName(), injector);
 			}
 		}
+	}
+
+	private Injector createInjector(InjectorConfig config) {
+		List<Module> modules = new ArrayList<Module>();
+		InjectorConfig current = config;
+		do {
+			modules.addAll(current.getModules());
+			InjectorConfig parent = null;
+			if (current.hasParent()) {
+				parent = configByName.get(current.getParentName());
+				if (parent == null) {
+					LOG.info("Can't create " + config.getName() + " as its ancestor " + current.getParentName()
+							+ " can't be found");
+					return null;
+				}
+			}
+			current = parent;
+		} while (current != null);
+		return Guice.createInjector(modules);
 	}
 
 	private Collection<InjectorConfig> getChildren(InjectorConfig parent) {
@@ -88,5 +97,14 @@ public class InjectorHierarchy {
 			}
 		}
 		return children;
+	}
+
+	public synchronized String getName(Injector injector) {
+		for (Entry<String, Injector> entry : injectorByName.entrySet()) {
+			if (entry.getValue() == injector) {
+				return entry.getKey();
+			}
+		}
+		return null;
 	}
 }

@@ -22,10 +22,6 @@ public class InjectorConfig {
 		parentName = runner.getParentName();
 	}
 
-	public List<Module> getModules() {
-		return modules;
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -36,5 +32,9 @@ public class InjectorConfig {
 
 	public boolean hasParent() {
 		return StringUtils.isNotBlank(parentName);
+	}
+
+	public List<Module> getModules() {
+		return modules;
 	}
 }

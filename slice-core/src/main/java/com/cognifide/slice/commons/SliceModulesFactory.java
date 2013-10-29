@@ -45,15 +45,25 @@ public class SliceModulesFactory {
 	 */
 	public static List<Module> createModules(final BundleContext bundleContext, final String injectorName,
 			final String bundleNameFilter, final String basePackage) {
+		List<Module> modules = createCoreModules(bundleContext);
+		modules.add(createSliceResourceModule(bundleContext, bundleNameFilter, basePackage));
+		return modules;
+	}
+
+	public static Module createSliceResourceModule(final BundleContext bundleContext,
+			final String bundleNameFilter, final String basePackage) {
+		return new SliceResourceModule(bundleContext, bundleNameFilter, basePackage);
+	}
+
+	public static List<Module> createCoreModules(final BundleContext bundleContext) {
 		final ContextScope contextScope = new SliceContextScope();
 		List<Module> modules = new ArrayList<Module>();
 		modules.add(Peaberry.osgiModule(bundleContext));
-		modules.add(new SliceModule(injectorName, contextScope));
+		modules.add(new SliceModule(contextScope));
 		modules.add(new SlingModule(contextScope));
 		modules.add(new JcrModule());
 		modules.add(new LinkModule());
 		modules.add(new ContextModule());
-		modules.add(new SliceResourceModule(bundleContext, bundleNameFilter, basePackage));
 		return modules;
 	}
 }

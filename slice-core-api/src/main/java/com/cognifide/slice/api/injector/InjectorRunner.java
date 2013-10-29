@@ -38,6 +38,8 @@ public class InjectorRunner {
 
 	private final List<Module> modules = new ArrayList<Module>();
 
+	private final List<Class<?>> exposed = new ArrayList<Class<?>>();
+
 	private boolean started = false;
 
 	private final BundleContext bundleContext;
@@ -62,22 +64,25 @@ public class InjectorRunner {
 		this.injectorName = injectorName;
 	}
 
-	public void setParentInjectorName(String parentInjectorName) {
+	public InjectorRunner setParentInjectorName(String parentInjectorName) {
 		this.parentInjectorName = parentInjectorName;
+		return this;
 	}
 
-	public void installModule(final Module newModule) {
+	public InjectorRunner installModule(final Module newModule) {
 		if (started) {
 			throw new IllegalStateException("Installing new modules is not allowed after Injector was stared");
 		}
 		modules.add(newModule);
+		return this;
 	}
 
-	public void installModules(final List<Module> newModules) {
+	public InjectorRunner installModules(final List<Module> newModules) {
 		if (started) {
 			throw new IllegalStateException("Installing new modules is not allowed after Injector was stared");
 		}
 		modules.addAll(newModules);
+		return this;
 	}
 
 	public void start() {
@@ -96,5 +101,9 @@ public class InjectorRunner {
 
 	String getParentName() {
 		return parentInjectorName;
+	}
+
+	List<Class<?>> getExposedClasses() {
+		return exposed;
 	}
 }
