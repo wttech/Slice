@@ -52,12 +52,12 @@ public class SliceContextFactory implements ContextFactory {
 	 * Resource.class with RequestedResourcePath attribute.
 	 */
 	@Override
-	public Context getServletRequestContext(final ServletRequest request, final ServletResponse response) {
+	public Context getServletRequestContext(final String injectorName, final ServletRequest request, final ServletResponse response) {
 		if (null == request || null == response) {
 			return null;
 		}
 
-		final Context context = new ServletRequestContext(request);
+		final Context context = new ServletRequestContext(injectorName, request);
 		context.put(Key.get(ServletRequest.class), request);
 		context.put(Key.get(ServletResponse.class), response);
 

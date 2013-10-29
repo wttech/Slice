@@ -24,6 +24,8 @@ package com.cognifide.slice.api.injector;
  */
 //@formatter:on
 
+import java.util.Collection;
+
 import org.apache.sling.api.resource.Resource;
 
 import com.google.inject.Injector;
@@ -80,4 +82,11 @@ public interface InjectorsRepository {
 	 * @return
 	 */
 	String getInjectorName(Injector injector);
+
+	/**
+	 * Returns names of all injectors
+	 * 
+	 * @return
+	 */
+	Collection<String> getInjectorNames();
 }

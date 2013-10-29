@@ -42,7 +42,7 @@ public interface ContextFactory {
 	 * Returned Context will contain entries for ServletRequest.class, ServletResponse.class and
 	 * Resource.class with RequestedResourcePath attribute.
 	 */
-	Context getServletRequestContext(ServletRequest request, ServletResponse response);
+	Context getServletRequestContext(String injectorName, ServletRequest request, ServletResponse response);
 
 	/**
 	 * Create Context from resourceResolver object. Returned Context will store all objects in itself - it

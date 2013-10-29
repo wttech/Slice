@@ -107,4 +107,8 @@ public class InjectorHierarchy {
 		}
 		return null;
 	}
+
+	public Collection<String> getNames() {
+		return injectorByName.keySet();
+	}
 }

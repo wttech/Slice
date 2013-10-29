@@ -1,29 +1,20 @@
 package com.cognifide.slice.core.internal.filter;
 
 /*
- * #%L
- * Slice - Core
- * $Id:$
- * $HeadURL:$
- * %%
- * Copyright (C) 2012 Cognifide Limited
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * #%L Slice - Core $Id:$ $HeadURL:$ %% Copyright (C) 2012 Cognifide Limited %% Licensed under the Apache
+ * License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You
+ * may obtain a copy of the License at
  * 
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License. #L%
  */
 
-
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -35,11 +26,14 @@ import javax.servlet.ServletResponse;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
+import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.osgi.framework.Constants;
 
 import com.cognifide.slice.api.context.Context;
 import com.cognifide.slice.api.context.ContextProvider;
+import com.cognifide.slice.api.context.RequestContextProvider;
+import com.cognifide.slice.api.injector.InjectorsRepository;
 import com.cognifide.slice.core.internal.context.SliceContextFactory;
 
 // @formatter:off
@@ -60,15 +54,14 @@ import com.cognifide.slice.core.internal.context.SliceContextFactory;
 		@Property(name = Constants.SERVICE_RANKING, intValue = ContextRequstFilter.RANKING),
 		@Property(name = "filter.scope", value = {"request","forward"}) })
 // @formatter:on
-public class ContextRequstFilter implements Filter, ContextProvider {
+public class ContextRequstFilter implements Filter, RequestContextProvider {
+
+	@Reference
+	private InjectorsRepository injectorsRepo;
 
 	public static final int RANKING = -650;
 
-	private final ThreadLocal<Context> contexts = new ThreadLocal<Context>();
-
-	@Override
-	public void init(final FilterConfig filterConfig) throws ServletException {
-	}
+	private ThreadLocal<Map<String, Context>> contexts = new ThreadLocal<Map<String, Context>>();
 
 	/**
 	 * Update Context instance for current thread to use current request and response values.
@@ -76,19 +69,19 @@ public class ContextRequstFilter implements Filter, ContextProvider {
 	@Override
 	public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
 			throws IOException, ServletException {
-		final Context previous = contexts.get();
-
+		final Map<String, Context> previous = contexts.get();
 		try {
-			final Context context = (new SliceContextFactory()).getServletRequestContext(request, response);
-			contexts.set(context);
+			Map<String, Context> current = new HashMap<String, Context>();
+			for (String injector : injectorsRepo.getInjectorNames()) {
+				Context context = (new SliceContextFactory()).getServletRequestContext(injector, request,
+						response);
+				current.put(injector, context);
+			}
+			contexts.set(current);
 			chain.doFilter(request, response);
 		} finally {
 			contexts.set(previous);
 		}
-	}
-
-	@Override
-	public void destroy() {
 	}
 
 	/**
@@ -97,9 +90,21 @@ public class ContextRequstFilter implements Filter, ContextProvider {
 	 * Return Context instance for current thread. It contains most current ServletRequest and ServletResponse
 	 * instances.
 	 */
+	public ContextProvider getContextProvider(final String injectorName) {
+		return new ContextProvider() {
+			@Override
+			public Context getContext() {
+				return contexts.get().get(injectorName);
+			}
+		};
+	}
+
 	@Override
-	public Context getContext() {
-		return contexts.get();
+	public void init(final FilterConfig filterConfig) throws ServletException {
+	}
+
+	@Override
+	public void destroy() {
 	}
 
 }

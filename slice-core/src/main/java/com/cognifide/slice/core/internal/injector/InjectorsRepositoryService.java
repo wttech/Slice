@@ -24,6 +24,8 @@ package com.cognifide.slice.core.internal.injector;
 */
 //@formatter:on
 
+import java.util.Collection;
+
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
@@ -117,5 +119,10 @@ public final class InjectorsRepositoryService implements InjectorsRepository {
 	@Override
 	public String getInjectorName(Injector injector) {
 		return injectors.getName(injector);
+	}
+
+	@Override
+	public Collection<String> getInjectorNames() {
+		return injectors.getNames();
 	}
 }

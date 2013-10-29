@@ -26,6 +26,7 @@ import org.apache.sling.api.resource.Resource;
 
 import com.cognifide.slice.api.model.InitializableModel;
 import com.cognifide.slice.api.qualifier.EmptyObject;
+import com.cognifide.slice.api.scope.ContextScoped;
 import com.cognifide.slice.core.internal.provider.CurrentResourceProvider;
 import com.cognifide.slice.mapper.api.Mapper;
 import com.google.inject.Inject;
@@ -37,6 +38,7 @@ import com.google.inject.Key;
  * 
  * @TODO: investigate using a request scoped cache (immutable objects etc...)
  */
+@ContextScoped
 public class SliceResourceProvider {
 
 	private final Injector injector;

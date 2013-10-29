@@ -31,7 +31,7 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.scripting.SlingBindings;
 import org.apache.sling.api.scripting.SlingScriptHelper;
 
-import com.cognifide.slice.api.context.ContextProvider;
+import com.cognifide.slice.api.context.RequestContextProvider;
 import com.cognifide.slice.api.injector.InjectorWithContext;
 import com.cognifide.slice.api.injector.InjectorsRepository;
 import com.cognifide.slice.api.provider.ModelProvider;
@@ -51,26 +51,26 @@ public final class SliceTagUtils {
 			final String appName) {
 		final SlingHttpServletRequest request = SliceTagUtils.slingRequestFrom(pageContext);
 		final InjectorsRepository injectorsRepository = SliceTagUtils.injectorsRepositoryFrom(pageContext);
-		final ContextProvider contextProvider = SliceTagUtils.contextProviderFrom(pageContext);
+		final RequestContextProvider requestContextProvider = SliceTagUtils.contextProviderFrom(pageContext);
 
-		return getFromCurrentPath(request, injectorsRepository, contextProvider, type, appName);
+		return getFromCurrentPath(request, injectorsRepository, requestContextProvider, type, appName);
 	}
 
 	public static <T> T getFromCurrentPath(final SlingHttpServletRequest request,
-			final InjectorsRepository injectorsRepository, final ContextProvider contextProvider,
+			final InjectorsRepository injectorsRepository, final RequestContextProvider requestContextProvider,
 			final Class<T> type) {
-		return getFromCurrentPath(request, injectorsRepository, contextProvider, type, null);
+		return getFromCurrentPath(request, injectorsRepository, requestContextProvider, type, null);
 	}
 
 	public static <T> T getFromCurrentPath(final SlingHttpServletRequest request,
-			final InjectorsRepository injectorsRepository, final ContextProvider contextProvider,
+			final InjectorsRepository injectorsRepository, final RequestContextProvider requestContextProvider,
 			final Class<T> type, final String appName) {
 		final String injectorName = getInjectorName(request, appName);
 		if (StringUtils.isBlank(injectorName)) {
 			throw new IllegalStateException("Guice injector name not available");
 		}
 
-		if (null == contextProvider) {
+		if (null == requestContextProvider) {
 			throw new IllegalStateException("ContextProvider is not available");
 		}
 
@@ -79,7 +79,7 @@ public final class SliceTagUtils {
 			throw new IllegalStateException("Guice injector not found: " + injectorName);
 		}
 
-		injector.pushContextProvider(contextProvider);
+		injector.pushContextProvider(requestContextProvider.getContextProvider(injectorName));
 		try {
 			final ModelProvider modelProvider = injector.getInstance(ModelProvider.class);
 			final Resource resource = request.getResource();
@@ -104,9 +104,9 @@ public final class SliceTagUtils {
 		return (SlingHttpServletRequest) pageContext.getRequest();
 	}
 
-	public static ContextProvider contextProviderFrom(final PageContext pageContext) {
+	public static RequestContextProvider contextProviderFrom(final PageContext pageContext) {
 		final SlingScriptHelper slingScriptHelper = getSlingScriptHelper(pageContext);
-		return slingScriptHelper.getService(ContextProvider.class);
+		return slingScriptHelper.getService(RequestContextProvider.class);
 	}
 
 	public static InjectorsRepository injectorsRepositoryFrom(final PageContext pageContext) {
