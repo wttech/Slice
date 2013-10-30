@@ -101,6 +101,7 @@ public final class SliceModule extends ContextScopeModule {
 		return repository.getInjectorName(injector);
 	}
 
+	@Provides
 	@Singleton
 	public Bundle getBundle() {
 		return bundle;
