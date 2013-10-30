@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 
 import com.cognifide.slice.api.context.ContextScope;
 import com.cognifide.slice.api.provider.ClassToKeyMapper;
-import com.cognifide.slice.core.internal.module.ContextModule;
 import com.cognifide.slice.core.internal.module.JcrModule;
 import com.cognifide.slice.core.internal.module.LinkModule;
 import com.cognifide.slice.core.internal.module.SliceModule;
@@ -61,7 +60,6 @@ public class SliceClassToKeyMapperTest {
 		modules.add(new SlingModule(contextScope));
 		modules.add(new JcrModule());
 		modules.add(new LinkModule());
-		modules.add(new ContextModule());
 		modules.add(new SliceResourceModule(bundleContext, BUNDLE_NAME_FILTER, BASE_PACKAGE));
 
 		injector = Guice.createInjector(modules);
