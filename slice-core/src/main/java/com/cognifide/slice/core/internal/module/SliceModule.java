@@ -24,6 +24,7 @@ package com.cognifide.slice.core.internal.module;
 
 import org.apache.sling.api.resource.Resource;
 import org.ops4j.peaberry.Peaberry;
+import org.osgi.framework.Bundle;
 
 import com.cognifide.slice.api.context.ContextFactory;
 import com.cognifide.slice.api.context.ContextScope;
@@ -47,13 +48,17 @@ import com.cognifide.slice.core.internal.provider.SliceModelProvider;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.Provides;
+import com.google.inject.Singleton;
 
 public final class SliceModule extends ContextScopeModule {
 
 	private static final String DEFAULT_ROOT_PATH = "/content/";
 
-	public SliceModule(final ContextScope contextScope) {
+	private final Bundle bundle;
+
+	public SliceModule(ContextScope contextScope, Bundle bundle) {
 		super(contextScope);
+		this.bundle = bundle;
 	}
 
 	@Override
@@ -96,4 +101,8 @@ public final class SliceModule extends ContextScopeModule {
 		return repository.getInjectorName(injector);
 	}
 
+	@Singleton
+	public Bundle getBundle() {
+		return bundle;
+	}
 }
