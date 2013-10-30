@@ -48,7 +48,7 @@ public class SliceModulesFactory {
 		final ContextScope contextScope = new SliceContextScope();
 		List<Module> modules = new ArrayList<Module>();
 		modules.add(Peaberry.osgiModule(bundleContext));
-		modules.add(new SliceModule(injectorName, contextScope));
+		modules.add(new SliceModule(injectorName, contextScope, bundleContext.getBundle()));
 		modules.add(new SlingModule(contextScope));
 		modules.add(new JcrModule());
 		modules.add(new LinkModule());

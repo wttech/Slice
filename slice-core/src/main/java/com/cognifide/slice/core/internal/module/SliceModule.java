@@ -23,6 +23,8 @@ package com.cognifide.slice.core.internal.module;
  */
 
 import org.apache.sling.api.resource.Resource;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
 
 import com.cognifide.slice.api.context.ContextFactory;
 import com.cognifide.slice.api.context.ContextScope;
@@ -44,6 +46,7 @@ import com.cognifide.slice.core.internal.provider.SliceClassToKeyMapper;
 import com.cognifide.slice.core.internal.provider.SliceModelProvider;
 import com.google.inject.Key;
 import com.google.inject.Provides;
+import com.google.inject.Singleton;
 
 public final class SliceModule extends ContextScopeModule {
 
@@ -51,9 +54,11 @@ public final class SliceModule extends ContextScopeModule {
 
 	private final String injectorName;
 
-	public SliceModule(final String injectorName, final ContextScope contextScope) {
-		super(contextScope);
+	private final Bundle bundle;
 
+	public SliceModule(String injectorName, ContextScope contextScope, Bundle bundle) {
+		super(contextScope);
+		this.bundle = bundle;
 		this.injectorName = injectorName;
 	}
 
@@ -90,4 +95,9 @@ public final class SliceModule extends ContextScopeModule {
 		return requestedResource == null ? null : requestedResource.getPath();
 	}
 
+	@Provides
+	@Singleton
+	public Bundle getBundle() {
+		return bundle;
+	}
 }
