@@ -30,7 +30,7 @@ public class ServletRequestContext implements Context {
 	private final Map<Key<?>, Object> contextMap;
 
 	public ServletRequestContext(final String injectorName, final ServletRequest request) {
-		final String attributeName = getAttributeName(injectorName);
+		final String attributeName = getInjectorAttributeName(injectorName);
 		@SuppressWarnings("unchecked")
 		Map<Key<?>, Object> contextMap = (Map<Key<?>, Object>) request.getAttribute(attributeName);
 		if (contextMap == null) {
@@ -55,7 +55,7 @@ public class ServletRequestContext implements Context {
 		return (T) contextMap.get(key);
 	}
 
-	private static String getAttributeName(String injectorName) {
+	private static String getInjectorAttributeName(String injectorName) {
 		return String.format("%s_%s", ServletRequestContext.class.getName(), injectorName);
 	}
 }
