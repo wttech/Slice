@@ -1,6 +1,6 @@
 package com.cognifide.slice.activator;
 
-/*
+/*-
  * #%L
  * Slice - Activator
  * $Id:$
@@ -22,7 +22,6 @@ package com.cognifide.slice.activator;
  * #L%
  */
 
-
 import java.util.List;
 
 import org.osgi.framework.BundleActivator;
@@ -42,10 +41,10 @@ public class Activator implements BundleActivator {
 		List<Module> sliceModules = SliceModulesFactory.createCoreModules(bundleContext);
 		List<Module> validationModules = ValidationModulesFactory.createModules();
 
-		new InjectorRunner(bundleContext, INJECTOR_NAME) //
-				.installModules(sliceModules) //
-				.installModules(validationModules) //
-				.start();
+		InjectorRunner runner = new InjectorRunner(bundleContext, INJECTOR_NAME);
+		runner.installModules(sliceModules);
+		runner.installModules(validationModules);
+		runner.start();
 	}
 
 	@Override
