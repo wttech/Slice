@@ -100,6 +100,16 @@ public final class InjectorsRepositoryService implements InjectorsRepository {
 		return injector;
 	}
 
+	@Override
+	public String getInjectorName(Injector injector) {
+		return injectors.getRegisteredName(injector);
+	}
+
+	@Override
+	public Collection<String> getInjectorNames() {
+		return injectors.getInjectorNames();
+	}
+
 	private InjectorWithContext getInjectorForResourceAsAdmin(String resourcePath) throws LoginException {
 		ResourceResolver resourceResolver = resourceResolverFactory.getAdministrativeResourceResolver(null);
 		Resource resource = resourceResolver.getResource(resourcePath);
@@ -114,15 +124,5 @@ public final class InjectorsRepositoryService implements InjectorsRepository {
 
 	protected void unbindInjectors(final InjectorConfig config) {
 		injectors.unregisterInjector(config);
-	}
-
-	@Override
-	public String getInjectorName(Injector injector) {
-		return injectors.getName(injector);
-	}
-
-	@Override
-	public Collection<String> getInjectorNames() {
-		return injectors.getNames();
 	}
 }
