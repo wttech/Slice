@@ -38,51 +38,55 @@ public class InjectorRunner {
 
 	private final List<Module> modules = new ArrayList<Module>();
 
-	private final List<Class<?>> exposed = new ArrayList<Class<?>>();
+	private final BundleContext bundleContext;
+
+	private final ContextScope contextScope;
 
 	private boolean started = false;
-
-	private final BundleContext bundleContext;
 
 	private String parentInjectorName;
 
 	/**
-	 * Use constructor without unused contextScope parameter.
+	 * @param bundleContext Context used to get access to the OSGi
+	 * @param injectorName Name of the new injector
 	 * 
-	 * @param bundleContext
-	 * @param injectorName
-	 * @param contextScope
+	 * @deprecated The contextScope parameter in the class is not used to create an injector. Use the
+	 * {@link #InjectorRunner(BundleContext, String)}
 	 */
 	@Deprecated
 	public InjectorRunner(final BundleContext bundleContext, final String injectorName,
 			final ContextScope contextScope) {
-		this(bundleContext, injectorName);
+		this.bundleContext = bundleContext;
+		this.injectorName = injectorName;
+		this.contextScope = contextScope;
 	}
 
+	/**
+	 * @param bundleContext Context used to get access to the OSGi
+	 * @param injectorName Name of the new injector
+	 */
 	public InjectorRunner(final BundleContext bundleContext, final String injectorName) {
 		this.bundleContext = bundleContext;
 		this.injectorName = injectorName;
+		this.contextScope = null;
 	}
 
-	public InjectorRunner setParentInjectorName(String parentInjectorName) {
+	public void setParentInjectorName(String parentInjectorName) {
 		this.parentInjectorName = parentInjectorName;
-		return this;
 	}
 
-	public InjectorRunner installModule(final Module newModule) {
+	public void installModule(final Module newModule) {
 		if (started) {
 			throw new IllegalStateException("Installing new modules is not allowed after Injector was stared");
 		}
 		modules.add(newModule);
-		return this;
 	}
 
-	public InjectorRunner installModules(final List<Module> newModules) {
+	public void installModules(final List<Module> newModules) {
 		if (started) {
 			throw new IllegalStateException("Installing new modules is not allowed after Injector was stared");
 		}
 		modules.addAll(newModules);
-		return this;
 	}
 
 	public void start() {
@@ -91,19 +95,28 @@ public class InjectorRunner {
 		bundleContext.registerService(InjectorConfig.class.getName(), config, properties);
 	}
 
+	public String getInjectorName() {
+		return injectorName;
+	}
+
+	public BundleContext getBundleContext() {
+		return bundleContext;
+	}
+
+	/**
+	 * @deprecated Context scope is not used to create an injector. This method and matching constructor will
+	 * be removed from the future versions of Slice.
+	 */
+	@Deprecated
+	public ContextScope getContextScope() {
+		return contextScope;
+	}
+
 	List<Module> getModules() {
 		return modules;
 	}
 
-	String getInjectorName() {
-		return injectorName;
-	}
-
 	String getParentName() {
 		return parentInjectorName;
-	}
-
-	List<Class<?>> getExposedClasses() {
-		return exposed;
 	}
 }
