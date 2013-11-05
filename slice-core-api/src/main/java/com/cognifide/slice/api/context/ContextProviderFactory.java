@@ -1,6 +1,4 @@
-package com.cognifide.slice.api.context;
-
-/*
+/*-
  * #%L
  * Slice - Core API
  * $Id:$
@@ -22,6 +20,7 @@ package com.cognifide.slice.api.context;
  * #L%
  */
 
+package com.cognifide.slice.api.context;
 
 /**
  * @author Rafał Malinowski
