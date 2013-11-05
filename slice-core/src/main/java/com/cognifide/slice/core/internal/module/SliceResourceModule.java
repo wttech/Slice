@@ -129,7 +129,7 @@ public class SliceResourceModule extends AbstractModule {
 	 * @param sliceResourceClass
 	 */
 	private <T> void bindActualObject(final Class<T> sliceResourceClass) {
-		LOG.error("Binding " + sliceResourceClass + " to MRP");
+		LOG.info("Binding " + sliceResourceClass + " to MRP");
 		bind(sliceResourceClass).toProvider(new MappedResourceProvider<T>(sliceResourceClass));
 	}
 
