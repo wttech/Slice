@@ -1,5 +1,4 @@
-package com.cognifide.slice.commons;
-/*
+/*-
  * #%L
  * Slice - Core
  * $Id:$
@@ -21,6 +20,7 @@ package com.cognifide.slice.commons;
  * #L%
  */
 
+package com.cognifide.slice.commons;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +30,7 @@ import org.osgi.framework.BundleContext;
 
 import com.cognifide.slice.api.context.ContextScope;
 import com.cognifide.slice.core.internal.context.SliceContextScope;
+import com.cognifide.slice.core.internal.module.ContextModule;
 import com.cognifide.slice.core.internal.module.JcrModule;
 import com.cognifide.slice.core.internal.module.LinkModule;
 import com.cognifide.slice.core.internal.module.SliceModule;
@@ -84,6 +85,7 @@ public class SliceModulesFactory {
 		modules.add(new SlingModule(contextScope));
 		modules.add(new JcrModule());
 		modules.add(new LinkModule());
+		modules.add(new ContextModule());
 		return modules;
 	}
 }
