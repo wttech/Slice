@@ -1,15 +1,25 @@
 package com.cognifide.slice.util;
 
 /*
- * #%L Slice - Core API $Id:$ $HeadURL:$ %% Copyright (C) 2012 Cognifide Limited %% Licensed under the Apache
- * License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You
- * may obtain a copy of the License at
+ * #%L
+ * Slice - Core API
+ * $Id:$
+ * $HeadURL:$
+ * %%
+ * Copyright (C) 2012 Cognifide Limited
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  * 
- * http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software distributed under the License is
- * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the License. #L%
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
  */
 
 import java.util.regex.Matcher;
@@ -18,7 +28,6 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ValueMap;
 
 
@@ -51,45 +60,8 @@ public final class InjectorNameUtil {
 	 */
 	@Deprecated
 	public static String getFromRequest(final SlingHttpServletRequest request) {
-		final ResourceResolver resourceResolver = request.getResourceResolver();
-
-		Resource currentResource = request.getResource();
-
-		while (null != currentResource) {
-			final String result = getFromResource(currentResource);
-			if (StringUtils.isNotBlank(result)) {
-				return result;
-			}
-
-			final String jcrContentResult = getFromResource(resourceResolver.getResource(currentResource,
-					JCR_CONTENT_NODE_NAME));
-			if (StringUtils.isNotBlank(jcrContentResult)) {
-				return jcrContentResult;
-			}
-
-			currentResource = currentResource.getParent();
-		}
-
 		if (null != request.getResource()) {
 			return getFromResourceType(request.getResource().getResourceType());
-		}
-
-		return StringUtils.EMPTY;
-	}
-
-	@Deprecated
-	// left only for compatibility reasons; to be removed with getFromRequest
-	private static String getFromResource(final Resource currentResource) {
-		if (null == currentResource) {
-			return StringUtils.EMPTY;
-		}
-
-		final ValueMap resourceValueMap = currentResource.adaptTo(ValueMap.class);
-		if (null != resourceValueMap) {
-			final String injectorName = resourceValueMap.get("injectorName", String.class);
-			if (null != injectorName) {
-				return injectorName;
-			}
 		}
 
 		return StringUtils.EMPTY;

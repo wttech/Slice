@@ -24,7 +24,11 @@ package com.cognifide.slice.api.injector;
  */
 //@formatter:on
 
+import java.util.Collection;
+
 import org.apache.sling.api.resource.Resource;
+
+import com.google.inject.Injector;
 
 /**
  * @author Witold Szczerba
@@ -70,4 +74,19 @@ public interface InjectorsRepository {
 	 * @return default injector for the specified resource, or null if no feasible injector was registered.
 	 */
 	InjectorWithContext getInjectorForResource(final String resourcePath);
+
+	/**
+	 * Returns name of the given injector.
+	 * 
+	 * @param injector
+	 * @return
+	 */
+	String getInjectorName(Injector injector);
+
+	/**
+	 * Returns names of all injectors
+	 * 
+	 * @return
+	 */
+	Collection<String> getInjectorNames();
 }

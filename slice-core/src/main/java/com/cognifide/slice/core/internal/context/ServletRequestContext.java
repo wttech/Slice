@@ -22,6 +22,8 @@ package com.cognifide.slice.core.internal.context;
  * #L%
  */
 
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletRequest;
 
@@ -30,42 +32,40 @@ import com.google.inject.Key;
 
 /**
  * @author Rafał ServletRequestContext
- *
+ * 
  * Context that stored all data in ServletRequest attributes.
  */
 public class ServletRequestContext implements Context {
 
-	private final Object nullObject = new Object();
+	private final Map<Key<?>, Object> contextMap;
 
-	private final ServletRequest request;
-
-	public ServletRequestContext(final ServletRequest request) {
-		this.request = request;
+	public ServletRequestContext(final String injectorName, final ServletRequest request) {
+		final String attributeName = getInjectorAttributeName(injectorName);
+		@SuppressWarnings("unchecked")
+		Map<Key<?>, Object> contextMap = (Map<Key<?>, Object>) request.getAttribute(attributeName);
+		if (contextMap == null) {
+			request.setAttribute(attributeName, contextMap = new HashMap<Key<?>, Object>());
+		}
+		this.contextMap = contextMap;
 	}
 
 	@Override
 	public <T> boolean contains(Key<T> key) {
-		return null != request.getAttribute(key.toString());
+		return contextMap.containsKey(key);
 	}
 
 	@Override
 	public <T> void put(final Key<T> key, final T object) {
-		if (null != object) {
-			request.setAttribute(key.toString(), object);
-		} else {
-			request.setAttribute(key.toString(), nullObject);
-		}
+		contextMap.put(key, object);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T get(final Key<T> key) {
-		final Object value = request.getAttribute(key.toString());
-		if (value == nullObject) {
-			return null;
-		} else {
-			return (T) value;
-		}
+		return (T) contextMap.get(key);
 	}
 
+	private static String getInjectorAttributeName(String injectorName) {
+		return String.format("%s_%s", ServletRequestContext.class.getName(), injectorName);
+	}
 }

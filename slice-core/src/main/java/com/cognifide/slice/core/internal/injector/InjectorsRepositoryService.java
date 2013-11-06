@@ -24,8 +24,7 @@ package com.cognifide.slice.core.internal.injector;
 */
 //@formatter:on
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collection;
 
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Properties;
@@ -42,12 +41,11 @@ import org.osgi.framework.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.cognifide.slice.api.injector.InjectorConfig;
 import com.cognifide.slice.api.injector.InjectorWithContext;
 import com.cognifide.slice.api.injector.InjectorsRepository;
-import com.cognifide.slice.api.qualifier.InjectorName;
 import com.cognifide.slice.util.InjectorNameUtil;
 import com.google.inject.Injector;
-import com.google.inject.Key;
 
 /**
  * @author Witold Szczerba
@@ -67,20 +65,21 @@ public final class InjectorsRepositoryService implements InjectorsRepository {
 
 	private static final Logger LOG = LoggerFactory.getLogger(InjectorsRepositoryService.class);
 
-	@Reference(cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, referenceInterface = Injector.class, //
-	policy = ReferencePolicy.DYNAMIC)
-	private final Map<String, Injector> injectors = new HashMap<String, Injector>();
-
 	@Reference
 	private ResourceResolverFactory resourceResolverFactory;
 
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, referenceInterface = InjectorConfig.class, //
+	policy = ReferencePolicy.DYNAMIC)
+	private final InjectorHierarchy injectors = new InjectorHierarchy();
+
 	@Override
 	public InjectorWithContext getInjector(final String injectorName) {
-		InjectorWithContextImpl injector = null;
-		if (injectors.containsKey(injectorName)) {
-			injector = new InjectorWithContextImpl(injectors.get(injectorName));
+		InjectorWithContextImpl injectorWithContext = null;
+		Injector injector = injectors.getInjectorByName(injectorName);
+		if (injector != null) {
+			injectorWithContext = new InjectorWithContextImpl(injector);
 		}
-		return injector;
+		return injectorWithContext;
 	}
 
 	@Override
@@ -101,6 +100,16 @@ public final class InjectorsRepositoryService implements InjectorsRepository {
 		return injector;
 	}
 
+	@Override
+	public String getInjectorName(Injector injector) {
+		return injectors.getRegisteredName(injector);
+	}
+
+	@Override
+	public Collection<String> getInjectorNames() {
+		return injectors.getInjectorNames();
+	}
+
 	private InjectorWithContext getInjectorForResourceAsAdmin(String resourcePath) throws LoginException {
 		ResourceResolver resourceResolver = resourceResolverFactory.getAdministrativeResourceResolver(null);
 		Resource resource = resourceResolver.getResource(resourcePath);
@@ -109,20 +118,11 @@ public final class InjectorsRepositoryService implements InjectorsRepository {
 		return injector;
 	}
 
-	// /////////////////////////////////////////////////////////////////////////
-	// SCR binding methods
-	// ///////////////////////////////////////////////////////////////////////
-
-	protected void bindInjectors(final Injector injector) {
-		Key<String> key = Key.get(String.class, InjectorName.class);
-		final String injectorName = injector.getInstance(key);
-		injectors.put(injectorName, injector);
+	protected void bindInjectors(final InjectorConfig config) {
+		injectors.registerInjector(config);
 	}
 
-	protected void unbindInjectors(final Injector injector) {
-		Key<String> key = Key.get(String.class, InjectorName.class);
-		final String injectorName = injector.getInstance(key);
-		injectors.remove(injectorName);
+	protected void unbindInjectors(final InjectorConfig config) {
+		injectors.unregisterInjector(config);
 	}
-
 }
