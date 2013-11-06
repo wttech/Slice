@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.cognifide.slice.api.injector.InjectorConfig;
+import com.google.inject.CreationException;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
@@ -119,7 +120,12 @@ public class InjectorHierarchy {
 			}
 			current = parent;
 		} while (current != null);
-		return Guice.createInjector(modules);
+		try {
+			return Guice.createInjector(modules);
+		} catch (CreationException e) {
+			LOG.error("Can't create injector " + config.getName(), e);
+			return null;
+		}
 	}
 
 	private Collection<InjectorConfig> getChildren(InjectorConfig parent) {
