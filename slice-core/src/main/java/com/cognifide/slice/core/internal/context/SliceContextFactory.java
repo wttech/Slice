@@ -1,6 +1,4 @@
-package com.cognifide.slice.core.internal.context;
-
-/*
+/*-
  * #%L
  * Slice - Core
  * $Id:$
@@ -22,6 +20,7 @@ package com.cognifide.slice.core.internal.context;
  * #L%
  */
 
+package com.cognifide.slice.core.internal.context;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -43,6 +42,18 @@ import com.google.inject.Key;
  * Helper class for creating Context instances.
  */
 public class SliceContextFactory implements ContextFactory {
+
+	/**
+	 * Create common context from request and response objects. Returned Context will delegate it stored/reads
+	 * to request object.
+	 * 
+	 * @deprecated Use method with explicit injector name
+	 * {@code ContextFactory#getServletRequestContext(String, ServletRequest, ServletResponse)}
+	 */
+	@Override
+	public Context getServletRequestContext(ServletRequest request, ServletResponse response) {
+		return getServletRequestContext(COMMON_CONTEXT_NAME, request, response);
+	}
 
 	/**
 	 * Create Context from request and response objects. Returned Context will delegate it stored/reads to
@@ -86,5 +97,4 @@ public class SliceContextFactory implements ContextFactory {
 
 		return mapContex;
 	}
-
 }
