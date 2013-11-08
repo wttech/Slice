@@ -48,7 +48,7 @@ public final class SliceUtil {
 
 	/**
 	 * Returns injector created in the context of given request and resource. Injector should be closed after
-	 * usage. Sample usage:
+	 * usage. Sample usage in Java 7:
 	 * 
 	 * <pre>
 	 * try (InjectorWithContext injector = SliceUtil.getInjector(&quot;myApp&quot;, request, response)) {
@@ -57,6 +57,20 @@ public final class SliceUtil {
 	 * 	// do something clever with the model
 	 * }
 	 * </pre>
+	 * 
+	 * In Java 6 you can use try-finally idiom:
+	 * 
+	 * <pre>
+	 * InjectorWithContext injector = SliceUtil.getInjector(&quot;myApp&quot;, request, response)
+	 * try {
+	 * 	ModelProvider modelProvider = injector.getInstance(ModelProvider.class);
+	 * 	SimpleModel simpleModel = modelProvider.get(SimpleModel.class, resource);
+	 * 	// do something clever with the model
+	 * } finally {
+	 * 	injector.close();
+	 * }
+	 * </pre>
+
 	 * 
 	 * @param injectorName Name of the desired injector
 	 * @return Created injector
