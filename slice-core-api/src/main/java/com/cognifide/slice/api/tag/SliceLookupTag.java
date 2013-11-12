@@ -22,71 +22,67 @@ package com.cognifide.slice.api.tag;
  * #L%
  */
 
-
-import org.apache.commons.lang.StringUtils;
-
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.apache.commons.lang.StringUtils;
+
 public class SliceLookupTag extends TagSupport {
 
-   private String var;
+	private String var;
 
-   private String appName; // auto-detected when null
+	private String appName; // auto-detected when null
 
+	private String cls; // optional
 
-   private String cls; // optional
+	private Class<?> type;
 
-   private Class<?> type;
+	private void clean() {
+		type = null;
+		var = null;
+		appName = null;
+		cls = null;
+	}
 
-   private void clean() {
-      type = null;
-      var = null;
-      appName = null;
-      cls = null;
-   }
+	@Override
+	public int doStartTag() throws JspException {
+		try {
+			if (StringUtils.isBlank(var) || (type == null)) {
+				throw new JspTagException("Var and Type must be set " + appName);
+			}
+			final Object model = SliceTagUtils.getFromCurrentPath(pageContext, type, appName);
+			pageContext.setAttribute(var, model, PageContext.PAGE_SCOPE);
+		} finally {
+			clean();
+		}
+		return SKIP_BODY;
+	}
 
+	@Override
+	public int doEndTag() throws JspException {
+		return EVAL_PAGE;
+	}
 
-   @Override
-   public int doStartTag() throws JspException {
-      try {
-         if (StringUtils.isBlank(var) || (type == null)) {
-            throw new JspTagException("Var and Type must be set " + appName);
-         }
-         final Object model = SliceTagUtils.getFromCurrentPath(pageContext, type, appName);
-         pageContext.setAttribute(var, model, PageContext.PAGE_SCOPE);
-      } finally {
-         clean();
-      }
-      return SKIP_BODY;
-   }
+	public void setType(Class<?> type) {
+		this.type = type;
+	}
 
-   @Override
-   public int doEndTag() throws JspException {
-      return EVAL_PAGE;
-   }
+	public void setVar(String var) {
+		this.var = var;
+	}
 
+	public void setAppName(String appName) {
+		this.appName = appName;
+	}
 
-   public void setType(Class<?> type) {
-      this.type = type;
-   }
+	public String getCls() {
+		return cls;
+	}
 
-   public void setVar(String var) {
-      this.var = var;
-   }
-
-   public void setAppName(String appName) {
-      this.appName = appName;
-   }
-
-   public String getCls() {
-      return cls;
-   }
-
-   public void setCls(String cls) {
-      this.cls = cls;
-   }
+	public void setCls(String cls) {
+		this.cls = cls;
+	}
 
 }
