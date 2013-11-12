@@ -39,6 +39,12 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 
+/**
+ * This class stores injector configuration tree and creates injectors associated with these configurations.
+ * 
+ * @author Tomasz Rekawek
+ * 
+ */
 public class InjectorHierarchy {
 
 	private static final Logger LOG = LoggerFactory.getLogger(InjectorHierarchy.class);
@@ -49,6 +55,13 @@ public class InjectorHierarchy {
 
 	private volatile Map<Injector, String> nameLookupMap = new HashMap<Injector, String>();
 
+	/**
+	 * Register new injector configuration. If all ancestors of the new config are already registered, method
+	 * will create new injector. If this config is a missing ancestor of some other config, the child injector
+	 * (or injectors) will be created as well.
+	 * 
+	 * @param config Injector configuration
+	 */
 	public synchronized void registerInjector(InjectorConfig config) {
 		configByName.put(config.getName(), config);
 
@@ -57,6 +70,11 @@ public class InjectorHierarchy {
 		refreshNameLookupMap();
 	}
 
+	/**
+	 * Unregister given injector config, destroy associated injector and all its children.
+	 * 
+	 * @param config
+	 */
 	public synchronized void unregisterInjector(InjectorConfig config) {
 		List<InjectorConfig> injectorsToRemove = getSubtree(config);
 		for (InjectorConfig c : injectorsToRemove) {
@@ -66,14 +84,31 @@ public class InjectorHierarchy {
 		refreshNameLookupMap();
 	}
 
+	/**
+	 * Return injector with given name
+	 * 
+	 * @param injectorName Injector name
+	 * @return Injector or null if there is no such injector
+	 */
 	public synchronized Injector getInjectorByName(String injectorName) {
 		return injectorByName.get(injectorName);
 	}
 
+	/**
+	 * Return name of the given injector
+	 * 
+	 * @param injector Injector object
+	 * @return Injector name or null if there is no such injector
+	 */
 	public String getRegisteredName(Injector injector) {
 		return nameLookupMap.get(injector);
 	}
 
+	/**
+	 * Return names of all created injectors
+	 * 
+	 * @return Collection with names of all successfully created injectors.
+	 */
 	public Collection<String> getInjectorNames() {
 		return nameLookupMap.values();
 	}

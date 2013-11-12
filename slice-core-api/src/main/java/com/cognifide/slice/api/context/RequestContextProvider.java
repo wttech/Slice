@@ -1,6 +1,4 @@
-package com.cognifide.slice.api.context;
-
-/*
+/*-
  * #%L
  * Slice - Core API
  * $Id:$
@@ -22,7 +20,15 @@ package com.cognifide.slice.api.context;
  * #L%
  */
 
+package com.cognifide.slice.api.context;
 
 public interface RequestContextProvider {
+	/**
+	 * Return context provider that stores data in the request attributes. Bindings are stored separately for
+	 * each injector.
+	 * 
+	 * @param injectorName Injector name
+	 * @return Context provider that stores data in the request attribute.
+	 */
 	ContextProvider getContextProvider(String injectorName);
 }

@@ -61,7 +61,7 @@ public class ContextRequstFilter implements Filter, RequestContextProvider {
 
 	public static final int RANKING = -650;
 
-	private ThreadLocal<Map<String, Context>> contexts = new ThreadLocal<Map<String, Context>>();
+	private final ThreadLocal<Map<String, Context>> contexts = new ThreadLocal<Map<String, Context>>();
 
 	/**
 	 * Update Context instance for current thread to use current request and response values.
