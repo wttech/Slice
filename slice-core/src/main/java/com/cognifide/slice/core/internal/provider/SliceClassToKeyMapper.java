@@ -57,7 +57,7 @@ public class SliceClassToKeyMapper implements ClassToKeyMapper {
 
 	@Override
 	public Key<?> getKey(final String className) {
-		Key<?> knownKey = knownKeys.get("class " + className);
+		Key<?> knownKey = knownKeys.get(className);
 		if (null == knownKey) {
 			try {
 				Class<?> clazz = bundle.loadClass(className);

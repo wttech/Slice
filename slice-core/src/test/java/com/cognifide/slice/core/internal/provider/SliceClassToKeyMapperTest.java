@@ -14,9 +14,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import com.cognifide.slice.api.context.ContextFactory;
 import com.cognifide.slice.api.context.ContextScope;
 import com.cognifide.slice.api.provider.ClassToKeyMapper;
 import com.cognifide.slice.core.internal.module.JcrModule;
@@ -31,15 +30,11 @@ import com.google.inject.Module;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SliceClassToKeyMapperTest {
-	private static final String APPLICATION_NAME = "test";
-
 	private static final String BUNDLE_NAME_FILTER = "com\\.cognifide\\.test\\.webapp\\..*";
 
 	private static final String BASE_PACKAGE = "com.cognifide.test";
 
 	private Injector injector;
-
-	private static final Logger LOG = LoggerFactory.getLogger(SliceClassToKeyMapperTest.class);
 
 	@Mock
 	private BundleContext bundleContext;
@@ -49,6 +44,8 @@ public class SliceClassToKeyMapperTest {
 
 	@Mock
 	private ContextScope contextScope;
+	
+	private ClassToKeyMapper mapper;
 
 	@Before
 	public void setUp() throws ClassNotFoundException {
@@ -63,18 +60,24 @@ public class SliceClassToKeyMapperTest {
 		modules.add(new SliceResourceModule(bundleContext, BUNDLE_NAME_FILTER, BASE_PACKAGE));
 
 		injector = Guice.createInjector(modules);
+		mapper = injector.getInstance(ClassToKeyMapper.class);
 	}
 
 	@Test
-	public void testGetKey() {
-		ClassToKeyMapper mapper = injector.getInstance(ClassToKeyMapper.class);
-		System.out.println(getClass().getCanonicalName());
-		testForClassName(mapper, ClassToKeyMapper.class, ClassToKeyMapper.class.getName());
+	public void testGetKeyForSimpleType() {
+		// use type not bound in a module - but with an obvious constructor 
+		testForClassName(ClassToKeyMapper.class);
 	}
 
-	private void testForClassName(ClassToKeyMapper mapper, Class<?> clazz, String className) {
-		LOG.error("test");
-		Object instance1 = injector.getInstance(clazz);
+	@Test
+	public void testGetKeyForKnownBinding() {
+		// use interface bound in a module - but with a simple constructor so it passes mocks
+		testForClassName(ContextFactory.class);
+	}
+
+	private void testForClassName(Class<?> testedClass) {
+		String className = testedClass.getName();
+		Object instance1 = injector.getInstance(testedClass);
 		assertNotNull("instance of " + className + " fetched by key cannot be null", instance1);
 
 		Key<?> key = mapper.getKey(className);
