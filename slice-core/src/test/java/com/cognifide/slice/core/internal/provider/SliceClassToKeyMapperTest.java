@@ -11,10 +11,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.cognifide.slice.api.context.ContextScope;
 import com.cognifide.slice.api.provider.ClassToKeyMapper;
@@ -39,9 +40,12 @@ public class SliceClassToKeyMapperTest {
 
 	private Injector injector;
 
+	private static final Logger LOG = LoggerFactory.getLogger(SliceClassToKeyMapperTest.class);
+
 	@Mock
 	private BundleContext bundleContext;
 
+	@Mock
 	private Bundle bundle;
 
 	@Mock
@@ -49,11 +53,9 @@ public class SliceClassToKeyMapperTest {
 
 	@Before
 	public void setUp() throws ClassNotFoundException {
-		bundle = Mockito.mock(Bundle.class);
 		when(bundleContext.getBundles()).thenReturn(new Bundle[0]);
-		when(bundle.loadClass(ClassToKeyMapper.class.getCanonicalName())).thenReturn(
-				SliceClassToKeyMapper.class);
-
+		when(bundle.loadClass(ClassToKeyMapper.class.getCanonicalName())).thenReturn(SliceClassToKeyMapper.class);
+		
 		List<Module> modules = new ArrayList<Module>();
 		modules.add(new SliceModule(APPLICATION_NAME, contextScope, bundle));
 		modules.add(new SlingModule(contextScope));
@@ -68,29 +70,12 @@ public class SliceClassToKeyMapperTest {
 	@Test
 	public void testGetKey() {
 		ClassToKeyMapper mapper = injector.getInstance(ClassToKeyMapper.class);
+		System.out.println(getClass().getCanonicalName());
 		testForClassName(mapper, ClassToKeyMapper.class, ClassToKeyMapper.class.getName());
 	}
 
-	@Test
-	public void testInternalCaching() throws ClassNotFoundException {
-		String className = ClassToKeyMapper.class.getName();
-		ClassToKeyMapper mapper = injector.getInstance(ClassToKeyMapper.class);
-
-		// known class
-		Key<?> key = mapper.getKey(className);
-		Mockito.verify(bundle, Mockito.times(0)).loadClass(className);
-
-		// some unknown class
-		when(bundle.loadClass(SliceClassToKeyMapperTest.class.getCanonicalName())).thenReturn(
-				SliceClassToKeyMapperTest.class);
-		className = SliceClassToKeyMapperTest.class.getName();
-		key = mapper.getKey(className);
-		Key<?> secondInvocationKey = mapper.getKey(className);
-		Mockito.verify(bundle, Mockito.times(1)).loadClass(className);
-		assertEquals("Expecting the same key returned", key, secondInvocationKey);
-	}
-
 	private void testForClassName(ClassToKeyMapper mapper, Class<?> clazz, String className) {
+		LOG.error("test");
 		Object instance1 = injector.getInstance(clazz);
 		assertNotNull("instance of " + className + " fetched by key cannot be null", instance1);
 
