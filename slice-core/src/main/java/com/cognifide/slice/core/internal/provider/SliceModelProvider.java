@@ -1,27 +1,16 @@
 package com.cognifide.slice.core.internal.provider;
 
 /*
- * #%L
- * Slice - Core
- * $Id:$
- * $HeadURL:$
- * %%
- * Copyright (C) 2012 Cognifide Limited
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * #%L Slice - Core $Id:$ $HeadURL:$ %% Copyright (C) 2012 Cognifide Limited %% Licensed under the Apache
+ * License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You
+ * may obtain a copy of the License at
  * 
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License. #L%
  */
-
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -89,7 +78,7 @@ public class SliceModelProvider implements ModelProvider {
 		 * against servlet specification.
 		 */
 		ExecutionContextImpl executionItem = new ExecutionContextImpl(path);
-		LOG.debug("creating new instance of " + type.getName() + " from " + path);
+		LOG.debug("creating new instance of {} from {}", new Object[] { type.getName(), path });
 		return get(type, executionItem);
 	}
 
@@ -99,7 +88,7 @@ public class SliceModelProvider implements ModelProvider {
 	@Override
 	public <T> T get(Class<T> type, Resource resource) {
 		ExecutionContextImpl executionItem = new ExecutionContextImpl(resource);
-		LOG.debug("creating new instance of " + type.getName() + " from resource: " + resource);
+		LOG.debug("creating new instance of {} from {}", new Object[] { type.getName(), resource });
 		return get(type, executionItem);
 	}
 
@@ -113,7 +102,7 @@ public class SliceModelProvider implements ModelProvider {
 			throw new ClassNotFoundException("key for class " + className + " not found");
 		}
 		ExecutionContextImpl executionItem = new ExecutionContextImpl(path);
-		LOG.debug("creating new instance for " + key.toString() + " from " + path);
+		LOG.debug("creating new instance for {} from {}", new Object[] { key.toString(), path });
 		return get(key, executionItem);
 	}
 
