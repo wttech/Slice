@@ -22,18 +22,13 @@
 
 package com.cognifide.slice.api.context;
 
-/**
- * ContextProvider that allows for manually setting Context.
- * 
- * @author Rafał Malinowski
- */
-public interface SimpleContextProvider extends ContextProvider {
-
+public interface RequestContextProvider {
 	/**
-	 * Set Context to be provided.
-	 *
-	 * @param context Context to be provided
+	 * Return context provider that stores data in the request attributes. Bindings are stored separately for
+	 * each injector.
+	 * 
+	 * @param injectorName Injector name
+	 * @return Context provider that stores data in the request attribute.
 	 */
-	void setContext(Context context);
-
+	ContextProvider getContextProvider(String injectorName);
 }

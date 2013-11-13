@@ -23,11 +23,13 @@ package com.cognifide.slice.core.internal.module;
  */
 
 import org.apache.sling.api.resource.Resource;
+import org.ops4j.peaberry.Peaberry;
 import org.osgi.framework.Bundle;
 
 import com.cognifide.slice.api.context.ContextFactory;
 import com.cognifide.slice.api.context.ContextScope;
 import com.cognifide.slice.api.execution.ExecutionContextStack;
+import com.cognifide.slice.api.injector.InjectorsRepository;
 import com.cognifide.slice.api.provider.ChildrenProvider;
 import com.cognifide.slice.api.provider.ClassToKeyMapper;
 import com.cognifide.slice.api.provider.ModelProvider;
@@ -43,6 +45,7 @@ import com.cognifide.slice.core.internal.execution.ExecutionContextStackImpl;
 import com.cognifide.slice.core.internal.provider.SliceChildrenProvider;
 import com.cognifide.slice.core.internal.provider.SliceClassToKeyMapper;
 import com.cognifide.slice.core.internal.provider.SliceModelProvider;
+import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
@@ -51,19 +54,17 @@ public final class SliceModule extends ContextScopeModule {
 
 	private static final String DEFAULT_ROOT_PATH = "/content/";
 
-	private final String injectorName;
-
 	private final Bundle bundle;
 
-	public SliceModule(String injectorName, ContextScope contextScope, Bundle bundle) {
+	public SliceModule(ContextScope contextScope, Bundle bundle) {
 		super(contextScope);
 		this.bundle = bundle;
-		this.injectorName = injectorName;
 	}
 
 	@Override
 	protected void configure() {
-		bind(Key.get(String.class, InjectorName.class)).toInstance(injectorName);
+		bind(InjectorsRepository.class).toProvider(
+				Peaberry.service(InjectorsRepository.class).single().direct());
 
 		bindScope(ContextScoped.class, getContextScope());
 		bind(ContextScope.class).toInstance(getContextScope());
@@ -92,6 +93,12 @@ public final class SliceModule extends ContextScopeModule {
 	@RequestedResourcePath
 	public String getRequestedResourcePath(@Nullable @RequestedResource final Resource requestedResource) {
 		return requestedResource == null ? null : requestedResource.getPath();
+	}
+
+	@Provides
+	@InjectorName
+	public String getInjectorName(InjectorsRepository repository, Injector injector) {
+		return repository.getInjectorName(injector);
 	}
 
 	@Provides
