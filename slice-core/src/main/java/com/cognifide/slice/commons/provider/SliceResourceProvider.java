@@ -25,13 +25,11 @@ package com.cognifide.slice.commons.provider;
 import org.apache.sling.api.resource.Resource;
 
 import com.cognifide.slice.api.model.InitializableModel;
-import com.cognifide.slice.api.qualifier.EmptyObject;
 import com.cognifide.slice.api.scope.ContextScoped;
 import com.cognifide.slice.core.internal.provider.CurrentResourceProvider;
 import com.cognifide.slice.mapper.api.Mapper;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.google.inject.Key;
 
 /**
  * Used internally.
@@ -47,12 +45,15 @@ public class SliceResourceProvider {
 
 	private final Mapper mapper;
 
+	private final KeyCache keyCache;
+
 	@Inject
 	public SliceResourceProvider(final CurrentResourceProvider currentResourceProvider,
-			final Injector injector, final Mapper mapper) {
+			final Injector injector, final Mapper mapper, final KeyCache keyCache) {
 		this.injector = injector;
 		this.currentResourceProvider = currentResourceProvider;
 		this.mapper = mapper;
+		this.keyCache = keyCache;
 	}
 
 	public <T> T get(final Class<T> sliceResourceClass) {
@@ -73,7 +74,7 @@ public class SliceResourceProvider {
 	}
 
 	private <T> T newInstance(final Class<T> sliceResourceClass) {
-		final T instance = injector.getInstance(Key.get(sliceResourceClass, EmptyObject.class));
+		final T instance = injector.getInstance(keyCache.getKey(sliceResourceClass));
 		if (instance == null) {
 			throw new IllegalStateException("Cannot create empty instance of " + sliceResourceClass
 					+ ". It has not been registered properly or it's not a valid Guice object.");

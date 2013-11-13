@@ -23,7 +23,6 @@ package com.cognifide.slice.mapper.impl.processor;
  */
 
 import java.lang.reflect.Field;
-import java.text.MessageFormat;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
@@ -45,7 +44,9 @@ public class SliceResourceFieldProcessor implements FieldProcessor {
 
 	@Override
 	public boolean accepts(Resource resource, Field field) {
-		return field.getType().isAnnotationPresent(SliceResource.class);
+		Class<?> type = field.getType();
+		// additional checks of type for performance sake
+		return type != String.class && !type.isPrimitive() && type.isAnnotationPresent(SliceResource.class);
 	}
 
 	@Override
@@ -55,12 +56,14 @@ public class SliceResourceFieldProcessor implements FieldProcessor {
 		// create instance only if nested resource isn't null
 		if (nestedResource == null) {
 			// nested SliceResources are not instantiated as empty - not to erase information about them not
-			// being
-			// present; when such functionality is required, a separate logic should be implemented for that
-			String message = "the nested resource [{0}/{1}] doesn't exist, assigning null value for [{2}#{3}]";
-			message = MessageFormat.format(message, resource.getPath(), propertyName,
-					fieldType.getCanonicalName(), field.getName());
-			LOG.debug(message);
+			// being present; when such functionality is required, a separate logic should be implemented for
+			// that
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(
+						"the nested resource [{0}/{1}] doesn't exist, assigning null value for [{2}#{3}]",
+						new Object[] { resource.getPath(), propertyName, fieldType.getCanonicalName(),
+								field.getName() });
+			}
 			return null;
 		} else {
 			return sliceResourceProvider.get().get(fieldType, nestedResource);
