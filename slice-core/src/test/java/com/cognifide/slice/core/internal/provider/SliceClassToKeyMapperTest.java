@@ -32,6 +32,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -65,14 +66,15 @@ public class SliceClassToKeyMapperTest {
 
 	@Mock
 	private ContextScope contextScope;
-	
+
 	private ClassToKeyMapper mapper;
 
 	@Before
 	public void setUp() throws ClassNotFoundException {
 		when(bundleContext.getBundles()).thenReturn(new Bundle[0]);
-		when(bundle.loadClass(ClassToKeyMapper.class.getCanonicalName())).thenReturn(SliceClassToKeyMapper.class);
-		
+		when(bundle.loadClass(ClassToKeyMapper.class.getCanonicalName())).thenReturn(
+				SliceClassToKeyMapper.class);
+
 		List<Module> modules = new ArrayList<Module>();
 		modules.add(new SliceModule(contextScope, bundle));
 		modules.add(new SlingModule(contextScope));
@@ -86,7 +88,7 @@ public class SliceClassToKeyMapperTest {
 
 	@Test
 	public void testGetKeyForSimpleType() {
-		// use type not bound in a module - but with an obvious constructor 
+		// use type not bound in a module - but with an obvious constructor
 		testForClassName(ClassToKeyMapper.class);
 	}
 
@@ -94,6 +96,24 @@ public class SliceClassToKeyMapperTest {
 	public void testGetKeyForKnownBinding() {
 		// use interface bound in a module - but with a simple constructor so it passes mocks
 		testForClassName(ContextFactory.class);
+	}
+
+	@Test
+	public void testInternalCaching() throws ClassNotFoundException {
+		String className = ClassToKeyMapper.class.getName();
+
+		// known class
+		Key<?> key = mapper.getKey(className);
+		Mockito.verify(bundle, Mockito.times(0)).loadClass(className);
+
+		// some unknown class
+		when(bundle.loadClass(SliceClassToKeyMapperTest.class.getCanonicalName())).thenReturn(
+				SliceClassToKeyMapperTest.class);
+		className = SliceClassToKeyMapperTest.class.getName();
+		key = mapper.getKey(className);
+		Key<?> secondInvocationKey = mapper.getKey(className);
+		Mockito.verify(bundle, Mockito.times(1)).loadClass(className);
+		assertEquals("Expecting the same key returned", key, secondInvocationKey);
 	}
 
 	private void testForClassName(Class<?> testedClass) {
