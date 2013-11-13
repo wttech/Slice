@@ -1,3 +1,24 @@
+/*-
+ * #%L
+ * Slice - Core
+ * $Id:$
+ * $HeadURL:$
+ * %%
+ * Copyright (C) 2012 Cognifide Limited
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 package com.cognifide.slice.core.internal.provider;
 
 import static junit.framework.Assert.assertEquals;
@@ -14,12 +35,10 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import com.cognifide.slice.api.context.ContextFactory;
 import com.cognifide.slice.api.context.ContextScope;
 import com.cognifide.slice.api.provider.ClassToKeyMapper;
-import com.cognifide.slice.core.internal.module.ContextModule;
 import com.cognifide.slice.core.internal.module.JcrModule;
 import com.cognifide.slice.core.internal.module.LinkModule;
 import com.cognifide.slice.core.internal.module.SliceModule;
@@ -32,15 +51,11 @@ import com.google.inject.Module;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SliceClassToKeyMapperTest {
-	private static final String APPLICATION_NAME = "test";
-
 	private static final String BUNDLE_NAME_FILTER = "com\\.cognifide\\.test\\.webapp\\..*";
 
 	private static final String BASE_PACKAGE = "com.cognifide.test";
 
 	private Injector injector;
-
-	private static final Logger LOG = LoggerFactory.getLogger(SliceClassToKeyMapperTest.class);
 
 	@Mock
 	private BundleContext bundleContext;
@@ -50,6 +65,8 @@ public class SliceClassToKeyMapperTest {
 
 	@Mock
 	private ContextScope contextScope;
+	
+	private ClassToKeyMapper mapper;
 
 	@Before
 	public void setUp() throws ClassNotFoundException {
@@ -57,26 +74,31 @@ public class SliceClassToKeyMapperTest {
 		when(bundle.loadClass(ClassToKeyMapper.class.getCanonicalName())).thenReturn(SliceClassToKeyMapper.class);
 		
 		List<Module> modules = new ArrayList<Module>();
-		modules.add(new SliceModule(APPLICATION_NAME, contextScope, bundle));
+		modules.add(new SliceModule(contextScope, bundle));
 		modules.add(new SlingModule(contextScope));
 		modules.add(new JcrModule());
 		modules.add(new LinkModule());
-		modules.add(new ContextModule());
 		modules.add(new SliceResourceModule(bundleContext, BUNDLE_NAME_FILTER, BASE_PACKAGE));
 
 		injector = Guice.createInjector(modules);
+		mapper = injector.getInstance(ClassToKeyMapper.class);
 	}
 
 	@Test
-	public void testGetKey() {
-		ClassToKeyMapper mapper = injector.getInstance(ClassToKeyMapper.class);
-		System.out.println(getClass().getCanonicalName());
-		testForClassName(mapper, ClassToKeyMapper.class, ClassToKeyMapper.class.getName());
+	public void testGetKeyForSimpleType() {
+		// use type not bound in a module - but with an obvious constructor 
+		testForClassName(ClassToKeyMapper.class);
 	}
 
-	private void testForClassName(ClassToKeyMapper mapper, Class<?> clazz, String className) {
-		LOG.error("test");
-		Object instance1 = injector.getInstance(clazz);
+	@Test
+	public void testGetKeyForKnownBinding() {
+		// use interface bound in a module - but with a simple constructor so it passes mocks
+		testForClassName(ContextFactory.class);
+	}
+
+	private void testForClassName(Class<?> testedClass) {
+		String className = testedClass.getName();
+		Object instance1 = injector.getInstance(testedClass);
 		assertNotNull("instance of " + className + " fetched by key cannot be null", instance1);
 
 		Key<?> key = mapper.getKey(className);
