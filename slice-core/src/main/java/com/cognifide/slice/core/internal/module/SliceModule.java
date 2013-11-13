@@ -24,7 +24,6 @@ package com.cognifide.slice.core.internal.module;
 
 import org.apache.sling.api.resource.Resource;
 import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
 
 import com.cognifide.slice.api.context.ContextFactory;
 import com.cognifide.slice.api.context.ContextScope;
