@@ -60,7 +60,7 @@ public class SliceResourceFieldProcessor implements FieldProcessor {
 			// that
 			if (LOG.isDebugEnabled()) {
 				LOG.debug(
-						"the nested resource [{0}/{1}] doesn't exist, assigning null value for [{2}#{3}]",
+						"the nested resource [{}/{}] doesn't exist, assigning null value for [{}#{}]",
 						new Object[] { resource.getPath(), propertyName, fieldType.getCanonicalName(),
 								field.getName() });
 			}
