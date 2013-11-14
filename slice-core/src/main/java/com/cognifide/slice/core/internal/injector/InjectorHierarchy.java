@@ -148,10 +148,8 @@ public class InjectorHierarchy {
 				String parentName = current.getParentName();
 				parent = configByName.get(parentName);
 				if (parent == null) {
-					if (LOG.isInfoEnabled()) {
-						LOG.info("Can't create {} as its ancestor {} can't be found",
-								new Object[] { config.getName(), parentName });
-					}
+					LOG.info("Can't create {} as its ancestor {} can't be found",
+							new Object[] { config.getName(), parentName });
 					return null;
 				}
 			}
