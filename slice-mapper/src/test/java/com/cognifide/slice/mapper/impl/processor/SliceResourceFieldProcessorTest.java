@@ -19,7 +19,7 @@ public class SliceResourceFieldProcessorTest {
 		processor = new SliceResourceFieldProcessor();
 	}
 
-	public void testAccpetString() throws SecurityException, NoSuchFieldException {
+	public void testAcceptString() throws SecurityException, NoSuchFieldException {
 		Field field = TestObject.class.getDeclaredField("stringField");
 		boolean result = processor.accepts(resource, field);
 		Assert.assertFalse("String field should not be acceptable", result);
