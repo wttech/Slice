@@ -35,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.cognifide.slice.api.qualifier.EmptyObject;
+import com.cognifide.slice.commons.provider.KeyCache;
 import com.cognifide.slice.commons.provider.SliceResourceProvider;
 import com.cognifide.slice.core.internal.BundleClassesFinder;
 import com.cognifide.slice.core.internal.BundleClassesFinder.ClassFilter;
@@ -78,6 +79,7 @@ public class SliceResourceModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
+		bind(KeyCache.class);
 		for (Class<?> clazz : this.classes) {
 			try {
 				bindToOwnProvider(clazz);
@@ -129,7 +131,7 @@ public class SliceResourceModule extends AbstractModule {
 	 * @param sliceResourceClass
 	 */
 	private <T> void bindActualObject(final Class<T> sliceResourceClass) {
-		LOG.info("Binding " + sliceResourceClass + " to MRP");
+		LOG.info("Binding {} to MRP", sliceResourceClass);
 		bind(sliceResourceClass).toProvider(new MappedResourceProvider<T>(sliceResourceClass));
 	}
 

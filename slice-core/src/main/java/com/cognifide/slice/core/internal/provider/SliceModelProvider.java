@@ -1,6 +1,4 @@
-package com.cognifide.slice.core.internal.provider;
-
-/*
+/*-
  * #%L
  * Slice - Core
  * $Id:$
@@ -22,6 +20,7 @@ package com.cognifide.slice.core.internal.provider;
  * #L%
  */
 
+package com.cognifide.slice.core.internal.provider;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -89,7 +88,7 @@ public class SliceModelProvider implements ModelProvider {
 		 * against servlet specification.
 		 */
 		ExecutionContextImpl executionItem = new ExecutionContextImpl(path);
-		LOG.debug("creating new instance of " + type.getName() + " from " + path);
+		LOG.debug("creating new instance of {} from {}", new Object[] { type.getName(), path });
 		return get(type, executionItem);
 	}
 
@@ -99,7 +98,7 @@ public class SliceModelProvider implements ModelProvider {
 	@Override
 	public <T> T get(Class<T> type, Resource resource) {
 		ExecutionContextImpl executionItem = new ExecutionContextImpl(resource);
-		LOG.debug("creating new instance of " + type.getName() + " from resource: " + resource);
+		LOG.debug("creating new instance of {} from {}", new Object[] { type.getName(), resource });
 		return get(type, executionItem);
 	}
 
@@ -113,7 +112,7 @@ public class SliceModelProvider implements ModelProvider {
 			throw new ClassNotFoundException("key for class " + className + " not found");
 		}
 		ExecutionContextImpl executionItem = new ExecutionContextImpl(path);
-		LOG.debug("creating new instance for " + key.toString() + " from " + path);
+		LOG.debug("creating new instance for {} from {}", new Object[] { key.toString(), path });
 		return get(key, executionItem);
 	}
 
