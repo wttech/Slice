@@ -61,7 +61,9 @@ public class SliceResourceFieldProcessor implements FieldProcessor {
 			String message = "the nested resource [{0}/{1}] doesn't exist, assigning null value for [{2}#{3}]";
 			message = MessageFormat.format(message, resource.getPath(), propertyName,
 					fieldType.getCanonicalName(), field.getName());
-			LOG.debug(message);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(message);
+			}
 			return null;
 		} else {
 			return sliceResourceProvider.get().get(fieldType, nestedResource);

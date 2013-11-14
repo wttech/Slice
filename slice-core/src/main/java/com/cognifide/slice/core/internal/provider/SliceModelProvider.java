@@ -88,7 +88,9 @@ public class SliceModelProvider implements ModelProvider {
 		 * against servlet specification.
 		 */
 		ExecutionContextImpl executionItem = new ExecutionContextImpl(path);
-		LOG.debug("creating new instance of {} from {}", new Object[] { type.getName(), path });
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("creating new instance of {} from {}", new Object[] { type.getName(), path });
+		}
 		return get(type, executionItem);
 	}
 
@@ -98,7 +100,9 @@ public class SliceModelProvider implements ModelProvider {
 	@Override
 	public <T> T get(Class<T> type, Resource resource) {
 		ExecutionContextImpl executionItem = new ExecutionContextImpl(resource);
-		LOG.debug("creating new instance of {} from {}", new Object[] { type.getName(), resource });
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("creating new instance of {} from {}", new Object[] { type.getName(), resource });
+		}
 		return get(type, executionItem);
 	}
 
@@ -112,7 +116,9 @@ public class SliceModelProvider implements ModelProvider {
 			throw new ClassNotFoundException("key for class " + className + " not found");
 		}
 		ExecutionContextImpl executionItem = new ExecutionContextImpl(path);
-		LOG.debug("creating new instance for {} from {}", new Object[] { key.toString(), path });
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("creating new instance for {} from {}", new Object[] { key.toString(), path });
+		}
 		return get(key, executionItem);
 	}
 
