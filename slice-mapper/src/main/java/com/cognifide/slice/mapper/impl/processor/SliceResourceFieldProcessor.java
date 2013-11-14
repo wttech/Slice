@@ -23,7 +23,6 @@ package com.cognifide.slice.mapper.impl.processor;
  */
 
 import java.lang.reflect.Field;
-import java.text.MessageFormat;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
@@ -59,11 +58,11 @@ public class SliceResourceFieldProcessor implements FieldProcessor {
 			// nested SliceResources are not instantiated as empty - not to erase information about them not
 			// being present; when such functionality is required, a separate logic should be implemented for
 			// that
-			String message = "the nested resource [{0}/{1}] doesn't exist, assigning null value for [{2}#{3}]";
-			message = MessageFormat.format(message, resource.getPath(), propertyName,
-					fieldType.getCanonicalName(), field.getName());
 			if (LOG.isDebugEnabled()) {
-				LOG.debug(message);
+				LOG.debug(
+						"the nested resource [{0}/{1}] doesn't exist, assigning null value for [{2}#{3}]",
+						new Object[] { resource.getPath(), propertyName, fieldType.getCanonicalName(),
+								field.getName() });
 			}
 			return null;
 		} else {
