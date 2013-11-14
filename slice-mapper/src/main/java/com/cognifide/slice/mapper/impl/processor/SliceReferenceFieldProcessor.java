@@ -22,7 +22,6 @@ package com.cognifide.slice.mapper.impl.processor;
  * #L%
  */
 
-
 import java.lang.reflect.Field;
 
 import org.apache.commons.lang.StringUtils;
@@ -47,7 +46,9 @@ public class SliceReferenceFieldProcessor implements FieldProcessor {
 
 	@Override
 	public boolean accepts(final Resource resource, final Field field) {
-		return field.isAnnotationPresent(SliceReference.class);
+		Class<?> type = field.getType();
+		// additional checks of type for performance sake
+		return !type.isPrimitive() && type != String.class && type.isAnnotationPresent(SliceReference.class);
 	}
 
 	@Override
