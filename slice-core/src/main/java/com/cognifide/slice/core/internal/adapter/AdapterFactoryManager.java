@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Deactivate;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.adapter.AdapterFactory;
@@ -57,6 +58,13 @@ public class AdapterFactoryManager implements InjectorListener {
 		bundleContext = componentContext.getBundleContext();
 		modules = new HashMap<AdaptableModule, List<String>>();
 		registrationByModule = new HashMap<AdaptableModule, ServiceRegistration>();
+	}
+
+	@Deactivate
+	public void deactivate() {
+		for (ServiceRegistration adapterFactory : registrationByModule.values()) {
+			adapterFactory.unregister();
+		}
 	}
 
 	@Override
