@@ -94,7 +94,11 @@ public class ContextRequstFilter implements Filter, RequestContextProvider {
 		return new ContextProvider() {
 			@Override
 			public Context getContext() {
-				return contexts.get().get(injectorName);
+				Map<String, Context> contextMap = contexts.get();
+				if (contextMap == null) {
+					return null;
+				}
+				return contextMap.get(injectorName);
 			}
 		};
 	}
