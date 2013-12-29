@@ -143,10 +143,16 @@ public final class SliceUtil {
 		}
 	}
 
-	private static final class ConstantContextProvider implements ContextProvider {
+	/**
+	 * Simple context provider returning always the same context.
+	 * 
+	 * @author Tomasz Rękawek
+	 *
+	 */
+	public static final class ConstantContextProvider implements ContextProvider {
 		private final Context context;
 
-		private ConstantContextProvider(Context context) {
+		public ConstantContextProvider(Context context) {
 			this.context = context;
 		}
 
