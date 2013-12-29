@@ -54,7 +54,7 @@ import com.google.inject.Module;
  * 
  */
 @Component
-@Service
+@Service(value = InjectorHierarchy.class)
 public class InjectorHierarchy {
 
 	private static final Logger LOG = LoggerFactory.getLogger(InjectorHierarchy.class);
@@ -62,7 +62,7 @@ public class InjectorHierarchy {
 	@Reference(cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, referenceInterface = InjectorConfig.class, policy = ReferencePolicy.DYNAMIC, bind = "bindConfig", unbind = "unbindConfig")
 	private final Map<String, InjectorConfig> configByName = new HashMap<String, InjectorConfig>();
 
-	@Reference(cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, referenceInterface = InjectorConfig.class, policy = ReferencePolicy.DYNAMIC)
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, referenceInterface = InjectorListener.class, policy = ReferencePolicy.DYNAMIC)
 	private final Set<InjectorListener> listeners = new HashSet<InjectorListener>();
 
 	private final Map<String, Injector> injectorByName = new HashMap<String, Injector>();
