@@ -84,7 +84,7 @@ public class InjectorHierarchy {
 	 * 
 	 * @param config Injector configuration
 	 */
-	public synchronized void registerInjector(InjectorConfig config) {
+	private synchronized void registerInjector(InjectorConfig config) {
 		configByName.put(config.getName(), config);
 
 		List<InjectorConfig> injectorsToRefresh = getSubtree(config);
@@ -97,7 +97,7 @@ public class InjectorHierarchy {
 	 * 
 	 * @param config
 	 */
-	public synchronized void unregisterInjector(InjectorConfig config) {
+	private synchronized void unregisterInjector(InjectorConfig config) {
 		List<InjectorConfig> injectorsToRemove = getSubtree(config);
 		for (InjectorConfig c : injectorsToRemove) {
 			Injector injector = injectorByName.remove(c.getName());
@@ -183,7 +183,7 @@ public class InjectorHierarchy {
 		try {
 			Injector injector = Guice.createInjector(modules);
 			for (InjectorListener listener : listeners) {
-				listener.injectorDestroyed(injector, config);
+				listener.injectorCreated(injector, config);
 			}
 			return injector;
 		} catch (CreationException e) {
