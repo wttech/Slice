@@ -35,6 +35,7 @@ import com.cognifide.slice.api.context.ContextProvider;
 import com.cognifide.slice.api.context.RequestContextProvider;
 import com.cognifide.slice.api.injector.InjectorsRepository;
 import com.cognifide.slice.core.internal.context.SliceContextFactory;
+import com.cognifide.slice.util.SliceUtil.ConstantContextProvider;
 
 // @formatter:off
 /**
@@ -91,16 +92,15 @@ public class ContextRequstFilter implements Filter, RequestContextProvider {
 	 * instances.
 	 */
 	public ContextProvider getContextProvider(final String injectorName) {
-		return new ContextProvider() {
-			@Override
-			public Context getContext() {
-				Map<String, Context> contextMap = contexts.get();
-				if (contextMap == null) {
-					return null;
-				}
-				return contextMap.get(injectorName);
-			}
-		};
+		Map<String, Context> contextMap = contexts.get();
+		if (contextMap == null) {
+			return null;
+		}
+		Context context = contextMap.get(injectorName);
+		if (context == null) {
+			return null;
+		}
+		return new ConstantContextProvider(context);
 	}
 
 	private Context createContext(String injectorName, ServletRequest request, ServletResponse response) {
