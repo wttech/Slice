@@ -39,6 +39,7 @@ import com.cognifide.slice.commons.provider.KeyCache;
 import com.cognifide.slice.commons.provider.SliceResourceProvider;
 import com.cognifide.slice.core.internal.BundleClassesFinder;
 import com.cognifide.slice.core.internal.BundleClassesFinder.ClassFilter;
+import com.cognifide.slice.core.internal.adapter.AdaptableModule;
 import com.cognifide.slice.mapper.annotation.SliceResource;
 import com.cognifide.slice.mapper.api.Mapper;
 import com.google.inject.AbstractModule;
@@ -49,7 +50,7 @@ import com.google.inject.Inject;
  * bound to their {@link SliceResourceProvider} providers
  * 
  */
-public class SliceResourceModule extends AbstractModule {
+public class SliceResourceModule extends AbstractModule implements AdaptableModule {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SliceResourceModule.class);
 
@@ -75,6 +76,11 @@ public class SliceResourceModule extends AbstractModule {
 		classFinder.addFilter(new AnnotationFilter());
 
 		this.classes = classFinder.getClasses();
+	}
+
+	@Override
+	public Collection<Class<?>> getClasses() {
+		return classes;
 	}
 
 	@Override
