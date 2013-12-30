@@ -32,6 +32,7 @@ import java.util.Map;
 import org.apache.sling.api.resource.Resource;
 
 import com.cognifide.slice.api.provider.ModelProvider;
+import org.apache.sling.api.resource.ResourceResolver;
 
 public class MockModelProvider implements ModelProvider {
 
@@ -88,6 +89,26 @@ public class MockModelProvider implements ModelProvider {
 			T model = get(type, path);
 			if (model != null) {
 				result.add(model);
+			}
+		}
+		return result;
+	}
+
+	@Override
+	@SuppressWarnings("null")
+	public <T> List<T> getChildModels(Class<T> type, String path) {
+		ResourceResolver resolver = null;
+		return getChildModels(type, resolver.getResource(path));
+	}
+
+	@Override
+	public <T> List<T> getChildModels(Class<T> type, Resource resource) {
+		final ArrayList<T> result = new ArrayList<T>();
+		if (resource != null) {
+			Iterator<Resource> listChildren = resource.listChildren();
+			while (listChildren.hasNext()) {
+				Resource childResource = listChildren.next();
+				result.add(get(type, childResource));
 			}
 		}
 		return result;

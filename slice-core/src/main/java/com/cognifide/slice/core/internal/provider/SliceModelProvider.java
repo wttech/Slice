@@ -19,7 +19,6 @@
  * limitations under the License.
  * #L%
  */
-
 package com.cognifide.slice.core.internal.provider;
 
 import java.util.ArrayList;
@@ -41,10 +40,11 @@ import com.cognifide.slice.core.internal.execution.ExecutionContextImpl;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Key;
+import org.apache.sling.api.resource.ResourceResolver;
 
 /**
  * This class creates object or list of objects of given injectable type using Guice injector.
- * 
+ *
  * @author Witold Szczerba
  * @author Rafał Malinowski
  */
@@ -169,4 +169,22 @@ public class SliceModelProvider implements ModelProvider {
 		return getList(type, Arrays.asList(paths).iterator());
 	}
 
+	@Override
+	public <T> List<T> getChildModels(Class<T> type, String path) {
+		ResourceResolver resolver = injector.getInstance(ResourceResolver.class);
+		return getChildModels(type, resolver.getResource(path));
+	}
+
+	@Override
+	public <T> List<T> getChildModels(Class<T> type, Resource resource) {
+		final ArrayList<T> result = new ArrayList<T>();
+		if (resource != null) {
+			Iterator<Resource> listChildren = resource.listChildren();
+			while (listChildren.hasNext()) {
+				Resource childResource = listChildren.next();
+				result.add(get(type, childResource));
+			}
+		}
+		return result;
+	}
 }

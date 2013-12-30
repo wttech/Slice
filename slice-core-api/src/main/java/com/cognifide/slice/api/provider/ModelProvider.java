@@ -109,4 +109,8 @@ public interface ModelProvider {
 	 * @return list of model objects from given CRX repository paths
 	 */
 	<T> List<T> getList(final Class<T> type, final String[] paths);
+
+	<T> List<T> getChildModels(final Class<T> type, final String path);
+
+	<T> List<T> getChildModels(final Class<T> type, final Resource resource);
 }
