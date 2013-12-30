@@ -37,8 +37,6 @@ import com.cognifide.slice.api.link.LinkBuilder;
 import com.cognifide.slice.core.internal.link.LinkImpl;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Allows building links and modifying existing link. Use whenever you need to add/remove selectors, query
@@ -98,7 +96,6 @@ public final class LinkBuilderImpl implements LinkBuilder {
 	 * Creates a builder and sets underlying values using specified URL.
 	 *
 	 * @param url
-	 * @throws java.net.MalformedURLException
 	 */
 	public LinkBuilderImpl(final String url) throws MalformedURLException {
 		URL urlHelper = new URL(url);
