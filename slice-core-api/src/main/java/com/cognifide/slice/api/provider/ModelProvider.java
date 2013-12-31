@@ -73,8 +73,35 @@ public interface ModelProvider {
 	 */
 	<T> T get(final Class<T> type, final Resource resource);
 	
+	/**
+	 * Creates new model object of type T from given resource. During this method call state of
+	 * {@link ExecutionContextStack} is modified - resource attribute is added on top of execution stack. It
+	 * allows for recursive call of ModelProvider methods from model object that is being created.
+	 * 
+	 * This method is thread-safe.
+	 * 
+	 * @param T type of model object to create
+	 * @param key object that contains both class and annotation class of model object to create
+	 * @param resource Sling resource to create object from
+	 * @return model object from given resource
+	 */
 	<T> T get(final Key<T> key, final Resource resource);
 	
+	/**
+	 * Creates new model object of type T from given CRX repository path. During this method call state of
+	 * {@link ExecutionContextStack} is modified - path attribute is added on top of execution stack. It
+	 * allows for recursive call of ModelProvider methods from model object that is being created.
+	 * 
+	 * It is possible to use absolute and relative (with "./" prefix) paths in recursive calls.
+	 * All gets are performed with Context that was used to create this ModelProvider.
+	 * 
+	 * This method is thread-safe.
+	 * 
+	 * @param T type of model object to create
+	 * @param key object that contains both class and annotation class of model object to create
+	 * @param path CRX repository path to create object from
+	 * @return model object from given CRX repository path
+	 */
 	<T> T get(final Key<T> key, final String path);
 
 	/**
