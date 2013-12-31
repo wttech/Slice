@@ -23,6 +23,7 @@ package com.cognifide.slice.api.provider;
  */
 
 
+import com.google.inject.Key;
 import java.util.Iterator;
 import java.util.List;
 
@@ -71,6 +72,10 @@ public interface ModelProvider {
 	 * @return model object from given resource
 	 */
 	<T> T get(final Class<T> type, final Resource resource);
+	
+	<T> T get(final Key<T> key, final Resource resource);
+	
+	<T> T get(final Key<T> key, final String path);
 
 	/**
 	 * Creates new model object of type specified by given class name. During this method call state of
