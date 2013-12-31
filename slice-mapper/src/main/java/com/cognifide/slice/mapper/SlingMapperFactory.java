@@ -21,24 +21,24 @@ package com.cognifide.slice.mapper;
  * limitations under the License.
  * #L%
  */
-
 import com.cognifide.slice.mapper.api.Mapper;
+import com.cognifide.slice.mapper.api.MapperFactory;
 import com.cognifide.slice.mapper.impl.postprocessor.EscapeValuePostProcessor;
 import com.cognifide.slice.mapper.impl.processor.BooleanFieldProcessor;
 import com.cognifide.slice.mapper.impl.processor.SliceReferenceFieldProcessor;
 import com.cognifide.slice.mapper.impl.processor.SliceResourceFieldProcessor;
 import com.google.inject.Inject;
 
-public final class SlingMapperFactory {
+public final class SlingMapperFactory implements MapperFactory {
 
-	private final MapperFactory mapperFactory;
+	private final MapperFactoryImpl mapperFactory;
 
 	private final SliceResourceFieldProcessor sliceResourceFieldProcessor;
 
 	private final SliceReferenceFieldProcessor sliceReferenceFieldProcessor;
 
 	@Inject
-	public SlingMapperFactory(final MapperFactory mapperFactory,
+	public SlingMapperFactory(final MapperFactoryImpl mapperFactory,
 			final SliceResourceFieldProcessor sliceResourceFieldProcessor,
 			final SliceReferenceFieldProcessor sliceReferenceFieldProcessor) {
 		this.mapperFactory = mapperFactory;
@@ -46,6 +46,7 @@ public final class SlingMapperFactory {
 		this.sliceReferenceFieldProcessor = sliceReferenceFieldProcessor;
 	}
 
+	@Override
 	public Mapper getMapper() {
 		final Mapper mapper = mapperFactory.getMapper();
 

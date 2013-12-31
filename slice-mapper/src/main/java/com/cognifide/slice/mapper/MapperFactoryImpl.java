@@ -23,12 +23,14 @@ package com.cognifide.slice.mapper;
  */
 
 
+import com.cognifide.slice.mapper.api.MapperFactory;
 import com.cognifide.slice.mapper.api.Mapper;
 import com.cognifide.slice.mapper.impl.GenericSlingMapper;
 
 
-public final class MapperFactory {
+public final class MapperFactoryImpl implements MapperFactory {
 
+	@Override
 	public Mapper getMapper() {
 		return new GenericSlingMapper();
 	}
