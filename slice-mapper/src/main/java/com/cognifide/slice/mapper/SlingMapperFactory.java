@@ -23,6 +23,8 @@ package com.cognifide.slice.mapper;
  */
 import com.cognifide.slice.mapper.api.Mapper;
 import com.cognifide.slice.mapper.api.MapperFactory;
+import com.cognifide.slice.mapper.api.processor.FieldPostProcessor;
+import com.cognifide.slice.mapper.api.processor.FieldProcessor;
 import com.cognifide.slice.mapper.impl.postprocessor.EscapeValuePostProcessor;
 import com.cognifide.slice.mapper.impl.processor.BooleanFieldProcessor;
 import com.cognifide.slice.mapper.impl.processor.SliceReferenceFieldProcessor;
@@ -56,6 +58,26 @@ public final class SlingMapperFactory implements MapperFactory {
 		mapper.registerFieldPostProcessor(new EscapeValuePostProcessor());
 
 		return mapper;
+	}
+
+	@Override
+	public void registerFieldProcessor(FieldProcessor fieldProcessor, Mapper mapper) {
+		mapper.registerFieldProcessor(fieldProcessor);
+	}
+
+	@Override
+	public void unregisterFieldProcessor(FieldProcessor fieldProcessor, Mapper mapper) {
+		mapper.unregisterFieldProcessor(fieldProcessor);
+	}
+
+	@Override
+	public void registerFieldPostProcessor(FieldPostProcessor fieldPostProcessor, Mapper mapper) {
+		mapper.registerFieldPostProcessor(fieldPostProcessor);
+	}
+
+	@Override
+	public void unregisterFieldPostProcessor(FieldPostProcessor fieldPostProcessor, Mapper mapper) {
+		mapper.unregisterFieldPostProcessor(fieldPostProcessor);
 	}
 
 }

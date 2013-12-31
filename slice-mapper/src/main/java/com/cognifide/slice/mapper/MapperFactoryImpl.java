@@ -21,18 +21,37 @@ package com.cognifide.slice.mapper;
  * limitations under the License.
  * #L%
  */
-
-
 import com.cognifide.slice.mapper.api.MapperFactory;
 import com.cognifide.slice.mapper.api.Mapper;
+import com.cognifide.slice.mapper.api.processor.FieldPostProcessor;
+import com.cognifide.slice.mapper.api.processor.FieldProcessor;
 import com.cognifide.slice.mapper.impl.GenericSlingMapper;
-
 
 public final class MapperFactoryImpl implements MapperFactory {
 
 	@Override
 	public Mapper getMapper() {
 		return new GenericSlingMapper();
+	}
+
+	@Override
+	public void registerFieldProcessor(FieldProcessor fieldProcessor, Mapper mapper) {
+		mapper.registerFieldProcessor(fieldProcessor);
+	}
+
+	@Override
+	public void unregisterFieldProcessor(FieldProcessor fieldProcessor, Mapper mapper) {
+		mapper.unregisterFieldProcessor(fieldProcessor);
+	}
+
+	@Override
+	public void registerFieldPostProcessor(FieldPostProcessor fieldPostProcessor, Mapper mapper) {
+		mapper.registerFieldPostProcessor(fieldPostProcessor);
+	}
+
+	@Override
+	public void unregisterFieldPostProcessor(FieldPostProcessor fieldPostProcessor, Mapper mapper) {
+		mapper.unregisterFieldPostProcessor(fieldPostProcessor);
 	}
 
 }

@@ -111,22 +111,26 @@ public class GenericSlingMapper implements Mapper {
 		processors.add(new DefaultFieldProcessor());
 	}
 
+	@Override
 	public void registerFieldProcessor(FieldProcessor fieldProcessor) {
 		if (!processors.contains(fieldProcessor)) {
 			processors.addFirst(fieldProcessor);
 		}
 	}
 
+	@Override
 	public void unregisterFieldProcessor(FieldProcessor fieldProcessor) {
 		processors.remove(fieldProcessor);
 	}
 
+	@Override
 	public void registerFieldPostProcessor(FieldPostProcessor fieldPostProcessor) {
 		if (!postProcessors.contains(fieldPostProcessor)) {
 			postProcessors.addFirst(fieldPostProcessor);
 		}
 	}
 
+	@Override
 	public void unregisterFieldPostProcessor(FieldPostProcessor fieldPostProcessor) {
 		postProcessors.remove(fieldPostProcessor);
 	}

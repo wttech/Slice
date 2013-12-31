@@ -16,7 +16,8 @@
 
 package com.cognifide.slice.mapper.api;
 
-import com.cognifide.slice.mapper.api.Mapper;
+import com.cognifide.slice.mapper.api.processor.FieldPostProcessor;
+import com.cognifide.slice.mapper.api.processor.FieldProcessor;
 
 /**
  *
@@ -25,5 +26,13 @@ import com.cognifide.slice.mapper.api.Mapper;
 public interface MapperFactory {
 
 	Mapper getMapper();
+	
+	void registerFieldProcessor(FieldProcessor fieldProcessor, Mapper mapper);
+
+	void unregisterFieldProcessor(FieldProcessor fieldProcessor, Mapper mapper);
+
+	void registerFieldPostProcessor(FieldPostProcessor fieldPostProcessor, Mapper mapper);
+
+	void unregisterFieldPostProcessor(FieldPostProcessor fieldPostProcessor, Mapper mapper);
 	
 }
