@@ -102,21 +102,23 @@ public final class LinkBuilderImpl implements LinkBuilder {
 		String urlPath = urlHelper.getPath();
 		if (StringUtils.countMatches(urlPath, ".") > 1
 				|| StringUtils.lastIndexOf(urlPath, "/") > StringUtils.lastIndexOf(urlPath, ".")) {
-			String[] split = urlPath.split("\\.[a-zA-Z]+\\/");
+			String[] split = urlPath.split("\\.\\w+\\/", 2);
 			if (split.length == 2) {
 				urlPath = StringUtils.substringBeforeLast(urlPath, "/" + split[1]);
 				this.suffix = "/" + split[1];
 			} else {
 				suffix = "";
 			}
+		} else {
+			suffix = "";
 		}
 		this.path = StringUtils.substringBefore(urlPath, ".");
 		this.extension = StringUtils.substringAfterLast(urlPath, ".");
 		setSelectorString(StringUtils.substringBetween(urlPath, path, extension));
 		setQueryString(urlHelper.getQuery());
 		this.fragment = (urlHelper.getRef() == null) ? "" : urlHelper.getRef();
-		this.protocol = (urlHelper.getProtocol()== null) ? "" : urlHelper.getProtocol();
-		this.domain = (urlHelper.getAuthority()== null) ? "" : urlHelper.getAuthority();
+		this.protocol = (urlHelper.getProtocol() == null) ? "" : urlHelper.getProtocol();
+		this.domain = (urlHelper.getAuthority() == null) ? "" : urlHelper.getAuthority();
 	}
 
 	/**
