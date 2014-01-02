@@ -173,15 +173,15 @@ public class SliceModelProvider implements ModelProvider {
 	}
 
 	@Override
-	public <T> List<T> getChildModels(Class<T> type, String path) {
-		return getChildModels(type, resolver.getResource(currentExecutionContext.getAbsolutePath(path)));
+	public <T> List<T> getChildModels(Class<T> type, String parentPath) {
+		return getChildModels(type, resolver.getResource(currentExecutionContext.getAbsolutePath(parentPath)));
 	}
 
 	@Override
-	public <T> List<T> getChildModels(Class<T> type, Resource resource) {
+	public <T> List<T> getChildModels(Class<T> type, Resource parentResource) {
 		final List<T> result = new ArrayList<T>();
-		if (resource != null) {
-			Iterator<Resource> listChildren = resource.listChildren();
+		if (parentResource != null) {
+			Iterator<Resource> listChildren = parentResource.listChildren();
 			while (listChildren.hasNext()) {
 				Resource childResource = listChildren.next();
 				result.add(get(type, childResource));

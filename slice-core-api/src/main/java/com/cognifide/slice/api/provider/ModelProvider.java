@@ -115,10 +115,10 @@ public interface ModelProvider {
 	 *
 	 * @param <T> type of model objects to create
 	 * @param type class of model objects to create
-	 * @param path toSling resource to obtain children
+	 * @param parentPath toSling resource to obtain children
 	 * @return list of model objects from given CRX repository paths
 	 */
-	<T> List<T> getChildModels(final Class<T> type, final String path);
+	<T> List<T> getChildModels(final Class<T> type, final String parentPath);
 
 	/**
 	 * This method lists children for given resource, for each of them calls {@link get} and returns results
@@ -126,8 +126,8 @@ public interface ModelProvider {
 	 *
 	 * @param <T> type of model objects to create
 	 * @param type class of model objects to create
-	 * @param resource Sling resource to obtain children
+	 * @param parentResource Sling resource to obtain children
 	 * @return list of model objects from given CRX repository paths
 	 */
-	<T> List<T> getChildModels(final Class<T> type, final Resource resource);
+	<T> List<T> getChildModels(final Class<T> type, final Resource parentResource);
 }
