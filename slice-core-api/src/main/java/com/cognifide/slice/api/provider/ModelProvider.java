@@ -110,7 +110,24 @@ public interface ModelProvider {
 	 */
 	<T> List<T> getList(final Class<T> type, final String[] paths);
 
+	/**
+	 * This is convenience method that works exactly like {@link getChildModels}.
+	 *
+	 * @param <T> type of model objects to create
+	 * @param type class of model objects to create
+	 * @param path toSling resource to obtain children
+	 * @return list of model objects from given CRX repository paths
+	 */
 	<T> List<T> getChildModels(final Class<T> type, final String path);
 
+	/**
+	 * This method lists children for given resource, for each of them calls {@link get} and returns results
+	 * as a list.
+	 *
+	 * @param <T> type of model objects to create
+	 * @param type class of model objects to create
+	 * @param resource Sling resource to obtain children
+	 * @return list of model objects from given CRX repository paths
+	 */
 	<T> List<T> getChildModels(final Class<T> type, final Resource resource);
 }
