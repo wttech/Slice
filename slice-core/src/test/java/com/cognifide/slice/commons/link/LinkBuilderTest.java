@@ -123,6 +123,32 @@ public class LinkBuilderTest {
 		assertEquals(selectors, lb.getSelectors());
 		assertEquals("/c/d.s.txt", lb.getSuffix());
 	}
+	
+	@Test
+	public void shouldParseUrlWithNumericExtensionAndSuffix() throws MalformedURLException {
+		String url = "http://localhost:5602/a/b.mp3/c";
+
+		//when
+		LinkBuilderImpl lb = new LinkBuilderImpl(url);
+
+		//then
+		assertEquals("mp3", lb.getExtension());
+		assertEquals("", lb.getFragment());
+		assertEquals("/a/b", lb.getPath());
+		assertEquals("", lb.getQueryString());
+		assertEquals("/c", lb.getSuffix());
+	}
+	
+	@Test
+	public void suffixShouldBeEmptyNotNull() throws MalformedURLException {
+		assertEquals("", new LinkBuilderImpl("http://localhost:5602/a.html").getSuffix());
+		assertEquals("", new LinkBuilderImpl("http://localhost:5602/a.selector.html").getSuffix());
+	}
+	
+	@Test
+	public void suffixCanHasMultipleDots() throws MalformedURLException {
+		assertEquals("/b.a/c.d", new LinkBuilderImpl("http://localhost:5602/a.html/b.a/c.d").getSuffix());
+	}
 
 	@Test
 	public void shouldThrowMalformedUrlException() {
