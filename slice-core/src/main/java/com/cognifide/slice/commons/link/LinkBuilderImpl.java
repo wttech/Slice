@@ -115,6 +115,8 @@ public final class LinkBuilderImpl implements LinkBuilder {
 		setSelectorString(StringUtils.substringBetween(urlPath, path, extension));
 		setQueryString(urlHelper.getQuery());
 		this.fragment = (urlHelper.getRef() == null) ? "" : urlHelper.getRef();
+		this.protocol = (urlHelper.getProtocol()== null) ? "" : urlHelper.getProtocol();
+		this.domain = (urlHelper.getAuthority()== null) ? "" : urlHelper.getAuthority();
 	}
 
 	/**

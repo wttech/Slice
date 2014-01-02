@@ -74,6 +74,8 @@ public class LinkBuilderTest {
 		assertEquals("wcmmode=disabled&test=2", lb.getQueryString());
 		assertEquals(selectors, lb.getSelectors());
 		assertEquals("", lb.getSuffix());
+		assertEquals("author.example.com", lb.getDomain());
+		assertEquals("http", lb.getProtocol());
 	}
 
 	@Test
