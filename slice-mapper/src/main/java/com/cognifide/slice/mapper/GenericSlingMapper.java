@@ -22,7 +22,6 @@ package com.cognifide.slice.mapper;
  * #L%
  */
 
-import com.cognifide.slice.mapper.MapperBuilder;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.text.MessageFormat;

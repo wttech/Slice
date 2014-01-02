@@ -41,7 +41,7 @@ public final class SlingMapperBuilder extends MapperBuilder {
 		this.sliceResourceFieldProcessor = sliceResourceFieldProcessor;
 		this.sliceReferenceFieldProcessor = sliceReferenceFieldProcessor;
 	}
-	
+
 	public Mapper build() {
 		processors.add(new BooleanFieldProcessor());
 		processors.add(sliceResourceFieldProcessor);
@@ -50,7 +50,7 @@ public final class SlingMapperBuilder extends MapperBuilder {
 		processors.add(new DefaultFieldProcessor());
 		return new GenericSlingMapper(this);
 	}
-	
+
 	public Mapper getMapper() {
 		return build();
 	}
