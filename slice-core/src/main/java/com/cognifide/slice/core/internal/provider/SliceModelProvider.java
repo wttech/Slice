@@ -63,6 +63,9 @@ public class SliceModelProvider implements ModelProvider {
 
 	private final ExecutionContextStack currentExecutionContext;
 
+	@Inject
+	private ResourceResolver resolver;
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -88,7 +91,7 @@ public class SliceModelProvider implements ModelProvider {
 		 * against servlet specification.
 		 */
 		ExecutionContextImpl executionItem = new ExecutionContextImpl(path);
-		LOG.debug("creating new instance of {} from {}", new Object[] { type.getName(), path });
+		LOG.debug("creating new instance of {} from {}", new Object[]{type.getName(), path});
 		return get(type, executionItem);
 	}
 
@@ -98,7 +101,7 @@ public class SliceModelProvider implements ModelProvider {
 	@Override
 	public <T> T get(Class<T> type, Resource resource) {
 		ExecutionContextImpl executionItem = new ExecutionContextImpl(resource);
-		LOG.debug("creating new instance of {} from {}", new Object[] { type.getName(), resource });
+		LOG.debug("creating new instance of {} from {}", new Object[]{type.getName(), resource});
 		return get(type, executionItem);
 	}
 
@@ -112,7 +115,7 @@ public class SliceModelProvider implements ModelProvider {
 			throw new ClassNotFoundException("key for class " + className + " not found");
 		}
 		ExecutionContextImpl executionItem = new ExecutionContextImpl(path);
-		LOG.debug("creating new instance for {} from {}", new Object[] { key.toString(), path });
+		LOG.debug("creating new instance for {} from {}", new Object[]{key.toString(), path});
 		return get(key, executionItem);
 	}
 
@@ -171,7 +174,6 @@ public class SliceModelProvider implements ModelProvider {
 
 	@Override
 	public <T> List<T> getChildModels(Class<T> type, String path) {
-		ResourceResolver resolver = injector.getInstance(ResourceResolver.class);
 		return getChildModels(type, resolver.getResource(path));
 	}
 
