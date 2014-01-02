@@ -25,8 +25,6 @@ package com.cognifide.slice.mapper.api;
 
 import org.apache.sling.api.resource.Resource;
 
-import com.cognifide.slice.mapper.api.processor.FieldPostProcessor;
-import com.cognifide.slice.mapper.api.processor.FieldProcessor;
 
 /**
  * Mapper is an object that provides an abstract interface to content repository, providing some specific
@@ -45,13 +43,5 @@ public interface Mapper {
 	 * @return specified object with appropriate fields mapped from specified resource
 	 */
 	<T> T get(Resource resource, T object);
-
-	void registerFieldProcessor(FieldProcessor fieldProcessor);
-
-	void unregisterFieldProcessor(FieldProcessor fieldProcessor);
-
-	void registerFieldPostProcessor(FieldPostProcessor fieldPostProcessor);
-
-	void unregisterFieldPostProcessor(FieldPostProcessor fieldPostProcessor);
 
 }

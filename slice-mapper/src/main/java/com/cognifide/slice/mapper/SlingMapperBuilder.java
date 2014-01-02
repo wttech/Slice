@@ -21,40 +21,38 @@ package com.cognifide.slice.mapper;
  * limitations under the License.
  * #L%
  */
-
 import com.cognifide.slice.mapper.api.Mapper;
 import com.cognifide.slice.mapper.impl.postprocessor.EscapeValuePostProcessor;
 import com.cognifide.slice.mapper.impl.processor.BooleanFieldProcessor;
+import com.cognifide.slice.mapper.impl.processor.DefaultFieldProcessor;
 import com.cognifide.slice.mapper.impl.processor.SliceReferenceFieldProcessor;
 import com.cognifide.slice.mapper.impl.processor.SliceResourceFieldProcessor;
 import com.google.inject.Inject;
 
-public final class SlingMapperFactory {
-
-	private final MapperFactory mapperFactory;
+public final class SlingMapperBuilder extends MapperBuilder {
 
 	private final SliceResourceFieldProcessor sliceResourceFieldProcessor;
 
 	private final SliceReferenceFieldProcessor sliceReferenceFieldProcessor;
 
 	@Inject
-	public SlingMapperFactory(final MapperFactory mapperFactory,
-			final SliceResourceFieldProcessor sliceResourceFieldProcessor,
+	public SlingMapperBuilder(final SliceResourceFieldProcessor sliceResourceFieldProcessor,
 			final SliceReferenceFieldProcessor sliceReferenceFieldProcessor) {
-		this.mapperFactory = mapperFactory;
 		this.sliceResourceFieldProcessor = sliceResourceFieldProcessor;
 		this.sliceReferenceFieldProcessor = sliceReferenceFieldProcessor;
 	}
-
+	
+	public Mapper build() {
+		processors.add(new BooleanFieldProcessor());
+		processors.add(sliceResourceFieldProcessor);
+		processors.add(sliceReferenceFieldProcessor);
+		postProcessors.add(new EscapeValuePostProcessor());
+		processors.add(new DefaultFieldProcessor());
+		return new GenericSlingMapper(this);
+	}
+	
 	public Mapper getMapper() {
-		final Mapper mapper = mapperFactory.getMapper();
-
-		mapper.registerFieldProcessor(new BooleanFieldProcessor());
-		mapper.registerFieldProcessor(sliceResourceFieldProcessor);
-		mapper.registerFieldProcessor(sliceReferenceFieldProcessor);
-		mapper.registerFieldPostProcessor(new EscapeValuePostProcessor());
-
-		return mapper;
+		return build();
 	}
 
 }

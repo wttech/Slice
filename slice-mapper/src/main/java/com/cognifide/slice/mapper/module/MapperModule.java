@@ -24,7 +24,7 @@ package com.cognifide.slice.mapper.module;
 
 
 import com.cognifide.slice.api.scope.ContextScoped;
-import com.cognifide.slice.mapper.SlingMapperFactory;
+import com.cognifide.slice.mapper.SlingMapperBuilder;
 import com.cognifide.slice.mapper.api.Mapper;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -49,7 +49,7 @@ public class MapperModule extends AbstractModule {
 	 */
 	@Provides
 	@ContextScoped
-	public Mapper getMapper(final SlingMapperFactory slingMapperFactory) {
+	public Mapper getMapper(final SlingMapperBuilder slingMapperFactory) {
 		return slingMapperFactory.getMapper();
 	}
 

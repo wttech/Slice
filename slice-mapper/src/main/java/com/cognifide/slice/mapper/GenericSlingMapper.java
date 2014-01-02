@@ -1,4 +1,4 @@
-package com.cognifide.slice.mapper.impl;
+package com.cognifide.slice.mapper;
 
 /*-
  * #%L
@@ -22,6 +22,7 @@ package com.cognifide.slice.mapper.impl;
  * #L%
  */
 
+import com.cognifide.slice.mapper.MapperBuilder;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.text.MessageFormat;
@@ -107,28 +108,9 @@ public class GenericSlingMapper implements Mapper {
 
 	private final Deque<FieldPostProcessor> postProcessors = new LinkedList<FieldPostProcessor>();
 
-	public GenericSlingMapper() {
-		processors.add(new DefaultFieldProcessor());
-	}
-
-	public void registerFieldProcessor(FieldProcessor fieldProcessor) {
-		if (!processors.contains(fieldProcessor)) {
-			processors.addFirst(fieldProcessor);
-		}
-	}
-
-	public void unregisterFieldProcessor(FieldProcessor fieldProcessor) {
-		processors.remove(fieldProcessor);
-	}
-
-	public void registerFieldPostProcessor(FieldPostProcessor fieldPostProcessor) {
-		if (!postProcessors.contains(fieldPostProcessor)) {
-			postProcessors.addFirst(fieldPostProcessor);
-		}
-	}
-
-	public void unregisterFieldPostProcessor(FieldPostProcessor fieldPostProcessor) {
-		postProcessors.remove(fieldPostProcessor);
+	public GenericSlingMapper(MapperBuilder builder) {
+		processors.addAll(builder.getProcessors());
+		postProcessors.addAll(builder.getPostProcessors());
 	}
 
 	// /////////////////////////////////////////////////////////////////////////
