@@ -59,11 +59,11 @@ public class MapperBuilder {
 		postProcessors.remove(fieldPostProcessor);
 	}
 
-	public final Deque<FieldProcessor> getProcessors() {
+	final Deque<FieldProcessor> getProcessors() {
 		return processors;
 	}
 
-	public final Deque<FieldPostProcessor> getPostProcessors() {
+	final Deque<FieldPostProcessor> getPostProcessors() {
 		return postProcessors;
 	}
 

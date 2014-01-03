@@ -42,6 +42,7 @@ public final class SlingMapperBuilder extends MapperBuilder {
 		this.sliceReferenceFieldProcessor = sliceReferenceFieldProcessor;
 	}
 
+	@Override
 	public Mapper build() {
 		processors.add(new BooleanFieldProcessor());
 		processors.add(sliceResourceFieldProcessor);
