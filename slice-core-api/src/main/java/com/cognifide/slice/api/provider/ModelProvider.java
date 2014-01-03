@@ -109,4 +109,19 @@ public interface ModelProvider {
 	 * @return list of model objects from given CRX repository paths
 	 */
 	<T> List<T> getList(final Class<T> type, final String[] paths);
+	
+	/**
+	 * Creates list of model objects of type T from given CRX repository paths. During this method call state
+	 * of {@link ExecutionContextStack} is modified for each path from iterator - path is added on top of
+	 * path stack. It allows for recursive call of ModelProvider methods from model objects that are being
+	 * created.
+	 * 
+	 * It is possible to use absolute and relative (with "./" prefix) paths in recursive calls.
+	 * 
+	 * @param <T> type of model objects to create
+	 * @param type class of model objects to create
+	 * @param resources iterator that returns CRX repository resources to create objects from
+	 * @return list of model objects from given CRX repository paths
+	 */
+	<T> List<T> getListFromResources(final Class<T> type, final Iterator<Resource> resources);
 }
