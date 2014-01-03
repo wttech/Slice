@@ -24,7 +24,6 @@ package com.cognifide.slice.mapper;
 import com.cognifide.slice.mapper.api.Mapper;
 import com.cognifide.slice.mapper.api.processor.FieldPostProcessor;
 import com.cognifide.slice.mapper.api.processor.FieldProcessor;
-import com.cognifide.slice.mapper.impl.processor.DefaultFieldProcessor;
 import java.util.Deque;
 import java.util.LinkedList;
 
@@ -35,28 +34,21 @@ public class MapperBuilder {
 	protected final Deque<FieldPostProcessor> postProcessors = new LinkedList<FieldPostProcessor>();
 
 	public Mapper build() {
-		processors.add(new DefaultFieldProcessor());
 		return new GenericSlingMapper(this);
 	}
 
-	public final void registerFieldProcessor(FieldProcessor fieldProcessor) {
+	public final MapperBuilder addFieldProcessor(FieldProcessor fieldProcessor) {
 		if (!processors.contains(fieldProcessor)) {
 			processors.addFirst(fieldProcessor);
 		}
+		return this;
 	}
 
-	public final void unregisterFieldProcessor(FieldProcessor fieldProcessor) {
-		processors.remove(fieldProcessor);
-	}
-
-	public final void registerFieldPostProcessor(FieldPostProcessor fieldPostProcessor) {
+	public final MapperBuilder addFieldPostProcessor(FieldPostProcessor fieldPostProcessor) {
 		if (!postProcessors.contains(fieldPostProcessor)) {
 			postProcessors.addFirst(fieldPostProcessor);
 		}
-	}
-
-	public final void unregisterFieldPostProcessor(FieldPostProcessor fieldPostProcessor) {
-		postProcessors.remove(fieldPostProcessor);
+		return this;
 	}
 
 	final Deque<FieldProcessor> getProcessors() {

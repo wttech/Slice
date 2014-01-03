@@ -107,7 +107,7 @@ public class GenericSlingMapper implements Mapper {
 
 	private final Deque<FieldPostProcessor> postProcessors = new LinkedList<FieldPostProcessor>();
 
-	public GenericSlingMapper(MapperBuilder builder) {
+	GenericSlingMapper(MapperBuilder builder) {
 		processors.addAll(builder.getProcessors());
 		postProcessors.addAll(builder.getPostProcessors());
 	}
