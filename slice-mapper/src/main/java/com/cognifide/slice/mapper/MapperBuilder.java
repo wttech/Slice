@@ -72,11 +72,11 @@ public final class MapperBuilder {
 		return this;
 	}
 
-	final Deque<FieldProcessor> getProcessors() {
+	Deque<FieldProcessor> getProcessors() {
 		return processors;
 	}
 
-	final Deque<FieldPostProcessor> getPostProcessors() {
+	Deque<FieldPostProcessor> getPostProcessors() {
 		return postProcessors;
 	}
 
