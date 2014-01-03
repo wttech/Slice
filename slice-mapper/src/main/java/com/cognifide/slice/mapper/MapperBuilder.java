@@ -24,30 +24,51 @@ package com.cognifide.slice.mapper;
 import com.cognifide.slice.mapper.api.Mapper;
 import com.cognifide.slice.mapper.api.processor.FieldPostProcessor;
 import com.cognifide.slice.mapper.api.processor.FieldProcessor;
+import com.cognifide.slice.mapper.impl.postprocessor.EscapeValuePostProcessor;
+import com.cognifide.slice.mapper.impl.processor.BooleanFieldProcessor;
+import com.cognifide.slice.mapper.impl.processor.DefaultFieldProcessor;
+import com.cognifide.slice.mapper.impl.processor.SliceReferenceFieldProcessor;
+import com.cognifide.slice.mapper.impl.processor.SliceResourceFieldProcessor;
+import com.google.inject.Inject;
 import java.util.Deque;
 import java.util.LinkedList;
 
-public class MapperBuilder {
+public final class MapperBuilder {
 
-	protected final Deque<FieldProcessor> processors = new LinkedList<FieldProcessor>();
+	private final Deque<FieldProcessor> processors = new LinkedList<FieldProcessor>();
 
-	protected final Deque<FieldPostProcessor> postProcessors = new LinkedList<FieldPostProcessor>();
+	private final Deque<FieldPostProcessor> postProcessors = new LinkedList<FieldPostProcessor>();
+
+	@Inject
+	private SliceResourceFieldProcessor sliceResourceFieldProcessor;
+
+	@Inject
+	private SliceReferenceFieldProcessor sliceReferenceFieldProcessor;
 
 	public Mapper build() {
 		return new GenericSlingMapper(this);
 	}
 
-	public final MapperBuilder addFieldProcessor(FieldProcessor fieldProcessor) {
+	public MapperBuilder addFieldProcessor(FieldProcessor fieldProcessor) {
 		if (!processors.contains(fieldProcessor)) {
 			processors.addFirst(fieldProcessor);
 		}
 		return this;
 	}
 
-	public final MapperBuilder addFieldPostProcessor(FieldPostProcessor fieldPostProcessor) {
+	public MapperBuilder addFieldPostProcessor(FieldPostProcessor fieldPostProcessor) {
 		if (!postProcessors.contains(fieldPostProcessor)) {
 			postProcessors.addFirst(fieldPostProcessor);
 		}
+		return this;
+	}
+
+	public MapperBuilder addDefaultSlingProcessors() {
+		processors.add(new DefaultFieldProcessor());
+		processors.add(new BooleanFieldProcessor());
+		processors.add(sliceResourceFieldProcessor);
+		processors.add(sliceReferenceFieldProcessor);
+		postProcessors.add(new EscapeValuePostProcessor());
 		return this;
 	}
 

@@ -24,9 +24,12 @@ package com.cognifide.slice.mapper.module;
 
 
 import com.cognifide.slice.api.scope.ContextScoped;
-import com.cognifide.slice.mapper.SlingMapperBuilder;
+import com.cognifide.slice.commons.provider.SliceResourceProvider;
+import com.cognifide.slice.mapper.MapperBuilder;
+import com.cognifide.slice.mapper.annotation.SliceResource;
 import com.cognifide.slice.mapper.api.Mapper;
 import com.google.inject.AbstractModule;
+import com.google.inject.Inject;
 import com.google.inject.Provides;
 
 /**
@@ -36,6 +39,9 @@ import com.google.inject.Provides;
  */
 public class MapperModule extends AbstractModule {
 
+	@Inject
+	private MapperBuilder mapperBuilder;
+	
 	@Override
 	protected void configure() {
 	}
@@ -43,14 +49,12 @@ public class MapperModule extends AbstractModule {
 	/**
 	 * Builds and provides {@link Mapper}
 	 * 
-	 * @param sliceResourceFieldProcessor
-	 * @param sliceReferenceFieldProcessor
-	 * @return
+	 * @return Sling mapper object
 	 */
 	@Provides
 	@ContextScoped
-	public Mapper getMapper(final SlingMapperBuilder slingMapperFactory) {
-		return slingMapperFactory.getMapper();
+	public Mapper getMapper() {
+		return mapperBuilder.addDefaultSlingProcessors().build();
 	}
 
 }
