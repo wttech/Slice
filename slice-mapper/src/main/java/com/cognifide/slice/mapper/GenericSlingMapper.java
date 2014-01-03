@@ -25,8 +25,6 @@ package com.cognifide.slice.mapper;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.text.MessageFormat;
-import java.util.Deque;
-import java.util.LinkedList;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.reflect.FieldUtils;
@@ -49,6 +47,8 @@ import com.cognifide.slice.mapper.helper.ReflectionHelper;
 import com.cognifide.slice.mapper.impl.processor.DefaultFieldProcessor;
 import com.cognifide.slice.mapper.strategy.MapperStrategy;
 import com.cognifide.slice.mapper.strategy.MapperStrategyFactory;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Generic implementation of {@link Mapper} that maps Sling {@link Resource} to a {@link SliceResource} using
@@ -103,9 +103,9 @@ public class GenericSlingMapper implements Mapper {
 
 	private final MapperStrategyFactory mapperStrategyFactory = new MapperStrategyFactory();
 
-	private final Deque<FieldProcessor> processors = new LinkedList<FieldProcessor>();
+	private final List<FieldProcessor> processors = new ArrayList<FieldProcessor>();
 
-	private final Deque<FieldPostProcessor> postProcessors = new LinkedList<FieldPostProcessor>();
+	private final List<FieldPostProcessor> postProcessors = new ArrayList<FieldPostProcessor>();
 
 	GenericSlingMapper(MapperBuilder builder) {
 		processors.addAll(builder.getProcessors());

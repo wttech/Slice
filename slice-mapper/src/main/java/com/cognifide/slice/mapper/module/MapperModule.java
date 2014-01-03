@@ -54,7 +54,7 @@ public class MapperModule extends AbstractModule {
 	@Provides
 	@ContextScoped
 	public Mapper getMapper() {
-		return mapperBuilder.addDefaultSlingProcessors().build();
+		return mapperBuilder.addDefaultSliceProcessors().build();
 	}
 
 }

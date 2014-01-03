@@ -33,6 +33,12 @@ import com.google.inject.Inject;
 import java.util.Deque;
 import java.util.LinkedList;
 
+/**
+ * MapperBuilder replaced previous MapperFactory. It allows to set Field Processors and Post Processors and
+ * then build instance of {@link Mapper}
+ * 
+ * @author maciej.matuszewski
+ */
 public final class MapperBuilder {
 
 	private final Deque<FieldProcessor> processors = new LinkedList<FieldProcessor>();
@@ -45,25 +51,44 @@ public final class MapperBuilder {
 	@Inject
 	private SliceReferenceFieldProcessor sliceReferenceFieldProcessor;
 
+	/**
+	 * This method creates new instance of {@link GenericSlingMapper}. Field processors should be added
+	 * before this method.
+	 * 
+	 * @return
+	 */
 	public Mapper build() {
 		return new GenericSlingMapper(this);
 	}
 
+	/**
+	 * Adds {@link FieldProcessor} at the beginning of processors list.
+	 * 
+	 * @param fieldProcessor
+	 * @return
+	 */
 	public MapperBuilder addFieldProcessor(FieldProcessor fieldProcessor) {
-		if (!processors.contains(fieldProcessor)) {
-			processors.addFirst(fieldProcessor);
-		}
+		processors.addFirst(fieldProcessor);
 		return this;
 	}
 
+	/**
+	 * Adds {@link FieldPostProcessor} at the beginning of postProcessors list.
+	 * 
+	 * @param fieldPostProcessor
+	 * @return
+	 */
 	public MapperBuilder addFieldPostProcessor(FieldPostProcessor fieldPostProcessor) {
-		if (!postProcessors.contains(fieldPostProcessor)) {
-			postProcessors.addFirst(fieldPostProcessor);
-		}
+		postProcessors.addFirst(fieldPostProcessor);
 		return this;
 	}
 
-	public MapperBuilder addDefaultSlingProcessors() {
+	/**
+	 * Adds default processors and post processors - the same that was added in SlingMapperFactory
+	 * 
+	 * @return
+	 */
+	public MapperBuilder addDefaultSliceProcessors() {
 		processors.add(new DefaultFieldProcessor());
 		processors.add(new BooleanFieldProcessor());
 		processors.add(sliceResourceFieldProcessor);
