@@ -57,7 +57,7 @@ import com.google.inject.Module;
  * @author Tomasz Rękawek
  * 
  */
-@Component
+@Component(immediate = true)
 @Service
 public class AdapterFactoryManager implements InjectorListener {
 
