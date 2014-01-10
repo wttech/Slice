@@ -1,6 +1,6 @@
 package com.cognifide.slice.api.provider;
 
-/*
+/*-
  * #%L
  * Slice - Core API
  * $Id:$
@@ -22,12 +22,12 @@ package com.cognifide.slice.api.provider;
  * #L%
  */
 
-
-import com.google.inject.Key;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.sling.api.resource.Resource;
+
+import com.google.inject.Key;
 
 /**
  * This class creates object or list of objects of given injectable type using Guice injector.
@@ -42,8 +42,8 @@ public interface ModelProvider {
 	 * {@link ExecutionContextStack} is modified - path attribute is added on top of execution stack. It
 	 * allows for recursive call of ModelProvider methods from model object that is being created.
 	 * 
-	 * It is possible to use absolute and relative (with "./" prefix) paths in recursive calls.
-	 * All gets are performed with Context that was used to create this ModelProvider.
+	 * It is possible to use absolute and relative (with "./" prefix) paths in recursive calls. All gets are
+	 * performed with Context that was used to create this ModelProvider.
 	 * 
 	 * <code>
 	 *   modelProvider.get(ModelType.class, "/absolute/patch");
@@ -72,7 +72,7 @@ public interface ModelProvider {
 	 * @return model object from given resource
 	 */
 	<T> T get(final Class<T> type, final Resource resource);
-	
+
 	/**
 	 * Creates new model object of type T from given resource. During this method call state of
 	 * {@link ExecutionContextStack} is modified - resource attribute is added on top of execution stack. It
@@ -81,26 +81,30 @@ public interface ModelProvider {
 	 * This method is thread-safe.
 	 * 
 	 * @param T type of model object to create
-	 * @param key object that contains both class and annotation class of model object to create
+	 * @param key a Guice {@link Key} which defines binding to a required object
 	 * @param resource Sling resource to create object from
 	 * @return model object from given resource
+	 * 
+	 * @see Key
 	 */
 	<T> T get(final Key<T> key, final Resource resource);
-	
+
 	/**
 	 * Creates new model object of type T from given CRX repository path. During this method call state of
 	 * {@link ExecutionContextStack} is modified - path attribute is added on top of execution stack. It
 	 * allows for recursive call of ModelProvider methods from model object that is being created.
 	 * 
-	 * It is possible to use absolute and relative (with "./" prefix) paths in recursive calls.
-	 * All gets are performed with Context that was used to create this ModelProvider.
+	 * It is possible to use absolute and relative (with "./" prefix) paths in recursive calls. All gets are
+	 * performed with Context that was used to create this ModelProvider.
 	 * 
 	 * This method is thread-safe.
 	 * 
 	 * @param T type of model object to create
-	 * @param key object that contains both class and annotation class of model object to create
+	 * @param key a Guice {@link Key} which defines binding to a required object
 	 * @param path CRX repository path to create object from
 	 * @return model object from given CRX repository path
+	 * 
+	 * @see Key
 	 */
 	<T> T get(final Key<T> key, final String path);
 
@@ -119,9 +123,8 @@ public interface ModelProvider {
 
 	/**
 	 * Creates list of model objects of type T from given CRX repository paths. During this method call state
-	 * of {@link ExecutionContextStack} is modified for each path from iterator - path is added on top of
-	 * path stack. It allows for recursive call of ModelProvider methods from model objects that are being
-	 * created.
+	 * of {@link ExecutionContextStack} is modified for each path from iterator - path is added on top of path
+	 * stack. It allows for recursive call of ModelProvider methods from model objects that are being created.
 	 * 
 	 * It is possible to use absolute and relative (with "./" prefix) paths in recursive calls.
 	 * 
