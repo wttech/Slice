@@ -108,8 +108,8 @@ public class SliceModelProvider implements ModelProvider {
 	@Override
 	public <T> T get(Key<T> key, Resource resource) {
 		ExecutionContextImpl executionItem = new ExecutionContextImpl(resource);
-		LOG.debug("creating new instance of {} from {}", new Object[]{key.toString(), resource});
-		return (T) get(key, executionItem);
+		LOG.debug("creating new instance of {} from {}", new Object[] { key.toString(), resource });
+		return get(key, executionItem);
 	}
 
 	/**
@@ -118,8 +118,8 @@ public class SliceModelProvider implements ModelProvider {
 	@Override
 	public <T> T get(Key<T> key, String path) {
 		ExecutionContextImpl executionItem = new ExecutionContextImpl(path);
-		LOG.debug("creating new instance of {} from {}", new Object[]{key.toString(), path});
-		return (T) get(key, executionItem);
+		LOG.debug("creating new instance of {} from {}", new Object[] { key.toString(), path });
+		return get(key, executionItem);
 	}
 
 	/**
@@ -136,12 +136,11 @@ public class SliceModelProvider implements ModelProvider {
 		return get(key, executionItem);
 	}
 
-	@SuppressWarnings("unchecked")
 	private <T> T get(Class<T> type, ExecutionContextImpl executionItem) {
-		return (T) get(Key.get(type), executionItem);
+		return get(Key.get(type), executionItem);
 	}
 
-	private Object get(Key<?> key, ExecutionContextImpl executionItem) {
+	private <T> T get(Key<T> key, ExecutionContextImpl executionItem) {
 		final ContextProvider oldContextProvider = contextScope.getContextProvider();
 		contextScope.setContextProvider(contextProvider);
 
