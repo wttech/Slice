@@ -165,7 +165,8 @@ public class GenericSlingMapper implements Mapper {
 			Class<?> type = object.getClass();
 			Field[] fields = ReflectionHelper.readAllDeclaredFields(type);
 			for (Field field : fields) {
-				MapperStrategy mapperStrategy = mapperStrategyFactory.getMapperStrategy(field.getDeclaringClass());
+				MapperStrategy mapperStrategy = mapperStrategyFactory.getMapperStrategy(field
+						.getDeclaringClass());
 				if (shouldFieldBeMapped(field, mapperStrategy)) {
 					Object value = mapResourceToField(resource, valueMap, field);
 					FieldUtils.writeField(field, object, value, ReflectionHelper.FORCE_ACCESS);
