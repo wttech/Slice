@@ -38,7 +38,7 @@ public class Activator implements BundleActivator {
 
 	@Override
 	public void start(BundleContext bundleContext) throws Exception {
-		List<Module> sliceModules = SliceModulesFactory.createCoreModules(bundleContext);
+		List<Module> sliceModules = SliceModulesFactory.createModules(bundleContext);
 		List<Module> validationModules = ValidationModulesFactory.createModules();
 
 		InjectorRunner runner = new InjectorRunner(bundleContext, INJECTOR_NAME);

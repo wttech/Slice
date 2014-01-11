@@ -43,8 +43,8 @@ import com.cognifide.slice.api.provider.ClassToKeyMapper;
 import com.cognifide.slice.core.internal.module.JcrModule;
 import com.cognifide.slice.core.internal.module.LinkModule;
 import com.cognifide.slice.core.internal.module.SliceModule;
-import com.cognifide.slice.core.internal.module.SliceResourceModule;
 import com.cognifide.slice.core.internal.module.SlingModule;
+import com.cognifide.slice.mapper.module.MapperModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -52,9 +52,6 @@ import com.google.inject.Module;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SliceClassToKeyMapperTest {
-	private static final String BUNDLE_NAME_FILTER = "com\\.cognifide\\.test\\.webapp\\..*";
-
-	private static final String BASE_PACKAGE = "com.cognifide.test";
 
 	private Injector injector;
 
@@ -80,7 +77,7 @@ public class SliceClassToKeyMapperTest {
 		modules.add(new SlingModule(contextScope));
 		modules.add(new JcrModule());
 		modules.add(new LinkModule());
-		modules.add(new SliceResourceModule(bundleContext, BUNDLE_NAME_FILTER, BASE_PACKAGE));
+		modules.add(new MapperModule());
 
 		injector = Guice.createInjector(modules);
 		mapper = injector.getInstance(ClassToKeyMapper.class);
