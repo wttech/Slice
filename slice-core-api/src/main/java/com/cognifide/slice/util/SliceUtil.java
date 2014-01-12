@@ -33,7 +33,6 @@ import com.cognifide.slice.api.context.ContextProvider;
 import com.cognifide.slice.api.context.RequestContextProvider;
 import com.cognifide.slice.api.injector.InjectorWithContext;
 import com.cognifide.slice.api.injector.InjectorsRepository;
-import com.cognifide.slice.api.provider.ModelProvider;
 
 /**
  * This util class provides useful tools for getting Slice injectors and injecting models. Each public method
@@ -70,13 +69,11 @@ public final class SliceUtil {
 	 * 	injector.close();
 	 * }
 	 * </pre>
-
 	 * 
 	 * @param injectorName Name of the desired injector
 	 * @return Created injector
 	 */
-	public static InjectorWithContext getInjector(String injectorName, SlingHttpServletRequest request,
-			SlingHttpServletResponse response) {
+	public static InjectorWithContext getInjector(String injectorName, SlingHttpServletRequest request) {
 		InjectorWithContext injector = request.adaptTo(InjectorsRepository.class).getInjector(injectorName);
 		RequestContextProvider requestContextProvider = request.adaptTo(RequestContextProvider.class);
 		injector.pushContextProvider(requestContextProvider.getContextProvider(injectorName));
@@ -100,59 +97,28 @@ public final class SliceUtil {
 	}
 
 	/**
-	 * 
-	 * Creates model from given resource. This method is useful if you need to get a single model. However,
-	 * invoking it to get multiple models, one after another won't be as effective as creating injector and
-	 * {@code ModelProvider} manually. Sample usage:
+	 * Creates {@link com.cognifide.slice.mapper.annotation.SliceResource} model from given resource. This
+	 * method is useful if you need to get a single model. However, invoking it to get multiple models, one
+	 * after another won't be as effective as creating injector and {@code ModelProvider} manually. Sample
+	 * usage:
 	 * 
 	 * <pre>
-	 * SimpleModel model = SliceUtil.injectModel(SimpleModel.class, myResource, &quot;myApp&quot;, request, response);
+	 * SimpleModel model = SliceUtil.injectModel(SimpleModel.class, myResource);
 	 * // do something clever with the model
 	 * </pre>
 	 * 
 	 * @deprecated Use {@code resource.adaptTo(Model.class)} instead.
 	 * @param type Model class
 	 * @param resource Resource to map
-	 * @param injectorName Name of the desired injector
 	 * @return Injected and mapped model
 	 */
 	@Deprecated
-	public static <T> T injectModel(Class<T> type, Resource resource, String injectorName,
-			SlingHttpServletRequest request, SlingHttpServletResponse response) {
-		return injectModel(type, resource, getInjector(injectorName, request, response));
-	}
-
-	/**
-	 * Creates model from given resource. See
-	 * {@link #injectModel(Class, Resource, String, SlingHttpServletRequest, SlingHttpServletResponse)}
-	 * Javadoc for more info.
-	 * 
-	 * @deprecated Use {@code resource.adaptTo(Model.class)} instead.
-	 * @param type Model class
-	 * @param resource Resource to map
-	 * @param injectorName Name of the desired injector
-	 * @return Injected and mapped model
-	 */
-	@Deprecated
-	public static <T> T injectModel(Class<T> type, Resource resource, String injectorName,
-			ResourceResolver resolver) {
-		return injectModel(type, resource, getInjector(injectorName, resolver));
-	}
-
-	private static <T> T injectModel(Class<T> type, Resource resource, InjectorWithContext injector) {
-		try {
-			ModelProvider modelProvider = injector.getInstance(ModelProvider.class);
-			return modelProvider.get(type, resource);
-		} finally {
-			injector.popContextProvider();
-		}
+	public static <T> T injectModel(Class<T> type, Resource resource) {
+		return resource.adaptTo(type);
 	}
 
 	/**
 	 * Simple context provider returning always the same context.
-	 * 
-	 * @author Tomasz Rękawek
-	 *
 	 */
 	public static final class ConstantContextProvider implements ContextProvider {
 		private final Context context;
