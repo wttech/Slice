@@ -100,6 +100,7 @@ public final class SliceUtil {
 	}
 
 	/**
+	 * 
 	 * Creates model from given resource. This method is useful if you need to get a single model. However,
 	 * invoking it to get multiple models, one after another won't be as effective as creating injector and
 	 * {@code ModelProvider} manually. Sample usage:
@@ -109,11 +110,13 @@ public final class SliceUtil {
 	 * // do something clever with the model
 	 * </pre>
 	 * 
+	 * @deprecated Use {@code resource.adaptTo(Model.class)} instead.
 	 * @param type Model class
 	 * @param resource Resource to map
 	 * @param injectorName Name of the desired injector
 	 * @return Injected and mapped model
 	 */
+	@Deprecated
 	public static <T> T injectModel(Class<T> type, Resource resource, String injectorName,
 			SlingHttpServletRequest request, SlingHttpServletResponse response) {
 		return injectModel(type, resource, getInjector(injectorName, request, response));
@@ -124,11 +127,13 @@ public final class SliceUtil {
 	 * {@link #injectModel(Class, Resource, String, SlingHttpServletRequest, SlingHttpServletResponse)}
 	 * Javadoc for more info.
 	 * 
+	 * @deprecated Use {@code resource.adaptTo(Model.class)} instead.
 	 * @param type Model class
 	 * @param resource Resource to map
 	 * @param injectorName Name of the desired injector
 	 * @return Injected and mapped model
 	 */
+	@Deprecated
 	public static <T> T injectModel(Class<T> type, Resource resource, String injectorName,
 			ResourceResolver resolver) {
 		return injectModel(type, resource, getInjector(injectorName, resolver));
