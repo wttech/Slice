@@ -1,6 +1,6 @@
 package com.cognifide.slice.commons.link;
 
-/*
+/*-
  * #%L
  * Slice - Core
  * $Id:$
@@ -22,8 +22,8 @@ package com.cognifide.slice.commons.link;
  * #L%
  */
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.fail;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,11 +31,10 @@ import org.junit.Test;
 
 import com.cognifide.slice.api.link.Link;
 import com.cognifide.slice.core.internal.link.LinkImpl;
-import java.net.MalformedURLException;
 
 /**
  * @author Jan Kuźniak
- *
+ * 
  */
 public class LinkBuilderTest {
 
@@ -54,20 +53,20 @@ public class LinkBuilderTest {
 
 	@Test
 	public void shouldParseUrlWithSelectorsQueriesAndFragment() {
-		//given
+		// given
 		ArrayList<String> selectors = new ArrayList<String>();
 		selectors.add("mytest");
 		selectors.add("mytest2");
 		String url = "http://author.example.com/content/demo/home.mytest.mytest2.html?wcmmode=disabled&test=2#GOODBYE";
 
-		//when
+		// when
 		LinkBuilderImpl lb = null;
 		try {
 			lb = new LinkBuilderImpl(url);
 		} catch (MalformedURLException ex) {
 		}
 
-		//then
+		// then
 		assertEquals("html", lb.getExtension());
 		assertEquals("GOODBYE", lb.getFragment());
 		assertEquals("/content/demo/home", lb.getPath());
@@ -80,18 +79,18 @@ public class LinkBuilderTest {
 
 	@Test
 	public void shouldParseUrlWithSuffix() {
-		//given
+		// given
 		ArrayList<String> selectors = new ArrayList<String>();
 		String url = "http://author.example.com/content/demo/home.json/richtext";
 
-		//when
+		// when
 		LinkBuilderImpl lb = null;
 		try {
 			lb = new LinkBuilderImpl(url);
 		} catch (MalformedURLException ex) {
 		}
 
-		//then
+		// then
 		assertEquals("json", lb.getExtension());
 		assertEquals("", lb.getFragment());
 		assertEquals("/content/demo/home", lb.getPath());
@@ -100,22 +99,19 @@ public class LinkBuilderTest {
 		assertEquals("/richtext", lb.getSuffix());
 	}
 
-	@Test
-	public void shouldParseUrlWithComplexSuffixAndFragment() {
-		//given
+	@Test()
+	public void shouldParseUrlWithComplexSuffixAndFragment() throws MalformedURLException {
+		// given
 		ArrayList<String> selectors = new ArrayList<String>();
 		selectors.add("s1");
 		selectors.add("s2");
 		String url = "http://localhost:5602/a/b.s1.s2.html/c/d.s.txt#GOODBYE";
 
-		//when
+		// when
 		LinkBuilderImpl lb = null;
-		try {
-			lb = new LinkBuilderImpl(url);
-		} catch (MalformedURLException ex) {
-		}
+		lb = new LinkBuilderImpl(url);
 
-		//then
+		// then
 		assertEquals("html", lb.getExtension());
 		assertEquals("GOODBYE", lb.getFragment());
 		assertEquals("/a/b", lb.getPath());
@@ -123,44 +119,38 @@ public class LinkBuilderTest {
 		assertEquals(selectors, lb.getSelectors());
 		assertEquals("/c/d.s.txt", lb.getSuffix());
 	}
-	
+
 	@Test
 	public void shouldParseUrlWithNumericExtensionAndSuffix() throws MalformedURLException {
 		String url = "http://localhost:5602/a/b.mp3/c";
 
-		//when
+		// when
 		LinkBuilderImpl lb = new LinkBuilderImpl(url);
 
-		//then
+		// then
 		assertEquals("mp3", lb.getExtension());
 		assertEquals("", lb.getFragment());
 		assertEquals("/a/b", lb.getPath());
 		assertEquals("", lb.getQueryString());
 		assertEquals("/c", lb.getSuffix());
 	}
-	
+
 	@Test
 	public void suffixShouldBeEmptyNotNull() throws MalformedURLException {
 		assertEquals("", new LinkBuilderImpl("http://localhost:5602/a.html").getSuffix());
 		assertEquals("", new LinkBuilderImpl("http://localhost:5602/a.selector.html").getSuffix());
 	}
-	
+
 	@Test
 	public void suffixCanHasMultipleDots() throws MalformedURLException {
 		assertEquals("/b.a/c.d", new LinkBuilderImpl("http://localhost:5602/a.html/b.a/c.d").getSuffix());
 	}
 
-	@Test
-	public void shouldThrowMalformedUrlException() {
-		//given
-		String url = "lorem ipsum";
-		try {
-			//when
-			LinkBuilderImpl lb = new LinkBuilderImpl(url);
-			fail();
-		} catch (MalformedURLException ex) {
-
-		}
+	@Test(expected = MalformedURLException.class)
+	public void shouldThrowMalformedUrlException() throws MalformedURLException {
+		// given
+		String malformedUrl = "lorem ipsum";
+		new LinkBuilderImpl(malformedUrl);
 	}
 
 	@Test
