@@ -1,6 +1,6 @@
 /*-
  * #%L
- * Slice - Core
+ * Slice - Core API
  * $Id:$
  * $HeadURL:$
  * %%
@@ -24,12 +24,11 @@ package com.cognifide.slice.util;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
-import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
+import com.cognifide.slice.api.context.ConstantContextProvider;
 import com.cognifide.slice.api.context.Context;
 import com.cognifide.slice.api.context.ContextFactory;
-import com.cognifide.slice.api.context.ContextProvider;
 import com.cognifide.slice.api.context.RequestContextProvider;
 import com.cognifide.slice.api.injector.InjectorWithContext;
 import com.cognifide.slice.api.injector.InjectorsRepository;
@@ -41,8 +40,8 @@ import com.cognifide.slice.api.injector.InjectorsRepository;
  * @author Tomasz Rekawek
  * 
  */
-public final class SliceUtil {
-	private SliceUtil() {
+public final class InjectorUtil {
+	private InjectorUtil() {
 	}
 
 	/**
@@ -94,42 +93,5 @@ public final class SliceUtil {
 		Context context = factory.getResourceResolverContext(resolver);
 		injector.pushContextProvider(new ConstantContextProvider(context));
 		return injector;
-	}
-
-	/**
-	 * Creates {@link com.cognifide.slice.mapper.annotation.SliceResource} model from given resource. This
-	 * method is useful if you need to get a single model. However, invoking it to get multiple models, one
-	 * after another won't be as effective as creating injector and {@code ModelProvider} manually. Sample
-	 * usage:
-	 * 
-	 * <pre>
-	 * SimpleModel model = SliceUtil.injectModel(SimpleModel.class, myResource);
-	 * // do something clever with the model
-	 * </pre>
-	 * 
-	 * @deprecated Use {@code resource.adaptTo(Model.class)} instead.
-	 * @param type Model class
-	 * @param resource Resource to map
-	 * @return Injected and mapped model
-	 */
-	@Deprecated
-	public static <T> T injectModel(Class<T> type, Resource resource) {
-		return resource.adaptTo(type);
-	}
-
-	/**
-	 * Simple context provider returning always the same context.
-	 */
-	public static final class ConstantContextProvider implements ContextProvider {
-		private final Context context;
-
-		public ConstantContextProvider(Context context) {
-			this.context = context;
-		}
-
-		@Override
-		public Context getContext() {
-			return context;
-		}
 	}
 }

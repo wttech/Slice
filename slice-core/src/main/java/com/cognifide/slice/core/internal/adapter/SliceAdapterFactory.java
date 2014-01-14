@@ -25,6 +25,7 @@ package com.cognifide.slice.core.internal.adapter;
 import org.apache.sling.api.adapter.AdapterFactory;
 import org.apache.sling.api.resource.Resource;
 
+import com.cognifide.slice.api.context.ConstantContextProvider;
 import com.cognifide.slice.api.context.Context;
 import com.cognifide.slice.api.context.ContextFactory;
 import com.cognifide.slice.api.context.ContextProvider;
@@ -32,7 +33,6 @@ import com.cognifide.slice.api.context.RequestContextProvider;
 import com.cognifide.slice.api.injector.InjectorWithContext;
 import com.cognifide.slice.api.injector.InjectorsRepository;
 import com.cognifide.slice.api.provider.ModelProvider;
-import com.cognifide.slice.util.SliceUtil.ConstantContextProvider;
 
 public class SliceAdapterFactory implements AdapterFactory {
 

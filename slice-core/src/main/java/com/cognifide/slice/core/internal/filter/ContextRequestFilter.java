@@ -40,12 +40,12 @@ import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.osgi.framework.Constants;
 
+import com.cognifide.slice.api.context.ConstantContextProvider;
 import com.cognifide.slice.api.context.Context;
 import com.cognifide.slice.api.context.ContextProvider;
 import com.cognifide.slice.api.context.RequestContextProvider;
 import com.cognifide.slice.api.injector.InjectorsRepository;
 import com.cognifide.slice.core.internal.context.SliceContextFactory;
-import com.cognifide.slice.util.SliceUtil.ConstantContextProvider;
 
 // @formatter:off
 /**
