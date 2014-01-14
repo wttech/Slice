@@ -101,6 +101,7 @@ public class ContextRequestFilter implements Filter, RequestContextProvider {
 	 * Return Context instance for current thread. It contains most current ServletRequest and ServletResponse
 	 * instances.
 	 */
+	@Override
 	public ContextProvider getContextProvider(final String injectorName) {
 		Map<String, Context> contextMap = contexts.get();
 		if (contextMap == null) {
