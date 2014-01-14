@@ -34,12 +34,10 @@ import org.slf4j.LoggerFactory;
 import com.cognifide.slice.api.context.ContextProvider;
 import com.cognifide.slice.api.context.ContextScope;
 import com.cognifide.slice.api.execution.ExecutionContextStack;
-import com.cognifide.slice.api.model.InitializableModel;
 import com.cognifide.slice.api.provider.ClassToKeyMapper;
 import com.cognifide.slice.api.provider.ModelProvider;
 import com.cognifide.slice.api.scope.ContextScoped;
 import com.cognifide.slice.core.internal.execution.ExecutionContextImpl;
-import com.cognifide.slice.mapper.api.Mapper;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -65,21 +63,17 @@ public class SliceModelProvider implements ModelProvider {
 
 	private final ExecutionContextStack currentExecutionContext;
 
-	private final Mapper mapper;
-
 	/**
 	 * {@inheritDoc}
 	 */
 	@Inject
 	public SliceModelProvider(final Injector injector, final ContextScope contextScope,
-			final ClassToKeyMapper classToKeyMapper, final ExecutionContextStack currentExecutionContext,
-			final Mapper mapper) {
+			final ClassToKeyMapper classToKeyMapper, final ExecutionContextStack currentExecutionContext) {
 		this.injector = injector;
 		this.contextScope = contextScope;
 		this.contextProvider = contextScope.getContextProvider();
 		this.classToKeyMapper = classToKeyMapper;
 		this.currentExecutionContext = currentExecutionContext;
-		this.mapper = mapper;
 	}
 
 	/**
@@ -156,27 +150,13 @@ public class SliceModelProvider implements ModelProvider {
 
 		currentExecutionContext.push(executionItem);
 		try {
-			return get(key, injector);
+			return injector.getInstance(key);
 		} finally {
 			currentExecutionContext.pop();
 			contextScope.setContextProvider(oldContextProvider);
 		}
 	}
 
-	private <T> T get(Key<T> key, Injector injector) {
-		CurrentResourceProvider resourceProvider = injector.getInstance(CurrentResourceProvider.class);
-		Resource resource = resourceProvider.get();
-
-		T model = injector.getInstance(key);
-		if (resource != null) {
-			mapper.get(resource, model);
-		}
-		if (model instanceof InitializableModel) {
-			InitializableModel initializableModel = (InitializableModel) model;
-			initializableModel.afterCreated();
-		}
-		return model;
-	}
 
 	/**
 	 * {@inheritDoc}

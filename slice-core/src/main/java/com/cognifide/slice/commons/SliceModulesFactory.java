@@ -34,6 +34,7 @@ import com.cognifide.slice.core.internal.module.ContextModule;
 import com.cognifide.slice.core.internal.module.JcrModule;
 import com.cognifide.slice.core.internal.module.LinkModule;
 import com.cognifide.slice.core.internal.module.SliceModule;
+import com.cognifide.slice.core.internal.module.SliceResourceModule;
 import com.cognifide.slice.core.internal.module.SlingModule;
 import com.google.inject.Module;
 
@@ -59,6 +60,7 @@ public class SliceModulesFactory {
 	 * <li>{@link JcrModule}</li>
 	 * <li>{@link LinkModule}</li>
 	 * <li>{@link ContextModule}</li>
+	 * <li>{@link SliceResourceModule}</li>
 	 * </ul>
 	 * 
 	 * @return list of Slice-related modules
@@ -72,6 +74,7 @@ public class SliceModulesFactory {
 		modules.add(new JcrModule());
 		modules.add(new LinkModule());
 		modules.add(new ContextModule());
+		modules.add(new SliceResourceModule());
 		return modules;
 	}
 }
