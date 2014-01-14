@@ -18,7 +18,7 @@ import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
 
 /**
- * This module create an InjectorListener that postprocesses every injection of a {@code @SliceResource}, maps
+ * This module creates an InjectorListener that postprocesses every injection of a {@code @SliceResource}, maps
  * its {@code @JcrProperty} fields and invokes {@code afterCreated()} method.
  * 
  * @author Tomasz Rękawek
