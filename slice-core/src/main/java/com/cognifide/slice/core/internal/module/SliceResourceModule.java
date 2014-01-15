@@ -18,8 +18,8 @@ import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
 
 /**
- * This module creates an InjectorListener that postprocesses every injection of a {@code @SliceResource}, maps
- * its {@code @JcrProperty} fields and invokes {@code afterCreated()} method.
+ * This module creates an InjectorListener that postprocesses every injection of a {@code @SliceResource},
+ * maps its {@code @JcrProperty} fields and invokes {@code afterCreated()} method.
  * 
  * @author Tomasz Rękawek
  * 
@@ -65,6 +65,9 @@ public class SliceResourceModule extends AbstractModule {
 		@Override
 		public void afterInjection(Object injectee) {
 			Resource resource = currentResourceProvider.get().get();
+			if (resource == null) {
+				return;
+			}
 			Mapper mapper = mapperProvider.get();
 			mapper.get(resource, injectee);
 			if (injectee instanceof InitializableModel) {
