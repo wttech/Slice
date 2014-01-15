@@ -23,7 +23,6 @@
 package com.cognifide.slice.util;
 
 import org.apache.sling.api.SlingHttpServletRequest;
-import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.resource.ResourceResolver;
 
 import com.cognifide.slice.api.context.ConstantContextProvider;
@@ -49,7 +48,7 @@ public final class InjectorUtil {
 	 * usage. Sample usage in Java 7:
 	 * 
 	 * <pre>
-	 * try (InjectorWithContext injector = SliceUtil.getInjector(&quot;myApp&quot;, request, response)) {
+	 * try (InjectorWithContext injector = InjectorUtil.getInjector(&quot;myApp&quot;, request)) {
 	 * 	ModelProvider modelProvider = injector.getInstance(ModelProvider.class);
 	 * 	SimpleModel simpleModel = modelProvider.get(SimpleModel.class, resource);
 	 * 	// do something clever with the model
@@ -59,7 +58,7 @@ public final class InjectorUtil {
 	 * In Java 6 you can use try-finally idiom:
 	 * 
 	 * <pre>
-	 * InjectorWithContext injector = SliceUtil.getInjector(&quot;myApp&quot;, request, response)
+	 * InjectorWithContext injector = InjectorUtil.getInjector(&quot;myApp&quot;, request)
 	 * try {
 	 * 	ModelProvider modelProvider = injector.getInstance(ModelProvider.class);
 	 * 	SimpleModel simpleModel = modelProvider.get(SimpleModel.class, resource);
@@ -70,6 +69,7 @@ public final class InjectorUtil {
 	 * </pre>
 	 * 
 	 * @param injectorName Name of the desired injector
+	 * @param request Request used to provide context
 	 * @return Created injector
 	 */
 	public static InjectorWithContext getInjector(String injectorName, SlingHttpServletRequest request) {
@@ -81,10 +81,11 @@ public final class InjectorUtil {
 
 	/**
 	 * Returns injector created in the context of given resource resolver. Injector should be closed after
-	 * usage. See {@link #getInjector(String, SlingHttpServletRequest, SlingHttpServletResponse)} for more
-	 * info.
+	 * usage. See {@link #getInjector(String, SlingHttpServletRequest)} for more info. Please notice that
+	 * Sling request and response objects won't be bound to the context of the created injector.
 	 * 
 	 * @param injectorName Name of the desired injector
+	 * @param resolver Resolver used to provide context
 	 * @return Created injector
 	 */
 	public static InjectorWithContext getInjector(String injectorName, ResourceResolver resolver) {
