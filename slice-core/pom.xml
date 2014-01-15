@@ -109,6 +109,12 @@
 			<groupId>org.apache.felix</groupId>
 			<artifactId>org.apache.felix.scr.annotations</artifactId>
 		</dependency>
+
+		<!-- Sling -->
+		<dependency>
+			<groupId>org.apache.sling</groupId>
+			<artifactId>org.apache.sling.commons.classloader</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>

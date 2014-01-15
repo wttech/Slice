@@ -23,11 +23,12 @@ package com.cognifide.slice.core.internal.provider;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.sling.commons.classloader.DynamicClassLoaderManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +36,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
 
 import com.cognifide.slice.api.context.ContextFactory;
 import com.cognifide.slice.api.context.ContextScope;
@@ -46,6 +46,7 @@ import com.cognifide.slice.core.internal.module.SliceModule;
 import com.cognifide.slice.core.internal.module.SlingModule;
 import com.cognifide.slice.mapper.module.MapperModule;
 import com.google.inject.Guice;
+import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.Module;
@@ -56,21 +57,22 @@ public class SliceClassToKeyMapperTest {
 	private Injector injector;
 
 	@Mock
-	private BundleContext bundleContext;
+	private ContextScope contextScope;
 
 	@Mock
 	private Bundle bundle;
 
 	@Mock
-	private ContextScope contextScope;
+	private DynamicClassLoaderManager classLoaderManager;
+
+	@Mock
+	private ClassLoader classLoader;
 
 	private ClassToKeyMapper mapper;
 
 	@Before
 	public void setUp() throws ClassNotFoundException {
-		when(bundleContext.getBundles()).thenReturn(new Bundle[0]);
-		when(bundle.loadClass(ClassToKeyMapper.class.getCanonicalName())).thenReturn(
-				SliceClassToKeyMapper.class);
+		when(classLoaderManager.getDynamicClassLoader()).thenReturn(classLoader);
 
 		List<Module> modules = new ArrayList<Module>();
 		modules.add(new SliceModule(contextScope, bundle));
@@ -80,13 +82,15 @@ public class SliceClassToKeyMapperTest {
 		modules.add(new MapperModule());
 
 		injector = Guice.createInjector(modules);
-		mapper = injector.getInstance(ClassToKeyMapper.class);
+		mapper = new SliceClassToKeyMapper(injector, classLoaderManager);
 	}
 
 	@Test
-	public void testGetKeyForSimpleType() {
+	public void testGetKeyForSimpleType() throws ClassNotFoundException {
+		doReturn(ClassWithAnObviousConstructor.class).when(classLoader).loadClass(
+				ClassWithAnObviousConstructor.class.getName());
 		// use type not bound in a module - but with an obvious constructor
-		testForClassName(ClassToKeyMapper.class);
+		testForClassName(ClassWithAnObviousConstructor.class);
 	}
 
 	@Test
@@ -101,15 +105,14 @@ public class SliceClassToKeyMapperTest {
 
 		// known class
 		Key<?> key = mapper.getKey(className);
-		Mockito.verify(bundle, Mockito.times(0)).loadClass(className);
+		Mockito.verify(classLoader, Mockito.times(0)).loadClass(className);
 
 		// some unknown class
-		when(bundle.loadClass(SliceClassToKeyMapperTest.class.getCanonicalName())).thenReturn(
-				SliceClassToKeyMapperTest.class);
 		className = SliceClassToKeyMapperTest.class.getName();
+		doReturn(SliceClassToKeyMapperTest.class).when(classLoader).loadClass(className);
 		key = mapper.getKey(className);
 		Key<?> secondInvocationKey = mapper.getKey(className);
-		Mockito.verify(bundle, Mockito.times(1)).loadClass(className);
+		Mockito.verify(classLoader, Mockito.times(1)).loadClass(className);
 		assertEquals("Expecting the same key returned", key, secondInvocationKey);
 	}
 
@@ -125,5 +128,11 @@ public class SliceClassToKeyMapperTest {
 		assertNotNull("instance of " + className + " fetched by type cannot be null", instance2);
 
 		assertEquals("Expected same class, never mind the method", instance1.getClass(), instance2.getClass());
+	}
+
+	private static class ClassWithAnObviousConstructor {
+		@Inject
+		public ClassWithAnObviousConstructor(ContextFactory contextFactory) {
+		}
 	}
 }

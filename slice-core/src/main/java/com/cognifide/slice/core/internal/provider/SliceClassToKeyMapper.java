@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.osgi.framework.Bundle;
+import org.apache.sling.commons.classloader.DynamicClassLoaderManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,13 +43,13 @@ public class SliceClassToKeyMapper implements ClassToKeyMapper {
 	// cache - pre-filled with
 	private final Map<String, Key<?>> knownKeys = new HashMap<String, Key<?>>();
 
-	private final Bundle bundle;
+	private final DynamicClassLoaderManager classLoaderManager;
 
 	private static final Logger LOG = LoggerFactory.getLogger(SliceClassToKeyMapper.class);
 
 	@Inject
-	public SliceClassToKeyMapper(Injector injector, Bundle bundle) {
-		this.bundle = bundle;
+	public SliceClassToKeyMapper(Injector injector, DynamicClassLoaderManager classLoaderManager) {
+		this.classLoaderManager = classLoaderManager;
 		initiateKnownBindings(injector);
 	}
 
@@ -69,13 +69,13 @@ public class SliceClassToKeyMapper implements ClassToKeyMapper {
 		Key<?> knownKey = knownKeys.get(className);
 		if (knownKey == null) {
 			try {
-				Class<?> clazz = bundle.loadClass(className);
+				Class<?> clazz = classLoaderManager.getDynamicClassLoader().loadClass(className);
 				knownKey = Key.get(clazz);
 				// adding binding
 				knownKeys.put(className, knownKey);
 			} catch (ClassNotFoundException e) {
-				String msg = "Unable to map class [{0}] in bundle: {1}";
-				LOG.error(MessageFormat.format(msg, className, bundle.getSymbolicName()), e);
+				String msg = "Unable to map class [{0}]";
+				LOG.error(MessageFormat.format(msg, className), e);
 				// returning null
 			}
 		}
