@@ -28,8 +28,6 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ValueMap;
-
 
 /**
  * Util for getting injector name required for given request.
@@ -38,10 +36,6 @@ import org.apache.sling.api.resource.ValueMap;
  * @author Jan Kuźniak
  */
 public final class InjectorNameUtil {
-
-	private static final String JCR_CONTENT_NODE_NAME = "jcr:content";
-
-	private static final String INJECTOR_NAME_PROPERTY = "injectorName";
 
 	private static final Pattern RESOURCE_TYPE_PATTERN = Pattern.compile("(/[^/]+/)?([^/]+)(/.*)?");
 
@@ -63,50 +57,7 @@ public final class InjectorNameUtil {
 		if (null != request.getResource()) {
 			return getFromResourceType(request.getResource().getResourceType());
 		}
-
 		return StringUtils.EMPTY;
-	}
-
-	public static String getForResource(Resource resource) {
-		String injectorName = null;
-		if (resource != null) {
-			injectorName = getFromContentTree(resource);
-			if (injectorName == null) {
-				injectorName = getFromResourceType(resource.getResourceType());
-			}
-		}
-		return injectorName;
-	}
-
-	public static String getFromContentTree(Resource resource) {
-		String injectorName = null;
-		Resource currentResource = resource;
-		while ((null == injectorName) && (null != currentResource)) {
-			injectorName = getFromContentNode(currentResource);
-			currentResource = currentResource.getParent();
-		}
-		return injectorName;
-	}
-
-	private static String getFromContentNode(Resource resource) {
-		String injectorName;
-		injectorName = getInjectorNameProperty(resource);
-		if (null == injectorName) {
-			Resource contentResource = resource.getChild(JCR_CONTENT_NODE_NAME);
-			if (null != contentResource) {
-				injectorName = getInjectorNameProperty(contentResource);
-			}
-		}
-		return injectorName;
-	}
-
-	public static String getInjectorNameProperty(Resource resource) {
-		String injectorName = null;
-		final ValueMap properties = resource.adaptTo(ValueMap.class);
-		if (null != properties) {
-			injectorName = properties.get(INJECTOR_NAME_PROPERTY, String.class);
-		}
-		return injectorName;
 	}
 
 	public static String getFromResourceType(String resourceType) {

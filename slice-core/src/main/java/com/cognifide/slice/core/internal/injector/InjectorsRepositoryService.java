@@ -1,9 +1,8 @@
 package com.cognifide.slice.core.internal.injector;
 
-//@formatter:off
-/*
+/*-
 * #%L
-* Slice - Core API
+* Slice - Core
 * $Id:$
 * $HeadURL:$
 * %%
@@ -22,7 +21,6 @@ package com.cognifide.slice.core.internal.injector;
 * limitations under the License.
 * #L%
 */
-//@formatter:on
 
 import java.util.Collection;
 
@@ -33,18 +31,12 @@ import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.ReferenceCardinality;
 import org.apache.felix.scr.annotations.ReferencePolicy;
 import org.apache.felix.scr.annotations.Service;
-import org.apache.sling.api.resource.LoginException;
-import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.osgi.framework.Constants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.cognifide.slice.api.injector.InjectorConfig;
 import com.cognifide.slice.api.injector.InjectorWithContext;
 import com.cognifide.slice.api.injector.InjectorsRepository;
-import com.cognifide.slice.util.InjectorNameUtil;
 import com.google.inject.Injector;
 
 /**
@@ -62,8 +54,6 @@ import com.google.inject.Injector;
 })
 // @formatter:on
 public final class InjectorsRepositoryService implements InjectorsRepository {
-
-	private static final Logger LOG = LoggerFactory.getLogger(InjectorsRepositoryService.class);
 
 	@Reference
 	private ResourceResolverFactory resourceResolverFactory;
@@ -83,24 +73,6 @@ public final class InjectorsRepositoryService implements InjectorsRepository {
 	}
 
 	@Override
-	public InjectorWithContext getInjectorForResource(Resource resource) {
-		String injectorName = InjectorNameUtil.getForResource(resource);
-		return getInjector(injectorName);
-	}
-
-	@Override
-	public InjectorWithContext getInjectorForResource(String resourcePath) {
-		InjectorWithContext injector = null;
-		try {
-			injector = getInjectorForResourceAsAdmin(resourcePath);
-		} catch (LoginException e) {
-			// yikes! I can no longer login to repostiory with "null" credentials!
-			LOG.error("Unexpected: could not access administrative resource resolver");
-		}
-		return injector;
-	}
-
-	@Override
 	public String getInjectorName(Injector injector) {
 		return injectors.getRegisteredName(injector);
 	}
@@ -108,14 +80,6 @@ public final class InjectorsRepositoryService implements InjectorsRepository {
 	@Override
 	public Collection<String> getInjectorNames() {
 		return injectors.getInjectorNames();
-	}
-
-	private InjectorWithContext getInjectorForResourceAsAdmin(String resourcePath) throws LoginException {
-		ResourceResolver resourceResolver = resourceResolverFactory.getAdministrativeResourceResolver(null);
-		Resource resource = resourceResolver.getResource(resourcePath);
-		InjectorWithContext injector = getInjectorForResource(resource);
-		resourceResolver.close();
-		return injector;
 	}
 
 	protected void bindInjectors(final InjectorConfig config) {
