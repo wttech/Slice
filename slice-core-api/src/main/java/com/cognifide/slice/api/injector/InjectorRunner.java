@@ -2,7 +2,7 @@ package com.cognifide.slice.api.injector;
 
 /*-
  * #%L
- * Slice - Core
+ * Slice - Core API
  * $Id:$
  * $HeadURL:$
  * %%
@@ -29,7 +29,6 @@ import java.util.List;
 
 import org.osgi.framework.BundleContext;
 
-import com.cognifide.slice.api.context.ContextScope;
 import com.google.inject.Module;
 
 public class InjectorRunner {
@@ -40,7 +39,9 @@ public class InjectorRunner {
 
 	private final BundleContext bundleContext;
 
-	private final ContextScope contextScope;
+	private final String bundleNameFilter;
+
+	private final String basePackage;
 
 	private boolean started = false;
 
@@ -49,26 +50,13 @@ public class InjectorRunner {
 	/**
 	 * @param bundleContext Context used to get access to the OSGi
 	 * @param injectorName Name of the new injector
-	 * 
-	 * @deprecated The contextScope parameter in the class is not used to create an injector. Use the
-	 * {@link #InjectorRunner(BundleContext, String)}
 	 */
-	@Deprecated
 	public InjectorRunner(final BundleContext bundleContext, final String injectorName,
-			final ContextScope contextScope) {
+			final String bundleNameFilter, final String basePackage) {
 		this.bundleContext = bundleContext;
 		this.injectorName = injectorName;
-		this.contextScope = contextScope;
-	}
-
-	/**
-	 * @param bundleContext Context used to get access to the OSGi
-	 * @param injectorName Name of the new injector
-	 */
-	public InjectorRunner(final BundleContext bundleContext, final String injectorName) {
-		this.bundleContext = bundleContext;
-		this.injectorName = injectorName;
-		this.contextScope = null;
+		this.bundleNameFilter = bundleNameFilter;
+		this.basePackage = basePackage;
 	}
 
 	public void setParentInjectorName(String parentInjectorName) {
@@ -99,17 +87,12 @@ public class InjectorRunner {
 		return injectorName;
 	}
 
-	public BundleContext getBundleContext() {
-		return bundleContext;
+	String getBundleNameFilter() {
+		return bundleNameFilter;
 	}
 
-	/**
-	 * @deprecated Context scope is not used to create an injector. This method and matching constructor will
-	 * be removed from the future versions of Slice.
-	 */
-	@Deprecated
-	public ContextScope getContextScope() {
-		return contextScope;
+	String getBasePackage() {
+		return basePackage;
 	}
 
 	List<Module> getModules() {

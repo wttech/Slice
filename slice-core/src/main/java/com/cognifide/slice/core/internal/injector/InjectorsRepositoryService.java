@@ -28,13 +28,10 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.ReferenceCardinality;
-import org.apache.felix.scr.annotations.ReferencePolicy;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.osgi.framework.Constants;
 
-import com.cognifide.slice.api.injector.InjectorConfig;
 import com.cognifide.slice.api.injector.InjectorWithContext;
 import com.cognifide.slice.api.injector.InjectorsRepository;
 import com.google.inject.Injector;
@@ -58,9 +55,8 @@ public final class InjectorsRepositoryService implements InjectorsRepository {
 	@Reference
 	private ResourceResolverFactory resourceResolverFactory;
 
-	@Reference(cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, referenceInterface = InjectorConfig.class, //
-	policy = ReferencePolicy.DYNAMIC)
-	private final InjectorHierarchy injectors = new InjectorHierarchy();
+	@Reference
+	private InjectorHierarchy injectors;
 
 	@Override
 	public InjectorWithContext getInjector(final String injectorName) {
