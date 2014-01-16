@@ -1,15 +1,25 @@
 package com.cognifide.slice.core.internal.filter;
 
 /*
- * #%L Slice - Core $Id:$ $HeadURL:$ %% Copyright (C) 2012 Cognifide Limited %% Licensed under the Apache
- * License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You
- * may obtain a copy of the License at
+ * #%L
+ * Slice - Core
+ * $Id:$
+ * $HeadURL:$
+ * %%
+ * Copyright (C) 2012 Cognifide Limited
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  * 
- * http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software distributed under the License is
- * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the License. #L%
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
  */
 
 import java.io.IOException;
@@ -30,6 +40,7 @@ import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.osgi.framework.Constants;
 
+import com.cognifide.slice.api.context.ConstantContextProvider;
 import com.cognifide.slice.api.context.Context;
 import com.cognifide.slice.api.context.ContextProvider;
 import com.cognifide.slice.api.context.RequestContextProvider;
@@ -40,7 +51,7 @@ import com.cognifide.slice.core.internal.context.SliceContextFactory;
 /**
  * @author Witold Szczerba
  * @author Rafał Malinowski
- * @class ContextRequestFilter
+ * @class ContextRequstFilter
  * 
  * This filter is run for on each request. Each time it stores a Context instance with ServletRequest and
  * ServletResponse values in per-thread variable. This Context is later accessible by getContext() and can be
@@ -90,13 +101,17 @@ public class ContextRequestFilter implements Filter, RequestContextProvider {
 	 * Return Context instance for current thread. It contains most current ServletRequest and ServletResponse
 	 * instances.
 	 */
+	@Override
 	public ContextProvider getContextProvider(final String injectorName) {
-		return new ContextProvider() {
-			@Override
-			public Context getContext() {
-				return contexts.get().get(injectorName);
-			}
-		};
+		Map<String, Context> contextMap = contexts.get();
+		if (contextMap == null) {
+			return null;
+		}
+		Context context = contextMap.get(injectorName);
+		if (context == null) {
+			return null;
+		}
+		return new ConstantContextProvider(context);
 	}
 
 	private Context createContext(String injectorName, ServletRequest request, ServletResponse response) {

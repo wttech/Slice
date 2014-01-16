@@ -1,8 +1,6 @@
-package com.cognifide.slice.core.internal.module;
-
-/*
+/*-
  * #%L
- * Slice - Core
+ * Slice - Core API
  * $Id:$
  * $HeadURL:$
  * %%
@@ -22,25 +20,22 @@ package com.cognifide.slice.core.internal.module;
  * #L%
  */
 
+package com.cognifide.slice.api.context;
 
-import com.cognifide.slice.commons.provider.SliceResourceProvider;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
+/**
+ * Simple context provider returning always the same context.
+ * 
+ * @author Tomasz Rękawek
+ */
+public final class ConstantContextProvider implements ContextProvider {
+	private final Context context;
 
-public final class MappedResourceProvider<T> implements Provider<T> {
-
-	private final Class<T> sliceResourceClass;
-
-	@Inject
-	private Provider<SliceResourceProvider> sliceResourceProvider;
-
-	public MappedResourceProvider(final Class<T> sliceResourceClass) {
-		this.sliceResourceClass = sliceResourceClass;
+	public ConstantContextProvider(Context context) {
+		this.context = context;
 	}
 
 	@Override
-	public T get() {
-		return sliceResourceProvider.get().get(sliceResourceClass);
+	public Context getContext() {
+		return context;
 	}
-
 }
