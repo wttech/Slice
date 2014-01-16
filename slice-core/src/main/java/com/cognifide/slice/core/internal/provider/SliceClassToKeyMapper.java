@@ -35,6 +35,7 @@ import com.google.inject.Binding;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Key;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 @Singleton
@@ -43,13 +44,15 @@ public class SliceClassToKeyMapper implements ClassToKeyMapper {
 	// cache - pre-filled with
 	private final Map<String, Key<?>> knownKeys = new HashMap<String, Key<?>>();
 
-	private final DynamicClassLoaderManager classLoaderManager;
+	// Provider to ensure that we have a valid OSGi service in this singleton object
+	private final Provider<DynamicClassLoaderManager> classLoaderManagerProvider;
 
 	private static final Logger LOG = LoggerFactory.getLogger(SliceClassToKeyMapper.class);
 
 	@Inject
-	public SliceClassToKeyMapper(Injector injector, DynamicClassLoaderManager classLoaderManager) {
-		this.classLoaderManager = classLoaderManager;
+	public SliceClassToKeyMapper(Injector injector,
+			Provider<DynamicClassLoaderManager> classLoaderManagerProvider) {
+		this.classLoaderManagerProvider = classLoaderManagerProvider;
 		initiateKnownBindings(injector);
 	}
 
@@ -69,7 +72,8 @@ public class SliceClassToKeyMapper implements ClassToKeyMapper {
 		Key<?> knownKey = knownKeys.get(className);
 		if (knownKey == null) {
 			try {
-				Class<?> clazz = classLoaderManager.getDynamicClassLoader().loadClass(className);
+				Class<?> clazz = classLoaderManagerProvider.get().getDynamicClassLoader()
+						.loadClass(className);
 				knownKey = Key.get(clazz);
 				// adding binding
 				knownKeys.put(className, knownKey);
