@@ -26,10 +26,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
+import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Deactivate;
+import org.apache.felix.scr.annotations.Reference;
+import org.apache.felix.scr.annotations.ReferenceCardinality;
+import org.apache.felix.scr.annotations.ReferencePolicy;
+import org.apache.felix.scr.annotations.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,15 +53,29 @@ import com.google.inject.Module;
  * @author Tomasz Rekawek
  * 
  */
+@Component
+@Service(value = InjectorHierarchy.class)
 public class InjectorHierarchy {
 
 	private static final Logger LOG = LoggerFactory.getLogger(InjectorHierarchy.class);
 
-	private Map<String, Injector> injectorByName = new HashMap<String, Injector>();
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, referenceInterface = InjectorConfig.class, policy = ReferencePolicy.DYNAMIC, bind = "bindConfig", unbind = "unbindConfig")
+	private final Map<String, InjectorConfig> configByName = new HashMap<String, InjectorConfig>();
 
-	private Map<String, InjectorConfig> configByName = new HashMap<String, InjectorConfig>();
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, referenceInterface = InjectorListener.class, policy = ReferencePolicy.DYNAMIC)
+	private final Set<InjectorListener> listeners = new HashSet<InjectorListener>();
+
+	private final Map<String, Injector> injectorByName = new HashMap<String, Injector>();
 
 	private volatile Map<Injector, String> nameLookupMap = new HashMap<Injector, String>();
+
+	@Deactivate
+	public void deactivate() {
+		configByName.clear();
+		injectorByName.clear();
+		nameLookupMap.clear();
+		listeners.clear();
+	}
 
 	/**
 	 * Register new injector configuration. If all ancestors of the new config are already registered, method
@@ -62,7 +84,7 @@ public class InjectorHierarchy {
 	 * 
 	 * @param config Injector configuration
 	 */
-	public synchronized void registerInjector(InjectorConfig config) {
+	private synchronized void registerInjector(InjectorConfig config) {
 		configByName.put(config.getName(), config);
 
 		List<InjectorConfig> injectorsToRefresh = getSubtree(config);
@@ -75,10 +97,13 @@ public class InjectorHierarchy {
 	 * 
 	 * @param config
 	 */
-	public synchronized void unregisterInjector(InjectorConfig config) {
+	private synchronized void unregisterInjector(InjectorConfig config) {
 		List<InjectorConfig> injectorsToRemove = getSubtree(config);
 		for (InjectorConfig c : injectorsToRemove) {
-			injectorByName.remove(c.getName());
+			Injector injector = injectorByName.remove(c.getName());
+			for (InjectorListener listener : listeners) {
+				listener.injectorDestroyed(injector, c);
+			}
 		}
 		configByName.remove(config.getName());
 		refreshNameLookupMap();
@@ -156,7 +181,11 @@ public class InjectorHierarchy {
 			current = parent;
 		} while (current != null);
 		try {
-			return Guice.createInjector(modules);
+			Injector injector = Guice.createInjector(modules);
+			for (InjectorListener listener : listeners) {
+				listener.injectorCreated(injector, config);
+			}
+			return injector;
 		} catch (CreationException e) {
 			LOG.error("Can't create injector " + config.getName(), e);
 			return null;
@@ -180,5 +209,26 @@ public class InjectorHierarchy {
 			map.put(entry.getValue(), entry.getKey());
 		}
 		nameLookupMap = map;
+	}
+
+	protected void bindConfig(final InjectorConfig config) {
+		registerInjector(config);
+	}
+
+	protected void unbindConfig(final InjectorConfig config) {
+		unregisterInjector(config);
+	}
+
+	protected void bindListeners(final InjectorListener listener) {
+		for (Entry<String, Injector> entry : injectorByName.entrySet()) {
+			String name = entry.getKey();
+			InjectorConfig config = configByName.get(name);
+			listener.injectorCreated(entry.getValue(), config);
+		}
+		listeners.add(listener);
+	}
+
+	protected void unbindListeners(final InjectorListener listener) {
+		listeners.remove(listener);
 	}
 }

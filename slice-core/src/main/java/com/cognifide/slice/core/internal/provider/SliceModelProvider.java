@@ -157,6 +157,7 @@ public class SliceModelProvider implements ModelProvider {
 		}
 	}
 
+
 	/**
 	 * {@inheritDoc}
 	 */

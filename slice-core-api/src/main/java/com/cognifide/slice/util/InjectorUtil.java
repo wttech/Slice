@@ -1,6 +1,6 @@
 /*-
  * #%L
- * Slice - Core
+ * Slice - Core API
  * $Id:$
  * $HeadURL:$
  * %%
@@ -23,17 +23,14 @@
 package com.cognifide.slice.util;
 
 import org.apache.sling.api.SlingHttpServletRequest;
-import org.apache.sling.api.SlingHttpServletResponse;
-import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
+import com.cognifide.slice.api.context.ConstantContextProvider;
 import com.cognifide.slice.api.context.Context;
 import com.cognifide.slice.api.context.ContextFactory;
-import com.cognifide.slice.api.context.ContextProvider;
 import com.cognifide.slice.api.context.RequestContextProvider;
 import com.cognifide.slice.api.injector.InjectorWithContext;
 import com.cognifide.slice.api.injector.InjectorsRepository;
-import com.cognifide.slice.api.provider.ModelProvider;
 
 /**
  * This util class provides useful tools for getting Slice injectors and injecting models. Each public method
@@ -42,8 +39,8 @@ import com.cognifide.slice.api.provider.ModelProvider;
  * @author Tomasz Rekawek
  * 
  */
-public final class SliceUtil {
-	private SliceUtil() {
+public final class InjectorUtil {
+	private InjectorUtil() {
 	}
 
 	/**
@@ -51,7 +48,7 @@ public final class SliceUtil {
 	 * usage. Sample usage in Java 7:
 	 * 
 	 * <pre>
-	 * try (InjectorWithContext injector = SliceUtil.getInjector(&quot;myApp&quot;, request, response)) {
+	 * try (InjectorWithContext injector = InjectorUtil.getInjector(&quot;myApp&quot;, request)) {
 	 * 	ModelProvider modelProvider = injector.getInstance(ModelProvider.class);
 	 * 	SimpleModel simpleModel = modelProvider.get(SimpleModel.class, resource);
 	 * 	// do something clever with the model
@@ -61,7 +58,7 @@ public final class SliceUtil {
 	 * In Java 6 you can use try-finally idiom:
 	 * 
 	 * <pre>
-	 * InjectorWithContext injector = SliceUtil.getInjector(&quot;myApp&quot;, request, response)
+	 * InjectorWithContext injector = InjectorUtil.getInjector(&quot;myApp&quot;, request)
 	 * try {
 	 * 	ModelProvider modelProvider = injector.getInstance(ModelProvider.class);
 	 * 	SimpleModel simpleModel = modelProvider.get(SimpleModel.class, resource);
@@ -70,13 +67,12 @@ public final class SliceUtil {
 	 * 	injector.close();
 	 * }
 	 * </pre>
-
 	 * 
 	 * @param injectorName Name of the desired injector
+	 * @param request Request used to provide context
 	 * @return Created injector
 	 */
-	public static InjectorWithContext getInjector(String injectorName, SlingHttpServletRequest request,
-			SlingHttpServletResponse response) {
+	public static InjectorWithContext getInjector(String injectorName, SlingHttpServletRequest request) {
 		InjectorWithContext injector = request.adaptTo(InjectorsRepository.class).getInjector(injectorName);
 		RequestContextProvider requestContextProvider = request.adaptTo(RequestContextProvider.class);
 		injector.pushContextProvider(requestContextProvider.getContextProvider(injectorName));
@@ -85,10 +81,14 @@ public final class SliceUtil {
 
 	/**
 	 * Returns injector created in the context of given resource resolver. Injector should be closed after
-	 * usage. See {@link #getInjector(String, SlingHttpServletRequest, SlingHttpServletResponse)} for more
-	 * info.
+	 * usage. See {@link #getInjector(String, SlingHttpServletRequest)} for more info.
+	 * <br/><br/>
+	 * Please notice that Sling request and response objects won't be bound to the context of the created
+	 * injector. This method is meant to be used to provide Slice injector in OSGi components, where you have
+	 * no request.
 	 * 
 	 * @param injectorName Name of the desired injector
+	 * @param resolver Resolver used to provide context
 	 * @return Created injector
 	 */
 	public static InjectorWithContext getInjector(String injectorName, ResourceResolver resolver) {
@@ -97,62 +97,5 @@ public final class SliceUtil {
 		Context context = factory.getResourceResolverContext(resolver);
 		injector.pushContextProvider(new ConstantContextProvider(context));
 		return injector;
-	}
-
-	/**
-	 * Creates model from given resource. This method is useful if you need to get a single model. However,
-	 * invoking it to get multiple models, one after another won't be as effective as creating injector and
-	 * {@code ModelProvider} manually. Sample usage:
-	 * 
-	 * <pre>
-	 * SimpleModel model = SliceUtil.injectModel(SimpleModel.class, myResource, &quot;myApp&quot;, request, response);
-	 * // do something clever with the model
-	 * </pre>
-	 * 
-	 * @param type Model class
-	 * @param resource Resource to map
-	 * @param injectorName Name of the desired injector
-	 * @return Injected and mapped model
-	 */
-	public static <T> T injectModel(Class<T> type, Resource resource, String injectorName,
-			SlingHttpServletRequest request, SlingHttpServletResponse response) {
-		return injectModel(type, resource, getInjector(injectorName, request, response));
-	}
-
-	/**
-	 * Creates model from given resource. See
-	 * {@link #injectModel(Class, Resource, String, SlingHttpServletRequest, SlingHttpServletResponse)}
-	 * Javadoc for more info.
-	 * 
-	 * @param type Model class
-	 * @param resource Resource to map
-	 * @param injectorName Name of the desired injector
-	 * @return Injected and mapped model
-	 */
-	public static <T> T injectModel(Class<T> type, Resource resource, String injectorName,
-			ResourceResolver resolver) {
-		return injectModel(type, resource, getInjector(injectorName, resolver));
-	}
-
-	private static <T> T injectModel(Class<T> type, Resource resource, InjectorWithContext injector) {
-		try {
-			ModelProvider modelProvider = injector.getInstance(ModelProvider.class);
-			return modelProvider.get(type, resource);
-		} finally {
-			injector.popContextProvider();
-		}
-	}
-
-	private static final class ConstantContextProvider implements ContextProvider {
-		private final Context context;
-
-		private ConstantContextProvider(Context context) {
-			this.context = context;
-		}
-
-		@Override
-		public Context getContext() {
-			return context;
-		}
 	}
 }
