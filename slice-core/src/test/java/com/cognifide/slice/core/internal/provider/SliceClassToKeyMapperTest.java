@@ -23,7 +23,8 @@ package com.cognifide.slice.core.internal.provider;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +51,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.Module;
+import com.google.inject.Provider;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SliceClassToKeyMapperTest {
@@ -63,7 +65,10 @@ public class SliceClassToKeyMapperTest {
 	private Bundle bundle;
 
 	@Mock
-	private DynamicClassLoaderManager classLoaderManager;
+	private Provider<DynamicClassLoaderManager> classLoaderManager;
+
+	@Mock
+	private DynamicClassLoaderManager manager;
 
 	@Mock
 	private ClassLoader classLoader;
@@ -72,7 +77,8 @@ public class SliceClassToKeyMapperTest {
 
 	@Before
 	public void setUp() throws ClassNotFoundException {
-		when(classLoaderManager.getDynamicClassLoader()).thenReturn(classLoader);
+		when(classLoaderManager.get()).thenReturn(manager);
+		when(manager.getDynamicClassLoader()).thenReturn(classLoader);
 
 		List<Module> modules = new ArrayList<Module>();
 		modules.add(new SliceModule(contextScope, bundle));
