@@ -1,6 +1,6 @@
 package com.cognifide.slice.api.provider;
 
-/*
+/*-
  * #%L
  * Slice - Core API
  * $Id:$
@@ -22,7 +22,6 @@ package com.cognifide.slice.api.provider;
  * #L%
  */
 
-
 import java.util.Iterator;
 import java.util.List;
 
@@ -41,8 +40,8 @@ public interface ModelProvider {
 	 * {@link ExecutionContextStack} is modified - path attribute is added on top of execution stack. It
 	 * allows for recursive call of ModelProvider methods from model object that is being created.
 	 * 
-	 * It is possible to use absolute and relative (with "./" prefix) paths in recursive calls.
-	 * All gets are performed with Context that was used to create this ModelProvider.
+	 * It is possible to use absolute and relative (with "./" prefix) paths in recursive calls. All gets are
+	 * performed with Context that was used to create this ModelProvider.
 	 * 
 	 * <code>
 	 *   modelProvider.get(ModelType.class, "/absolute/patch");
@@ -87,9 +86,8 @@ public interface ModelProvider {
 
 	/**
 	 * Creates list of model objects of type T from given CRX repository paths. During this method call state
-	 * of {@link ExecutionContextStack} is modified for each path from iterator - path is added on top of
-	 * path stack. It allows for recursive call of ModelProvider methods from model objects that are being
-	 * created.
+	 * of {@link ExecutionContextStack} is modified for each path from iterator - path is added on top of path
+	 * stack. It allows for recursive call of ModelProvider methods from model objects that are being created.
 	 * 
 	 * It is possible to use absolute and relative (with "./" prefix) paths in recursive calls.
 	 * 
