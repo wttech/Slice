@@ -45,9 +45,13 @@ public class ListFieldProcessor implements FieldProcessor {
 			return null;
 		}
 		Object value = valueMap.get(propertyName);
+		if (value == null) {
+			return null;
+		}
 		if (value.getClass().isArray()) {
 			return Arrays.asList((Object[]) value);
+		} else {
+			return Arrays.asList(value);
 		}
-		return null;
 	}
 }
