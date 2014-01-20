@@ -1,6 +1,6 @@
 package com.cognifide.slice.mapper.module;
 
-/*
+/*-
  * #%L
  * Slice - Mapper
  * $Id:$
@@ -22,9 +22,7 @@ package com.cognifide.slice.mapper.module;
  * #L%
  */
 
-
 import com.cognifide.slice.api.scope.ContextScoped;
-import com.cognifide.slice.commons.provider.SliceResourceProvider;
 import com.cognifide.slice.mapper.MapperBuilder;
 import com.cognifide.slice.mapper.annotation.SliceResource;
 import com.cognifide.slice.mapper.api.Mapper;
@@ -41,7 +39,7 @@ public class MapperModule extends AbstractModule {
 
 	@Inject
 	private MapperBuilder mapperBuilder;
-	
+
 	@Override
 	protected void configure() {
 	}
