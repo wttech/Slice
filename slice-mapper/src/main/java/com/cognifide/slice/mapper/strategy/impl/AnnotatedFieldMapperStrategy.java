@@ -24,7 +24,6 @@ package com.cognifide.slice.mapper.strategy.impl;
 
 import java.lang.reflect.Field;
 
-import com.cognifide.slice.mapper.annotation.Children;
 import com.cognifide.slice.mapper.annotation.JcrProperty;
 import com.cognifide.slice.mapper.strategy.MapperStrategy;
 

@@ -1,6 +1,6 @@
 package com.cognifide.slice.mapper.exception;
 
-/*
+/*-
  * #%L
  * Slice - Mapper
  * $Id:$
@@ -22,13 +22,16 @@ package com.cognifide.slice.mapper.exception;
  * #L%
  */
 
-
 public class MapperException extends RuntimeException {
 
 	private static final long serialVersionUID = -8268093493798783056L;
 
 	public MapperException(final String message, final Throwable cause) {
 		super(message, cause);
+	}
+
+	public MapperException(final String message) {
+		super(message);
 	}
 
 }

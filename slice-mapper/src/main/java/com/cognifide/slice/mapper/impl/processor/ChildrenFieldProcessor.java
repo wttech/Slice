@@ -19,6 +19,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 public class ChildrenFieldProcessor implements FieldProcessor {
+
 	@Inject
 	private Provider<ModelProvider> modelProvider;
 
@@ -33,58 +34,46 @@ public class ChildrenFieldProcessor implements FieldProcessor {
 
 	@Override
 	public Object mapResourceToField(Resource resource, ValueMap valueMap, Field field, String propertyName) {
+		List<?> mappedModels = getChildrenList(resource, field, propertyName);
+
 		final Class<?> fieldType = field.getType();
-		final String fieldName = field.getName();
-		propertyName = (fieldName.equals(propertyName) ? "." : propertyName);
-
-		@SuppressWarnings("rawtypes")
-		List children = getChildrenList(resource, field, propertyName);
-
 		if (fieldType.isArray()) {
-			return getArrayFromList(fieldType, children);
+			return getArrayFromList(fieldType.getComponentType(), mappedModels);
 		} else {
-			return children;
+			return mappedModels;
 		}
-
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private List getChildrenList(Resource resource, Field field, String propertyName) {
-		final Resource childResource = resource.getChild(propertyName);
-		final Children childrenAnnotation = field.getAnnotation(Children.class);
-		final Class<?> childrenType = childrenAnnotation.value();
-
-		if (childResource != null) {
-			Iterator<Resource> childrenIterator = childResource.listChildren();
-			List children = new ArrayList();
-			while (childrenIterator.hasNext()) {
-				String childrenPath = childrenIterator.next().getPath();
-				Object child = modelProvider.get().get(childrenType, childrenPath);
-				if (child != null) {
-					children.add(child);
-				}
-			}
-			return children;
-		} else {
+	private List<?> getChildrenList(Resource resource, Field field, String propertyName) {
+		final Resource collectionParent = resource.getChild(propertyName);
+		if (collectionParent == null) {
 			String message = MessageFormat.format("The resource {0} does not exists.", propertyName);
-			throw new MapperException(message, new Exception());
-		}
-	}
-
-	@SuppressWarnings("rawtypes")
-	private Object getArrayFromList(Class<?> fieldType, List children) {
-		Class<?> ofArray = fieldType.getComponentType();
-		try {
-			return getCastedArray(children, ofArray.getConstructor().newInstance());
-		} catch (Exception e) {
-			String message = "Cannot cast from list to array";
-			throw new MapperException(message, e);
+			throw new MapperException(message);
 		}
 
+		final Children childrenAnnotation = field.getAnnotation(Children.class);
+		final Class<?> modelClass = childrenAnnotation.value();
+
+		ModelProvider provider = modelProvider.get();
+		Iterator<Resource> iterator = collectionParent.listChildren();
+		List<Object> mappedModels = new ArrayList<Object>();
+		while (iterator.hasNext()) {
+			Object childModel = provider.get(modelClass, iterator.next());
+			mappedModels.add(childModel);
+		}
+		return mappedModels;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private <T> T[] getCastedArray(List list, T type) {
-		return (T[]) list.toArray((T[]) Array.newInstance(type.getClass(), list.size()));
+	private Object getArrayFromList(Class<?> componentType, List<?> children) {
+		Object array = Array.newInstance(componentType, children.size());
+		int index = 0;
+		for (Object child : children) {
+			if (!componentType.isAssignableFrom(child.getClass())) {
+				String message = MessageFormat.format("Can't cast {0} into {1} array", child, componentType);
+				throw new MapperException(message);
+			}
+			Array.set(array, index++, child);
+		}
+		return array;
 	}
 }

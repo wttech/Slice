@@ -27,7 +27,6 @@ import java.lang.reflect.Field;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 
-import com.cognifide.slice.mapper.annotation.Children;
 import com.cognifide.slice.mapper.api.processor.FieldProcessor;
 import com.cognifide.slice.mapper.helper.ReflectionHelper;
 
