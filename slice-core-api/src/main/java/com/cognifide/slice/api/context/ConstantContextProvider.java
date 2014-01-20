@@ -23,17 +23,19 @@
 package com.cognifide.slice.api.context;
 
 /**
- * ContextProvider that allows for manually setting Context.
+ * Simple context provider returning always the same context.
  * 
- * @author Rafał Malinowski
+ * @author Tomasz Rękawek
  */
-public interface SimpleContextProvider extends ContextProvider {
+public final class ConstantContextProvider implements ContextProvider {
+	private final Context context;
 
-	/**
-	 * Set Context to be provided.
-	 *
-	 * @param context Context to be provided
-	 */
-	void setContext(Context context);
+	public ConstantContextProvider(Context context) {
+		this.context = context;
+	}
 
+	@Override
+	public Context getContext() {
+		return context;
+	}
 }

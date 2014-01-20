@@ -1,6 +1,4 @@
-package com.cognifide.slice.api.injector;
-
-/*
+/*-
  * #%L
  * Slice - Core API
  * $Id:$
@@ -22,6 +20,7 @@ package com.cognifide.slice.api.injector;
  * #L%
  */
 
+package com.cognifide.slice.api.injector;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,11 +37,17 @@ public class InjectorConfig {
 
 	private final String parentName;
 
+	private final String basePackage;
+
+	private final String bundleFilter;
+
 	InjectorConfig(InjectorRunner runner) {
 		// we don't allow to change the module list after creating the configuration
 		modules = Collections.unmodifiableList(new ArrayList<Module>(runner.getModules()));
 		name = runner.getInjectorName();
 		parentName = runner.getParentName();
+		basePackage = runner.getBasePackage();
+		bundleFilter = runner.getBundleNameFilter();
 	}
 
 	public String getName() {
@@ -59,5 +64,13 @@ public class InjectorConfig {
 
 	public List<Module> getModules() {
 		return modules;
+	}
+
+	public String getBasePackage() {
+		return basePackage;
+	}
+
+	public String getBundleNameFilter() {
+		return bundleFilter;
 	}
 }
