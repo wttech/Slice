@@ -29,18 +29,17 @@ import org.apache.sling.api.resource.ValueMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.cognifide.slice.commons.provider.SliceResourceProvider;
+import com.cognifide.slice.api.provider.ModelProvider;
 import com.cognifide.slice.mapper.annotation.SliceResource;
 import com.cognifide.slice.mapper.api.processor.FieldProcessor;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 public class SliceResourceFieldProcessor implements FieldProcessor {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SliceResourceFieldProcessor.class);
 
 	@Inject
-	private Provider<SliceResourceProvider> sliceResourceProvider;
+	private ModelProvider modelProvider;
 
 	@Override
 	public boolean accepts(Resource resource, Field field) {
@@ -66,7 +65,7 @@ public class SliceResourceFieldProcessor implements FieldProcessor {
 			}
 			return null;
 		} else {
-			return sliceResourceProvider.get().get(fieldType, nestedResource);
+			return modelProvider.get(fieldType, nestedResource);
 		}
 	}
 

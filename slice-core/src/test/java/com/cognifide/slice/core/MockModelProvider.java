@@ -1,6 +1,6 @@
 package com.cognifide.slice.core;
 
-/*
+/*-
  * #%L
  * Slice - Core
  * $Id:$
@@ -22,7 +22,6 @@ package com.cognifide.slice.core;
  * #L%
  */
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -33,6 +32,7 @@ import org.apache.sling.api.resource.Resource;
 
 import com.cognifide.slice.api.provider.ModelProvider;
 import org.apache.sling.api.resource.ResourceResolver;
+import com.google.inject.Key;
 
 public class MockModelProvider implements ModelProvider {
 
@@ -62,7 +62,19 @@ public class MockModelProvider implements ModelProvider {
 		// TODO
 		return null;
 	}
-	
+
+	@Override
+	public <T> T get(Key<T> key, Resource resource) {
+		// TODO
+		return null;
+	}
+
+	@Override
+	public <T> T get(Key<T> key, String path) {
+		// TODO
+		return null;
+	}
+
 	@Override
 	public Object get(String className, String path) throws ClassNotFoundException {
 		// TODO
