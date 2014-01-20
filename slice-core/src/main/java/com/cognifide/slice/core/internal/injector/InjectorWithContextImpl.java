@@ -107,6 +107,14 @@ public class InjectorWithContextImpl implements InjectorWithContext {
 		return result;
 	}
 
+	/**
+	 * Alias for the {@link #popContextProvider()} method.
+	 * 
+	 */
+	public void close() {
+		popContextProvider();
+	}
+
 	@Override
 	public <T> T getInstance(final Class<T> clazz) {
 		return injector.getInstance(clazz);

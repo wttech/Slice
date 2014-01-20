@@ -1,8 +1,6 @@
-package com.cognifide.slice.core.internal.context;
-
-/*
+/*-
  * #%L
- * Slice - Core
+ * Slice - Core API
  * $Id:$
  * $HeadURL:$
  * %%
@@ -22,20 +20,15 @@ package com.cognifide.slice.core.internal.context;
  * #L%
  */
 
+package com.cognifide.slice.api.context;
 
-import com.cognifide.slice.api.context.Context;
-import com.cognifide.slice.api.context.SimpleContextProvider;
-
-public class SimpleContextProviderImpl implements SimpleContextProvider {
-
-	private Context context;
-
-	public void setContext(final Context context) {
-		this.context = context;
-	}
-
-	public Context getContext() {
-		return context;
-	}
-
+public interface RequestContextProvider {
+	/**
+	 * Return context provider that stores data in the request attributes. Bindings are stored separately for
+	 * each injector.
+	 * 
+	 * @param injectorName Injector name
+	 * @return Context provider that stores data in the request attribute.
+	 */
+	ContextProvider getContextProvider(String injectorName);
 }

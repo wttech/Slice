@@ -1,6 +1,4 @@
-package com.cognifide.slice.core.internal.context;
-
-/*
+/*-
  * #%L
  * Slice - Core
  * $Id:$
@@ -22,6 +20,7 @@ package com.cognifide.slice.core.internal.context;
  * #L%
  */
 
+package com.cognifide.slice.core.internal.context;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -45,6 +44,18 @@ import com.google.inject.Key;
 public class SliceContextFactory implements ContextFactory {
 
 	/**
+	 * Create common context from request and response objects. Returned Context will delegate it stored/reads
+	 * to request object.
+	 * 
+	 * @deprecated Use method with explicit injector name
+	 * {@code ContextFactory#getServletRequestContext(String, ServletRequest, ServletResponse)}
+	 */
+	@Override
+	public Context getServletRequestContext(ServletRequest request, ServletResponse response) {
+		return getServletRequestContext(COMMON_CONTEXT_NAME, request, response);
+	}
+
+	/**
 	 * Create Context from request and response objects. Returned Context will delegate it stored/reads to
 	 * request object - it will behave a bit like RequestScope from Slice 1.0.
 	 * 
@@ -52,12 +63,13 @@ public class SliceContextFactory implements ContextFactory {
 	 * Resource.class with RequestedResourcePath attribute.
 	 */
 	@Override
-	public Context getServletRequestContext(final ServletRequest request, final ServletResponse response) {
+	public Context getServletRequestContext(final String injectorName, final ServletRequest request,
+			final ServletResponse response) {
 		if (null == request || null == response) {
-			return null;
+			throw new IllegalArgumentException("Request and response can't be null");
 		}
 
-		final Context context = new ServletRequestContext(request);
+		final Context context = new ServletRequestContext(injectorName, request);
 		context.put(Key.get(ServletRequest.class), request);
 		context.put(Key.get(ServletResponse.class), response);
 
@@ -85,5 +97,4 @@ public class SliceContextFactory implements ContextFactory {
 
 		return mapContex;
 	}
-
 }

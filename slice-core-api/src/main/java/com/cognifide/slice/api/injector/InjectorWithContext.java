@@ -22,6 +22,8 @@ package com.cognifide.slice.api.injector;
  * #L%
  */
 
+import java.io.Closeable;
+
 import com.cognifide.slice.api.context.ContextProvider;
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -57,7 +59,7 @@ import com.google.inject.Key;
  * 
  * This decoration has two delegate getInstance() methods added for convenience.
  */
-public interface InjectorWithContext {
+public interface InjectorWithContext extends Closeable {
 
 	/**
 	 * Return Guice Injector behind this InjectorWithContext.
@@ -73,6 +75,11 @@ public interface InjectorWithContext {
 	 * Pop top ContextProvider from ContextProvider stack and set previous one as current on Guice Injector.
 	 */
 	ContextProvider popContextProvider();
+
+	/**
+	 * Easy to remember alias for the {@code #popContextProvider()} method.
+	 */
+	void close();
 
 	/**
 	 * Return new instance of given class using Guice Injector.

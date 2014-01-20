@@ -22,8 +22,9 @@ package com.cognifide.slice.core.internal.filter;
  * #L%
  */
 
-
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -35,11 +36,15 @@ import javax.servlet.ServletResponse;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
+import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.osgi.framework.Constants;
 
+import com.cognifide.slice.api.context.ConstantContextProvider;
 import com.cognifide.slice.api.context.Context;
 import com.cognifide.slice.api.context.ContextProvider;
+import com.cognifide.slice.api.context.RequestContextProvider;
+import com.cognifide.slice.api.injector.InjectorsRepository;
 import com.cognifide.slice.core.internal.context.SliceContextFactory;
 
 // @formatter:off
@@ -57,18 +62,17 @@ import com.cognifide.slice.core.internal.context.SliceContextFactory;
 @Properties({
 		@Property(name = Constants.SERVICE_DESCRIPTION, value = "Filter that is injected into request chain to provide access to request, resource and response."),
 		@Property(name = Constants.SERVICE_VENDOR, value = "Cognifide"),
-		@Property(name = Constants.SERVICE_RANKING, intValue = ContextRequstFilter.RANKING),
+		@Property(name = Constants.SERVICE_RANKING, intValue = ContextRequestFilter.RANKING),
 		@Property(name = "filter.scope", value = {"request","forward"}) })
 // @formatter:on
-public class ContextRequstFilter implements Filter, ContextProvider {
+public class ContextRequestFilter implements Filter, RequestContextProvider {
+
+	@Reference
+	private InjectorsRepository injectorsRepo;
 
 	public static final int RANKING = -650;
 
-	private final ThreadLocal<Context> contexts = new ThreadLocal<Context>();
-
-	@Override
-	public void init(final FilterConfig filterConfig) throws ServletException {
-	}
+	private final ThreadLocal<Map<String, Context>> contexts = new ThreadLocal<Map<String, Context>>();
 
 	/**
 	 * Update Context instance for current thread to use current request and response values.
@@ -76,19 +80,19 @@ public class ContextRequstFilter implements Filter, ContextProvider {
 	@Override
 	public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
 			throws IOException, ServletException {
-		final Context previous = contexts.get();
-
+		final Map<String, Context> previous = contexts.get();
 		try {
-			final Context context = (new SliceContextFactory()).getServletRequestContext(request, response);
-			contexts.set(context);
+			Map<String, Context> current = new HashMap<String, Context>();
+			for (String injector : injectorsRepo.getInjectorNames()) {
+				current.put(injector, createContext(injector, request, response));
+			}
+			current.put(SliceContextFactory.COMMON_CONTEXT_NAME,
+					createContext(SliceContextFactory.COMMON_CONTEXT_NAME, request, response));
+			contexts.set(current);
 			chain.doFilter(request, response);
 		} finally {
 			contexts.set(previous);
 		}
-	}
-
-	@Override
-	public void destroy() {
 	}
 
 	/**
@@ -98,8 +102,28 @@ public class ContextRequstFilter implements Filter, ContextProvider {
 	 * instances.
 	 */
 	@Override
-	public Context getContext() {
-		return contexts.get();
+	public ContextProvider getContextProvider(final String injectorName) {
+		Map<String, Context> contextMap = contexts.get();
+		if (contextMap == null) {
+			return null;
+		}
+		Context context = contextMap.get(injectorName);
+		if (context == null) {
+			return null;
+		}
+		return new ConstantContextProvider(context);
+	}
+
+	private Context createContext(String injectorName, ServletRequest request, ServletResponse response) {
+		return (new SliceContextFactory()).getServletRequestContext(injectorName, request, response);
+	}
+
+	@Override
+	public void init(final FilterConfig filterConfig) throws ServletException {
+	}
+
+	@Override
+	public void destroy() {
 	}
 
 }

@@ -41,6 +41,9 @@ public class BooleanFieldProcessor implements FieldProcessor {
 	@Override
 	public Object mapResourceToField(Resource resource, ValueMap valueMap, Field field, String propertyName) {
 		Boolean result = null;
+		if (field.getType().isPrimitive()) {
+			result = Boolean.FALSE;
+		}
 		if (valueMap != null) {
 			Object value = valueMap.get(propertyName);
 			if (value instanceof Boolean) {

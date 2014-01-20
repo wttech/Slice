@@ -1,8 +1,6 @@
-package com.cognifide.slice.core.internal.context;
-
-/*
+/*-
  * #%L
- * Slice - Core
+ * Slice - Core API
  * $Id:$
  * $HeadURL:$
  * %%
@@ -22,15 +20,22 @@ package com.cognifide.slice.core.internal.context;
  * #L%
  */
 
+package com.cognifide.slice.api.context;
 
-import com.cognifide.slice.api.context.ContextProviderFactory;
-import com.cognifide.slice.api.context.SimpleContextProvider;
+/**
+ * Simple context provider returning always the same context.
+ * 
+ * @author Tomasz Rękawek
+ */
+public final class ConstantContextProvider implements ContextProvider {
+	private final Context context;
 
-public class ContextProviderFactoryImpl implements ContextProviderFactory {
-
-	@Override
-	public SimpleContextProvider getSimpleContextProvider() {
-		return new SimpleContextProviderImpl();
+	public ConstantContextProvider(Context context) {
+		this.context = context;
 	}
 
+	@Override
+	public Context getContext() {
+		return context;
+	}
 }

@@ -1,6 +1,6 @@
-package com.cognifide.slice.core.internal;
+package com.cognifide.slice.core.internal.scanner;
 
-/*
+/*-
  * #%L
  * Slice - Core
  * $Id:$
