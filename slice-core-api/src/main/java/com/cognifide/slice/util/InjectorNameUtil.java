@@ -22,21 +22,25 @@ package com.cognifide.slice.util;
  * #L%
  */
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ResourceResolver;
-import org.apache.sling.api.resource.ValueMap;
 
 /**
  * Util for getting injector name required for given request.
  * 
  * @author rafal.malinowski
+ * @author Jan Kuźniak
  */
 public final class InjectorNameUtil {
 
+	private static final Pattern RESOURCE_TYPE_PATTERN = Pattern.compile("(/[^/]+/)?([^/]+)(/.*)?");
+
 	private InjectorNameUtil() {
+		// hiding util class constructor
 	}
 
 	/**
@@ -45,54 +49,26 @@ public final class InjectorNameUtil {
 	 * 
 	 * If no injectorName property is found then name is fetched from current resource type. It is name of
 	 * path item directly after apps. For /apps/slice/... it will return slice.
+	 * 
+	 * @deprecated use {@link com.cognifide.slice.api.injector.InjectorsRepository#getInjectorForResource(Resource)} instead
 	 */
+	@Deprecated
 	public static String getFromRequest(final SlingHttpServletRequest request) {
-		final ResourceResolver resourceResolver = request.getResourceResolver();
-
-		Resource currentResource = request.getResource();
-
-		while (null != currentResource) {
-			final String result = getFromResource(currentResource);
-			if (StringUtils.isNotBlank(result)) {
-				return result;
-			}
-
-			final String jcrContentResult = getFromResource(resourceResolver.getResource(currentResource,
-					"jcr:content"));
-			if (StringUtils.isNotBlank(jcrContentResult)) {
-				return jcrContentResult;
-			}
-
-			currentResource = currentResource.getParent();
-		}
-
 		if (null != request.getResource()) {
 			return getFromResourceType(request.getResource().getResourceType());
 		}
-
 		return StringUtils.EMPTY;
 	}
 
-	private static String getFromResource(final Resource currentResource) {
-		if (null == currentResource) {
-			return StringUtils.EMPTY;
-		}
-
-		final ValueMap resourceValueMap = currentResource.adaptTo(ValueMap.class);
-		if (null != resourceValueMap) {
-			final String injectorName = resourceValueMap.get("injectorName", String.class);
-			if (null != injectorName) {
-				return injectorName;
+	public static String getFromResourceType(String resourceType) {
+		String injectorName = null;
+		if (StringUtils.isNotEmpty(resourceType)) {
+			Pattern pattern = RESOURCE_TYPE_PATTERN;
+			Matcher matcher = pattern.matcher(resourceType);
+			if (matcher.matches()) {
+				injectorName = matcher.group(2);
 			}
 		}
-
-		return StringUtils.EMPTY;
+		return injectorName;
 	}
-
-	private static String getFromResourceType(final String resourceType) {
-		// we ignore absolute resource types at this stage
-		// TODO: review and fix for absolute resource types (/apps/cognifide/...)
-		return resourceType.substring(0, resourceType.indexOf('/'));
-	}
-
 }

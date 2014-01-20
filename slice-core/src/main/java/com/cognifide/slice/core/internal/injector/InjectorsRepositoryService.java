@@ -1,6 +1,6 @@
 package com.cognifide.slice.core.internal.injector;
 
-/*
+/*-
  * #%L
  * Slice - Core
  * $Id:$
@@ -22,58 +22,58 @@ package com.cognifide.slice.core.internal.injector;
  * #L%
  */
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collection;
 
 import org.apache.felix.scr.annotations.Component;
-
 import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.ReferenceCardinality;
-import org.apache.felix.scr.annotations.ReferencePolicy;
 import org.apache.felix.scr.annotations.Service;
+import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.osgi.framework.Constants;
 
 import com.cognifide.slice.api.injector.InjectorWithContext;
 import com.cognifide.slice.api.injector.InjectorsRepository;
-import com.cognifide.slice.api.qualifier.InjectorName;
 import com.google.inject.Injector;
-import com.google.inject.Key;
 
-// @formatter:off
 /**
  * @author Witold Szczerba
  * @author Rafał Malinowski
+ * @author Jan Kuźniak
  * @class InjectorsRepositoryService
  */
 @Component(immediate = true)
 @Service
-@Properties({ //
-@Property(name = Constants.SERVICE_DESCRIPTION, value = "Repository of all slice injectors."), //
+// @formatter:off
+@Properties({ @Property(name = Constants.SERVICE_DESCRIPTION, value = "Repository of all Slice injectors."),
 		@Property(name = Constants.SERVICE_VENDOR, value = "Cognifide") })
 // @formatter:on
 public final class InjectorsRepositoryService implements InjectorsRepository {
 
-	@Reference(cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, referenceInterface = Injector.class, policy = ReferencePolicy.DYNAMIC)
-	private final Map<String, Injector> injectors = new HashMap<String, Injector>();
+	@Reference
+	private ResourceResolverFactory resourceResolverFactory;
 
+	@Reference
+	private InjectorHierarchy injectors;
+
+	@Override
 	public InjectorWithContext getInjector(final String injectorName) {
-		if (injectors.containsKey(injectorName)) {
-			return new InjectorWithContextImpl(injectors.get(injectorName));
-		} else {
-			return null;
+		InjectorWithContextImpl injectorWithContext = null;
+		Injector injector = injectors.getInjectorByName(injectorName);
+		if (injector != null) {
+			injectorWithContext = new InjectorWithContextImpl(injector);
 		}
+		return injectorWithContext;
 	}
 
-	protected void bindInjectors(final Injector injector) {
-		final String injectorName = injector.getInstance(Key.get(String.class, InjectorName.class));
-		injectors.put(injectorName, injector);
+	@Override
+	public String getInjectorName(Injector injector) {
+		return injectors.getRegisteredName(injector);
 	}
 
-	protected void unbindInjectors(final Injector injector) {
-		final String injectorName = injector.getInstance(Key.get(String.class, InjectorName.class));
-		injectors.remove(injectorName);
+	@Override
+	public Collection<String> getInjectorNames() {
+		return injectors.getInjectorNames();
 	}
 
 }

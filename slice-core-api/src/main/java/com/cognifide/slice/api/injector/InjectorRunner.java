@@ -2,7 +2,7 @@ package com.cognifide.slice.api.injector;
 
 /*-
  * #%L
- * Slice - Core
+ * Slice - Core API
  * $Id:$
  * $HeadURL:$
  * %%
@@ -29,9 +29,6 @@ import java.util.List;
 
 import org.osgi.framework.BundleContext;
 
-import com.cognifide.slice.api.context.ContextScope;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import com.google.inject.Module;
 
 public class InjectorRunner {
@@ -40,25 +37,30 @@ public class InjectorRunner {
 
 	private final List<Module> modules = new ArrayList<Module>();
 
-	private boolean started = false;
-
 	private final BundleContext bundleContext;
 
-	private final ContextScope contextScope;
+	private final String bundleNameFilter;
 
+	private final String basePackage;
+
+	private boolean started = false;
+
+	private String parentInjectorName;
+
+	/**
+	 * @param bundleContext Context used to get access to the OSGi
+	 * @param injectorName Name of the new injector
+	 */
 	public InjectorRunner(final BundleContext bundleContext, final String injectorName,
-			final ContextScope contextScope) {
+			final String bundleNameFilter, final String basePackage) {
 		this.bundleContext = bundleContext;
 		this.injectorName = injectorName;
-		this.contextScope = contextScope;
+		this.bundleNameFilter = bundleNameFilter;
+		this.basePackage = basePackage;
 	}
 
-	public BundleContext getBundleContext() {
-		return bundleContext;
-	}
-
-	public String getInjectorName() {
-		return injectorName;
+	public void setParentInjectorName(String parentInjectorName) {
+		this.parentInjectorName = parentInjectorName;
 	}
 
 	public void installModule(final Module newModule) {
@@ -76,18 +78,28 @@ public class InjectorRunner {
 	}
 
 	public void start() {
-		final Injector injector = Guice.createInjector(modules);
-
-		final Dictionary<String, String> injectorAttr = new Hashtable<String, String>();
-		injectorAttr.put("name", injectorName);
-
-		bundleContext.registerService(Injector.class.getName(), injector, injectorAttr).getReference();
-
-		started = true;
+		InjectorConfig config = new InjectorConfig(this);
+		Dictionary<String, Object> properties = new Hashtable<String, Object>();
+		bundleContext.registerService(InjectorConfig.class.getName(), config, properties);
 	}
 
-	public ContextScope getContextScope() {
-		return contextScope;
+	public String getInjectorName() {
+		return injectorName;
 	}
 
+	String getBundleNameFilter() {
+		return bundleNameFilter;
+	}
+
+	String getBasePackage() {
+		return basePackage;
+	}
+
+	List<Module> getModules() {
+		return modules;
+	}
+
+	String getParentName() {
+		return parentInjectorName;
+	}
 }

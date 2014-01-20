@@ -3,7 +3,7 @@
 
 	<groupId>com.cognifide.slice</groupId>
 	<artifactId>slice-parent</artifactId>
-	<version>3.1.0-SNAPSHOT</version>
+	<version>4.0.1-incubator-SNAPSHOT</version>
 
 	<name>Slice - Parent</name>
 	<url>http://cognifide.com/</url>
@@ -24,12 +24,11 @@
 	</licenses>
 
 	<modules>
+		<module>slice-activator</module>
 		<module>slice-core-api</module>
 		<module>slice-core</module>
 		<module>slice-mapper-api</module>
 		<module>slice-mapper</module>
-		<module>slice-cq</module>
-		<module>slice-cq-taglib</module>
 		<module>slice-validation</module>
 		<module>slice-validation-api</module>
 		<module>slice-assembly</module>
@@ -57,9 +56,9 @@
 	</properties>
 	
 	<scm>
-		<connection>scm:git:git@github.com:Cognifide/Slice.git</connection>
-		<url>scm:git:git@github.com:Cognifide/Slice.git</url>
-		<developerConnection>scm:git|ssh://git@github.com/Cognifide/Slice.git</developerConnection>
+		<connection>scm:git:https://github.com/Cognifide/Slice.git</connection>
+		<url>scm:git:https://github.com/Cognifide/Slice.git</url>
+		<developerConnection>scm:git|https://github.com/Cognifide/Slice.git</developerConnection>
 	</scm>
 	
 	<developers>
@@ -149,6 +148,7 @@
 					<preparationGoals>clean install</preparationGoals>
 					<useReleaseProfile>false</useReleaseProfile>
 					<arguments>-Psonatype-oss-release</arguments>
+					<mavenExecutorId>forked-path</mavenExecutorId>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -183,7 +183,7 @@
 						<user>${slice.crx.username}</user>
 						<password>${slice.crx.password}</password>
 						<usePut>true</usePut>
-						<slingUrl>${slice.sling.url}</slingUrl>
+						<slingUrl>${slice.instance.url}/system/console</slingUrl>
 					</configuration>
 					<executions>
 						<execution>
@@ -258,12 +258,38 @@
 						</lifecycleMappingMetadata>
 					</configuration>
 				</plugin>
+				<plugin>
+					<groupId>com.cognifide.maven.plugins</groupId>
+					<artifactId>maven-crx-plugin</artifactId>
+					<version>1.0.3</version>
+					<configuration>
+						<runOnlyAtExecutionRoot>${maven-crx-plugin.runOnlyAtExecutionRoot}</runOnlyAtExecutionRoot>
+						<skip>true</skip>
+						<packageFileName>${assembly.path}</packageFileName>
+						<packageName>${project.artifactId}</packageName>
+						<url>${slice.instance.url}</url>
+						<user>${slice.crx.username}</user>
+						<password>${slice.crx.password}</password>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
 
 	<dependencyManagement>
 		<dependencies>
+			<!-- Slice -->	
+			<dependency>
+				<groupId>com.cognifide.slice</groupId>
+				<artifactId>slice-core</artifactId>
+				<version>4.0.1-incubator-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>com.cognifide.slice</groupId>
+				<artifactId>slice-mapper-api</artifactId>
+				<version>4.0.1-incubator-SNAPSHOT</version>
+			</dependency>
+			
 			<!-- Guice -->
 			<dependency>
 				<groupId>com.google.inject</groupId>
@@ -285,6 +311,7 @@
 				<artifactId>peaberry</artifactId>
 				<version>1.1.1</version>
 			</dependency>
+			
 			<!-- Guice's dependency (provided by Spring repository) -->
 			<dependency>
 				<groupId>org.aopalliance</groupId>
@@ -338,6 +365,56 @@
 				<version>1.6.0</version>
 				<scope>provided</scope>
 			</dependency>
+			
+			<!-- Apache Sling -->
+			<dependency>
+				<groupId>org.apache.sling</groupId>
+				<artifactId>org.apache.sling.api</artifactId>
+				<version>2.2.0</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.sling</groupId>
+				<artifactId>org.apache.sling.commons.classloader</artifactId>
+				<version>1.3.0</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<!-- Apache Commons -->
+			<dependency>
+				<groupId>commons-lang</groupId>
+				<artifactId>commons-lang</artifactId>
+				<version>2.5</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<!-- Logging -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>1.6.1</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<!-- Test -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.10</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-all</artifactId>
+				<version>1.9.0</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-simple</artifactId>
+				<version>1.6.4</version>
+				<scope>test</scope>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	
@@ -346,38 +423,32 @@
 		<dependency>
 			<groupId>org.apache.sling</groupId>
 			<artifactId>org.apache.sling.api</artifactId>
-			<version>2.2.0</version>
-			<scope>provided</scope>
 		</dependency>
 
 		<!-- Apache Commons -->
 		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
-			<version>2.5</version>
-			<scope>provided</scope>
 		</dependency>
 
 		<!-- Logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.6.1</version>
-			<scope>provided</scope>
 		</dependency>
 
 		<!-- Test -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.10</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
-			<version>1.9.0</version>
-			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
 		</dependency>
 	</dependencies>
 	

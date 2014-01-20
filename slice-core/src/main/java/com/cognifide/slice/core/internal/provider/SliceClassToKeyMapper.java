@@ -1,6 +1,4 @@
-package com.cognifide.slice.core.internal.provider;
-
-/*
+/*-
  * #%L
  * Slice - Core
  * $Id:$
@@ -21,38 +19,70 @@ package com.cognifide.slice.core.internal.provider;
  * limitations under the License.
  * #L%
  */
+package com.cognifide.slice.core.internal.provider;
 
-
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.apache.sling.commons.classloader.DynamicClassLoaderManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.cognifide.slice.api.provider.ClassToKeyMapper;
 import com.google.inject.Binding;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Key;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 @Singleton
 public class SliceClassToKeyMapper implements ClassToKeyMapper {
 
-	private final Map<String, Key<?>> classToKeyMapping = new HashMap<String, Key<?>>();
+	// cache - pre-filled with
+	private final Map<String, Key<?>> knownKeys = new HashMap<String, Key<?>>();
+
+	// Provider to ensure that we have a valid OSGi service in this singleton object
+	private final Provider<DynamicClassLoaderManager> classLoaderManagerProvider;
+
+	private static final Logger LOG = LoggerFactory.getLogger(SliceClassToKeyMapper.class);
 
 	@Inject
-	public SliceClassToKeyMapper(final Injector injector) {
+	public SliceClassToKeyMapper(Injector injector,
+			Provider<DynamicClassLoaderManager> classLoaderManagerProvider) {
+		this.classLoaderManagerProvider = classLoaderManagerProvider;
+		initiateKnownBindings(injector);
+	}
+
+	private void initiateKnownBindings(Injector injector) {
 		final Map<Key<?>, Binding<?>> knownBindings = injector.getBindings();
 		for (final Entry<Key<?>, Binding<?>> binding : knownBindings.entrySet()) {
 			final Key<?> key = binding.getKey();
-			if (null == key.getAnnotation()) {
-				classToKeyMapping.put(key.getTypeLiteral().getType().toString(), key);
+			if (key.getAnnotation() == null) {
+				Class<?> clazz = key.getTypeLiteral().getRawType();
+				knownKeys.put(clazz.getCanonicalName(), key);
 			}
 		}
 	}
 
 	@Override
 	public Key<?> getKey(final String className) {
-		return classToKeyMapping.get("class " + className);
+		Key<?> knownKey = knownKeys.get(className);
+		if (knownKey == null) {
+			try {
+				Class<?> clazz = classLoaderManagerProvider.get().getDynamicClassLoader()
+						.loadClass(className);
+				knownKey = Key.get(clazz);
+				// adding binding
+				knownKeys.put(className, knownKey);
+			} catch (ClassNotFoundException e) {
+				String msg = "Unable to map class [{0}]";
+				LOG.error(MessageFormat.format(msg, className), e);
+				// returning null
+			}
+		}
+		return knownKey;
 	}
-
 }

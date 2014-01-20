@@ -3,7 +3,11 @@
 ## Purpose
 
 Slice is a framework that glues Sling and Google Guice together. It eases mapping between
-resources to classed and to using dependency injection inside Sling and CQ applications.
+resources to classes and allows to use dependency injection inside Sling and CQ applications.
+
+In 3.1.0 version of Slice the CQ related modules have been extracted to separate projects:
+* Slice CQ v5.5 Addon: https://github.com/Cognifide/Slice-CQ55/
+* Slice CQ v5.6 Addon: https://github.com/Cognifide/Slice-CQ56/
 
 ## Prerequisites
 
@@ -12,7 +16,7 @@ resources to classed and to using dependency injection inside Sling and CQ appli
 
 ## Installation
 
-Slice is available from Maven Central Repo. However if you want to check out the newest development version, do the folling:
+Slice is available from Maven Central Repo. However if you want to check out the newest development version, do the following:
 
 Checkout the source code:
 
@@ -22,64 +26,52 @@ Checkout the source code:
 
 Compile and install:
 
-    mvn clean package install
+    mvn install
 
 ## Usage
 
-Add dependencied to your POM file:
+Add dependencies to your POM file:
 
     (...)
     <dependency>
         <groupId>com.cognifide.slice</groupId>
         <artifactId>slice-core-api</artifactId>
-        <version>3.0.0</version>
+        <version>3.1.0</version>
         <scope>compile</scope>
     </dependency>
     <dependency>
         <groupId>com.cognifide.slice</groupId>
         <artifactId>slice-core</artifactId>
-        <version>3.0.0</version>
+        <version>3.1.0</version>
         <scope>compile</scope>
     </dependency>
     <dependency>
         <groupId>com.cognifide.slice</groupId>
         <artifactId>slice-mapper</artifactId>
-        <version>3.0.0</version>
+        <version>3.1.0</version>
         <scope>compile</scope>
     </dependency>
     <dependency>
         <groupId>com.cognifide.slice</groupId>
         <artifactId>slice-mapper-api</artifactId>
-        <version>3.0.0</version>
-        <scope>compile</scope>
-    </dependency>
-    <dependency>
-        <groupId>com.cognifide.slice</groupId>
-        <artifactId>slice-cq</artifactId>
-        <version>3.0.0</version>
-        <scope>compile</scope>
-    </dependency>
-    <dependency>
-        <groupId>com.cognifide.slice</groupId>
-        <artifactId>slice-cq-taglib</artifactId>
-        <version>3.0.0</version>
+        <version>3.1.0</version>
         <scope>compile</scope>
     </dependency>
     <dependency>
         <groupId>com.cognifide.slice</groupId>
         <artifactId>slice-validation-api</artifactId>
-        <version>3.0.0</version>
+        <version>3.1.0</version>
         <scope>compile</scope>
     </dependency>
     <dependency>
         <groupId>com.cognifide.slice</groupId>
         <artifactId>slice-validation</artifactId>
-        <version>3.0.0</version>
+        <version>3.1.0</version>
         <scope>compile</scope>
     </dependency>
     (...)
 
-Prepare Injector of your application in Activator. Example activator:
+Prepare Injector of your application in BundleActivator. Example activator:
 
 	import java.util.ArrayList;
 	import java.util.List;
@@ -129,13 +121,13 @@ Prepare Injector of your application in Activator. Example activator:
 		}
 	}
 
-SliceModulesFactory requires some String parameters. It will look for any classes in filters matching BUNDLE_NAME_FILTER under package BASE_PACKAGE for classes
-annotated with @SliceResource and bind them to provider that automatically maps resource properties to fields.
+SliceModulesFactory requires some String parameters. It will look for classes matching BUNDLE_NAME_FILTER under package BASE_PACKAGE and
+annotated with @SliceResource. It will then bind them to provider that automatically maps resource properties to fields.
 You can install many Slice Resource modules on one Injector.
 
 ## Mapping Slice Resources
 
-Map any class with @SliceResource module to get auto mapping of resource properties to class fields:
+Annotate any class with @SliceResource annotation to get auto mapping of resource properties to class fields:
 
     @SliceResource
     public class RichTextModel {
@@ -154,7 +146,7 @@ Map any class with @SliceResource module to get auto mapping of resource propert
 
 	}
 
-Map current resource in .jsp file to this class:
+Map current resource in .jsp file to an instance of the given class:
 
     <slice:lookup appName="injectorName" var="model" type="<%=RichTextModel.class%>"/>
 
