@@ -19,7 +19,6 @@
  * limitations under the License.
  * #L%
  */
-
 package com.cognifide.slice.core.internal.provider;
 
 import java.util.ArrayList;
@@ -28,6 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,17 +63,21 @@ public class SliceModelProvider implements ModelProvider {
 
 	private final ExecutionContextStack currentExecutionContext;
 
+	private final ResourceResolver resourceResolver;
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Inject
 	public SliceModelProvider(final Injector injector, final ContextScope contextScope,
-			final ClassToKeyMapper classToKeyMapper, final ExecutionContextStack currentExecutionContext) {
+			final ClassToKeyMapper classToKeyMapper, final ExecutionContextStack currentExecutionContext,
+			final ResourceResolver resourceResolver) {
 		this.injector = injector;
 		this.contextScope = contextScope;
 		this.contextProvider = contextScope.getContextProvider();
 		this.classToKeyMapper = classToKeyMapper;
 		this.currentExecutionContext = currentExecutionContext;
+		this.resourceResolver = resourceResolver;
 	}
 
 	/**
@@ -136,28 +140,6 @@ public class SliceModelProvider implements ModelProvider {
 		return get(key, executionItem);
 	}
 
-	private <T> T get(Class<T> type, ExecutionContextImpl executionItem) {
-		return get(Key.get(type), executionItem);
-	}
-
-	private <T> T get(Key<T> key, ExecutionContextImpl executionItem) {
-		final ContextProvider oldContextProvider = contextScope.getContextProvider();
-		contextScope.setContextProvider(contextProvider);
-
-		if ((executionItem.getResource() == null) && (executionItem.getPath() != null)) {
-			executionItem.setPath(currentExecutionContext.getAbsolutePath(executionItem.getPath()));
-		}
-
-		currentExecutionContext.push(executionItem);
-		try {
-			return injector.getInstance(key);
-		} finally {
-			currentExecutionContext.pop();
-			contextScope.setContextProvider(oldContextProvider);
-		}
-	}
-
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -189,4 +171,51 @@ public class SliceModelProvider implements ModelProvider {
 		return getList(type, Arrays.asList(paths).iterator());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public <T> List<T> getChildModels(Class<T> type, String parentPath) {
+		String absolutePath = currentExecutionContext.getAbsolutePath(parentPath);
+		Resource resource = resourceResolver.getResource(absolutePath);
+		return getChildModels(type, resource);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public <T> List<T> getChildModels(Class<T> type, Resource parentResource) {
+		final List<T> result = new ArrayList<T>();
+		if (parentResource != null) {
+			Iterator<Resource> listChildren = parentResource.listChildren();
+			while (listChildren.hasNext()) {
+				Resource childResource = listChildren.next();
+				T childModel = get(type, childResource);
+				result.add(childModel);
+			}
+		}
+		return result;
+	}
+
+	private <T> T get(Class<T> type, ExecutionContextImpl executionItem) {
+		return get(Key.get(type), executionItem);
+	}
+
+	private <T> T get(Key<T> key, ExecutionContextImpl executionItem) {
+		final ContextProvider oldContextProvider = contextScope.getContextProvider();
+		contextScope.setContextProvider(contextProvider);
+
+		if ((executionItem.getResource() == null) && (executionItem.getPath() != null)) {
+			executionItem.setPath(currentExecutionContext.getAbsolutePath(executionItem.getPath()));
+		}
+
+		currentExecutionContext.push(executionItem);
+		try {
+			return injector.getInstance(key);
+		} finally {
+			currentExecutionContext.pop();
+			contextScope.setContextProvider(oldContextProvider);
+		}
+	}
 }

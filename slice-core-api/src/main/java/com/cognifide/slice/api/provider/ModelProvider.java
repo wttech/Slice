@@ -136,7 +136,7 @@ public interface ModelProvider {
 	<T> List<T> getList(final Class<T> type, final Iterator<String> paths);
 
 	/**
-	 * This is convenience method that works exactly like {@link getList}.
+	 * This is convenience method that works exactly like {@link #getList(Class, Iterator)}
 	 * 
 	 * @param T type of model objects to create
 	 * @param type class of model objects to create
@@ -144,4 +144,26 @@ public interface ModelProvider {
 	 * @return list of model objects from given CRX repository paths
 	 */
 	<T> List<T> getList(final Class<T> type, final String[] paths);
+
+	/**
+	 * This is a convenience method working exactly like {@link ModelProvider#getChildModels(Class, Resource)}
+	 * 
+	 * @param <T> type of model objects to create
+	 * @param type class of model objects to create
+	 * @param parentPath Sling resource path to obtain children (could be relative)
+	 * @return list of model objects from given CRX repository paths or empty list if parentPath is invalid
+	 */
+	<T> List<T> getChildModels(final Class<T> type, final String parentPath);
+
+	/**
+	 * This method lists children of the given resource via {@code parentResource.listChildren()}, invokes
+	 * {@link ModelProvider#get(Class, Resource)} for each of them and returns a {@code List} containing
+	 * mapped models. If the {@code parentResource} is null, an empty list will be returned.
+	 * 
+	 * @param <T> type of model objects to create
+	 * @param type class of model objects to create
+	 * @param parentResource Sling resource to obtain children
+	 * @return list of model objects from given CRX repository paths or empty list if parentResource is null
+	 */
+	<T> List<T> getChildModels(final Class<T> type, final Resource parentResource);
 }

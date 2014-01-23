@@ -21,9 +21,8 @@ package com.cognifide.slice.commons.link;
  * limitations under the License.
  * #L%
  */
-
-
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,10 +31,11 @@ import org.junit.Test;
 
 import com.cognifide.slice.api.link.Link;
 import com.cognifide.slice.core.internal.link.LinkImpl;
+import java.net.MalformedURLException;
 
 /**
  * @author Jan Kuźniak
- * 
+ *
  */
 public class LinkBuilderTest {
 
@@ -50,6 +50,89 @@ public class LinkBuilderTest {
 		assertEquals("", "/content.desktop.html", lb.toString());
 		lb.setSuffix("search.html");
 		assertEquals("", "/content.desktop.html/search.html", lb.toString());
+	}
+
+	@Test
+	public void shouldParseUrlWithSelectorsQueriesAndFragment() {
+		//given
+		ArrayList<String> selectors = new ArrayList<String>();
+		selectors.add("mytest");
+		selectors.add("mytest2");
+		String url = "http://author.example.com/content/demo/home.mytest.mytest2.html?wcmmode=disabled&test=2#GOODBYE";
+
+		//when
+		LinkBuilderImpl lb = null;
+		try {
+			lb = new LinkBuilderImpl(url);
+		} catch (MalformedURLException ex) {
+		}
+
+		//then
+		assertEquals("html", lb.getExtension());
+		assertEquals("GOODBYE", lb.getFragment());
+		assertEquals("/content/demo/home", lb.getPath());
+		assertEquals("wcmmode=disabled&test=2", lb.getQueryString());
+		assertEquals(selectors, lb.getSelectors());
+		assertEquals("", lb.getSuffix());
+	}
+
+	@Test
+	public void shouldParseUrlWithSuffix() {
+		//given
+		ArrayList<String> selectors = new ArrayList<String>();
+		String url = "http://author.example.com/content/demo/home.json/richtext";
+
+		//when
+		LinkBuilderImpl lb = null;
+		try {
+			lb = new LinkBuilderImpl(url);
+		} catch (MalformedURLException ex) {
+		}
+
+		//then
+		assertEquals("json", lb.getExtension());
+		assertEquals("", lb.getFragment());
+		assertEquals("/content/demo/home", lb.getPath());
+		assertEquals("", lb.getQueryString());
+		assertEquals(selectors, lb.getSelectors());
+		assertEquals("/richtext", lb.getSuffix());
+	}
+
+	@Test
+	public void shouldParseUrlWithComplexSuffixAndFragment() {
+		//given
+		ArrayList<String> selectors = new ArrayList<String>();
+		selectors.add("s1");
+		selectors.add("s2");
+		String url = "http://localhost:5602/a/b.s1.s2.html/c/d.s.txt#GOODBYE";
+
+		//when
+		LinkBuilderImpl lb = null;
+		try {
+			lb = new LinkBuilderImpl(url);
+		} catch (MalformedURLException ex) {
+		}
+
+		//then
+		assertEquals("html", lb.getExtension());
+		assertEquals("GOODBYE", lb.getFragment());
+		assertEquals("/a/b", lb.getPath());
+		assertEquals("", lb.getQueryString());
+		assertEquals(selectors, lb.getSelectors());
+		assertEquals("/c/d.s.txt", lb.getSuffix());
+	}
+
+	@Test
+	public void shouldThrowMalformedUrlException() {
+		//given
+		String url = "lorem ipsum";
+		try {
+			//when
+			LinkBuilderImpl lb = new LinkBuilderImpl(url);
+			fail();
+		} catch (MalformedURLException ex) {
+
+		}
 	}
 
 	@Test
