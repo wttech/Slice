@@ -1,5 +1,7 @@
 package com.cognifide.slice.api.link;
 
+import java.net.MalformedURLException;
+
 /*
  * #%L
  * Slice - Core API
@@ -39,5 +41,10 @@ public interface LinkBuilderFactory {
 	 * Create LinkBuilder based on link.
 	 */
 	LinkBuilder getLinkBuilder(Link link);
+	
+	/**
+	 * Create LinkBuilder based on URL.
+	 */
+	LinkBuilder getLinkBuilder(String url) throws MalformedURLException;
 
 }

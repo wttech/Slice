@@ -21,8 +21,6 @@ package com.cognifide.slice.commons.link;
  * limitations under the License.
  * #L%
  */
-
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -37,11 +35,13 @@ import org.apache.commons.lang.StringUtils;
 import com.cognifide.slice.api.link.Link;
 import com.cognifide.slice.api.link.LinkBuilder;
 import com.cognifide.slice.core.internal.link.LinkImpl;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Allows building links and modifying existing link. Use whenever you need to add/remove selectors, query
  * strings, suffix etc.
- * 
+ *
  * @author Jan Kuzniak
  * @author maciej.majchrzak
  */
@@ -78,7 +78,7 @@ public final class LinkBuilderImpl implements LinkBuilder {
 	/**
 	 * Creates a builder and sets underlying values using specified link. The values can be modified without
 	 * any affection on specified link.
-	 * 
+	 *
 	 * @param link
 	 */
 	public LinkBuilderImpl(final Link link) {
@@ -93,8 +93,33 @@ public final class LinkBuilderImpl implements LinkBuilder {
 	}
 
 	/**
+	 * Creates a builder and sets underlying values using specified URL.
+	 *
+	 * @param url
+	 */
+	public LinkBuilderImpl(final String url) throws MalformedURLException {
+		URL urlHelper = new URL(url);
+		String urlPath = urlHelper.getPath();
+		if (StringUtils.countMatches(urlPath, ".") > 1
+				|| StringUtils.lastIndexOf(urlPath, "/") > StringUtils.lastIndexOf(urlPath, ".")) {
+			String[] split = urlPath.split("\\.[a-zA-Z]+\\/");
+			if (split.length == 2) {
+				urlPath = StringUtils.substringBeforeLast(urlPath, "/" + split[1]);
+				this.suffix = "/" + split[1];
+			} else {
+				suffix = "";
+			}
+		}
+		this.path = StringUtils.substringBefore(urlPath, ".");
+		this.extension = StringUtils.substringAfterLast(urlPath, ".");
+		setSelectorString(StringUtils.substringBetween(urlPath, path, extension));
+		setQueryString(urlHelper.getQuery());
+		this.fragment = (urlHelper.getRef() == null) ? "" : urlHelper.getRef();
+	}
+
+	/**
 	 * Returns {@link LinkImpl} representing data in the builder.
-	 * 
+	 *
 	 * @return {@link LinkImpl} representing data in the builder, never null
 	 */
 	@Override
@@ -103,7 +128,9 @@ public final class LinkBuilderImpl implements LinkBuilder {
 				suffix, getQueryString(), fragment);
 	}
 
-	/** Same as <code>toLink().toString()</code> */
+	/**
+	 * Same as <code>toLink().toString()</code>
+	 */
 	@Override
 	public String toString() {
 		return toLink().toString();
@@ -111,7 +138,7 @@ public final class LinkBuilderImpl implements LinkBuilder {
 
 	/**
 	 * Adds selector (if not blank) as a last one on the list of selectors
-	 * 
+	 *
 	 * @param selector selector to be added
 	 * @return this builder
 	 */
@@ -125,7 +152,7 @@ public final class LinkBuilderImpl implements LinkBuilder {
 
 	/**
 	 * Removes selector from the list of selectors if present
-	 * 
+	 *
 	 * @param selector selector to be removed from the list of selectors. If blank, nothing happens.
 	 * @return this builder
 	 */
@@ -144,7 +171,7 @@ public final class LinkBuilderImpl implements LinkBuilder {
 
 	/**
 	 * Removes selector from the list of selectors if matches given regular expression
-	 * 
+	 *
 	 * @param selectorRegexp regular expression of the selector to remove from the list. If blank
 	 * {@link IllegalArgumentException} is thrown
 	 * @return this builder
@@ -168,7 +195,7 @@ public final class LinkBuilderImpl implements LinkBuilder {
 	/**
 	 * Retails all selectors which match given regular expression. All selectors which don't match the regular
 	 * expression are removed.
-	 * 
+	 *
 	 * @param selectorRegexp regular expression of the selector to be retained on the list. If blank
 	 * {@link IllegalArgumentException} is thrown
 	 * @return this builder
@@ -198,7 +225,7 @@ public final class LinkBuilderImpl implements LinkBuilder {
 	 * path="/content", tail="cognifide/" => path="/content/cognifide"<br>
 	 * path="/content", tail="/cognifide/" => path="/content/cognifide"<br>
 	 * </code>
-	 * 
+	 *
 	 * @param tail a fragment to be added at the end of the path. Leading and trailing slashes are removed.
 	 * @return this builder
 	 */
@@ -214,7 +241,7 @@ public final class LinkBuilderImpl implements LinkBuilder {
 	/**
 	 * Add a new query to path. Please note that multiple values can be stored under the same key. It will be
 	 * represented in the following way in final link: "key=value"
-	 * 
+	 *
 	 * @param key String under which a value will be stored
 	 * @param value value to be stored
 	 * @return this builder
@@ -237,7 +264,7 @@ public final class LinkBuilderImpl implements LinkBuilder {
 	/**
 	 * Removes a specified value from the list of values stored under specified key for the query string. If
 	 * there is no query under key or no specified value, nothing will be removed
-	 * 
+	 *
 	 * @param key
 	 * @param value
 	 * @return
@@ -253,7 +280,7 @@ public final class LinkBuilderImpl implements LinkBuilder {
 
 	/**
 	 * Removes all values stored under specified key for the query string
-	 * 
+	 *
 	 * @param key
 	 * @return this builder
 	 */
@@ -265,7 +292,7 @@ public final class LinkBuilderImpl implements LinkBuilder {
 
 	/**
 	 * Returns string representation of query string. It is NOT led by "?" char.
-	 * 
+	 *
 	 * @return
 	 */
 	@Override
@@ -289,7 +316,7 @@ public final class LinkBuilderImpl implements LinkBuilder {
 
 	/**
 	 * Sets query string. It must not start with "?", e.g. "param1=value1&param2=value2"
-	 * 
+	 *
 	 * @param queryString query string to be saved
 	 * @return
 	 */
@@ -313,7 +340,6 @@ public final class LinkBuilderImpl implements LinkBuilder {
 	// /////////////////////////////////////////////////////////////////////////
 	// getters and setters
 	// ///////////////////////////////////////////////////////////////////////
-
 	@Override
 	public String getPath() {
 		return path;
