@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +41,6 @@ import com.cognifide.slice.core.internal.execution.ExecutionContextImpl;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Key;
-import org.apache.sling.api.resource.ResourceResolver;
 
 /**
  * This class creates object or list of objects of given injectable type using Guice injector.
@@ -63,20 +63,21 @@ public class SliceModelProvider implements ModelProvider {
 
 	private final ExecutionContextStack currentExecutionContext;
 
-	@Inject
-	private ResourceResolver resolver;
+	private final ResourceResolver resourceResolver;
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Inject
 	public SliceModelProvider(final Injector injector, final ContextScope contextScope,
-			final ClassToKeyMapper classToKeyMapper, final ExecutionContextStack currentExecutionContext) {
+			final ClassToKeyMapper classToKeyMapper, final ExecutionContextStack currentExecutionContext,
+			final ResourceResolver resourceResolver) {
 		this.injector = injector;
 		this.contextScope = contextScope;
 		this.contextProvider = contextScope.getContextProvider();
 		this.classToKeyMapper = classToKeyMapper;
 		this.currentExecutionContext = currentExecutionContext;
+		this.resourceResolver = resourceResolver;
 	}
 
 	/**
@@ -139,28 +140,6 @@ public class SliceModelProvider implements ModelProvider {
 		return get(key, executionItem);
 	}
 
-	private <T> T get(Class<T> type, ExecutionContextImpl executionItem) {
-		return get(Key.get(type), executionItem);
-	}
-
-	private <T> T get(Key<T> key, ExecutionContextImpl executionItem) {
-		final ContextProvider oldContextProvider = contextScope.getContextProvider();
-		contextScope.setContextProvider(contextProvider);
-
-		if ((executionItem.getResource() == null) && (executionItem.getPath() != null)) {
-			executionItem.setPath(currentExecutionContext.getAbsolutePath(executionItem.getPath()));
-		}
-
-		currentExecutionContext.push(executionItem);
-		try {
-			return injector.getInstance(key);
-		} finally {
-			currentExecutionContext.pop();
-			contextScope.setContextProvider(oldContextProvider);
-		}
-	}
-
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -192,13 +171,19 @@ public class SliceModelProvider implements ModelProvider {
 		return getList(type, Arrays.asList(paths).iterator());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public <T> List<T> getChildModels(Class<T> type, String parentPath) {
 		String absolutePath = currentExecutionContext.getAbsolutePath(parentPath);
-		Resource resource = resolver.getResource(absolutePath);
+		Resource resource = resourceResolver.getResource(absolutePath);
 		return getChildModels(type, resource);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public <T> List<T> getChildModels(Class<T> type, Resource parentResource) {
 		final List<T> result = new ArrayList<T>();
@@ -206,9 +191,31 @@ public class SliceModelProvider implements ModelProvider {
 			Iterator<Resource> listChildren = parentResource.listChildren();
 			while (listChildren.hasNext()) {
 				Resource childResource = listChildren.next();
-				result.add(get(type, childResource));
+				T childModel = get(type, childResource);
+				result.add(childModel);
 			}
 		}
 		return result;
+	}
+
+	private <T> T get(Class<T> type, ExecutionContextImpl executionItem) {
+		return get(Key.get(type), executionItem);
+	}
+
+	private <T> T get(Key<T> key, ExecutionContextImpl executionItem) {
+		final ContextProvider oldContextProvider = contextScope.getContextProvider();
+		contextScope.setContextProvider(contextProvider);
+
+		if ((executionItem.getResource() == null) && (executionItem.getPath() != null)) {
+			executionItem.setPath(currentExecutionContext.getAbsolutePath(executionItem.getPath()));
+		}
+
+		currentExecutionContext.push(executionItem);
+		try {
+			return injector.getInstance(key);
+		} finally {
+			currentExecutionContext.pop();
+			contextScope.setContextProvider(oldContextProvider);
+		}
 	}
 }

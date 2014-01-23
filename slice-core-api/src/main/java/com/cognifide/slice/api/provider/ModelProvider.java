@@ -136,7 +136,7 @@ public interface ModelProvider {
 	<T> List<T> getList(final Class<T> type, final Iterator<String> paths);
 
 	/**
-	 * This is convenience method that works exactly like {@link getList}.
+	 * This is convenience method that works exactly like {@link #getList(Class, Iterator)}
 	 * 
 	 * @param T type of model objects to create
 	 * @param type class of model objects to create
