@@ -1,29 +1,20 @@
 package com.cognifide.slice.commons.link;
 
 /*
- * #%L
- * Slice - Core
- * $Id:$
- * $HeadURL:$
- * %%
- * Copyright (C) 2012 Cognifide Limited
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * #%L Slice - Core $Id:$ $HeadURL:$ %% Copyright (C) 2012 Cognifide Limited %% Licensed under the Apache
+ * License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You
+ * may obtain a copy of the License at
  * 
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License. #L%
  */
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.fail;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,11 +22,10 @@ import org.junit.Test;
 
 import com.cognifide.slice.api.link.Link;
 import com.cognifide.slice.core.internal.link.LinkImpl;
-import java.net.MalformedURLException;
 
 /**
  * @author Jan Kuźniak
- *
+ * 
  */
 public class LinkBuilderTest {
 
@@ -54,20 +44,20 @@ public class LinkBuilderTest {
 
 	@Test
 	public void shouldParseUrlWithSelectorsQueriesAndFragment() {
-		//given
+		// given
 		ArrayList<String> selectors = new ArrayList<String>();
 		selectors.add("mytest");
 		selectors.add("mytest2");
 		String url = "http://author.example.com/content/demo/home.mytest.mytest2.html?wcmmode=disabled&test=2#GOODBYE";
 
-		//when
+		// when
 		LinkBuilderImpl lb = null;
 		try {
 			lb = new LinkBuilderImpl(url);
 		} catch (MalformedURLException ex) {
 		}
 
-		//then
+		// then
 		assertEquals("html", lb.getExtension());
 		assertEquals("GOODBYE", lb.getFragment());
 		assertEquals("/content/demo/home", lb.getPath());
@@ -78,18 +68,18 @@ public class LinkBuilderTest {
 
 	@Test
 	public void shouldParseUrlWithSuffix() {
-		//given
+		// given
 		ArrayList<String> selectors = new ArrayList<String>();
 		String url = "http://author.example.com/content/demo/home.json/richtext";
 
-		//when
+		// when
 		LinkBuilderImpl lb = null;
 		try {
 			lb = new LinkBuilderImpl(url);
 		} catch (MalformedURLException ex) {
 		}
 
-		//then
+		// then
 		assertEquals("json", lb.getExtension());
 		assertEquals("", lb.getFragment());
 		assertEquals("/content/demo/home", lb.getPath());
@@ -100,20 +90,20 @@ public class LinkBuilderTest {
 
 	@Test
 	public void shouldParseUrlWithComplexSuffixAndFragment() {
-		//given
+		// given
 		ArrayList<String> selectors = new ArrayList<String>();
 		selectors.add("s1");
 		selectors.add("s2");
 		String url = "http://localhost:5602/a/b.s1.s2.html/c/d.s.txt#GOODBYE";
 
-		//when
+		// when
 		LinkBuilderImpl lb = null;
 		try {
 			lb = new LinkBuilderImpl(url);
 		} catch (MalformedURLException ex) {
 		}
 
-		//then
+		// then
 		assertEquals("html", lb.getExtension());
 		assertEquals("GOODBYE", lb.getFragment());
 		assertEquals("/a/b", lb.getPath());
@@ -124,10 +114,10 @@ public class LinkBuilderTest {
 
 	@Test
 	public void shouldThrowMalformedUrlException() {
-		//given
+		// given
 		String url = "lorem ipsum";
 		try {
-			//when
+			// when
 			LinkBuilderImpl lb = new LinkBuilderImpl(url);
 			fail();
 		} catch (MalformedURLException ex) {
@@ -359,5 +349,16 @@ public class LinkBuilderTest {
 
 		lb.removeQuery("param1", "value2");
 		assertEquals("", "/content.search.desktop.html/keyword.html?param2=value2#paragraph1", lb.toString());
+	}
+
+	@Test
+	public void toEscapedStringTest() {
+		Link link = new LinkImpl("/content", "search.desktop", "html", "keyword.html",
+				"param1=value1&param2=value2", "paragraph1");
+		LinkBuilderImpl lb = new LinkBuilderImpl(link);
+		lb.addQuery("param1", "value2");
+		assertEquals(
+				"/content.search.desktop.html/keyword.html?param1=value1&amp;param1=value2&amp;param2=value2#paragraph1",
+				lb.toEscapedString());
 	}
 }
