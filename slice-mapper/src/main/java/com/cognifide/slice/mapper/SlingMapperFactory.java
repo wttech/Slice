@@ -38,7 +38,7 @@ public final class SlingMapperFactory {
 	private final SliceResourceFieldProcessor sliceResourceFieldProcessor;
 
 	private final SliceReferenceFieldProcessor sliceReferenceFieldProcessor;
-	
+
 	private final ChildrenFieldProcessor childrenFieldProcessor;
 
 	private final ListFieldProcessor listFieldProcessor;

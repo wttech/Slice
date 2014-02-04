@@ -3,9 +3,7 @@ package com.cognifide.slice.mapper.impl.processor;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.sling.api.resource.Resource;
@@ -45,8 +43,8 @@ public class ChildrenFieldProcessor implements FieldProcessor {
 	}
 
 	private List<?> getChildrenList(Resource resource, Field field, String propertyName) {
-		final Resource collectionParent = resource.getChild(propertyName);
-		if (collectionParent == null) {
+		final Resource collectionParentResource = resource.getChild(propertyName);
+		if (collectionParentResource == null) {
 			String message = MessageFormat.format("The resource {0} does not exists.", propertyName);
 			throw new MapperException(message);
 		}
@@ -54,14 +52,7 @@ public class ChildrenFieldProcessor implements FieldProcessor {
 		final Children childrenAnnotation = field.getAnnotation(Children.class);
 		final Class<?> modelClass = childrenAnnotation.value();
 
-		ModelProvider provider = modelProvider.get();
-		Iterator<Resource> iterator = collectionParent.listChildren();
-		List<Object> mappedModels = new ArrayList<Object>();
-		while (iterator.hasNext()) {
-			Object childModel = provider.get(modelClass, iterator.next());
-			mappedModels.add(childModel);
-		}
-		return mappedModels;
+		return modelProvider.get().getChildModels(modelClass, collectionParentResource);
 	}
 
 	private Object getArrayFromList(Class<?> componentType, List<?> children) {
