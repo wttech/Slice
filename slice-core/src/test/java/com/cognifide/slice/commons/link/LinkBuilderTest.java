@@ -28,8 +28,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
+import org.mockito.Mock;
 
 import com.cognifide.slice.api.link.Link;
+import com.cognifide.slice.api.link.LinkBuilder;
+import com.cognifide.slice.core.internal.link.LinkBuilderFactoryImpl;
 import com.cognifide.slice.core.internal.link.LinkImpl;
 
 /**
@@ -37,6 +40,8 @@ import com.cognifide.slice.core.internal.link.LinkImpl;
  * 
  */
 public class LinkBuilderTest {
+	@Mock
+	private LinkBuilderFactoryImpl linkBuilderFactoryImpl;
 
 	@Test
 	public void testEmptyBuilder() {
@@ -60,9 +65,9 @@ public class LinkBuilderTest {
 		String url = "http://author.example.com/content/demo/home.mytest.mytest2.html?wcmmode=disabled&test=2#GOODBYE";
 
 		// when
-		LinkBuilderImpl lb = null;
+		LinkBuilder lb = null;
 		try {
-			lb = new LinkBuilderImpl(url);
+			lb = linkBuilderFactoryImpl.getLinkBuilder(url);
 		} catch (MalformedURLException ex) {
 		}
 
@@ -75,82 +80,6 @@ public class LinkBuilderTest {
 		assertEquals("", lb.getSuffix());
 		assertEquals("author.example.com", lb.getDomain());
 		assertEquals("http", lb.getProtocol());
-	}
-
-	@Test
-	public void shouldParseUrlWithSuffix() {
-		// given
-		ArrayList<String> selectors = new ArrayList<String>();
-		String url = "http://author.example.com/content/demo/home.json/richtext";
-
-		// when
-		LinkBuilderImpl lb = null;
-		try {
-			lb = new LinkBuilderImpl(url);
-		} catch (MalformedURLException ex) {
-		}
-
-		// then
-		assertEquals("json", lb.getExtension());
-		assertEquals("", lb.getFragment());
-		assertEquals("/content/demo/home", lb.getPath());
-		assertEquals("", lb.getQueryString());
-		assertEquals(selectors, lb.getSelectors());
-		assertEquals("/richtext", lb.getSuffix());
-	}
-
-	@Test()
-	public void shouldParseUrlWithComplexSuffixAndFragment() throws MalformedURLException {
-		// given
-		ArrayList<String> selectors = new ArrayList<String>();
-		selectors.add("s1");
-		selectors.add("s2");
-		String url = "http://localhost:5602/a/b.s1.s2.html/c/d.s.txt#GOODBYE";
-
-		// when
-		LinkBuilderImpl lb = null;
-		lb = new LinkBuilderImpl(url);
-
-		// then
-		assertEquals("html", lb.getExtension());
-		assertEquals("GOODBYE", lb.getFragment());
-		assertEquals("/a/b", lb.getPath());
-		assertEquals("", lb.getQueryString());
-		assertEquals(selectors, lb.getSelectors());
-		assertEquals("/c/d.s.txt", lb.getSuffix());
-	}
-
-	@Test
-	public void shouldParseUrlWithNumericExtensionAndSuffix() throws MalformedURLException {
-		String url = "http://localhost:5602/a/b.mp3/c";
-
-		// when
-		LinkBuilderImpl lb = new LinkBuilderImpl(url);
-
-		// then
-		assertEquals("mp3", lb.getExtension());
-		assertEquals("", lb.getFragment());
-		assertEquals("/a/b", lb.getPath());
-		assertEquals("", lb.getQueryString());
-		assertEquals("/c", lb.getSuffix());
-	}
-
-	@Test
-	public void suffixShouldBeEmptyNotNull() throws MalformedURLException {
-		assertEquals("", new LinkBuilderImpl("http://localhost:5602/a.html").getSuffix());
-		assertEquals("", new LinkBuilderImpl("http://localhost:5602/a.selector.html").getSuffix());
-	}
-
-	@Test
-	public void suffixCanHasMultipleDots() throws MalformedURLException {
-		assertEquals("/b.a/c.d", new LinkBuilderImpl("http://localhost:5602/a.html/b.a/c.d").getSuffix());
-	}
-
-	@Test(expected = MalformedURLException.class)
-	public void shouldThrowMalformedUrlException() throws MalformedURLException {
-		// given
-		String malformedUrl = "lorem ipsum";
-		new LinkBuilderImpl(malformedUrl);
 	}
 
 	@Test

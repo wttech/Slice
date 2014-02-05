@@ -21,6 +21,8 @@ package com.cognifide.slice.commons.link;
  * limitations under the License.
  * #L%
  */
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,12 +33,14 @@ import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.cognifide.slice.api.link.Link;
 import com.cognifide.slice.api.link.LinkBuilder;
 import com.cognifide.slice.core.internal.link.LinkImpl;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * Allows building links and modifying existing link. Use whenever you need to add/remove selectors, query
@@ -46,6 +50,7 @@ import java.net.URL;
  * @author maciej.majchrzak
  */
 public final class LinkBuilderImpl implements LinkBuilder {
+	private static final Logger LOG = LoggerFactory.getLogger(LinkBuilderImpl.class);
 
 	private String path;
 
@@ -66,6 +71,7 @@ public final class LinkBuilderImpl implements LinkBuilder {
 	/**
 	 * Creates an empty builder. All parts of a link are empty.
 	 */
+
 	public LinkBuilderImpl() {
 		this.path = "";
 		this.selectors = new ArrayList<String>();
@@ -97,9 +103,12 @@ public final class LinkBuilderImpl implements LinkBuilder {
 	 * 
 	 * @param url
 	 */
-	public LinkBuilderImpl(final String url) throws MalformedURLException {
+	public LinkBuilderImpl(final String url, final ResourceResolver resourceResolver)
+			throws MalformedURLException {
 		URL urlHelper = new URL(url);
 		String urlPath = urlHelper.getPath();
+		boolean hasLongSuffix = false;
+
 		if (StringUtils.lastIndexOf(urlPath, "/") > StringUtils.lastIndexOf(urlPath, ".")
 		/* suffix exists and doesn't contain a dot */
 		|| StringUtils.countMatches(urlPath, ".") > 1) { // there are either some selectors or suffix
@@ -111,10 +120,24 @@ public final class LinkBuilderImpl implements LinkBuilder {
 				this.suffix = "/" + split[1];
 			}
 		}
-		suffix = StringUtils.defaultString(suffix);
 		this.path = StringUtils.substringBefore(urlPath, ".");
-		this.extension = StringUtils.substringAfterLast(urlPath, ".");
-		setSelectorString(StringUtils.substringBetween(urlPath, path, extension));
+		Resource resource = resourceResolver.getResource(path);
+
+		while (null == resource && !StringUtils.isEmpty(path)) {
+			this.path = StringUtils.substringBeforeLast(path, "/");
+			resource = resourceResolver.getResource(path);
+		}
+
+		suffix = StringUtils.defaultString(suffix);
+		String possibleLongSuffix = StringUtils.substringAfter(urlPath, path);
+		if (StringUtils.startsWith(possibleLongSuffix, "/")) {
+			hasLongSuffix = true;
+			this.suffix = possibleLongSuffix;
+		}
+		if (!hasLongSuffix) {
+			this.extension = StringUtils.substringAfterLast(urlPath, ".");
+			setSelectorString(StringUtils.substringBetween(urlPath, path, extension));
+		}
 		setQueryString(urlHelper.getQuery());
 		this.fragment = (urlHelper.getRef() == null) ? "" : urlHelper.getRef();
 		this.protocol = (urlHelper.getProtocol() == null) ? "" : urlHelper.getProtocol();
