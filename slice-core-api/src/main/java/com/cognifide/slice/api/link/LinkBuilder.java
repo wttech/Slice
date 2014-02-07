@@ -1,32 +1,22 @@
 package com.cognifide.slice.api.link;
 
 /*
- * #%L
- * Slice - Core API
- * $Id:$
- * $HeadURL:$
- * %%
- * Copyright (C) 2012 Cognifide Limited
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * #%L Slice - Core API $Id:$ $HeadURL:$ %% Copyright (C) 2012 Cognifide Limited %% Licensed under the Apache
+ * License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You
+ * may obtain a copy of the License at
  * 
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License. #L%
  */
 
-
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Map;
 
-import com.cognifide.slice.api.link.Link;
+import org.apache.sling.api.resource.ResourceResolver;
 
 /**
  * Allows building links and modifying existing link. Use whenever you need to add/remove selectors, query
@@ -43,6 +33,17 @@ public interface LinkBuilder {
 	 * @return;@link LinkImpl} representing data in the builder, never null
 	 */
 	Link toLink();
+
+	/**
+	 * Parses a specified url
+	 * 
+	 * @throws {@link MalformedURLException} when url is not a valid URL.
+	 * @param url URL string to be parsed.
+	 * @param resourceResolver Resolver used to get the resource's path.
+	 * @return this builder
+	 */
+	LinkBuilder parseUrl(final String url, final ResourceResolver resourceResolver)
+			throws MalformedURLException;
 
 	/**
 	 * Adds selector (if not blank) as a last one on the list of selectors

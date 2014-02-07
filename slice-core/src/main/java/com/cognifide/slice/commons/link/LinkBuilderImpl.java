@@ -35,8 +35,6 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.cognifide.slice.api.link.Link;
 import com.cognifide.slice.api.link.LinkBuilder;
@@ -48,9 +46,9 @@ import com.cognifide.slice.core.internal.link.LinkImpl;
  * 
  * @author Jan Kuzniak
  * @author maciej.majchrzak
+ * @author adam.zwoniarski
  */
 public final class LinkBuilderImpl implements LinkBuilder {
-	private static final Logger LOG = LoggerFactory.getLogger(LinkBuilderImpl.class);
 
 	private String path;
 
@@ -99,49 +97,49 @@ public final class LinkBuilderImpl implements LinkBuilder {
 	}
 
 	/**
-	 * Creates a builder and sets underlying values using specified URL.
+	 * Parses a specified URL string
 	 * 
-	 * @param url
+	 * @throws MalformedURLException when url is not a valid URL.
+	 * @param url URL string to be parsed.
+	 * @param resourceResolver Resolver used to get the resource's path.
+	 * @return this builder
 	 */
-	public LinkBuilderImpl(final String url, final ResourceResolver resourceResolver)
+	public LinkBuilderImpl parseUrl(final String url, final ResourceResolver resourceResolver)
 			throws MalformedURLException {
 		URL urlHelper = new URL(url);
 		String urlPath = urlHelper.getPath();
-		boolean hasLongSuffix = false;
+		this.path = resolvePath(resourceResolver, urlPath);
+		String possibleSuffix = StringUtils.substringAfter(urlPath, path);
 
-		if (StringUtils.lastIndexOf(urlPath, "/") > StringUtils.lastIndexOf(urlPath, ".")
-		/* suffix exists and doesn't contain a dot */
-		|| StringUtils.countMatches(urlPath, ".") > 1) { // there are either some selectors or suffix
-															// contains a dot
-			String[] split = urlPath.split("\\.\\w+\\/", 2); // it splits the path into path with selectors
-																// and suffix
-			if (split.length == 2) { // contains suffix
-				urlPath = StringUtils.substringBeforeLast(urlPath, "/" + split[1]);
-				this.suffix = "/" + split[1];
+		if (StringUtils.startsWith(possibleSuffix, "/")) {
+			this.suffix = possibleSuffix;
+		} else {
+			String suffix = StringUtils.substringAfter(possibleSuffix, "/");
+			if (!StringUtils.isEmpty(suffix)) {
+				urlPath = StringUtils.substringBeforeLast(urlPath, "/" + suffix);
+				this.suffix = "/" + suffix;
 			}
-		}
-		this.path = StringUtils.substringBefore(urlPath, ".");
-		Resource resource = resourceResolver.getResource(path);
-
-		while (null == resource && !StringUtils.isEmpty(path)) {
-			this.path = StringUtils.substringBeforeLast(path, "/");
-			resource = resourceResolver.getResource(path);
-		}
-
-		suffix = StringUtils.defaultString(suffix);
-		String possibleLongSuffix = StringUtils.substringAfter(urlPath, path);
-		if (StringUtils.startsWith(possibleLongSuffix, "/")) {
-			hasLongSuffix = true;
-			this.suffix = possibleLongSuffix;
-		}
-		if (!hasLongSuffix) {
 			this.extension = StringUtils.substringAfterLast(urlPath, ".");
 			setSelectorString(StringUtils.substringBetween(urlPath, path, extension));
 		}
+
+		this.suffix = StringUtils.defaultString(suffix);
 		setQueryString(urlHelper.getQuery());
 		this.fragment = (urlHelper.getRef() == null) ? "" : urlHelper.getRef();
 		this.protocol = (urlHelper.getProtocol() == null) ? "" : urlHelper.getProtocol();
 		this.domain = (urlHelper.getAuthority() == null) ? "" : urlHelper.getAuthority();
+		return this;
+	}
+
+	private String resolvePath(final ResourceResolver resourceResolver, String urlPath) {
+		String path = StringUtils.substringBefore(urlPath, ".");
+		Resource resource = resourceResolver.getResource(path);
+
+		while (null == resource && !StringUtils.isEmpty(path)) {
+			path = StringUtils.substringBeforeLast(path, "/");
+			resource = resourceResolver.getResource(path);
+		}
+		return path;
 	}
 
 	/**

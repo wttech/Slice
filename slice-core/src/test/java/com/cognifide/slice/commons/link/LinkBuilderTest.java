@@ -23,16 +23,12 @@ package com.cognifide.slice.commons.link;
  */
 import static junit.framework.Assert.assertEquals;
 
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
-import org.mockito.Mock;
 
 import com.cognifide.slice.api.link.Link;
-import com.cognifide.slice.api.link.LinkBuilder;
-import com.cognifide.slice.core.internal.link.LinkBuilderFactoryImpl;
 import com.cognifide.slice.core.internal.link.LinkImpl;
 
 /**
@@ -40,8 +36,6 @@ import com.cognifide.slice.core.internal.link.LinkImpl;
  * 
  */
 public class LinkBuilderTest {
-	@Mock
-	private LinkBuilderFactoryImpl linkBuilderFactoryImpl;
 
 	@Test
 	public void testEmptyBuilder() {
@@ -54,32 +48,6 @@ public class LinkBuilderTest {
 		assertEquals("", "/content.desktop.html", lb.toString());
 		lb.setSuffix("search.html");
 		assertEquals("", "/content.desktop.html/search.html", lb.toString());
-	}
-
-	@Test
-	public void shouldParseUrlWithSelectorsQueriesAndFragment() {
-		// given
-		ArrayList<String> selectors = new ArrayList<String>();
-		selectors.add("mytest");
-		selectors.add("mytest2");
-		String url = "http://author.example.com/content/demo/home.mytest.mytest2.html?wcmmode=disabled&test=2#GOODBYE";
-
-		// when
-		LinkBuilder lb = null;
-		try {
-			lb = linkBuilderFactoryImpl.getLinkBuilder(url);
-		} catch (MalformedURLException ex) {
-		}
-
-		// then
-		assertEquals("html", lb.getExtension());
-		assertEquals("GOODBYE", lb.getFragment());
-		assertEquals("/content/demo/home", lb.getPath());
-		assertEquals("wcmmode=disabled&test=2", lb.getQueryString());
-		assertEquals(selectors, lb.getSelectors());
-		assertEquals("", lb.getSuffix());
-		assertEquals("author.example.com", lb.getDomain());
-		assertEquals("http", lb.getProtocol());
 	}
 
 	@Test

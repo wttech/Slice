@@ -40,12 +40,12 @@ public class LinkBuilderUrlTest {
 		String url = "http://author.example.com/a/b/c/d.s.txt";
 
 		// when
-		LinkBuilder lb = new LinkBuilderImpl(url, resourceResolver);
+		LinkBuilder lb = new LinkBuilderImpl().parseUrl(url, resourceResolver);
 
 		// then
 		assertEquals("/a/b", lb.getPath());
-		assertEquals(null, lb.getSelectors());
-		assertEquals(null, lb.getExtension());
+		assertEquals(0, lb.getSelectors().size());
+		assertEquals("", lb.getExtension());
 		assertEquals("/c/d.s.txt", lb.getSuffix());
 
 	}
@@ -60,12 +60,12 @@ public class LinkBuilderUrlTest {
 		String url = "http://author.example.com/a/b/c/d.s.txt?q=1";
 
 		// when
-		LinkBuilder lb = new LinkBuilderImpl(url, resourceResolver);
+		LinkBuilder lb = new LinkBuilderImpl().parseUrl(url, resourceResolver);
 
 		// then
 		assertEquals("/a/b", lb.getPath());
-		assertEquals(null, lb.getSelectors());
-		assertEquals(null, lb.getExtension());
+		assertEquals(0, lb.getSelectors().size());
+		assertEquals("", lb.getExtension());
 		assertEquals("/c/d.s.txt", lb.getSuffix());
 		assertEquals("q=1", lb.getQueryString());
 
@@ -85,7 +85,7 @@ public class LinkBuilderUrlTest {
 		String url = "http://author.example.com/a/b.s1.html/c/d.s.txt";
 
 		// when
-		LinkBuilder lb = new LinkBuilderImpl(url, resourceResolver);
+		LinkBuilder lb = new LinkBuilderImpl().parseUrl(url, resourceResolver);
 
 		// then
 		assertEquals("/a/b", lb.getPath());
@@ -104,7 +104,7 @@ public class LinkBuilderUrlTest {
 		String url = "http://author.example.com/content/demo/home.json/richtext";
 
 		// when
-		LinkBuilderImpl lb = new LinkBuilderImpl(url, resourceResolver);
+		LinkBuilderImpl lb = new LinkBuilderImpl().parseUrl(url, resourceResolver);
 
 		// then
 		assertEquals("json", lb.getExtension());
@@ -126,7 +126,7 @@ public class LinkBuilderUrlTest {
 		String url = "http://localhost:5602/a/b.s1.s2.html/c/d.s.txt#GOODBYE";
 
 		// when
-		LinkBuilderImpl lb = new LinkBuilderImpl(url, resourceResolver);
+		LinkBuilderImpl lb = new LinkBuilderImpl().parseUrl(url, resourceResolver);
 
 		// then
 		assertEquals("html", lb.getExtension());
@@ -138,6 +138,30 @@ public class LinkBuilderUrlTest {
 	}
 
 	@Test
+	public void shouldParseUrlWithSelectorsQueriesAndFragment() throws MalformedURLException {
+		when(resourceResolver.getResource(Mockito.anyString())).thenReturn(resource);
+
+		// given
+		ArrayList<String> selectors = new ArrayList<String>();
+		selectors.add("mytest");
+		selectors.add("mytest2");
+		String url = "http://author.example.com/content/demo/home.mytest.mytest2.html?wcmmode=disabled&test=2#GOODBYE";
+
+		// when
+		LinkBuilderImpl lb = new LinkBuilderImpl().parseUrl(url, resourceResolver);
+
+		// then
+		assertEquals("html", lb.getExtension());
+		assertEquals("GOODBYE", lb.getFragment());
+		assertEquals("/content/demo/home", lb.getPath());
+		assertEquals("wcmmode=disabled&test=2", lb.getQueryString());
+		assertEquals(selectors, lb.getSelectors());
+		assertEquals("", lb.getSuffix());
+		assertEquals("author.example.com", lb.getDomain());
+		assertEquals("http", lb.getProtocol());
+	}
+
+	@Test
 	public void shouldParseUrlWithNumericExtensionAndSuffix() throws MalformedURLException {
 		when(resourceResolver.getResource(Mockito.anyString())).thenReturn(resource);
 
@@ -145,7 +169,7 @@ public class LinkBuilderUrlTest {
 		String url = "http://localhost:5602/a/b.mp3/c";
 
 		// when
-		LinkBuilderImpl lb = new LinkBuilderImpl(url, resourceResolver);
+		LinkBuilderImpl lb = new LinkBuilderImpl().parseUrl(url, resourceResolver);
 
 		// then
 		assertEquals("mp3", lb.getExtension());
@@ -159,9 +183,11 @@ public class LinkBuilderUrlTest {
 	public void suffixShouldBeEmptyNotNull() throws MalformedURLException {
 		when(resourceResolver.getResource(Mockito.anyString())).thenReturn(resource);
 
-		assertEquals("", new LinkBuilderImpl("http://localhost:5602/a.html", resourceResolver).getSuffix());
+		assertEquals("", new LinkBuilderImpl().parseUrl("http://localhost:5602/a.html", resourceResolver)
+				.getSuffix());
 		assertEquals("",
-				new LinkBuilderImpl("http://localhost:5602/a.selector.html", resourceResolver).getSuffix());
+				new LinkBuilderImpl().parseUrl("http://localhost:5602/a.selector.html", resourceResolver)
+						.getSuffix());
 	}
 
 	@Test
@@ -169,13 +195,14 @@ public class LinkBuilderUrlTest {
 		when(resourceResolver.getResource(Mockito.anyString())).thenReturn(resource);
 
 		assertEquals("/b.a/c.d",
-				new LinkBuilderImpl("http://localhost:5602/a.html/b.a/c.d", resourceResolver).getSuffix());
+				new LinkBuilderImpl().parseUrl("http://localhost:5602/a.html/b.a/c.d", resourceResolver)
+						.getSuffix());
 	}
 
 	@Test(expected = MalformedURLException.class)
 	public void shouldThrowMalformedUrlException() throws MalformedURLException {
 		// given
 		String malformedUrl = "lorem ipsum";
-		new LinkBuilderImpl(malformedUrl, resourceResolver);
+		new LinkBuilderImpl().parseUrl(malformedUrl, resourceResolver);
 	}
 }
