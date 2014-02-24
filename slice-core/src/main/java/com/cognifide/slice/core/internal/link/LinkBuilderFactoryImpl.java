@@ -27,6 +27,7 @@ import com.cognifide.slice.api.link.Link;
 import com.cognifide.slice.api.link.LinkBuilder;
 import com.cognifide.slice.api.link.LinkBuilderFactory;
 import com.cognifide.slice.commons.link.LinkBuilderImpl;
+import java.net.MalformedURLException;
 
 public class LinkBuilderFactoryImpl implements LinkBuilderFactory {
 
@@ -40,4 +41,8 @@ public class LinkBuilderFactoryImpl implements LinkBuilderFactory {
 		return new LinkBuilderImpl(link);
 	}
 
+	@Override
+	public LinkBuilder getLinkBuilder(final String url) throws MalformedURLException{
+		return new LinkBuilderImpl(url);
+	}
 }

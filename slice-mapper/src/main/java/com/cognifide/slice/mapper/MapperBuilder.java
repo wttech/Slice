@@ -1,25 +1,15 @@
 package com.cognifide.slice.mapper;
 
 /*
- * #%L
- * Slice - Mapper
- * $Id:$
- * $HeadURL:$
- * %%
- * Copyright (C) 2012 Cognifide Limited
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * #%L Slice - Mapper $Id:$ $HeadURL:$ %% Copyright (C) 2012 Cognifide Limited %% Licensed under the Apache
+ * License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You
+ * may obtain a copy of the License at
  * 
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License. #L%
  */
 import com.cognifide.slice.mapper.api.Mapper;
 import com.cognifide.slice.mapper.api.processor.FieldPostProcessor;
@@ -27,9 +17,11 @@ import com.cognifide.slice.mapper.api.processor.FieldProcessor;
 import com.cognifide.slice.mapper.impl.postprocessor.EscapeValuePostProcessor;
 import com.cognifide.slice.mapper.impl.processor.BooleanFieldProcessor;
 import com.cognifide.slice.mapper.impl.processor.DefaultFieldProcessor;
+import com.cognifide.slice.mapper.impl.processor.ListFieldProcessor;
 import com.cognifide.slice.mapper.impl.processor.SliceReferenceFieldProcessor;
 import com.cognifide.slice.mapper.impl.processor.SliceResourceFieldProcessor;
 import com.google.inject.Inject;
+
 import java.util.Deque;
 import java.util.LinkedList;
 
@@ -52,8 +44,8 @@ public final class MapperBuilder {
 	private SliceReferenceFieldProcessor sliceReferenceFieldProcessor;
 
 	/**
-	 * This method creates new instance of {@link GenericSlingMapper}. Field processors should be added
-	 * before this method.
+	 * This method creates new instance of {@link GenericSlingMapper}. Field processors should be added before
+	 * this method.
 	 * 
 	 * @return
 	 */
@@ -89,10 +81,12 @@ public final class MapperBuilder {
 	 * @return
 	 */
 	public MapperBuilder addDefaultSliceProcessors() {
-		processors.add(new DefaultFieldProcessor());
-		processors.add(new BooleanFieldProcessor());
-		processors.add(sliceResourceFieldProcessor);
-		processors.add(sliceReferenceFieldProcessor);
+		processors.add(sliceReferenceFieldProcessor); // @SliceReference
+		processors.add(sliceResourceFieldProcessor); // @SliceResource
+		processors.add(new ListFieldProcessor()); // Subclasses of Collection<?>
+		processors.add(new BooleanFieldProcessor()); // booleans
+		processors.add(new DefaultFieldProcessor()); // any other fields
+
 		postProcessors.add(new EscapeValuePostProcessor());
 		return this;
 	}
