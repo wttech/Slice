@@ -17,6 +17,7 @@ import com.cognifide.slice.mapper.api.processor.FieldProcessor;
 import com.cognifide.slice.mapper.impl.postprocessor.EscapeValuePostProcessor;
 import com.cognifide.slice.mapper.impl.processor.BooleanFieldProcessor;
 import com.cognifide.slice.mapper.impl.processor.DefaultFieldProcessor;
+import com.cognifide.slice.mapper.impl.processor.EnumFieldProcessor;
 import com.cognifide.slice.mapper.impl.processor.ListFieldProcessor;
 import com.cognifide.slice.mapper.impl.processor.SliceReferenceFieldProcessor;
 import com.cognifide.slice.mapper.impl.processor.SliceResourceFieldProcessor;
@@ -85,6 +86,7 @@ public final class MapperBuilder {
 		processors.add(sliceResourceFieldProcessor); // @SliceResource
 		processors.add(new ListFieldProcessor()); // Subclasses of Collection<?>
 		processors.add(new BooleanFieldProcessor()); // booleans
+		processors.add(new EnumFieldProcessor()); // enums
 		processors.add(new DefaultFieldProcessor()); // any other fields
 
 		postProcessors.add(new EscapeValuePostProcessor());
