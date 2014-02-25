@@ -143,6 +143,20 @@ public class SliceModelProvider implements ModelProvider {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public Object get(String className, Resource resource) throws ClassNotFoundException {
+		final Key<?> key = classToKeyMapper.getKey(className);
+		if (null == key) {
+			throw new ClassNotFoundException("key for class " + className + " not found");
+		}
+		ExecutionContextImpl executionItem = new ExecutionContextImpl(resource);
+		LOG.debug("creating new instance for {} from {}", new Object[] { key.toString(), resource });
+		return get(key, executionItem);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public final <T> List<T> getList(final Class<T> type, final Iterator<String> paths) {
 		final ArrayList<T> result = new ArrayList<T>();
 
