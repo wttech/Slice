@@ -34,7 +34,6 @@ import org.slf4j.LoggerFactory;
 import com.cognifide.slice.api.context.ContextProvider;
 import com.cognifide.slice.api.context.ContextScope;
 import com.cognifide.slice.api.execution.ExecutionContextStack;
-import com.cognifide.slice.api.provider.ClassToKeyMapper;
 import com.cognifide.slice.api.provider.ModelProvider;
 import com.cognifide.slice.api.scope.ContextScoped;
 import com.cognifide.slice.core.internal.execution.ExecutionContextImpl;

@@ -30,7 +30,6 @@ import com.cognifide.slice.api.context.ContextFactory;
 import com.cognifide.slice.api.context.ContextScope;
 import com.cognifide.slice.api.execution.ExecutionContextStack;
 import com.cognifide.slice.api.injector.InjectorsRepository;
-import com.cognifide.slice.api.provider.ClassToKeyMapper;
 import com.cognifide.slice.api.provider.ModelProvider;
 import com.cognifide.slice.api.qualifier.CurrentResourcePath;
 import com.cognifide.slice.api.qualifier.InjectorName;
@@ -41,7 +40,6 @@ import com.cognifide.slice.api.scope.ContextScoped;
 import com.cognifide.slice.commons.module.ContextScopeModule;
 import com.cognifide.slice.core.internal.context.SliceContextFactory;
 import com.cognifide.slice.core.internal.execution.ExecutionContextStackImpl;
-import com.cognifide.slice.core.internal.provider.SliceClassToKeyMapper;
 import com.cognifide.slice.core.internal.provider.SliceModelProvider;
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -68,7 +66,6 @@ public final class SliceModule extends ContextScopeModule {
 		bind(ContextScope.class).toInstance(getContextScope());
 
 		bind(ModelProvider.class).to(SliceModelProvider.class);
-		bind(ClassToKeyMapper.class).to(SliceClassToKeyMapper.class);
 		bind(ContextFactory.class).to(SliceContextFactory.class);
 
 		bindToContextScope(Key.get(Resource.class, RequestedResource.class));

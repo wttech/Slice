@@ -40,7 +40,7 @@ import org.osgi.framework.Bundle;
 
 import com.cognifide.slice.api.context.ContextFactory;
 import com.cognifide.slice.api.context.ContextScope;
-import com.cognifide.slice.api.provider.ClassToKeyMapper;
+import com.cognifide.slice.api.provider.ModelProvider;
 import com.cognifide.slice.core.internal.module.JcrModule;
 import com.cognifide.slice.core.internal.module.LinkModule;
 import com.cognifide.slice.core.internal.module.SliceModule;
@@ -88,7 +88,7 @@ public class SliceClassToKeyMapperTest {
 		modules.add(new MapperModule());
 
 		injector = Guice.createInjector(modules);
-		mapper = new SliceClassToKeyMapper(injector, classLoaderManager);
+		mapper = new ClassToKeyMapper(injector, classLoaderManager);
 	}
 
 	@Test
@@ -107,7 +107,7 @@ public class SliceClassToKeyMapperTest {
 
 	@Test
 	public void testInternalCaching() throws ClassNotFoundException {
-		String className = ClassToKeyMapper.class.getName();
+		String className = ModelProvider.class.getName();
 
 		// known class
 		Key<?> key = mapper.getKey(className);
