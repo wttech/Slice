@@ -131,7 +131,7 @@ public class SliceModelProvider implements ModelProvider {
 	@Override
 	public Object get(String className, String path) throws ClassNotFoundException {
 		final Key<?> key = classToKeyMapper.getKey(className);
-		if (null == key) {
+		if (key == null) {
 			throw new ClassNotFoundException("key for class " + className + " not found");
 		}
 		ExecutionContextImpl executionItem = new ExecutionContextImpl(path);
@@ -145,7 +145,7 @@ public class SliceModelProvider implements ModelProvider {
 	@Override
 	public Object get(String className, Resource resource) throws ClassNotFoundException {
 		final Key<?> key = classToKeyMapper.getKey(className);
-		if (null == key) {
+		if (key == null) {
 			throw new ClassNotFoundException("key for class " + className + " not found");
 		}
 		ExecutionContextImpl executionItem = new ExecutionContextImpl(resource);
@@ -160,7 +160,7 @@ public class SliceModelProvider implements ModelProvider {
 	public final <T> List<T> getList(final Class<T> type, final Iterator<String> paths) {
 		final ArrayList<T> result = new ArrayList<T>();
 
-		if (null == paths) {
+		if (paths == null) {
 			return result;
 		}
 
@@ -178,7 +178,7 @@ public class SliceModelProvider implements ModelProvider {
 	 */
 	@Override
 	public final <T> List<T> getList(final Class<T> type, final String[] paths) {
-		if (null == paths) {
+		if (paths == null) {
 			return new ArrayList<T>();
 		}
 		return getList(type, Arrays.asList(paths).iterator());
