@@ -34,7 +34,6 @@ import org.slf4j.LoggerFactory;
 import com.cognifide.slice.api.context.ContextProvider;
 import com.cognifide.slice.api.context.ContextScope;
 import com.cognifide.slice.api.execution.ExecutionContextStack;
-import com.cognifide.slice.api.provider.ClassToKeyMapper;
 import com.cognifide.slice.api.provider.ModelProvider;
 import com.cognifide.slice.api.scope.ContextScoped;
 import com.cognifide.slice.core.internal.execution.ExecutionContextImpl;
@@ -132,7 +131,7 @@ public class SliceModelProvider implements ModelProvider {
 	@Override
 	public Object get(String className, String path) throws ClassNotFoundException {
 		final Key<?> key = classToKeyMapper.getKey(className);
-		if (null == key) {
+		if (key == null) {
 			throw new ClassNotFoundException("key for class " + className + " not found");
 		}
 		ExecutionContextImpl executionItem = new ExecutionContextImpl(path);
@@ -144,10 +143,24 @@ public class SliceModelProvider implements ModelProvider {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public Object get(String className, Resource resource) throws ClassNotFoundException {
+		final Key<?> key = classToKeyMapper.getKey(className);
+		if (key == null) {
+			throw new ClassNotFoundException("key for class " + className + " not found");
+		}
+		ExecutionContextImpl executionItem = new ExecutionContextImpl(resource);
+		LOG.debug("creating new instance for {} from {}", new Object[] { key.toString(), resource });
+		return get(key, executionItem);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public final <T> List<T> getList(final Class<T> type, final Iterator<String> paths) {
 		final ArrayList<T> result = new ArrayList<T>();
 
-		if (null == paths) {
+		if (paths == null) {
 			return result;
 		}
 
@@ -165,7 +178,7 @@ public class SliceModelProvider implements ModelProvider {
 	 */
 	@Override
 	public final <T> List<T> getList(final Class<T> type, final String[] paths) {
-		if (null == paths) {
+		if (paths == null) {
 			return new ArrayList<T>();
 		}
 		return getList(type, Arrays.asList(paths).iterator());
