@@ -26,6 +26,7 @@ import com.cognifide.slice.mapper.api.Mapper;
 import com.cognifide.slice.mapper.impl.postprocessor.EscapeValuePostProcessor;
 import com.cognifide.slice.mapper.impl.processor.ChildrenFieldProcessor;
 import com.cognifide.slice.mapper.impl.processor.BooleanFieldProcessor;
+import com.cognifide.slice.mapper.impl.processor.EnumFieldProcessor;
 import com.cognifide.slice.mapper.impl.processor.ListFieldProcessor;
 import com.cognifide.slice.mapper.impl.processor.SliceReferenceFieldProcessor;
 import com.cognifide.slice.mapper.impl.processor.SliceResourceFieldProcessor;
@@ -59,6 +60,7 @@ public final class SlingMapperFactory {
 		final Mapper mapper = mapperFactory.getMapper();
 
 		mapper.registerFieldProcessor(new BooleanFieldProcessor());
+		mapper.registerFieldProcessor(new EnumFieldProcessor());
 		mapper.registerFieldProcessor(childrenFieldProcessor);
 		mapper.registerFieldProcessor(listFieldProcessor);
 		mapper.registerFieldProcessor(sliceResourceFieldProcessor);
