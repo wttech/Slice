@@ -61,8 +61,8 @@ public final class SlingMapperFactory {
 
 		mapper.registerFieldProcessor(new BooleanFieldProcessor());
 		mapper.registerFieldProcessor(new EnumFieldProcessor());
-		mapper.registerFieldProcessor(childrenFieldProcessor);
 		mapper.registerFieldProcessor(listFieldProcessor);
+		mapper.registerFieldProcessor(childrenFieldProcessor);
 		mapper.registerFieldProcessor(sliceResourceFieldProcessor);
 		mapper.registerFieldProcessor(sliceReferenceFieldProcessor);
 		mapper.registerFieldPostProcessor(new EscapeValuePostProcessor());

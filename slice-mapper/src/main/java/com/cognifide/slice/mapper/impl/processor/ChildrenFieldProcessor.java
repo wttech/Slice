@@ -3,7 +3,7 @@ package com.cognifide.slice.mapper.impl.processor;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.text.MessageFormat;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.sling.api.resource.Resource;
@@ -18,8 +18,12 @@ import com.google.inject.Provider;
 
 public class ChildrenFieldProcessor implements FieldProcessor {
 
+	private final Provider<ModelProvider> modelProvider;
+
 	@Inject
-	private Provider<ModelProvider> modelProvider;
+	public ChildrenFieldProcessor(final Provider<ModelProvider> modelProvider) {
+		this.modelProvider = modelProvider;
+	}
 
 	@Override
 	public boolean accepts(Resource resource, Field field) {
@@ -27,7 +31,7 @@ public class ChildrenFieldProcessor implements FieldProcessor {
 			return false;
 		}
 		Class<?> fieldType = field.getType();
-		return Collection.class.isAssignableFrom(fieldType) || fieldType.isArray();
+		return List.class.isAssignableFrom(fieldType) || fieldType.isArray();
 	}
 
 	@Override
@@ -43,16 +47,16 @@ public class ChildrenFieldProcessor implements FieldProcessor {
 	}
 
 	private List<?> getChildrenList(Resource resource, Field field, String propertyName) {
-		final Resource collectionParentResource = resource.getChild(propertyName);
-		if (collectionParentResource == null) {
-			String message = MessageFormat.format("The resource {0} does not exists.", propertyName);
-			throw new MapperException(message);
+		List<?> result;
+		Resource parentResource = resource.getChild(propertyName);
+		if (parentResource == null) {
+			result = Collections.EMPTY_LIST;
+		} else {
+			Children childrenAnnotation = field.getAnnotation(Children.class);
+			Class<?> modelClass = childrenAnnotation.value();
+			result = modelProvider.get().getChildModels(modelClass, parentResource);
 		}
-
-		final Children childrenAnnotation = field.getAnnotation(Children.class);
-		final Class<?> modelClass = childrenAnnotation.value();
-
-		return modelProvider.get().getChildModels(modelClass, collectionParentResource);
+		return result;
 	}
 
 	private Object getArrayFromList(Class<?> componentType, List<?> children) {
