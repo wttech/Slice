@@ -228,7 +228,6 @@ public class GenericSlingMapper implements Mapper {
 			}
 		}
 		return value;
-
 	}
 
 	/**

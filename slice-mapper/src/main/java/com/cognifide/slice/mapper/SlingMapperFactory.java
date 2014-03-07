@@ -24,6 +24,7 @@ package com.cognifide.slice.mapper;
 
 import com.cognifide.slice.mapper.api.Mapper;
 import com.cognifide.slice.mapper.impl.postprocessor.EscapeValuePostProcessor;
+import com.cognifide.slice.mapper.impl.processor.ChildrenFieldProcessor;
 import com.cognifide.slice.mapper.impl.processor.BooleanFieldProcessor;
 import com.cognifide.slice.mapper.impl.processor.EnumFieldProcessor;
 import com.cognifide.slice.mapper.impl.processor.ListFieldProcessor;
@@ -39,17 +40,20 @@ public final class SlingMapperFactory {
 
 	private final SliceReferenceFieldProcessor sliceReferenceFieldProcessor;
 
+	private final ChildrenFieldProcessor childrenFieldProcessor;
+
 	private final ListFieldProcessor listFieldProcessor;
 
 	@Inject
 	public SlingMapperFactory(final MapperFactory mapperFactory,
 			final SliceResourceFieldProcessor sliceResourceFieldProcessor,
 			final SliceReferenceFieldProcessor sliceReferenceFieldProcessor,
-			final ListFieldProcessor listFieldProcessor) {
+			final ListFieldProcessor listFieldProcessor, final ChildrenFieldProcessor childrenFieldProcessor) {
 		this.mapperFactory = mapperFactory;
 		this.sliceResourceFieldProcessor = sliceResourceFieldProcessor;
 		this.sliceReferenceFieldProcessor = sliceReferenceFieldProcessor;
 		this.listFieldProcessor = listFieldProcessor;
+		this.childrenFieldProcessor = childrenFieldProcessor;
 	}
 
 	public Mapper getMapper() {
@@ -58,6 +62,7 @@ public final class SlingMapperFactory {
 		mapper.registerFieldProcessor(new BooleanFieldProcessor());
 		mapper.registerFieldProcessor(new EnumFieldProcessor());
 		mapper.registerFieldProcessor(listFieldProcessor);
+		mapper.registerFieldProcessor(childrenFieldProcessor);
 		mapper.registerFieldProcessor(sliceResourceFieldProcessor);
 		mapper.registerFieldProcessor(sliceReferenceFieldProcessor);
 		mapper.registerFieldPostProcessor(new EscapeValuePostProcessor());
