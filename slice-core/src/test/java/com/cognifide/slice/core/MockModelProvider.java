@@ -31,7 +31,9 @@ import java.util.Map;
 import org.apache.sling.api.resource.Resource;
 
 import com.cognifide.slice.api.provider.ModelProvider;
+
 import org.apache.sling.api.resource.ResourceResolver;
+
 import com.google.inject.Key;
 
 public class MockModelProvider implements ModelProvider {
@@ -77,6 +79,12 @@ public class MockModelProvider implements ModelProvider {
 
 	@Override
 	public Object get(String className, String path) throws ClassNotFoundException {
+		// TODO
+		return null;
+	}
+
+	@Override
+	public Object get(String className, Resource resource) throws ClassNotFoundException {
 		// TODO
 		return null;
 	}

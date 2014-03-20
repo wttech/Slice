@@ -30,7 +30,6 @@ import org.apache.sling.commons.classloader.DynamicClassLoaderManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.cognifide.slice.api.provider.ClassToKeyMapper;
 import com.google.inject.Binding;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -39,7 +38,7 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 @Singleton
-public class SliceClassToKeyMapper implements ClassToKeyMapper {
+public class ClassToKeyMapper {
 
 	// cache - pre-filled with
 	private final Map<String, Key<?>> knownKeys = new HashMap<String, Key<?>>();
@@ -47,10 +46,10 @@ public class SliceClassToKeyMapper implements ClassToKeyMapper {
 	// Provider to ensure that we have a valid OSGi service in this singleton object
 	private final Provider<DynamicClassLoaderManager> classLoaderManagerProvider;
 
-	private static final Logger LOG = LoggerFactory.getLogger(SliceClassToKeyMapper.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ClassToKeyMapper.class);
 
 	@Inject
-	public SliceClassToKeyMapper(Injector injector,
+	public ClassToKeyMapper(Injector injector,
 			Provider<DynamicClassLoaderManager> classLoaderManagerProvider) {
 		this.classLoaderManagerProvider = classLoaderManagerProvider;
 		initiateKnownBindings(injector);
@@ -67,7 +66,6 @@ public class SliceClassToKeyMapper implements ClassToKeyMapper {
 		}
 	}
 
-	@Override
 	public Key<?> getKey(final String className) {
 		Key<?> knownKey = knownKeys.get(className);
 		if (knownKey == null) {
