@@ -16,6 +16,7 @@ import com.cognifide.slice.mapper.api.processor.FieldPostProcessor;
 import com.cognifide.slice.mapper.api.processor.FieldProcessor;
 import com.cognifide.slice.mapper.impl.postprocessor.EscapeValuePostProcessor;
 import com.cognifide.slice.mapper.impl.processor.BooleanFieldProcessor;
+import com.cognifide.slice.mapper.impl.processor.ChildrenFieldProcessor;
 import com.cognifide.slice.mapper.impl.processor.DefaultFieldProcessor;
 import com.cognifide.slice.mapper.impl.processor.EnumFieldProcessor;
 import com.cognifide.slice.mapper.impl.processor.ListFieldProcessor;
@@ -43,6 +44,9 @@ public final class MapperBuilder {
 
 	@Inject
 	private SliceReferenceFieldProcessor sliceReferenceFieldProcessor;
+	
+	@Inject
+	private ChildrenFieldProcessor childrenFieldProcessor;
 
 	/**
 	 * This method creates new instance of {@link GenericSlingMapper}. Field processors should be added before
@@ -84,7 +88,8 @@ public final class MapperBuilder {
 	public MapperBuilder addDefaultSliceProcessors() {
 		processors.add(sliceReferenceFieldProcessor); // @SliceReference
 		processors.add(sliceResourceFieldProcessor); // @SliceResource
-		processors.add(new ListFieldProcessor()); // Subclasses of Collection<?>
+		processors.add(childrenFieldProcessor); // child models @Children 
+		processors.add(new ListFieldProcessor()); // Subclasses of Collection<?> and arrays
 		processors.add(new BooleanFieldProcessor()); // booleans
 		processors.add(new EnumFieldProcessor()); // enums
 		processors.add(new DefaultFieldProcessor()); // any other fields
