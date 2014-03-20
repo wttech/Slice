@@ -47,6 +47,10 @@ public class ChildrenFieldProcessor implements FieldProcessor {
 	}
 
 	private List<?> getChildrenList(Resource resource, Field field, String propertyName) {
+		if (propertyName.charAt(0) == '/') {
+			throw new IllegalArgumentException(
+					"Property name must not start with \"/\" as it doesn't indicate a relative resource");
+		}
 		List<?> result;
 		Resource parentResource = resource.getChild(propertyName);
 		if (parentResource == null) {
