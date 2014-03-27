@@ -27,7 +27,6 @@ import com.cognifide.slice.mapper.MapperBuilder;
 import com.cognifide.slice.mapper.annotation.SliceResource;
 import com.cognifide.slice.mapper.api.Mapper;
 import com.google.inject.AbstractModule;
-import com.google.inject.Inject;
 import com.google.inject.Provides;
 
 /**
@@ -36,9 +35,6 @@ import com.google.inject.Provides;
  * 
  */
 public class MapperModule extends AbstractModule {
-
-	@Inject
-	private MapperBuilder mapperBuilder;
 
 	@Override
 	protected void configure() {
@@ -51,7 +47,7 @@ public class MapperModule extends AbstractModule {
 	 */
 	@Provides
 	@ContextScoped
-	public Mapper getMapper() {
+	public Mapper getMapper(MapperBuilder mapperBuilder) {
 		return mapperBuilder.addDefaultSliceProcessors().build();
 	}
 
