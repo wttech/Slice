@@ -33,6 +33,14 @@ local.properties
 target
 
 #################
+## Intellij
+#################
+.idea/
+*.iml
+*.iws
+
+
+#################
 ## Visual Studio
 #################
 
