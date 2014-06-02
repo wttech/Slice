@@ -1,6 +1,6 @@
 package com.cognifide.slice.core.internal.link;
 
-/*
+/*-
  * #%L
  * Slice - Core
  * $Id:$
@@ -26,7 +26,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
-public class LinkDecomposer {
+public class SlingPathDecomposer {
 
 	private final static String[] NO_SELECTORS = new String[0];
 
@@ -46,7 +46,7 @@ public class LinkDecomposer {
 
 	private String resourcePath;
 
-	public LinkDecomposer(final String url, final ResourceResolver resourceResolver) {
+	public SlingPathDecomposer(final String url, final ResourceResolver resourceResolver) {
 		this.url = url;
 		this.resourceResolver = resourceResolver;
 		decompose(url);

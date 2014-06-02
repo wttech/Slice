@@ -1,6 +1,6 @@
 package com.cognifide.slice.commons.link;
 
-/*
+/*-
  * #%L
  * Slice - Core
  * $Id:$
@@ -11,9 +11,9 @@ package com.cognifide.slice.commons.link;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,8 +22,7 @@ package com.cognifide.slice.commons.link;
  * #L%
  */
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.fail;
+import static junit.framework.Assert.*;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -65,7 +64,7 @@ public class LinkBuilderTest {
 		// when
 		LinkBuilder lb = null;
 		try {
-			lb = new LinkBuilderImpl(url, new MockResourceResolver("/content/demo/home"));
+			lb = new LinkBuilderImpl().parse(url, new MockResourceResolver("/content/demo/home"));
 		} catch (MalformedURLException ex) {
 		}
 
@@ -75,7 +74,7 @@ public class LinkBuilderTest {
 		assertEquals("/content/demo/home", lb.getPath());
 		assertEquals("wcmmode=disabled&test=2", lb.getQueryString());
 		assertEquals(selectors, lb.getSelectors());
-		assertEquals("", lb.getSuffix());
+		assertNull(lb.getSuffix());
 	}
 
 	@Test
@@ -87,7 +86,7 @@ public class LinkBuilderTest {
 		// when
 		LinkBuilder lb = null;
 		try {
-			lb = new LinkBuilderImpl(url, new MockResourceResolver());
+			lb = new LinkBuilderImpl().parse(url, new MockResourceResolver());
 		} catch (MalformedURLException ex) {
 		}
 
@@ -111,7 +110,7 @@ public class LinkBuilderTest {
 		// when
 		LinkBuilder lb = null;
 		try {
-			lb = new LinkBuilderImpl(url, new MockResourceResolver());
+			lb = new LinkBuilderImpl().parse(url, new MockResourceResolver());
 		} catch (MalformedURLException ex) {
 		}
 
@@ -130,7 +129,7 @@ public class LinkBuilderTest {
 		String url = "lorem ipsum";
 		try {
 			// when
-			LinkBuilder lb = new LinkBuilderImpl(url, new MockResourceResolver());
+			LinkBuilder lb = new LinkBuilderImpl().parse(url, new MockResourceResolver());
 			fail();
 		} catch (MalformedURLException ex) {
 

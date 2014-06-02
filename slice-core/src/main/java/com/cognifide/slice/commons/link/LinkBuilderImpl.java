@@ -1,6 +1,6 @@
 package com.cognifide.slice.commons.link;
 
-/*
+/*-
  * #%L
  * Slice - Core
  * $Id:$
@@ -34,12 +34,13 @@ import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
 import com.cognifide.slice.api.link.Link;
 import com.cognifide.slice.api.link.LinkBuilder;
-import com.cognifide.slice.core.internal.link.LinkDecomposer;
 import com.cognifide.slice.core.internal.link.LinkImpl;
+import com.cognifide.slice.core.internal.link.SlingPathDecomposer;
 
 /**
  * Allows building links and modifying existing link. Use whenever you need to add/remove selectors, query
@@ -47,6 +48,8 @@ import com.cognifide.slice.core.internal.link.LinkImpl;
  * 
  * @author Jan Kuzniak
  * @author maciej.majchrzak
+ * @author adam.zwoniarski
+ * @author maciej.rudowicz
  */
 public final class LinkBuilderImpl implements LinkBuilder {
 
@@ -69,13 +72,14 @@ public final class LinkBuilderImpl implements LinkBuilder {
 	/**
 	 * Creates an empty builder. All parts of a link are empty.
 	 */
+
 	public LinkBuilderImpl() {
-		this.path = StringUtils.EMPTY;
+		this.path = "";
 		this.selectors = new ArrayList<String>();
 		this.queries = new HashMap<String, List<String>>();
-		this.extension = StringUtils.EMPTY;
-		this.suffix = StringUtils.EMPTY;
-		this.fragment = StringUtils.EMPTY;
+		this.extension = "";
+		this.suffix = "";
+		this.fragment = "";
 	}
 
 	/**
@@ -86,7 +90,9 @@ public final class LinkBuilderImpl implements LinkBuilder {
 	 */
 	public LinkBuilderImpl(final Link link) {
 		this.path = link.getPath();
-		this.selectors = new ArrayList<String>(link.getSelectors());
+		List<String> linkSelectors = link.getSelectors();
+		this.selectors = new ArrayList<String>(linkSelectors.size());
+		this.selectors.addAll(linkSelectors);
 		this.extension = link.getExtension();
 		this.suffix = link.getSuffix();
 		setQueryString(link.getQueryString());
@@ -94,20 +100,38 @@ public final class LinkBuilderImpl implements LinkBuilder {
 	}
 
 	/**
-	 * Creates a builder and sets underlying values using specified URL.
+	 * Parses a specified URL string
 	 * 
-	 * @param url
+	 * @throws MalformedURLException when url is not a valid URL.
+	 * @param url URL string to be parsed.
+	 * @param resourceResolver Resolver used to get the resource's path.
+	 * @return this builder
 	 */
-	public LinkBuilderImpl(final String url, final ResourceResolver resourceResolver)
+	public LinkBuilderImpl parse(final String url, final ResourceResolver resourceResolver)
 			throws MalformedURLException {
 		URL urlHelper = new URL(url);
-		LinkDecomposer linkDecomposer = new LinkDecomposer(urlHelper.getPath(), resourceResolver);
-		this.suffix = linkDecomposer.getSuffix();
-		this.path = linkDecomposer.getResourcePath();
-		this.extension = linkDecomposer.getExtension();
-		this.selectors = Arrays.asList(linkDecomposer.getSelectors());
+		SlingPathDecomposer slingPathDecomposer = new SlingPathDecomposer(urlHelper.getPath(),
+				resourceResolver);
+		this.suffix = slingPathDecomposer.getSuffix();
+		this.path = slingPathDecomposer.getResourcePath();
+		this.extension = slingPathDecomposer.getExtension();
+		this.selectors = Arrays.asList(slingPathDecomposer.getSelectors());
 		setQueryString(urlHelper.getQuery());
 		this.fragment = (urlHelper.getRef() == null) ? "" : urlHelper.getRef();
+		this.protocol = (urlHelper.getProtocol() == null) ? "" : urlHelper.getProtocol();
+		this.domain = (urlHelper.getAuthority() == null) ? "" : urlHelper.getAuthority();
+		return this;
+	}
+
+	private String resolvePath(final ResourceResolver resourceResolver, String urlPath) {
+		String path = StringUtils.substringBefore(urlPath, ".");
+		Resource resource = resourceResolver.getResource(path);
+
+		while (null == resource && !StringUtils.isEmpty(path)) {
+			path = StringUtils.substringBeforeLast(path, "/");
+			resource = resourceResolver.getResource(path);
+		}
+		return path;
 	}
 
 	/**
