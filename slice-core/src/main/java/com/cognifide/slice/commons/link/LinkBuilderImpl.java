@@ -34,7 +34,6 @@ import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
 import com.cognifide.slice.api.link.Link;
@@ -120,17 +119,6 @@ public final class LinkBuilderImpl implements LinkBuilder {
 		this.fragment = (urlHelper.getRef() == null) ? "" : urlHelper.getRef();
 		this.protocol = (urlHelper.getProtocol() == null) ? "" : urlHelper.getProtocol();
 		this.domain = (urlHelper.getAuthority() == null) ? "" : urlHelper.getAuthority();
-	}
-
-	private String resolvePath(final ResourceResolver resourceResolver, String urlPath) {
-		String path = StringUtils.substringBefore(urlPath, ".");
-		Resource resource = resourceResolver.getResource(path);
-
-		while (null == resource && !StringUtils.isEmpty(path)) {
-			path = StringUtils.substringBeforeLast(path, "/");
-			resource = resourceResolver.getResource(path);
-		}
-		return path;
 	}
 
 	/**
