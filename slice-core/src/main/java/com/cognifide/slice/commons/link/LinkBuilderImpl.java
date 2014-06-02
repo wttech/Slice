@@ -2,7 +2,7 @@ package com.cognifide.slice.commons.link;
 
 /*-
  * #%L
- * Slice - Commons
+ * Slice - Core
  * $Id:$
  * $HeadURL:$
  * %%
