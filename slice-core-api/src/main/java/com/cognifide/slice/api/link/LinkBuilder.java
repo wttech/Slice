@@ -22,11 +22,8 @@ package com.cognifide.slice.api.link;
  * #L%
  */
 
-import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.sling.api.resource.ResourceResolver;
 
 /**
  * Allows building links and modifying existing link. Use whenever you need to add/remove selectors, query
@@ -43,16 +40,6 @@ public interface LinkBuilder {
 	 * @return;@link LinkImpl} representing data in the builder, never null
 	 */
 	Link toLink();
-
-	/**
-	 * Parses a specified url
-	 * 
-	 * @throws {@link MalformedURLException} when url is not a valid URL.
-	 * @param url URL string to be parsed.
-	 * @param resourceResolver Resolver used to get the resource's path.
-	 * @return this builder
-	 */
-	LinkBuilder parse(final String url, final ResourceResolver resourceResolver) throws MalformedURLException;
 
 	/**
 	 * Adds selector (if not blank) as a last one on the list of selectors

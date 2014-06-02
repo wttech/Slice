@@ -2,7 +2,7 @@ package com.cognifide.slice.commons.link;
 
 /*-
  * #%L
- * Slice - Core
+ * Slice - Commons
  * $Id:$
  * $HeadURL:$
  * %%
@@ -64,7 +64,7 @@ public class LinkBuilderTest {
 		// when
 		LinkBuilder lb = null;
 		try {
-			lb = new LinkBuilderImpl().parse(url, new MockResourceResolver("/content/demo/home"));
+			lb = new LinkBuilderImpl(url, new MockResourceResolver("/content/demo/home"));
 		} catch (MalformedURLException ex) {
 		}
 
@@ -86,7 +86,7 @@ public class LinkBuilderTest {
 		// when
 		LinkBuilder lb = null;
 		try {
-			lb = new LinkBuilderImpl().parse(url, new MockResourceResolver());
+			lb = new LinkBuilderImpl(url, new MockResourceResolver());
 		} catch (MalformedURLException ex) {
 		}
 
@@ -110,7 +110,7 @@ public class LinkBuilderTest {
 		// when
 		LinkBuilder lb = null;
 		try {
-			lb = new LinkBuilderImpl().parse(url, new MockResourceResolver());
+			lb = new LinkBuilderImpl(url, new MockResourceResolver());
 		} catch (MalformedURLException ex) {
 		}
 
@@ -129,7 +129,7 @@ public class LinkBuilderTest {
 		String url = "lorem ipsum";
 		try {
 			// when
-			LinkBuilder lb = new LinkBuilderImpl().parse(url, new MockResourceResolver());
+			LinkBuilder lb = new LinkBuilderImpl(url, new MockResourceResolver());
 			fail();
 		} catch (MalformedURLException ex) {
 

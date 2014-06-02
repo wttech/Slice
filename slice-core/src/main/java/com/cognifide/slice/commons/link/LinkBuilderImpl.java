@@ -2,7 +2,7 @@ package com.cognifide.slice.commons.link;
 
 /*-
  * #%L
- * Slice - Core
+ * Slice - Commons
  * $Id:$
  * $HeadURL:$
  * %%
@@ -107,7 +107,7 @@ public final class LinkBuilderImpl implements LinkBuilder {
 	 * @param resourceResolver Resolver used to get the resource's path.
 	 * @return this builder
 	 */
-	public LinkBuilderImpl parse(final String url, final ResourceResolver resourceResolver)
+	public LinkBuilderImpl(final String url, final ResourceResolver resourceResolver)
 			throws MalformedURLException {
 		URL urlHelper = new URL(url);
 		SlingPathDecomposer slingPathDecomposer = new SlingPathDecomposer(urlHelper.getPath(),
@@ -120,7 +120,6 @@ public final class LinkBuilderImpl implements LinkBuilder {
 		this.fragment = (urlHelper.getRef() == null) ? "" : urlHelper.getRef();
 		this.protocol = (urlHelper.getProtocol() == null) ? "" : urlHelper.getProtocol();
 		this.domain = (urlHelper.getAuthority() == null) ? "" : urlHelper.getAuthority();
-		return this;
 	}
 
 	private String resolvePath(final ResourceResolver resourceResolver, String urlPath) {
