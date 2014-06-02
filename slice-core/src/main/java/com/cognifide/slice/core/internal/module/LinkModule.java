@@ -22,12 +22,9 @@ package com.cognifide.slice.core.internal.module;
  * #L%
  */
 
-
-import com.cognifide.slice.api.link.LinkBuilderFactory;
 import com.cognifide.slice.api.link.LinkExternalizer;
 import com.cognifide.slice.api.link.PathMapper;
 import com.cognifide.slice.commons.link.LinkExternalizerImpl;
-import com.cognifide.slice.core.internal.link.LinkBuilderFactoryImpl;
 import com.cognifide.slice.core.internal.link.ResourceResolverPathMapper;
 import com.google.inject.AbstractModule;
 
@@ -35,7 +32,6 @@ public final class LinkModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(LinkBuilderFactory.class).to(LinkBuilderFactoryImpl.class);
 		bind(LinkExternalizer.class).to(LinkExternalizerImpl.class);
 		bind(PathMapper.class).to(ResourceResolverPathMapper.class);
 	}
