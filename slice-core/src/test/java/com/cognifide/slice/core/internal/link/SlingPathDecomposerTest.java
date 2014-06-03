@@ -35,7 +35,7 @@ public class SlingPathDecomposerTest {
 
 	@Test(expected = NullPointerException.class)
 	public void testNullUrl() {
-		SlingPathDecomposer spd = new SlingPathDecomposer(null, null);
+		new SlingPathDecomposer(null, null);
 	}
 
 	@Test

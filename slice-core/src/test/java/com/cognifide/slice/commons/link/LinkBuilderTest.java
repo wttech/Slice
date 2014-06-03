@@ -22,7 +22,8 @@ package com.cognifide.slice.commons.link;
  * #L%
  */
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class LinkBuilderTest {
 	}
 
 	@Test
-	public void shouldParseUrlWithSelectorsQueriesAndFragment() {
+	public void shouldParseUrlWithSelectorsQueriesAndFragment() throws MalformedURLException {
 		// given
 		ArrayList<String> selectors = new ArrayList<String>();
 		selectors.add("mytest");
@@ -62,11 +63,7 @@ public class LinkBuilderTest {
 		String url = "http://author.example.com/content/demo/home.mytest.mytest2.html?wcmmode=disabled&test=2#GOODBYE";
 
 		// when
-		LinkBuilder lb = null;
-		try {
-			lb = new LinkBuilderImpl(url, new MockResourceResolver("/content/demo/home"));
-		} catch (MalformedURLException ex) {
-		}
+		LinkBuilder lb = new LinkBuilderImpl(url, new MockResourceResolver("/content/demo/home"));
 
 		// then
 		assertEquals("html", lb.getExtension());
@@ -100,7 +97,7 @@ public class LinkBuilderTest {
 	}
 
 	@Test
-	public void shouldParseUrlWithComplexSuffixAndFragment() {
+	public void shouldParseUrlWithComplexSuffixAndFragment() throws MalformedURLException {
 		// given
 		ArrayList<String> selectors = new ArrayList<String>();
 		selectors.add("s1");
@@ -108,11 +105,7 @@ public class LinkBuilderTest {
 		String url = "http://localhost:5602/a/b.s1.s2.html/c/d.s.txt#GOODBYE";
 
 		// when
-		LinkBuilder lb = null;
-		try {
-			lb = new LinkBuilderImpl(url, new MockResourceResolver());
-		} catch (MalformedURLException ex) {
-		}
+		LinkBuilder lb = new LinkBuilderImpl(url, new MockResourceResolver());
 
 		// then
 		assertEquals("html", lb.getExtension());
@@ -123,17 +116,12 @@ public class LinkBuilderTest {
 		assertEquals("/c/d.s.txt", lb.getSuffix());
 	}
 
-	@Test
-	public void shouldThrowMalformedUrlException() {
+	@Test(expected = MalformedURLException.class)
+	public void shouldThrowMalformedUrlException() throws MalformedURLException {
 		// given
 		String url = "lorem ipsum";
-		try {
-			// when
-			LinkBuilder lb = new LinkBuilderImpl(url, new MockResourceResolver());
-			fail();
-		} catch (MalformedURLException ex) {
-
-		}
+		// when
+		new LinkBuilderImpl(url, new MockResourceResolver());
 	}
 
 	@Test
@@ -360,5 +348,16 @@ public class LinkBuilderTest {
 
 		lb.removeQuery("param1", "value2");
 		assertEquals("", "/content.search.desktop.html/keyword.html?param2=value2#paragraph1", lb.toString());
+	}
+
+	@Test
+	public void toEscapedStringTest() {
+		Link link = new LinkImpl("/content", "sel1.sel2", "png", null,
+				"param1=value1&param2=value2&param3=<>", "param>");
+		LinkBuilder lb = new LinkBuilderImpl(link);
+		String escapedString = lb.toEscapedString();
+		assertEquals("/content.sel1.sel2.png?param1=value1&amp;param2=value2&amp;param3=&lt;&gt;#param&gt;",
+				escapedString);
+
 	}
 }

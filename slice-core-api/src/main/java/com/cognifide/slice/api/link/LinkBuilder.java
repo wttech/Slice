@@ -1,6 +1,6 @@
 package com.cognifide.slice.api.link;
 
-/*
+/*-
  * #%L
  * Slice - Core API
  * $Id:$
@@ -40,6 +40,13 @@ public interface LinkBuilder {
 	 * @return;@link LinkImpl} representing data in the builder, never null
 	 */
 	Link toLink();
+
+	/**
+	 * Return string representation of the link escaped using HTML entities
+	 * 
+	 * @return HTML-escaped link which can be output in a script
+	 */
+	String toEscapedString();
 
 	/**
 	 * Adds selector (if not blank) as a last one on the list of selectors
