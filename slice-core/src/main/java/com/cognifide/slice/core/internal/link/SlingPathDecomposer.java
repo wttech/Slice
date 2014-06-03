@@ -82,42 +82,73 @@ public class SlingPathDecomposer {
 
 	private void decompose(String url) {
 		// check if whole path (with dot!) is a valid resource path
-		if (this.resourceResolver.getResource(url) != null) {
-			this.resource = this.resourceResolver.getResource(url);
-			this.resourcePath = this.resource.getPath();
+		if (getResource(url) != null) {
+			this.resourcePath = url;
 		} else {
-			// check if substring till first dot is a valid resource path
 			this.resourcePath = StringUtils.substringBefore(url, ".");
-			if (this.resourceResolver.getResource(resourcePath) != null) {
-				this.resource = this.resourceResolver.getResource(resourcePath);
+		}
+		this.resource = getResource(this.resourcePath);
+		final String pathTail = StringUtils.substringAfter(url, this.resourcePath);
+		final String pathToSplit = extractPathToSplit(pathTail);
+		this.suffix = readSuffix(pathTail);
+		this.selectors = readSelectors(pathToSplit);
+		this.selectorString = readSelectorString(pathToSplit);
+		this.extension = readExtension(pathToSplit);
+	}
+
+	private Resource getResource(final String path) {
+		return this.resourceResolver.getResource(path);
+	}
+
+	private String extractPathToSplit(String pathTail) {
+		String result;
+		int firstSlash = pathTail.indexOf('/');
+		if (firstSlash < 0) {
+			result = pathTail;
+		} else {
+			result = pathTail.substring(0, firstSlash);
+		}
+		return result;
+	}
+
+	private String readSuffix(String pathTail) {
+		int firstSlash = pathTail.indexOf('/');
+		String result;
+		if (firstSlash < 0) {
+			result = null;
+		} else {
+			result = pathTail.substring(firstSlash);
+		}
+		return result;
+	}
+
+	private String readExtension(String pathToSplit) {
+		String result = null;
+		int lastDot = pathToSplit.lastIndexOf('.');
+		if (lastDot + 1 < pathToSplit.length()) {
+			result = pathToSplit.substring(lastDot + 1);
+		}
+		return result;
+	}
+
+	private String[] readSelectors(final String pathToSplit) {
+		String[] result = NO_SELECTORS;
+		int lastDot = pathToSplit.lastIndexOf('.');
+		if (lastDot > 1) {
+			result = pathToSplit.substring(1, lastDot).split("\\.");
+		}
+		return result;
+	}
+
+	private String readSelectorString(final String pathToSplit) {
+		int lastDot = pathToSplit.lastIndexOf('.');
+		String result = null;
+		if (lastDot > 1) {
+			String tmpSel = pathToSplit.substring(1, lastDot);
+			if (tmpSel.split("\\.").length > 0) {
+				result = tmpSel;
 			}
 		}
-		final String pathTail = StringUtils.substringAfter(url, this.resourcePath);
-
-		int firstSlash = pathTail.indexOf('/');
-		String pathToSplit;
-		if (firstSlash < 0) {
-			pathToSplit = pathTail;
-			suffix = null;
-		} else {
-			pathToSplit = pathTail.substring(0, firstSlash);
-			suffix = pathTail.substring(firstSlash);
-		}
-
-		int lastDot = pathToSplit.lastIndexOf('.');
-
-		if (lastDot <= 1) {
-			// no selectors if only extension exists or selectors is empty
-			selectorString = null;
-			selectors = NO_SELECTORS;
-		} else {
-			// no selectors if splitting would give an empty array
-			String tmpSel = pathToSplit.substring(1, lastDot);
-			selectors = tmpSel.split("\\.");
-			selectorString = (selectors.length > 0) ? tmpSel : null;
-		}
-
-		// extension only if lastDot is not trailing
-		extension = (lastDot + 1 < pathToSplit.length()) ? pathToSplit.substring(lastDot + 1) : null;
+		return result;
 	}
 }
