@@ -1,6 +1,6 @@
 package com.cognifide.slice.api.link;
 
-/*
+/*-
  * #%L
  * Slice - Core API
  * $Id:$
@@ -22,11 +22,8 @@ package com.cognifide.slice.api.link;
  * #L%
  */
 
-
 import java.util.List;
 import java.util.Map;
-
-import com.cognifide.slice.api.link.Link;
 
 /**
  * Allows building links and modifying existing link. Use whenever you need to add/remove selectors, query
@@ -43,6 +40,13 @@ public interface LinkBuilder {
 	 * @return;@link LinkImpl} representing data in the builder, never null
 	 */
 	Link toLink();
+
+	/**
+	 * Return string representation of the link escaped using HTML entities
+	 * 
+	 * @return HTML-escaped link which can be output in a script
+	 */
+	String toEscapedString();
 
 	/**
 	 * Adds selector (if not blank) as a last one on the list of selectors
@@ -73,7 +77,7 @@ public interface LinkBuilder {
 	 * Retails all selectors which match given regular expression. All selectors which don't match the regular
 	 * expression are removed.
 	 * 
-	 * @param selectorRegexp regular expression of the selector to be retained on the list. If blank ;@link
+	 * @param includeRegexp regular expression of the selector to be retained on the list. If blank ;@link
 	 * IllegalArgumentException} is thrown
 	 * @return this builder
 	 */
