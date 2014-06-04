@@ -31,14 +31,15 @@ import com.cognifide.slice.api.link.LinkBuilder;
 import com.cognifide.slice.api.link.LinkBuilderFactory;
 import com.cognifide.slice.commons.link.LinkBuilderImpl;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 public class LinkBuilderFactoryImpl implements LinkBuilderFactory {
 
-	private ResourceResolver resourceResolver;
+	private Provider<ResourceResolver> resourceResolverProvider;
 
 	@Inject
-	public LinkBuilderFactoryImpl(final ResourceResolver resourceResolver) {
-		this.resourceResolver = resourceResolver;
+	public LinkBuilderFactoryImpl(final Provider<ResourceResolver> resourceResolverProvider) {
+		this.resourceResolverProvider = resourceResolverProvider;
 	}
 
 	@Override
@@ -53,6 +54,6 @@ public class LinkBuilderFactoryImpl implements LinkBuilderFactory {
 
 	@Override
 	public LinkBuilder getLinkBuilder(final String url) throws MalformedURLException {
-		return new LinkBuilderImpl(url, this.resourceResolver);
+		return new LinkBuilderImpl(url, this.resourceResolverProvider);
 	}
 }

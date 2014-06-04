@@ -77,7 +77,7 @@ public interface LinkBuilder {
 	 * Retails all selectors which match given regular expression. All selectors which don't match the regular
 	 * expression are removed.
 	 * 
-	 * @param selectorRegexp regular expression of the selector to be retained on the list. If blank ;@link
+	 * @param includeRegexp regular expression of the selector to be retained on the list. If blank ;@link
 	 * IllegalArgumentException} is thrown
 	 * @return this builder
 	 */

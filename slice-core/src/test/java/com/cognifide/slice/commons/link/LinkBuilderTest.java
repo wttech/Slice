@@ -24,22 +24,32 @@ package com.cognifide.slice.commons.link;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
+import static org.mockito.Mockito.when;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.sling.api.resource.ResourceResolver;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import com.cognifide.slice.api.link.Link;
 import com.cognifide.slice.api.link.LinkBuilder;
 import com.cognifide.slice.core.internal.link.LinkImpl;
+import com.google.inject.Provider;
 
 /**
  * @author Jan Kuźniak
  * 
  */
+@RunWith(MockitoJUnitRunner.class)
 public class LinkBuilderTest {
+
+	@Mock
+	Provider<ResourceResolver> resourceResolverProvider;
 
 	@Test
 	public void testEmptyBuilder() {
@@ -63,7 +73,8 @@ public class LinkBuilderTest {
 		String url = "http://author.example.com/content/demo/home.mytest.mytest2.html?wcmmode=disabled&test=2#GOODBYE";
 
 		// when
-		LinkBuilder lb = new LinkBuilderImpl(url, new MockResourceResolver("/content/demo/home"));
+		when(resourceResolverProvider.get()).thenReturn(new MockResourceResolver());
+		LinkBuilder lb = new LinkBuilderImpl(url, resourceResolverProvider);
 
 		// then
 		assertEquals("html", lb.getExtension());
@@ -83,7 +94,8 @@ public class LinkBuilderTest {
 		// when
 		LinkBuilder lb = null;
 		try {
-			lb = new LinkBuilderImpl(url, new MockResourceResolver());
+			when(resourceResolverProvider.get()).thenReturn(new MockResourceResolver());
+			lb = new LinkBuilderImpl(url, resourceResolverProvider);
 		} catch (MalformedURLException ex) {
 		}
 
@@ -105,7 +117,8 @@ public class LinkBuilderTest {
 		String url = "http://localhost:5602/a/b.s1.s2.html/c/d.s.txt#GOODBYE";
 
 		// when
-		LinkBuilder lb = new LinkBuilderImpl(url, new MockResourceResolver());
+		when(resourceResolverProvider.get()).thenReturn(new MockResourceResolver());
+		LinkBuilder lb = new LinkBuilderImpl(url, resourceResolverProvider);
 
 		// then
 		assertEquals("html", lb.getExtension());
@@ -121,7 +134,8 @@ public class LinkBuilderTest {
 		// given
 		String url = "lorem ipsum";
 		// when
-		new LinkBuilderImpl(url, new MockResourceResolver());
+		when(resourceResolverProvider.get()).thenReturn(new MockResourceResolver());
+		new LinkBuilderImpl(url, resourceResolverProvider);
 	}
 
 	@Test
