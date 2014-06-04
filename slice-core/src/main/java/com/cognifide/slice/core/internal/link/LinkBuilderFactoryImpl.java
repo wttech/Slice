@@ -54,6 +54,6 @@ public class LinkBuilderFactoryImpl implements LinkBuilderFactory {
 
 	@Override
 	public LinkBuilder getLinkBuilder(final String url) throws MalformedURLException {
-		return new LinkBuilderImpl(url, this.resourceResolverProvider);
+		return new LinkBuilderImpl(url, this.resourceResolverProvider.get());
 	}
 }

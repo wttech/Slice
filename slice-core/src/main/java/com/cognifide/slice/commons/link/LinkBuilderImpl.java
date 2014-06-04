@@ -41,7 +41,6 @@ import com.cognifide.slice.api.link.Link;
 import com.cognifide.slice.api.link.LinkBuilder;
 import com.cognifide.slice.core.internal.link.LinkImpl;
 import com.cognifide.slice.core.internal.link.SlingPathDecomposer;
-import com.google.inject.Provider;
 
 /**
  * Allows building links and modifying existing link. Use whenever you need to add/remove selectors, query
@@ -105,14 +104,14 @@ public final class LinkBuilderImpl implements LinkBuilder {
 	 * 
 	 * @throws MalformedURLException when url is not a valid URL.
 	 * @param url URL string to be parsed.
-	 * @param resourceResolverProvider ResourceResolverProvider used to get the ResourceResolver.
+	 * @param resourceResolver Resolver used to get the resource's path.
 	 * @return this builder
 	 */
-	public LinkBuilderImpl(final String url, final Provider<ResourceResolver> resourceResolverProvider)
+	public LinkBuilderImpl(final String url, final ResourceResolver resourceResolver)
 			throws MalformedURLException {
 		URL urlHelper = new URL(url);
 		SlingPathDecomposer slingPathDecomposer = new SlingPathDecomposer(urlHelper.getPath(),
-				resourceResolverProvider.get());
+				resourceResolver);
 		this.suffix = slingPathDecomposer.getSuffix();
 		this.path = slingPathDecomposer.getResourcePath();
 		this.extension = slingPathDecomposer.getExtension();

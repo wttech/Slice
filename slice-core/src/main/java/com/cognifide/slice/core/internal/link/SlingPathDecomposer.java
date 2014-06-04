@@ -113,17 +113,15 @@ public class SlingPathDecomposer {
 
 	private String readSuffix(String pathTail) {
 		int firstSlash = pathTail.indexOf('/');
-		String result;
-		if (firstSlash < 0) {
-			result = null;
-		} else {
+		String result = StringUtils.EMPTY;
+		if (firstSlash >= 0) {
 			result = pathTail.substring(firstSlash);
 		}
 		return result;
 	}
 
 	private String readExtension(String pathToSplit) {
-		String result = null;
+		String result = StringUtils.EMPTY;
 		int lastDot = pathToSplit.lastIndexOf('.');
 		if (lastDot + 1 < pathToSplit.length()) {
 			result = pathToSplit.substring(lastDot + 1);
@@ -142,7 +140,7 @@ public class SlingPathDecomposer {
 
 	private String readSelectorString(final String pathToSplit) {
 		int lastDot = pathToSplit.lastIndexOf('.');
-		String result = null;
+		String result = StringUtils.EMPTY;
 		if (lastDot > 1) {
 			String tmpSel = pathToSplit.substring(1, lastDot);
 			if (tmpSel.split("\\.").length > 0) {

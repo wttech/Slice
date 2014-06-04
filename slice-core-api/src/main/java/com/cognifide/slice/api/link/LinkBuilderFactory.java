@@ -64,7 +64,7 @@ public interface LinkBuilderFactory {
 	 * <li>{@link com.cognifide.slice.api.link.LinkBuilder#getSuffix() suffix path} - If the request URI
 	 * contains a slash character after the content path and optional selectors and extension, the path
 	 * starting with the slash upto the end of the request URI is the suffix path. The suffix path is
-	 * available as a strings {@link LinkBuilder#getSuffix()} ()}.
+	 * available as a strings {@link LinkBuilder#getSuffix()}.
 	 * </ul>
 	 */
 	LinkBuilder getLinkBuilder(String url) throws MalformedURLException;

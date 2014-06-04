@@ -24,32 +24,22 @@ package com.cognifide.slice.commons.link;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
-import static org.mockito.Mockito.when;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.sling.api.resource.ResourceResolver;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import com.cognifide.slice.api.link.Link;
 import com.cognifide.slice.api.link.LinkBuilder;
 import com.cognifide.slice.core.internal.link.LinkImpl;
-import com.google.inject.Provider;
 
 /**
  * @author Jan Kuźniak
  * 
  */
-@RunWith(MockitoJUnitRunner.class)
 public class LinkBuilderTest {
-
-	@Mock
-	Provider<ResourceResolver> resourceResolverProvider;
 
 	@Test
 	public void testEmptyBuilder() {
@@ -73,8 +63,7 @@ public class LinkBuilderTest {
 		String url = "http://author.example.com/content/demo/home.mytest.mytest2.html?wcmmode=disabled&test=2#GOODBYE";
 
 		// when
-		when(resourceResolverProvider.get()).thenReturn(new MockResourceResolver());
-		LinkBuilder lb = new LinkBuilderImpl(url, resourceResolverProvider);
+		LinkBuilder lb = new LinkBuilderImpl(url, new MockResourceResolver("/content/demo/home"));
 
 		// then
 		assertEquals("html", lb.getExtension());
@@ -82,7 +71,7 @@ public class LinkBuilderTest {
 		assertEquals("/content/demo/home", lb.getPath());
 		assertEquals("wcmmode=disabled&test=2", lb.getQueryString());
 		assertEquals(selectors, lb.getSelectors());
-		assertNull(lb.getSuffix());
+        assertEquals("", lb.getSuffix());
 	}
 
 	@Test
@@ -94,8 +83,7 @@ public class LinkBuilderTest {
 		// when
 		LinkBuilder lb = null;
 		try {
-			when(resourceResolverProvider.get()).thenReturn(new MockResourceResolver());
-			lb = new LinkBuilderImpl(url, resourceResolverProvider);
+			lb = new LinkBuilderImpl(url, new MockResourceResolver());
 		} catch (MalformedURLException ex) {
 		}
 
@@ -117,8 +105,7 @@ public class LinkBuilderTest {
 		String url = "http://localhost:5602/a/b.s1.s2.html/c/d.s.txt#GOODBYE";
 
 		// when
-		when(resourceResolverProvider.get()).thenReturn(new MockResourceResolver());
-		LinkBuilder lb = new LinkBuilderImpl(url, resourceResolverProvider);
+		LinkBuilder lb = new LinkBuilderImpl(url, new MockResourceResolver());
 
 		// then
 		assertEquals("html", lb.getExtension());
@@ -134,8 +121,7 @@ public class LinkBuilderTest {
 		// given
 		String url = "lorem ipsum";
 		// when
-		when(resourceResolverProvider.get()).thenReturn(new MockResourceResolver());
-		new LinkBuilderImpl(url, resourceResolverProvider);
+		new LinkBuilderImpl(url, new MockResourceResolver());
 	}
 
 	@Test
@@ -373,5 +359,35 @@ public class LinkBuilderTest {
 		assertEquals("/content.sel1.sel2.png?param1=value1&amp;param2=value2&amp;param3=&lt;&gt;#param&gt;",
 				escapedString);
 
+	}
+
+	@Test
+	public void shouldParseUrlWithNumericExtensionAndSuffix() throws MalformedURLException {
+		String url = "http://localhost:5602/a/b.mp3/c";
+
+		// when
+		LinkBuilderImpl lb = new LinkBuilderImpl(url, new MockResourceResolver("/a/b"));
+
+		// then
+		assertEquals("mp3", lb.getExtension());
+		assertEquals("", lb.getFragment());
+		assertEquals("/a/b", lb.getPath());
+		assertEquals("", lb.getQueryString());
+		assertEquals("/c", lb.getSuffix());
+	}
+
+	@Test
+	public void suffixShouldBeEmptyNotNull() throws MalformedURLException {
+		assertEquals("",
+				new LinkBuilderImpl("http://localhost:5602/a.html", new MockResourceResolver("/a"))
+						.getSuffix());
+		assertEquals("", new LinkBuilderImpl("http://localhost:5602/a.selector.html",
+				new MockResourceResolver("/a")).getSuffix());
+	}
+
+	@Test
+	public void suffixCanHasMultipleDots() throws MalformedURLException {
+		assertEquals("/b.a/c.d", new LinkBuilderImpl("http://localhost:5602/a.html/b.a/c.d",
+				new MockResourceResolver("/a")).getSuffix());
 	}
 }

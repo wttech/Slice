@@ -56,9 +56,9 @@ public class SlingPathDecomposerTest {
 		assertEquals("/a/b", spd.getResourcePath());
 		assertEquals("/a/b", spd.getResource().getPath());
 		assertArrayEquals(new String[] {}, spd.getSelectors());
-		assertNull(spd.getSelectorString());
-		assertNull(spd.getExtension());
-		assertNull(spd.getSuffix());
+		assertEquals("", spd.getSelectorString());
+		assertEquals("", spd.getExtension());
+		assertEquals("", spd.getSuffix());
 	}
 
 	@Test
@@ -67,9 +67,9 @@ public class SlingPathDecomposerTest {
 		assertNull(spd.getResource());
 		assertEquals("/a/b/c", spd.getResourcePath());
 		assertArrayEquals(new String[] {}, spd.getSelectors());
-		assertNull(spd.getSelectorString());
-		assertNull(spd.getExtension());
-		assertNull(spd.getSuffix());
+		assertEquals("", spd.getSelectorString());
+		assertEquals("", spd.getExtension());
+		assertEquals("", spd.getSuffix());
 	}
 
 	@Test
@@ -79,9 +79,9 @@ public class SlingPathDecomposerTest {
 		assertEquals("/a/b", spd.getResourcePath());
 		assertEquals("/a/b", spd.getResource().getPath());
 		assertArrayEquals(new String[] {}, spd.getSelectors());
-		assertNull(spd.getSelectorString());
+		assertEquals("", spd.getSelectorString());
 		assertEquals("html", spd.getExtension());
-		assertNull(spd.getSuffix());
+		assertEquals("", spd.getSuffix());
 	}
 
 	@Test
@@ -94,7 +94,7 @@ public class SlingPathDecomposerTest {
 		assertEquals("s1", spd.getSelectorString());
 		assertEquals("s1", spd.getSelectors()[0]);
 		assertEquals("html", spd.getExtension());
-		assertNull(spd.getSuffix());
+		assertEquals("", spd.getSuffix());
 	}
 
 	@Test
@@ -108,7 +108,7 @@ public class SlingPathDecomposerTest {
 		assertEquals("s1", spd.getSelectors()[0]);
 		assertEquals("s2", spd.getSelectors()[1]);
 		assertEquals("html", spd.getExtension());
-		assertNull(spd.getSuffix());
+		assertEquals("", spd.getSuffix());
 	}
 
 	@Test
@@ -117,8 +117,8 @@ public class SlingPathDecomposerTest {
 		assertNotNull(spd.getResource());
 		assertEquals("/a/b", spd.getResourcePath());
 		assertEquals(0, spd.getSelectors().length);
-		assertNull(spd.getSelectorString());
-		assertNull(spd.getExtension());
+		assertEquals("", spd.getSelectorString());
+		assertEquals("", spd.getExtension());
 		assertEquals("/c/d", spd.getSuffix());
 	}
 
@@ -128,7 +128,7 @@ public class SlingPathDecomposerTest {
 		assertNotNull(spd.getResource());
 		assertEquals("/a/b", spd.getResourcePath());
 		assertEquals(0, spd.getSelectors().length);
-		assertNull(spd.getSelectorString());
+		assertEquals("", spd.getSelectorString());
 		assertEquals("html", spd.getExtension());
 		assertEquals("/c/d", spd.getSuffix());
 	}
@@ -169,7 +169,7 @@ public class SlingPathDecomposerTest {
 		assertEquals("s", spd.getSelectors()[0]);
 		assertEquals("s", spd.getSelectorString());
 		assertEquals("txt", spd.getExtension());
-		assertNull(spd.getSuffix());
+		assertEquals("", spd.getSuffix());
 	}
 
 	@Test
@@ -180,7 +180,7 @@ public class SlingPathDecomposerTest {
 		assertEquals("/a/b", spd.getResource().getPath());
 		assertEquals("/a/b", spd.getResourcePath());
 		assertEquals(0, spd.getSelectors().length);
-		assertNull(spd.getSelectorString());
+		assertEquals("", spd.getSelectorString());
 		assertEquals("html", spd.getExtension());
 		assertEquals("/c/d.s.txt", spd.getSuffix());
 	}
@@ -221,10 +221,10 @@ public class SlingPathDecomposerTest {
 		SlingPathDecomposer spd = new SlingPathDecomposer("/some/path.", new MockResourceResolver(
 				"/some/path"));
 		assertEquals("/some/path", spd.getResourcePath());
-		assertNull("Selectors are null", spd.getSelectorString());
+		assertEquals("", spd.getSelectorString());
 		assertEquals(0, spd.getSelectors().length);
-		assertNull("Extension is null", spd.getExtension());
-		assertNull("Suffix is null", spd.getSuffix());
+		assertEquals("", spd.getExtension());
+		assertEquals("", spd.getSuffix());
 	}
 
 	@Test
@@ -232,9 +232,9 @@ public class SlingPathDecomposerTest {
 		SlingPathDecomposer spd = new SlingPathDecomposer("/some/path./suffix", new MockResourceResolver(
 				"/some/path"));
 		assertEquals("/some/path", spd.getResourcePath());
-		assertNull("Selectors are null", spd.getSelectorString());
+		assertEquals("", spd.getSelectorString());
 		assertEquals(0, spd.getSelectors().length);
-		assertNull("Extension is null", spd.getExtension());
+		assertEquals("", spd.getExtension());
 		assertEquals("/suffix", spd.getSuffix());
 	}
 
@@ -243,10 +243,10 @@ public class SlingPathDecomposerTest {
 		SlingPathDecomposer spd = new SlingPathDecomposer("/some/path..", new MockResourceResolver(
 				"/some/path"));
 		assertEquals("/some/path", spd.getResourcePath());
-		assertNull("Selectors are null", spd.getSelectorString());
+		assertEquals("", spd.getSelectorString());
 		assertEquals(0, spd.getSelectors().length);
-		assertNull("Extension is null", spd.getExtension());
-		assertNull("Suffix is null", spd.getSuffix());
+		assertEquals("", spd.getExtension());
+		assertEquals("", spd.getSuffix());
 	}
 
 	@Test
@@ -254,9 +254,9 @@ public class SlingPathDecomposerTest {
 		SlingPathDecomposer spd = new SlingPathDecomposer("/some/path../suffix", new MockResourceResolver(
 				"/some/path"));
 		assertEquals("/some/path", spd.getResourcePath());
-		assertNull("Selectors are null", spd.getSelectorString());
+		assertEquals("", spd.getSelectorString());
 		assertEquals(0, spd.getSelectors().length);
-		assertNull("Extension is null", spd.getExtension());
+		assertEquals("", spd.getExtension());
 		assertEquals("/suffix", spd.getSuffix());
 	}
 
@@ -265,10 +265,10 @@ public class SlingPathDecomposerTest {
 		SlingPathDecomposer spd = new SlingPathDecomposer("/some/path...", new MockResourceResolver(
 				"/some/path"));
 		assertEquals("/some/path", spd.getResourcePath());
-		assertNull("Selectors are null", spd.getSelectorString());
+		assertEquals("", spd.getSelectorString());
 		assertEquals(0, spd.getSelectors().length);
-		assertNull("Extension is null", spd.getExtension());
-		assertNull("Suffix is null", spd.getSuffix());
+		assertEquals("", spd.getExtension());
+		assertEquals("", spd.getSuffix());
 	}
 
 	@Test
@@ -276,9 +276,9 @@ public class SlingPathDecomposerTest {
 		SlingPathDecomposer spd = new SlingPathDecomposer("/some/path.../suffix", new MockResourceResolver(
 				"/some/path"));
 		assertEquals("/some/path", spd.getResourcePath());
-		assertNull("Selectors are null", spd.getSelectorString());
+		assertEquals("", spd.getSelectorString());
 		assertEquals(0, spd.getSelectors().length);
-		assertNull("Extension is null", spd.getExtension());
+		assertEquals("", spd.getExtension());
 		assertEquals("/suffix", spd.getSuffix());
 	}
 
@@ -299,10 +299,10 @@ public class SlingPathDecomposerTest {
 	public void testAllEmpty() {
 		SlingPathDecomposer spd = new SlingPathDecomposer("/", new MockResourceResolver("/"));
 		assertEquals("/", spd.getResourcePath());
-		assertNull("Selectors are null", spd.getSelectorString());
+		assertEquals("", spd.getSelectorString());
 		assertEquals(0, spd.getSelectors().length);
-		assertNull("Extension is null", spd.getExtension());
-		assertNull("Suffix is null", spd.getSuffix());
+		assertEquals("", spd.getExtension());
+		assertEquals("", spd.getSuffix());
 	}
 
 	@Test
@@ -310,10 +310,10 @@ public class SlingPathDecomposerTest {
 		SlingPathDecomposer spd = new SlingPathDecomposer("/some/path/here", new MockResourceResolver(
 				"/some/path"));
 		assertEquals("/some/path/here", spd.getResourcePath());
-		assertNull("Selectors are null", spd.getSelectorString());
+		assertEquals("", spd.getSelectorString());
 		assertEquals(0, spd.getSelectors().length);
-		assertNull("Extension is null", spd.getExtension());
-		assertNull("Suffix is null", spd.getSuffix());
+		assertEquals("", spd.getExtension());
+		assertEquals("", spd.getSuffix());
 	}
 
 	@Test
@@ -321,10 +321,10 @@ public class SlingPathDecomposerTest {
 		SlingPathDecomposer spd = new SlingPathDecomposer("/some/path/here.html", new MockResourceResolver(
 				"/some/path/here.html"));
 		assertEquals("/some/path/here.html", spd.getResource().getPath());
-		assertNull("Selectors are null", spd.getSelectorString());
+		assertEquals("", spd.getSelectorString());
 		assertEquals(0, spd.getSelectors().length);
-		assertNull("Extension is null", spd.getExtension());
-		assertNull("Suffix is null", spd.getSuffix());
+		assertEquals("", spd.getExtension());
+		assertEquals("", spd.getSuffix());
 	}
 
 	@Test
@@ -332,10 +332,10 @@ public class SlingPathDecomposerTest {
 		SlingPathDecomposer spd = new SlingPathDecomposer("/some/path/here.html", new MockResourceResolver(
 				"/some/path"));
 		assertEquals("/some/path/here", spd.getResourcePath());
-		assertNull("Selectors are null", spd.getSelectorString());
+		assertEquals("", spd.getSelectorString());
 		assertEquals(0, spd.getSelectors().length);
 		assertEquals("html", spd.getExtension());
-		assertNull("Suffix is null", spd.getSuffix());
+		assertEquals("", spd.getSuffix());
 	}
 
 	@Test
@@ -347,7 +347,7 @@ public class SlingPathDecomposerTest {
 		assertEquals(1, spd.getSelectors().length);
 		assertEquals("print", spd.getSelectors()[0]);
 		assertEquals("html", spd.getExtension());
-		assertNull("Suffix is null", spd.getSuffix());
+		assertEquals("", spd.getSuffix());
 	}
 
 	@Test
@@ -355,7 +355,7 @@ public class SlingPathDecomposerTest {
 		SlingPathDecomposer spd = new SlingPathDecomposer("/some/path/here.html/something",
 				new MockResourceResolver("/some/path"));
 		assertEquals("/some/path/here", spd.getResourcePath());
-		assertNull("Selectors are null", spd.getSelectorString());
+		assertEquals("", spd.getSelectorString());
 		assertEquals(0, spd.getSelectors().length);
 		assertEquals("html", spd.getExtension());
 		assertEquals("/something", spd.getSuffix());
@@ -400,7 +400,7 @@ public class SlingPathDecomposerTest {
 		SlingPathDecomposer spd = new SlingPathDecomposer("/some/path.print.a4.html/some/suffix",
 				new MockResourceResolver("/some/path"));
 		assertEquals("/some/path.print.a4", spd.getResource().getPath());
-		assertNull("Selectors are null", spd.getSelectorString());
+		assertEquals("", spd.getSelectorString());
 		assertEquals(0, spd.getSelectors().length);
 		assertEquals("html", spd.getExtension());
 		assertEquals("/some/suffix", spd.getSuffix());
@@ -412,7 +412,7 @@ public class SlingPathDecomposerTest {
 						"/some/path"));
 		assertEquals("/libs/foo/content/something/formitems", spd.getResource().getPath());
 		assertEquals("json", spd.getExtension());
-		assertNull("Selectors are null", spd.getSelectorString());
+		assertEquals("", spd.getSelectorString());
 		assertEquals("/image/vnd/xnd/knd.xml", spd.getSuffix());
 	}
 
