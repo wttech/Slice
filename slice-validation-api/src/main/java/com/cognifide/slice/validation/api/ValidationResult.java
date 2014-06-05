@@ -1,6 +1,6 @@
 package com.cognifide.slice.validation.api;
 
-/*
+/*-
  * #%L
  * Slice - Core API
  * $Id:$
@@ -27,9 +27,13 @@ import java.util.List;
 /**
  * Result of validation.
  * 
+ * @deprecated It will be removed (along with whole Validation API) in next major version - custom solution
+ * required
+ * 
  * @author Jan Kuźniak
  * @author Rafał Malinowski
  */
+@Deprecated
 public interface ValidationResult {
 	/**
 	 * Validates object.

@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.cognifide.slice.validation.api.ErrorMessage;
 
-/*
+/*-
  * #%L
  * Slice - Core API
  * $Id:$
@@ -30,6 +30,8 @@ import com.cognifide.slice.validation.api.ErrorMessage;
 /**
  * Write list of ErrorMessage objects to a target.
  * 
+ * @deprecated It will be removed (along with whole Validation API) in next major version - custom solution
+ * required
  * @author Rafał Malinowski
  */
 public interface ErrorMessageListWriter {

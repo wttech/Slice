@@ -1,6 +1,6 @@
 package com.cognifide.slice.validation;
 
-/*
+/*-
  * #%L
  * Slice - Core
  * $Id:$
@@ -22,7 +22,6 @@ package com.cognifide.slice.validation;
  * #L%
  */
 
-
 import com.cognifide.slice.validation.api.ErrorLevel;
 import com.cognifide.slice.validation.api.ErrorMessage;
 
@@ -30,6 +29,8 @@ import com.cognifide.slice.validation.api.ErrorMessage;
  * Represents single error message model object. Error message consists of a mandatory message text, and
  * optional throwable - if the error message was caused by an exception.
  * 
+ * @deprecated It will be removed (along with whole Validation API) in next major version - custom solution
+ * required
  * @author Marcin Cenkier
  * @author Jan Kuźniak
  */

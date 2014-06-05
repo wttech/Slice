@@ -1,6 +1,6 @@
 package com.cognifide.slice.core.internal.module;
 
-/*
+/*-
  * #%L
  * Slice - Core
  * $Id:$
@@ -22,7 +22,6 @@ package com.cognifide.slice.core.internal.module;
  * #L%
  */
 
-
 import com.cognifide.slice.api.link.LinkBuilderFactory;
 import com.cognifide.slice.api.link.LinkExternalizer;
 import com.cognifide.slice.api.link.PathMapper;
@@ -31,6 +30,12 @@ import com.cognifide.slice.core.internal.link.LinkBuilderFactoryImpl;
 import com.cognifide.slice.core.internal.link.ResourceResolverPathMapper;
 import com.google.inject.AbstractModule;
 
+/**
+ * 
+ * @deprecated It will be removed (along with whole Link API) in next major version - custom solution required
+ * 
+ */
+@Deprecated
 public final class LinkModule extends AbstractModule {
 
 	@Override

@@ -1,6 +1,6 @@
 package com.cognifide.slice.validation.api;
 
-/*
+/*-
  * #%L
  * Slice - Core API
  * $Id:$
@@ -25,14 +25,18 @@ package com.cognifide.slice.validation.api;
 /**
  * Validates given Validatable object.
  * 
+ * @deprecated It will be removed (along with whole Validation API) in next major version - custom solution
+ * required
  * @author Rafał Malinowski
  */
+@Deprecated
 public interface Validator {
 
 	/**
 	 * Validate given Validatable object.
+	 * 
 	 * @param validatable object to validate
-	 * @return result  of validation
+	 * @return result of validation
 	 */
 	ValidationResult validate(Validatable validatable);
 

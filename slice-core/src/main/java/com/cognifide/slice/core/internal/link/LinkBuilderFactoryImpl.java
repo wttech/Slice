@@ -1,6 +1,6 @@
 package com.cognifide.slice.core.internal.link;
 
-/*
+/*-
  * #%L
  * Slice - Core
  * $Id:$
@@ -33,6 +33,12 @@ import com.cognifide.slice.commons.link.LinkBuilderImpl;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
+/**
+ * 
+ * @deprecated It will be removed (along with whole Link API) in next major version - custom solution required
+ * 
+ */
+@Deprecated
 public class LinkBuilderFactoryImpl implements LinkBuilderFactory {
 
 	private Provider<ResourceResolver> resourceResolverProvider;
@@ -52,9 +58,9 @@ public class LinkBuilderFactoryImpl implements LinkBuilderFactory {
 		return new LinkBuilderImpl(link);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public LinkBuilder getLinkBuilder(final String url) throws MalformedURLException {
 		return new LinkBuilderImpl(url, this.resourceResolverProvider.get());

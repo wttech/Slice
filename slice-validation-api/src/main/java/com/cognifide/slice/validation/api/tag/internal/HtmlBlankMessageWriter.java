@@ -42,6 +42,8 @@ import com.cognifide.slice.api.tag.SliceTagUtils;
  * Writes blank message to a writer as HTML element. It can be blank HTML defined by developer or generic
  * blank rectangle provided by CQ.
  * 
+ * @deprecated It will be removed (along with whole Validation API) in next major version - custom solution
+ * required
  * @author Jakub Małecki
  * 
  */

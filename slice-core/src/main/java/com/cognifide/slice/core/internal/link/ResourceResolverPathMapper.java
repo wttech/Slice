@@ -1,6 +1,6 @@
 package com.cognifide.slice.core.internal.link;
 
-/*
+/*-
  * #%L
  * Slice - Core
  * $Id:$
@@ -22,13 +22,18 @@ package com.cognifide.slice.core.internal.link;
  * #L%
  */
 
-
 import org.apache.sling.api.resource.ResourceResolver;
 
 import com.cognifide.slice.api.link.PathMapper;
 import com.cognifide.slice.api.scope.ContextScoped;
 import com.google.inject.Inject;
 
+/**
+ * 
+ * @deprecated It will be removed (along with whole Link API) in next major version - custom solution required
+ * 
+ */
+@Deprecated
 @ContextScoped
 public class ResourceResolverPathMapper implements PathMapper {
 

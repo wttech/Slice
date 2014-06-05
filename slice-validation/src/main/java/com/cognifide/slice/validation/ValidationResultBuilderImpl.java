@@ -9,7 +9,7 @@ import com.cognifide.slice.validation.api.ValidationResult;
 import com.cognifide.slice.validation.api.ValidationResultBuilder;
 import com.cognifide.slice.validation.api.ValidationState;
 
-/*
+/*-
  * #%L
  * Slice - Core API
  * $Id:$
@@ -34,6 +34,8 @@ import com.cognifide.slice.validation.api.ValidationState;
 /**
  * Builds result of validation.
  * 
+ * @deprecated It will be removed (along with whole Validation API) in next major version - custom solution
+ * required
  * @author Rafał Malinowski
  */
 public class ValidationResultBuilderImpl implements ValidationResultBuilder {
@@ -55,8 +57,7 @@ public class ValidationResultBuilderImpl implements ValidationResultBuilder {
 	}
 
 	@Override
-	public ValidationResultBuilder addErrorMessage(final String message,
-			final Throwable t) {
+	public ValidationResultBuilder addErrorMessage(final String message, final Throwable t) {
 		addMessage(message, t, ErrorLevel.ERROR);
 		return this;
 	}
@@ -74,8 +75,8 @@ public class ValidationResultBuilderImpl implements ValidationResultBuilder {
 	}
 
 	@Override
-	public ValidationResultBuilder addMessage(final String message,
-			final Throwable t, final ErrorLevel errorLevel) {
+	public ValidationResultBuilder addMessage(final String message, final Throwable t,
+			final ErrorLevel errorLevel) {
 		errorMessages.add(new ErrorMessageImpl(message, t, errorLevel));
 		return this;
 	}

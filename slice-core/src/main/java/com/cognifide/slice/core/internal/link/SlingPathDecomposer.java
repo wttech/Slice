@@ -26,6 +26,12 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
+/**
+ * 
+ * @deprecated It will be removed (along with whole Link API) in next major version - custom solution required
+ * 
+ */
+@Deprecated
 public class SlingPathDecomposer {
 
 	private final static String[] NO_SELECTORS = new String[0];

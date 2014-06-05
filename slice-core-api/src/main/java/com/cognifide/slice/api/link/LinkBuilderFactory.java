@@ -2,7 +2,7 @@ package com.cognifide.slice.api.link;
 
 import java.net.MalformedURLException;
 
-/*
+/*-
  * #%L
  * Slice - Core API
  * $Id:$
@@ -27,8 +27,11 @@ import java.net.MalformedURLException;
 /**
  * Factory for creating LinkBuilder instances.
  * 
+ * @deprecated It will be removed (along with whole Link API) in next major version - custom solution required
+ * 
  * @author Rafał Malinowski
  */
+@Deprecated
 public interface LinkBuilderFactory {
 
 	/**
