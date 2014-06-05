@@ -1,6 +1,6 @@
 package com.cognifide.slice.api.link;
 
-/*
+/*-
  * #%L
  * Slice - Core API
  * $Id:$
@@ -21,7 +21,6 @@ package com.cognifide.slice.api.link;
  * limitations under the License.
  * #L%
  */
-
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -47,9 +46,12 @@ import java.util.regex.Pattern;
  * <li><b>fragment</b> is everything after hash sign up to the end of string.</li>
  * </ul>
  * 
+ * @deprecated It will be removed (along with whole Link API) in next major version - custom solution required
+ * 
  * @author Witold Szczerba
  * @author maciej.majchrzak
  */
+@Deprecated
 public interface Link {
 
 	/**

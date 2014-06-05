@@ -46,11 +46,14 @@ import com.cognifide.slice.core.internal.link.SlingPathDecomposer;
  * Allows building links and modifying existing link. Use whenever you need to add/remove selectors, query
  * strings, suffix etc.
  * 
+ * @deprecated It will be removed (along with whole Link API) in next major version - custom solution required
+ * 
  * @author Jan Kuzniak
  * @author maciej.majchrzak
  * @author adam.zwoniarski
  * @author maciej.rudowicz
  */
+@Deprecated
 public final class LinkBuilderImpl implements LinkBuilder {
 
 	private String path;

@@ -1,6 +1,6 @@
 package com.cognifide.slice.commons.link;
 
-/*
+/*-
  * #%L
  * Slice - Core
  * $Id:$
@@ -22,7 +22,6 @@ package com.cognifide.slice.commons.link;
  * #L%
  */
 
-
 import org.apache.commons.lang.StringUtils;
 
 import com.cognifide.slice.api.link.Link;
@@ -31,6 +30,12 @@ import com.cognifide.slice.api.link.PathMapper;
 import com.cognifide.slice.api.qualifier.Nullable;
 import com.google.inject.Inject;
 
+/**
+ * 
+ * @deprecated It will be removed (along with whole Link API) in next major version - custom solution required
+ * 
+ */
+@Deprecated
 public class LinkExternalizerImpl implements LinkExternalizer {
 
 	private static final String CONTENT_HANDLE = "/content";

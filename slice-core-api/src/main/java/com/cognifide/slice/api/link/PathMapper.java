@@ -1,6 +1,6 @@
 package com.cognifide.slice.api.link;
 
-/*
+/*-
  * #%L
  * Slice - Core API
  * $Id:$
@@ -22,7 +22,12 @@ package com.cognifide.slice.api.link;
  * #L%
  */
 
-
+/**
+ * 
+ * @deprecated It will be removed (along with whole Link API) in next major version - custom solution required
+ * 
+ */
+@Deprecated
 public interface PathMapper {
 
 	String mapPath(final String path);
