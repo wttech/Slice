@@ -134,6 +134,16 @@ public class MockModelProvider implements ModelProvider {
 		return result;
 	}
 
+	@Override
+	public <T> List<T> getListFromResources(Class<T> type, Iterator<Resource> resources) {
+		List<T> result = new ArrayList<T>();
+		while (resources.hasNext()) {
+			Resource resource = resources.next();
+			result.add(get(type, resource));
+		}
+		return result;
+	}
+
 	private class ClassPathPair {
 		private Class<?> type;
 
