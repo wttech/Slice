@@ -59,23 +59,6 @@ public interface InjectorsRepository {
 	InjectorWithContext getInjector(final String injectorName);
 
 	/**
-	 * Returns the default injector for the provided resource, or null if no feasible injector was registered.
-	 * 
-	 * @param resource resource to find the default injector for.
-	 * @return default injector for the specified resource, or null if no feasible injector was registered.
-	 */
-	InjectorWithContext getInjectorForResource(final Resource resource);
-
-	/**
-	 * Returns the default injector for the resource under provided path, or null if no feasible injector was
-	 * registered.
-	 * 
-	 * @param resourcePath path to the resource to find the default injector for.
-	 * @return default injector for the specified resource, or null if no feasible injector was registered.
-	 */
-	InjectorWithContext getInjectorForResource(final String resourcePath);
-
-	/**
 	 * Returns name of the given injector.
 	 * 
 	 * @param injector

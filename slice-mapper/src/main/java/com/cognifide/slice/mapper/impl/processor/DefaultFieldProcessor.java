@@ -42,8 +42,8 @@ public class DefaultFieldProcessor implements FieldProcessor {
 		if (valueMap == null) {
 			return null;
 		}
-		Class<?> propertyType = ReflectionHelper.getFieldType(field);
+		Class<?> propertyType  = ReflectionHelper.getFieldType(field);
+		
 		return valueMap.get(propertyName, propertyType);
 	}
-
 }

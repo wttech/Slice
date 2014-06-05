@@ -1,6 +1,6 @@
 package com.cognifide.slice.validation.api;
 
-/*
+/*-
  * #%L
  * Slice - Core API
  * $Id:$
@@ -28,19 +28,21 @@ package com.cognifide.slice.validation.api;
  * <ul>
  * <li><b>valid</b> - validation passed,</li>
  * <li><b>invalid</b> - validation not passed, object is invalid,</li>
- * <li><b>blank</b> - not populated at all; specific error message should be
- * displayed in the view - most likely user didn't do anything wrong yet, just
- * created empty component and has to pick it up.</li>
+ * <li><b>blank</b> - not populated at all; specific error message should be displayed in the view - most
+ * likely user didn't do anything wrong yet, just created empty component and has to pick it up.</li>
  * </ul>
+ * 
+ * @deprecated It will be removed (along with whole Validation API) in next major version - custom solution
+ * required
  * 
  * @author Rafał Malinowski
  */
+@Deprecated
 public enum ValidationState {
 
 	/**
-	 * Object is not populated at all. This is different than invalid as most
-	 * likely user didn't do anything wrong yet, just created empty object and
-	 * has to pick it up.
+	 * Object is not populated at all. This is different than invalid as most likely user didn't do anything
+	 * wrong yet, just created empty object and has to pick it up.
 	 */
 	BLANK,
 

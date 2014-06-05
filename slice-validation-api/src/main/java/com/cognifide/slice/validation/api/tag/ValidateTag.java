@@ -48,10 +48,14 @@ import com.cognifide.slice.validation.api.tag.internal.HtmlErrorMessageListWrite
  * 
  * It can also write result of validation to variable accessible in JSP code.
  * 
+ * @deprecated It will be removed (along with whole Validation API) in next major version - custom solution
+ * required
+ * 
  * @author Jan Kuźniak
  * @author Rafał Malinowski
  * @author Jakub Małecki
  */
+@Deprecated
 public class ValidateTag extends BodyTagSupport {
 
 	private static final long serialVersionUID = -8408025060913758496L;

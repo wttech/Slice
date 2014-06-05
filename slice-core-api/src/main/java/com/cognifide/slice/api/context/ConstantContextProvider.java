@@ -1,8 +1,6 @@
-package com.cognifide.slice.mapper;
-
-/*
+/*-
  * #%L
- * Slice - Mapper
+ * Slice - Core API
  * $Id:$
  * $HeadURL:$
  * %%
@@ -22,15 +20,22 @@ package com.cognifide.slice.mapper;
  * #L%
  */
 
+package com.cognifide.slice.api.context;
 
-import com.cognifide.slice.mapper.api.Mapper;
-import com.cognifide.slice.mapper.impl.GenericSlingMapper;
+/**
+ * Simple context provider returning always the same context.
+ * 
+ * @author Tomasz Rękawek
+ */
+public final class ConstantContextProvider implements ContextProvider {
+	private final Context context;
 
-
-public final class MapperFactory {
-
-	public Mapper getMapper() {
-		return new GenericSlingMapper();
+	public ConstantContextProvider(Context context) {
+		this.context = context;
 	}
 
+	@Override
+	public Context getContext() {
+		return context;
+	}
 }

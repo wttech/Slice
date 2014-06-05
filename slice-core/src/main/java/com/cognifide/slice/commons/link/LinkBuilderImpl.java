@@ -1,6 +1,6 @@
 package com.cognifide.slice.commons.link;
 
-/*
+/*-
  * #%L
  * Slice - Core
  * $Id:$
@@ -22,7 +22,8 @@ package com.cognifide.slice.commons.link;
  * #L%
  */
 
-
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -32,19 +33,27 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.sling.api.resource.ResourceResolver;
 
 import com.cognifide.slice.api.link.Link;
 import com.cognifide.slice.api.link.LinkBuilder;
 import com.cognifide.slice.core.internal.link.LinkImpl;
+import com.cognifide.slice.core.internal.link.SlingPathDecomposer;
 
 /**
  * Allows building links and modifying existing link. Use whenever you need to add/remove selectors, query
  * strings, suffix etc.
  * 
+ * @deprecated It will be removed (along with whole Link API) in next major version - custom solution required
+ * 
  * @author Jan Kuzniak
  * @author maciej.majchrzak
+ * @author adam.zwoniarski
+ * @author maciej.rudowicz
  */
+@Deprecated
 public final class LinkBuilderImpl implements LinkBuilder {
 
 	private String path;
@@ -66,6 +75,7 @@ public final class LinkBuilderImpl implements LinkBuilder {
 	/**
 	 * Creates an empty builder. All parts of a link are empty.
 	 */
+
 	public LinkBuilderImpl() {
 		this.path = "";
 		this.selectors = new ArrayList<String>();
@@ -93,6 +103,29 @@ public final class LinkBuilderImpl implements LinkBuilder {
 	}
 
 	/**
+	 * Parses a specified URL string
+	 * 
+	 * @throws MalformedURLException when url is not a valid URL.
+	 * @param url URL string to be parsed.
+	 * @param resourceResolver Resolver used to get the resource's path.
+	 * @return this builder
+	 */
+	public LinkBuilderImpl(final String url, final ResourceResolver resourceResolver)
+			throws MalformedURLException {
+		URL urlHelper = new URL(url);
+		SlingPathDecomposer slingPathDecomposer = new SlingPathDecomposer(urlHelper.getPath(),
+				resourceResolver);
+		this.suffix = slingPathDecomposer.getSuffix();
+		this.path = slingPathDecomposer.getResourcePath();
+		this.extension = slingPathDecomposer.getExtension();
+		this.selectors = Arrays.asList(slingPathDecomposer.getSelectors());
+		setQueryString(urlHelper.getQuery());
+		this.fragment = (urlHelper.getRef() == null) ? "" : urlHelper.getRef();
+		this.protocol = (urlHelper.getProtocol() == null) ? "" : urlHelper.getProtocol();
+		this.domain = (urlHelper.getAuthority() == null) ? "" : urlHelper.getAuthority();
+	}
+
+	/**
 	 * Returns {@link LinkImpl} representing data in the builder.
 	 * 
 	 * @return {@link LinkImpl} representing data in the builder, never null
@@ -103,10 +136,17 @@ public final class LinkBuilderImpl implements LinkBuilder {
 				suffix, getQueryString(), fragment);
 	}
 
-	/** Same as <code>toLink().toString()</code> */
+	/**
+	 * Same as <code>toLink().toString()</code>
+	 */
 	@Override
 	public String toString() {
 		return toLink().toString();
+	}
+
+	@Override
+	public String toEscapedString() {
+		return StringEscapeUtils.escapeHtml(toString());
 	}
 
 	/**
@@ -169,7 +209,7 @@ public final class LinkBuilderImpl implements LinkBuilder {
 	 * Retails all selectors which match given regular expression. All selectors which don't match the regular
 	 * expression are removed.
 	 * 
-	 * @param selectorRegexp regular expression of the selector to be retained on the list. If blank
+	 * @param includeRegexp regular expression of the selector to be retained on the list. If blank
 	 * {@link IllegalArgumentException} is thrown
 	 * @return this builder
 	 */
@@ -313,7 +353,6 @@ public final class LinkBuilderImpl implements LinkBuilder {
 	// /////////////////////////////////////////////////////////////////////////
 	// getters and setters
 	// ///////////////////////////////////////////////////////////////////////
-
 	@Override
 	public String getPath() {
 		return path;

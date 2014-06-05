@@ -9,9 +9,10 @@ import org.apache.commons.lang.StringEscapeUtils;
 import com.cognifide.slice.validation.api.ErrorMessage;
 
 /**
- * Write error message to a writer as a HTML li element. All code will be HTML
- * escaped.
+ * Write error message to a writer as a HTML li element. All code will be HTML escaped.
  * 
+ * @deprecated It will be removed (along with whole Validation API) in next major version - custom solution
+ * required
  * @author Rafał Malinowski
  */
 public class HtmlErrorMessageWriter implements ErrorMessageWriter {
@@ -23,8 +24,7 @@ public class HtmlErrorMessageWriter implements ErrorMessageWriter {
 	}
 
 	@Override
-	public void writeErrorMessage(final ErrorMessage errorMessage)
-			throws IOException {
+	public void writeErrorMessage(final ErrorMessage errorMessage) throws IOException {
 		writer.write("<li>");
 		writer.write("\n");
 		writer.write(StringEscapeUtils.escapeHtml(errorMessage.getMessage()));

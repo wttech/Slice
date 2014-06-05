@@ -1,6 +1,6 @@
 package com.cognifide.slice.core.internal.link;
 
-/*
+/*-
  * #%L
  * Slice - Core
  * $Id:$
@@ -11,9 +11,9 @@ package com.cognifide.slice.core.internal.link;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,13 +22,31 @@ package com.cognifide.slice.core.internal.link;
  * #L%
  */
 
+import java.net.MalformedURLException;
+
+import org.apache.sling.api.resource.ResourceResolver;
 
 import com.cognifide.slice.api.link.Link;
 import com.cognifide.slice.api.link.LinkBuilder;
 import com.cognifide.slice.api.link.LinkBuilderFactory;
 import com.cognifide.slice.commons.link.LinkBuilderImpl;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
+/**
+ * 
+ * @deprecated It will be removed (along with whole Link API) in next major version - custom solution required
+ * 
+ */
+@Deprecated
 public class LinkBuilderFactoryImpl implements LinkBuilderFactory {
+
+	private Provider<ResourceResolver> resourceResolverProvider;
+
+	@Inject
+	public LinkBuilderFactoryImpl(final Provider<ResourceResolver> resourceResolverProvider) {
+		this.resourceResolverProvider = resourceResolverProvider;
+	}
 
 	@Override
 	public LinkBuilder getLinkBuilder() {
@@ -40,4 +58,11 @@ public class LinkBuilderFactoryImpl implements LinkBuilderFactory {
 		return new LinkBuilderImpl(link);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public LinkBuilder getLinkBuilder(final String url) throws MalformedURLException {
+		return new LinkBuilderImpl(url, this.resourceResolverProvider.get());
+	}
 }

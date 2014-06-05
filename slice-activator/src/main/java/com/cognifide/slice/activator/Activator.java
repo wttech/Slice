@@ -36,12 +36,17 @@ public class Activator implements BundleActivator {
 
 	private static final String INJECTOR_NAME = "slice";
 
+	private static final String BUNDLE_NAME_FILTER = "^slice-.+";
+
+	private static final String BASE_PACKAGE = "com.cognifide.slice";
+
 	@Override
 	public void start(BundleContext bundleContext) throws Exception {
-		List<Module> sliceModules = SliceModulesFactory.createCoreModules(bundleContext);
+		List<Module> sliceModules = SliceModulesFactory.createModules(bundleContext);
 		List<Module> validationModules = ValidationModulesFactory.createModules();
 
-		InjectorRunner runner = new InjectorRunner(bundleContext, INJECTOR_NAME);
+		InjectorRunner runner = new InjectorRunner(bundleContext, INJECTOR_NAME, BUNDLE_NAME_FILTER,
+				BASE_PACKAGE);
 		runner.installModules(sliceModules);
 		runner.installModules(validationModules);
 		runner.start();

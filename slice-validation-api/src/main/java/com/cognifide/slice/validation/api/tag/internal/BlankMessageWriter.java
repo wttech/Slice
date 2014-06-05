@@ -29,6 +29,8 @@ import javax.jcr.RepositoryException;
 /**
  * Writes message informing that object is blank to a target.
  * 
+ * @deprecated It will be removed (along with whole Validation API) in next major version - custom solution
+ * required
  * @author Jakub Małecki
  */
 public interface BlankMessageWriter {

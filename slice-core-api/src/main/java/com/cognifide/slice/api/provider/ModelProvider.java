@@ -1,6 +1,6 @@
 package com.cognifide.slice.api.provider;
 
-/*
+/*-
  * #%L
  * Slice - Core API
  * $Id:$
@@ -22,11 +22,12 @@ package com.cognifide.slice.api.provider;
  * #L%
  */
 
-
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.sling.api.resource.Resource;
+
+import com.google.inject.Key;
 
 /**
  * This class creates object or list of objects of given injectable type using Guice injector.
@@ -41,8 +42,8 @@ public interface ModelProvider {
 	 * {@link ExecutionContextStack} is modified - path attribute is added on top of execution stack. It
 	 * allows for recursive call of ModelProvider methods from model object that is being created.
 	 * 
-	 * It is possible to use absolute and relative (with "./" prefix) paths in recursive calls.
-	 * All gets are performed with Context that was used to create this ModelProvider.
+	 * It is possible to use absolute and relative (with "./" prefix) paths in recursive calls. All gets are
+	 * performed with Context that was used to create this ModelProvider.
 	 * 
 	 * <code>
 	 *   modelProvider.get(ModelType.class, "/absolute/patch");
@@ -73,6 +74,41 @@ public interface ModelProvider {
 	<T> T get(final Class<T> type, final Resource resource);
 
 	/**
+	 * Creates new model object of type T from given resource. During this method call state of
+	 * {@link ExecutionContextStack} is modified - resource attribute is added on top of execution stack. It
+	 * allows for recursive call of ModelProvider methods from model object that is being created.
+	 * 
+	 * This method is thread-safe.
+	 * 
+	 * @param T type of model object to create
+	 * @param key a Guice {@link Key} which defines binding to a required object
+	 * @param resource Sling resource to create object from
+	 * @return model object from given resource
+	 * 
+	 * @see Key
+	 */
+	<T> T get(final Key<T> key, final Resource resource);
+
+	/**
+	 * Creates new model object of type T from given CRX repository path. During this method call state of
+	 * {@link ExecutionContextStack} is modified - path attribute is added on top of execution stack. It
+	 * allows for recursive call of ModelProvider methods from model object that is being created.
+	 * 
+	 * It is possible to use absolute and relative (with "./" prefix) paths in recursive calls. All gets are
+	 * performed with Context that was used to create this ModelProvider.
+	 * 
+	 * This method is thread-safe.
+	 * 
+	 * @param T type of model object to create
+	 * @param key a Guice {@link Key} which defines binding to a required object
+	 * @param path CRX repository path to create object from
+	 * @return model object from given CRX repository path
+	 * 
+	 * @see Key
+	 */
+	<T> T get(final Key<T> key, final String path);
+
+	/**
 	 * Creates new model object of type specified by given class name. During this method call state of
 	 * {@link ExecutionContextStack} is modified - path attribute is added on top of execution stack. It
 	 * allows for recursive call of ModelProvider methods from model object that is being created.
@@ -86,10 +122,21 @@ public interface ModelProvider {
 	Object get(final String className, final String path) throws ClassNotFoundException;
 
 	/**
+	 * Creates new model object of type specified by given class name. During this method call state of
+	 * {@link ExecutionContextStack} is modified - path attribute is added on top of execution stack. It
+	 * allows for recursive call of ModelProvider methods from model object that is being created.
+	 * 
+	 * @param className canonical name of a class to be resolved, e.g. com.cognifide.slice.api.ModelProvider
+	 * @param resource Sling resource to create object from
+	 * @return model object from given resource
+	 * @throws ClassNotFoundException if specified className cannot be resolved by Injector,
+	 */
+	Object get(final String className, final Resource resource) throws ClassNotFoundException;
+
+	/**
 	 * Creates list of model objects of type T from given CRX repository paths. During this method call state
-	 * of {@link ExecutionContextStack} is modified for each path from iterator - path is added on top of
-	 * path stack. It allows for recursive call of ModelProvider methods from model objects that are being
-	 * created.
+	 * of {@link ExecutionContextStack} is modified for each path from iterator - path is added on top of path
+	 * stack. It allows for recursive call of ModelProvider methods from model objects that are being created.
 	 * 
 	 * It is possible to use absolute and relative (with "./" prefix) paths in recursive calls.
 	 * 
@@ -101,7 +148,7 @@ public interface ModelProvider {
 	<T> List<T> getList(final Class<T> type, final Iterator<String> paths);
 
 	/**
-	 * This is convenience method that works exactly like {@link getList}.
+	 * This is convenience method that works exactly like {@link #getList(Class, Iterator)}
 	 * 
 	 * @param T type of model objects to create
 	 * @param type class of model objects to create
@@ -109,6 +156,28 @@ public interface ModelProvider {
 	 * @return list of model objects from given CRX repository paths
 	 */
 	<T> List<T> getList(final Class<T> type, final String[] paths);
+
+	/**
+	 * This is a convenience method working exactly like {@link ModelProvider#getChildModels(Class, Resource)}
+	 * 
+	 * @param <T> type of model objects to create
+	 * @param type class of model objects to create
+	 * @param parentPath Sling resource path to obtain children (could be relative)
+	 * @return list of model objects from given CRX repository paths or empty list if parentPath is invalid
+	 */
+	<T> List<T> getChildModels(final Class<T> type, final String parentPath);
+
+	/**
+	 * This method lists children of the given resource via {@code parentResource.listChildren()}, invokes
+	 * {@link ModelProvider#get(Class, Resource)} for each of them and returns a {@code List} containing
+	 * mapped models. If the {@code parentResource} is null, an empty list will be returned.
+	 * 
+	 * @param <T> type of model objects to create
+	 * @param type class of model objects to create
+	 * @param parentResource Sling resource to obtain children
+	 * @return list of model objects from given CRX repository paths or empty list if parentResource is null
+	 */
+	<T> List<T> getChildModels(final Class<T> type, final Resource parentResource);
 	
 	/**
 	 * Creates list of model objects of type T from given CRX repository paths. During this method call state

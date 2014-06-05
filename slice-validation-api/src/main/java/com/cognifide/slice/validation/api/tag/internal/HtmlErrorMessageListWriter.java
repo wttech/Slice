@@ -9,9 +9,11 @@ import com.cognifide.slice.validation.api.ErrorLevel;
 import com.cognifide.slice.validation.api.ErrorMessage;
 
 /**
- * Write list of error messages to a writer as a HTML div element. Messages will
- * be grouped basing on error levels.
+ * Write list of error messages to a writer as a HTML div element. Messages will be grouped basing on error
+ * levels.
  * 
+ * @deprecated It will be removed (along with whole Validation API) in next major version - custom solution
+ * required
  * @author Rafał Malinowski
  */
 public class HtmlErrorMessageListWriter implements ErrorMessageListWriter {
@@ -31,8 +33,7 @@ public class HtmlErrorMessageListWriter implements ErrorMessageListWriter {
 	}
 
 	@Override
-	public void writeErrorMessageList(final List<ErrorMessage> errorMessageList)
-			throws IOException {
+	public void writeErrorMessageList(final List<ErrorMessage> errorMessageList) throws IOException {
 		writer.write("<div class=\"validationMessages\">\n");
 		writer.write("<div class=\"title\">");
 		writer.write(title);
@@ -46,25 +47,21 @@ public class HtmlErrorMessageListWriter implements ErrorMessageListWriter {
 		writer.write(CLEAR_BOTH_DIV);
 	}
 
-	private void writeErrorMessageList(
-			final List<ErrorMessage> errorMessageList,
-			final ErrorLevel errorLevel) throws IOException {
-		final List<ErrorMessage> filteredErrorMessagEList = filterErrorsMessage(
-				errorMessageList, errorLevel);
+	private void writeErrorMessageList(final List<ErrorMessage> errorMessageList, final ErrorLevel errorLevel)
+			throws IOException {
+		final List<ErrorMessage> filteredErrorMessagEList = filterErrorsMessage(errorMessageList, errorLevel);
 		if (filteredErrorMessagEList.isEmpty()) {
 			return;
 		}
 
-		writer.write(String.format("<ul class=\"%sMessages\">\n",
-				errorLevel.getCssClassName()));
+		writer.write(String.format("<ul class=\"%sMessages\">\n", errorLevel.getCssClassName()));
 		for (final ErrorMessage errorMessage : filteredErrorMessagEList) {
 			errorMessageWriter.writeErrorMessage(errorMessage);
 		}
 		writer.write("</ul>\n");
 	}
 
-	private List<ErrorMessage> filterErrorsMessage(
-			final List<ErrorMessage> errorMessageList,
+	private List<ErrorMessage> filterErrorsMessage(final List<ErrorMessage> errorMessageList,
 			final ErrorLevel errorLevel) {
 		final List<ErrorMessage> result = new ArrayList<ErrorMessage>();
 		for (final ErrorMessage errorMessage : errorMessageList) {

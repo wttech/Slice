@@ -9,13 +9,14 @@ import com.cognifide.slice.validation.api.ErrorLevel;
 import com.cognifide.slice.validation.api.ErrorMessage;
 
 /**
- * Write list of error messages to a writer as a HTML comment. Messages will be
- * grouped basing on error levels.
+ * Write list of error messages to a writer as a HTML comment. Messages will be grouped basing on error
+ * levels.
  * 
+ * @deprecated It will be removed (along with whole Validation API) in next major version - custom solution
+ * required
  * @author Rafał Malinowski
  */
-public class HtmlCommentErrorMessageListWriter implements
-		ErrorMessageListWriter {
+public class HtmlCommentErrorMessageListWriter implements ErrorMessageListWriter {
 
 	private final Writer writer;
 
@@ -27,8 +28,7 @@ public class HtmlCommentErrorMessageListWriter implements
 	}
 
 	@Override
-	public void writeErrorMessageList(final List<ErrorMessage> errorMessageList)
-			throws IOException {
+	public void writeErrorMessageList(final List<ErrorMessage> errorMessageList) throws IOException {
 		writer.write("\n<!--");
 
 		for (final ErrorLevel errorLevel : ErrorLevel.values()) {
@@ -38,11 +38,9 @@ public class HtmlCommentErrorMessageListWriter implements
 		writer.write("\n-->\n");
 	}
 
-	private void writeErrorMessageList(
-			final List<ErrorMessage> errorMessageList,
-			final ErrorLevel errorLevel) throws IOException {
-		final List<ErrorMessage> filteredErrorMessagEList = filterErrorsMessage(
-				errorMessageList, errorLevel);
+	private void writeErrorMessageList(final List<ErrorMessage> errorMessageList, final ErrorLevel errorLevel)
+			throws IOException {
+		final List<ErrorMessage> filteredErrorMessagEList = filterErrorsMessage(errorMessageList, errorLevel);
 		if (errorMessageList.isEmpty()) {
 			return;
 		}
@@ -52,8 +50,7 @@ public class HtmlCommentErrorMessageListWriter implements
 		}
 	}
 
-	private List<ErrorMessage> filterErrorsMessage(
-			final List<ErrorMessage> errorMessageList,
+	private List<ErrorMessage> filterErrorsMessage(final List<ErrorMessage> errorMessageList,
 			final ErrorLevel errorLevel) {
 		final List<ErrorMessage> result = new ArrayList<ErrorMessage>();
 		for (final ErrorMessage errorMessage : errorMessageList) {

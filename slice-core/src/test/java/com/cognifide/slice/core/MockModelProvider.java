@@ -1,6 +1,6 @@
 package com.cognifide.slice.core;
 
-/*
+/*-
  * #%L
  * Slice - Core
  * $Id:$
@@ -22,7 +22,6 @@ package com.cognifide.slice.core;
  * #L%
  */
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -32,6 +31,10 @@ import java.util.Map;
 import org.apache.sling.api.resource.Resource;
 
 import com.cognifide.slice.api.provider.ModelProvider;
+
+import org.apache.sling.api.resource.ResourceResolver;
+
+import com.google.inject.Key;
 
 public class MockModelProvider implements ModelProvider {
 
@@ -61,9 +64,27 @@ public class MockModelProvider implements ModelProvider {
 		// TODO
 		return null;
 	}
-	
+
+	@Override
+	public <T> T get(Key<T> key, Resource resource) {
+		// TODO
+		return null;
+	}
+
+	@Override
+	public <T> T get(Key<T> key, String path) {
+		// TODO
+		return null;
+	}
+
 	@Override
 	public Object get(String className, String path) throws ClassNotFoundException {
+		// TODO
+		return null;
+	}
+
+	@Override
+	public Object get(String className, Resource resource) throws ClassNotFoundException {
 		// TODO
 		return null;
 	}
@@ -88,6 +109,26 @@ public class MockModelProvider implements ModelProvider {
 			T model = get(type, path);
 			if (model != null) {
 				result.add(model);
+			}
+		}
+		return result;
+	}
+
+	@Override
+	@SuppressWarnings("null")
+	public <T> List<T> getChildModels(Class<T> type, String path) {
+		ResourceResolver resolver = null;
+		return getChildModels(type, resolver.getResource(path));
+	}
+
+	@Override
+	public <T> List<T> getChildModels(Class<T> type, Resource resource) {
+		final ArrayList<T> result = new ArrayList<T>();
+		if (resource != null) {
+			Iterator<Resource> listChildren = resource.listChildren();
+			while (listChildren.hasNext()) {
+				Resource childResource = listChildren.next();
+				result.add(get(type, childResource));
 			}
 		}
 		return result;
