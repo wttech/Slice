@@ -1,6 +1,6 @@
 package com.cognifide.slice.validation;
 
-/*
+/*-
  * #%L
  * Slice - Core API
  * $Id:$
@@ -30,6 +30,8 @@ import com.cognifide.slice.validation.api.Validator;
 /**
  * Result of validation.
  * 
+ * @deprecated It will be removed (along with whole Validation API) in next major version - custom solution
+ * required
  * @author Rafał Malinowski
  */
 public class ValidatorImpl implements Validator {

@@ -1,6 +1,6 @@
 package com.cognifide.slice.validation.api;
 
-/*
+/*-
  * #%L
  * Slice - Core API
  * $Id:$
@@ -22,14 +22,17 @@ package com.cognifide.slice.validation.api;
  * #L%
  */
 
-
 /**
  * Represents single error message model object. Error message consists of a mandatory message text, and
  * optional throwable - if the error message was caused by an exception.
  * 
+ * @deprecated It will be removed (along with whole Validation API) in next major version - custom solution
+ * required
+ * 
  * @author Marcin Cenkier
  * @author Jan Kuźniak
  */
+@Deprecated
 public interface ErrorMessage {
 
 	String getMessage();

@@ -9,6 +9,8 @@ import com.google.inject.Module;
  * Factory for all CQ-related modules. It should be used in application's activator to register CQ-related
  * modules
  * 
+ * @deprecated It will be removed (along with whole Validation API) in next major version - custom solution
+ * required
  * @author maciej.majchrzak
  * 
  */

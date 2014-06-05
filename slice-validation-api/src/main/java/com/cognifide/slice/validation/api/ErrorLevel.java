@@ -1,6 +1,6 @@
 package com.cognifide.slice.validation.api;
 
-/*
+/*-
  * #%L
  * Slice - Core API
  * $Id:$
@@ -21,7 +21,12 @@ package com.cognifide.slice.validation.api;
  * limitations under the License.
  * #L%
  */
-
+/**
+ * @deprecated It will be removed (along with whole Validation API) in next major version - custom solution
+ * required
+ * 
+ */
+@Deprecated
 public enum ErrorLevel {
 
 	ERROR("error"), //

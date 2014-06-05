@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import com.cognifide.slice.validation.api.ErrorMessage;
 
-/*
+/*-
  * #%L
  * Slice - Core API
  * $Id:$
@@ -29,6 +29,8 @@ import com.cognifide.slice.validation.api.ErrorMessage;
 /**
  * Write one ErrorMessage object to a target.
  * 
+ * @deprecated It will be removed (along with whole Validation API) in next major version - custom solution
+ * required
  * @author Rafał Malinowski
  */
 public interface ErrorMessageWriter {

@@ -1,6 +1,6 @@
 package com.cognifide.slice.validation.api;
 
-/*
+/*-
  * #%L
  * Slice - Core API
  * $Id:$
@@ -23,14 +23,17 @@ package com.cognifide.slice.validation.api;
  */
 
 /**
- * Builds result of validation. Errors messages can be added using
- * addErrorMessage, addWarningMessage, addInformationMessage and generic
- * addMessage method.
+ * Builds result of validation. Errors messages can be added using addErrorMessage, addWarningMessage,
+ * addInformationMessage and generic addMessage method.
  * 
  * If validated object is blank, use setBlank method.
  * 
+ * @deprecated It will be removed (along with whole Validation API) in next major version - custom solution
+ * required
  * @author Rafał Malinowski
+ * 
  */
+@Deprecated
 public interface ValidationResultBuilder {
 
 	ValidationResultBuilder setBlank(boolean blank);
@@ -43,8 +46,7 @@ public interface ValidationResultBuilder {
 
 	ValidationResultBuilder addInformationMessage(String message);
 
-	ValidationResultBuilder addMessage(String message, Throwable t,
-			ErrorLevel errorLevel);
+	ValidationResultBuilder addMessage(String message, Throwable t, ErrorLevel errorLevel);
 
 	ValidationResult toValidationResult();
 
