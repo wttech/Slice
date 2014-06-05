@@ -178,19 +178,17 @@ public interface ModelProvider {
 	 * @return list of model objects from given CRX repository paths or empty list if parentResource is null
 	 */
 	<T> List<T> getChildModels(final Class<T> type, final Resource parentResource);
-	
+
 	/**
-	 * Creates list of model objects of type T from given CRX repository paths. During this method call state
-	 * of {@link ExecutionContextStack} is modified for each path from iterator - path is added on top of
-	 * path stack. It allows for recursive call of ModelProvider methods from model objects that are being
-	 * created.
+	 * Creates list of models of type T from specified resources. Each resource from specified iterator is
+	 * mapped to a class T
 	 * 
-	 * It is possible to use absolute and relative (with "./" prefix) paths in recursive calls.
 	 * 
 	 * @param <T> type of model objects to create
 	 * @param type class of model objects to create
 	 * @param resources iterator that returns CRX repository resources to create objects from
-	 * @return list of model objects from given CRX repository paths
+	 * @return list of model objects mapped from given resources. If the resource iterator has no element or
+	 * is <code>null</code>, then an empty list is returned. It never returns <code>null</code>.
 	 */
 	<T> List<T> getListFromResources(final Class<T> type, final Iterator<Resource> resources);
 }
