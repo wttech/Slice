@@ -29,7 +29,6 @@ import org.osgi.framework.BundleContext;
 
 import com.cognifide.slice.api.injector.InjectorRunner;
 import com.cognifide.slice.commons.SliceModulesFactory;
-import com.cognifide.slice.validation.ValidationModulesFactory;
 import com.google.inject.Module;
 
 public class Activator implements BundleActivator {
@@ -43,12 +42,10 @@ public class Activator implements BundleActivator {
 	@Override
 	public void start(BundleContext bundleContext) throws Exception {
 		List<Module> sliceModules = SliceModulesFactory.createModules(bundleContext);
-		List<Module> validationModules = ValidationModulesFactory.createModules();
 
 		InjectorRunner runner = new InjectorRunner(bundleContext, INJECTOR_NAME, BUNDLE_NAME_FILTER,
 				BASE_PACKAGE);
 		runner.installModules(sliceModules);
-		runner.installModules(validationModules);
 		runner.start();
 	}
 

@@ -50,11 +50,6 @@
 			<artifactId>slice-core</artifactId>
 			<version>4.0.1-incubator-SNAPSHOT</version>
 		</dependency>
-		<dependency>
-			<groupId>com.cognifide.slice</groupId>
-			<artifactId>slice-validation</artifactId>
-			<version>4.0.1-incubator-SNAPSHOT</version>
-		</dependency>
 
 		<!-- Guice -->
 		<dependency>
