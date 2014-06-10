@@ -29,8 +29,6 @@
 		<module>slice-core</module>
 		<module>slice-mapper-api</module>
 		<module>slice-mapper</module>
-		<module>slice-validation</module>
-		<module>slice-validation-api</module>
 		<module>slice-assembly</module>
 	</modules>
 
