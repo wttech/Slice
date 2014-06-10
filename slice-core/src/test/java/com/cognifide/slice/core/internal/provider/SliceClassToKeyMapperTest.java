@@ -42,7 +42,6 @@ import com.cognifide.slice.api.context.ContextFactory;
 import com.cognifide.slice.api.context.ContextScope;
 import com.cognifide.slice.api.provider.ModelProvider;
 import com.cognifide.slice.core.internal.module.JcrModule;
-import com.cognifide.slice.core.internal.module.LinkModule;
 import com.cognifide.slice.core.internal.module.SliceModule;
 import com.cognifide.slice.core.internal.module.SlingModule;
 import com.cognifide.slice.mapper.module.MapperModule;
@@ -84,7 +83,6 @@ public class SliceClassToKeyMapperTest {
 		modules.add(new SliceModule(contextScope, bundle));
 		modules.add(new SlingModule(contextScope));
 		modules.add(new JcrModule());
-		modules.add(new LinkModule());
 		modules.add(new MapperModule());
 
 		injector = Guice.createInjector(modules);
