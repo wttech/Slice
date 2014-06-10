@@ -48,7 +48,7 @@ public class SliceReferenceFieldProcessor implements FieldProcessor {
 	public boolean accepts(final Resource resource, final Field field) {
 		Class<?> type = field.getType();
 		// additional checks of type for performance sake
-		return type != String.class && !type.isPrimitive() && type.isAnnotationPresent(SliceReference.class);
+		return type != String.class && !type.isPrimitive() && field.isAnnotationPresent(SliceReference.class);
 	}
 
 	@Override

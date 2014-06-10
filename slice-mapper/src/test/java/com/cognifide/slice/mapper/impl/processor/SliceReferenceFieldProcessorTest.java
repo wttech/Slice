@@ -8,16 +8,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-public class SliceResourceFieldProcessorTest {
+public class SliceReferenceFieldProcessorTest {
 
 	@Mock
 	private Resource resource;
 
-	private SliceResourceFieldProcessor processor;
+	private SliceReferenceFieldProcessor processor;
 
 	@Before
 	public void setUp() throws SecurityException, NoSuchFieldException {
-		processor = new SliceResourceFieldProcessor();
+		processor = new SliceReferenceFieldProcessor();
 	}
 
 	@Test
@@ -40,9 +40,8 @@ public class SliceResourceFieldProcessorTest {
 
 	@Test
 	public void testAcceptAnnotated() throws SecurityException, NoSuchFieldException {
-		Field field = TestObject.class.getDeclaredField("annotatedField");
+		Field field = TestObject.class.getDeclaredField("fieldAnnotatedWithSliceReference");
 		boolean result = processor.accepts(resource, field);
 		Assert.assertTrue("Annotated field should be acceptable", result);
 	}
-
 }
