@@ -29,7 +29,7 @@ public class TextModel {
     }
 }
 ```
-##### Doing JSPs? No more business logic in JSPs (view layer). Business logic's place is in Java ans Slice knows about it!
+##### Doing JSPs? No more business logic in JSPs (view layer). Business logic's place is in Java and Slice knows about it!
 ```jsp
 <slice:lookup var="model" type="<%=com.cognifide.example.core.components.richtext.TextModel%>" />
 <p>${model.text}</p>
