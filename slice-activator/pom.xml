@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.cognifide.slice</groupId>
 		<artifactId>slice-parent</artifactId>
-		<version>4.0.1-incubator-SNAPSHOT</version>
+		<version>4.1.0-SNAPSHOT</version>
 	</parent>
 	<name>Slice - Activator</name>
 	<description>Slice activator</description>
@@ -43,12 +43,12 @@
 		<dependency>
 			<groupId>com.cognifide.slice</groupId>
 			<artifactId>slice-core-api</artifactId>
-			<version>4.0.1-incubator-SNAPSHOT</version>
+			<version>4.1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.cognifide.slice</groupId>
 			<artifactId>slice-core</artifactId>
-			<version>4.0.1-incubator-SNAPSHOT</version>
+			<version>4.1.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Guice -->
