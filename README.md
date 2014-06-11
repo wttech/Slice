@@ -14,7 +14,7 @@ Slice is a framework which simplifies Sling/Adobe AEM development by using depen
 
 ## Features
 ### Separation of concerns
-No more business logic in your view (JSP, Sightly scripts) - susiness logic's place is in Java classes ans Slice knows it!
+No more business logic in your view (JSP, Sightly scripts) - business logic's place is in Java classes ans Slice knows it!
 
 **Slice loves Sightly**. Sightly loves Slice. Both are perfect match. Seamless integration you will love:
 ```html
@@ -23,7 +23,7 @@ No more business logic in your view (JSP, Sightly scripts) - susiness logic's pl
 </div>
 ```
 
-**JSPs made clean and tidy** - no more this ugly scriptlets:
+**JSPs made clean and tidy** - no more this ugly scriptlets.
 ```jsp
 <slice:lookup var="model" type="<%=com.example.components.text.TextModel%>" />
 <p>${model.text}</p>
@@ -45,11 +45,12 @@ public class TextModel {
 
 ### Mapping resources into Java objects
 
-Slice allows you to map a resource into plain Java object. It's annotation-driven, very easy to use and fully extensible, so you can write your own ways of mapping if a set of available features is not enough for your needs. Slice supports mapping of :
+Slice allows you to map a resource into plain Java object. It's annotation-driven, very easy to use and fully extensible, so you can write your own ways of mapping if a set of available features is not enough for your needs. Slice supports mapping of:
  * simple properties (String, Long, Boolean, etc) into primitives and objects
  * simple properties into enums.
  * multi-value properties into arrays or lists
  * child resources into a Java object or list of objects
+ * nested resources/classes hierarchy
  
 The following code snippet demonstrates all above features in one model. It's simple - just annotate a class with @SliceResource and its fields with @JcrProperty to get auto mapping of resource properties to class fields:
 
@@ -96,13 +97,15 @@ public class ImageModel {
 
 
 
-### Dependency Injection with Google Guice. Why it's awesome? Take a look here: [Google I/O 2009 - Big Modular Java with Guice](https://www.youtube.com/watch?v=hBVJbzAagfs), and here to check [motivation of Google Guice creators](https://code.google.com/p/google-guice/wiki/)
+### Dependency Injection with Google Guice
+
+If your AEM components are more than simple text/image/title components (and they certainly are), then you probably need to combine their functionality with some external data or more complex business logic provided by other classes. Dependency injection allows you to do this easily and keep your code testable without boiler-plate code and unneeded arguments in methods used only to propagate a value down into the class hierarchy.
+
 ```java
 code snippets here
 ```
 
-
-
+We took Guice as a DI container. Why it's awesome? Take a look here: [Google I/O 2009 - Big Modular Java with Guice](https://www.youtube.com/watch?v=hBVJbzAagfs), and here to check [motivation of Google Guice creators](https://code.google.com/p/google-guice/wiki/)
 
 Since Slice 3.1 the AEM/CQ related modules have been extracted to separate projects:
 * Slice AEM v6.0 Addon: https://github.com/Cognifide/Slice-AEM60
@@ -177,31 +180,32 @@ import com.google.inject.Module;
  
 public class Activator implements BundleActivator {
 
-private static final String BUNDLE_NAME_FILTER = "app.*";
+	private static final String BUNDLE_NAME_FILTER = "app.*";
 
-private static final String BASE_PACKAGE = "com.example.app";
+	private static final String BASE_PACKAGE = "com.example.app";
 
-@Override
-public void start(final BundleContext bundleContext) {
+	@Override
+	public void start(final BundleContext bundleContext) {
 
-	final InjectorRunner injectorRunner = new InjectorRunner(bundleContext, INJECTOR_NAME, BUNDLE_NAME_FILTER, BASE_PACKAGE);
+		final InjectorRunner injectorRunner = new InjectorRunner(bundleContext, INJECTOR_NAME, 
+					BUNDLE_NAME_FILTER, BASE_PACKAGE);
 
-	final List<Module> sliceModules = SliceModulesFactory.createModules(bundleContext);
-	final List<Module> cqModules = CQModulesFactory.createModules(); //if you use AEM/CQ add-on
-	final List<Module> customModules = createCustomModules();
+		final List<Module> sliceModules = SliceModulesFactory.createModules(bundleContext);
+		final List<Module> cqModules = CQModulesFactory.createModules(); //if you use AEM/CQ add-on
+		final List<Module> customModules = createCustomModules();
 
-	injectorRunner.installModules(sliceModules);
-	injectorRunner.installModules(cqModules);
-	injectorRunner.installModules(customModules);
+		injectorRunner.installModules(sliceModules);
+		injectorRunner.installModules(cqModules);
+		injectorRunner.installModules(customModules);
 
-	injectorRunner.start();
-}
+		injectorRunner.start();
+	}
 
-private List<Module> createCustomModules() {
-	List<Module> applicationModules = new ArrayList<Module>();
-	//populate the list with your modules
-	return applicationModules;
-}
+	private List<Module> createCustomModules() {
+		List<Module> applicationModules = new ArrayList<Module>();
+		//populate the list with your modules
+		return applicationModules;
+	}
 }
 ```
 
