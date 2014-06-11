@@ -8,6 +8,45 @@ resources to classes and allows to use dependency injection inside Sling and CQ 
 In 3.1.0 version of Slice the CQ related modules have been extracted to separate projects:
 * Slice CQ v5.5 Addon: https://github.com/Cognifide/Slice-CQ55/
 * Slice CQ v5.6 Addon: https://github.com/Cognifide/Slice-CQ56/
+* Slice AEM v6.0 Addon: https://github.com/Cognifide/Slice-AEM60
+
+## Features
+##### Sightly loves Slice. Slice loves Sightly. Both are perfect match. Seamless integration you will love.
+```html
+<div data-sly-use.model="com.cognifide.example.core.components.richtext.TextModel">
+ <p>${model.text}<p>
+</div>
+```
+```java
+@SliceResource
+public class TextModel {
+  
+    @JcrProperty
+    private String text;
+  
+    public String getText() {
+        return text;
+    }
+}
+```
+##### Doing JSPs? No more business logic in JSPs (view layer). Business logic's place is in Java ans Slice knows about it!
+```jsp
+<slice:lookup var="model" type="<%=com.cognifide.example.core.components.richtext.TextModel%>" />
+<p>${model.text}</p>
+
+// Note that this sample uses exactly same model. One model to feed them all!
+```
+
+##### Dependency Injection with Google Guice. Why it's awesome? Take a look here: [Google I/O 2009 - Big Modular Java with Guice](https://www.youtube.com/watch?v=hBVJbzAagfs), and here to check [motivation of Google Guice creators](https://code.google.com/p/google-guice/wiki/)
+```java
+code snippets here
+```
+##### Lean and neat code, slicker design!
+##### Improved testability of your code! Thanks to dependency injection (DI) they can be easily unit-tested.
+##### Easy to start with! Slice is easy to learn and if you use it in all your projects, your developers know exactly how to start.
+##### Faster development – code reuse, dependency injection and simplicity make you more efficient than ever.
+##### Overall costs reduced!
+
 
 ## Prerequisites
 
@@ -54,18 +93,6 @@ Add dependencies to your POM file:
     <dependency>
         <groupId>com.cognifide.slice</groupId>
         <artifactId>slice-mapper-api</artifactId>
-        <version>3.1.0</version>
-        <scope>compile</scope>
-    </dependency>
-    <dependency>
-        <groupId>com.cognifide.slice</groupId>
-        <artifactId>slice-validation-api</artifactId>
-        <version>3.1.0</version>
-        <scope>compile</scope>
-    </dependency>
-    <dependency>
-        <groupId>com.cognifide.slice</groupId>
-        <artifactId>slice-validation</artifactId>
         <version>3.1.0</version>
         <scope>compile</scope>
     </dependency>
