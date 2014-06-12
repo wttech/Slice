@@ -62,7 +62,7 @@ public class InjectorConfig {
 		return StringUtils.isNotBlank(parentName);
 	}
 
-	public List<Module> getModules() {
+	public List<? extends Module> getModules() {
 		return modules;
 	}
 
