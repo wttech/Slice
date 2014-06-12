@@ -43,6 +43,8 @@ public class TextModel {
 }
 ```
 
+Interested in details? Read about [Slice concepts](https://cognifide.atlassian.net/wiki/display/SLICE/Slice+concepts+-+4.0) and [how it works internally](https://cognifide.atlassian.net/wiki/pages/viewpage.action?pageId=18579473) on our Wiki.
+
 ### Mapping resources into Java objects
 
 Slice allows you to map a resource into plain Java object. It's annotation-driven, very easy to use and fully extensible, so you can write your own ways of mapping if a set of available features is not enough for your needs. Slice supports mapping of:
@@ -95,6 +97,8 @@ public class ImageModel {
 	//...
 }
 ```
+
+Read more about mapping on our [Wiki](https://cognifide.atlassian.net/wiki/display/SLICE/Mapper+-+4.0).
 
 
 ### Dependency Injection with Google Guice
@@ -240,7 +244,7 @@ Since Slice 3.1 the AEM/CQ related modules have been extracted to separate proje
 
 # Commercial Support
 
-Technical support can be made available if needed. Please [contact us](https://www.cognifide.com/get-in-touch/) for more details.
+Technical support can be made available if needed. Please [contact us](https://www.cognifide.com/contact/) for more details.
 
 We can:
 
@@ -251,12 +255,8 @@ We can:
 
 # More documentation
 ------------------
-* [Full introduction to Slice](https://cognifide.atlassian.net/wiki/display/SLICE/About+Slice)
+* [Full documentation of Slice](https://cognifide.atlassian.net/wiki/display/SLICE/About+Slice+-+4.0)
 * [Slice Wiki](https://cognifide.atlassian.net/wiki/display/SLICE)
 * [Slice Issue tracking](https://cognifide.atlassian.net/browse/SLICE)
 
 * [Cognifide.com](http://cognifide.com)
-
-* [Maven](http://maven.apache.org)
-* [CRX](http://www.day.com/day/en/products/crx.html)
-* [CRX API](http://dev.day.com/content/docs/en/crx/current/how_to/package_manager.html#Package%20Manager%20HTTP%20Service%20API)
