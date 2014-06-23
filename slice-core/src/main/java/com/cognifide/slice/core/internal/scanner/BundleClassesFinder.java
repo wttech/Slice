@@ -49,7 +49,7 @@ public class BundleClassesFinder {
 
 	public BundleClassesFinder(Collection<Bundle> bundles, String basePackage) {
 		this.bundles = bundles;
-		this.basePackage = basePackage.replace(".", "/");
+		this.basePackage = basePackage.replace('.', '/');
 	}
 
 	public Collection<Class<?>> getClasses() {
@@ -72,7 +72,7 @@ public class BundleClassesFinder {
 					ClassReader classReader = new ClassReader(classURL.openStream());
 
 					if (accepts(classReader)) {
-						String className = classReader.getClassName().replace("/", ".");
+						String className = classReader.getClassName().replace('/', '.');
 
 						if (LOG.isDebugEnabled()) {
 							LOG.debug("Slice Resource class: " + className + " has been found.");
