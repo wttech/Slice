@@ -244,7 +244,7 @@ Since Slice 3.1 the AEM/CQ related modules have been extracted to separate proje
 
 # Commercial Support
 
-Technical support can be made available if needed. Please [contact us](https://www.cognifide.com/contact/) for more details.
+Technical support can be made available if needed. Please [contact us](slice@cognifide.com) for more details.
 
 We can:
 
@@ -253,10 +253,10 @@ We can:
 * provide a training for your engineers,
 * support your development teams.
 
+
 # More documentation
 ------------------
 * [Full documentation of Slice](https://cognifide.atlassian.net/wiki/display/SLICE/About+Slice+-+4.0)
-* [Slice Wiki](https://cognifide.atlassian.net/wiki/display/SLICE)
-* [Slice Issue tracking](https://cognifide.atlassian.net/browse/SLICE)
-
-* [Cognifide.com](http://cognifide.com)
+* [Slice wiki](https://cognifide.atlassian.net/wiki/display/SLICE)
+* [Slice users mailing group](http://slice-users.2340343.n4.nabble.com/) if you have any question on how to use it
+* [Slice issue tracking](https://cognifide.atlassian.net/browse/SLICE)
