@@ -244,7 +244,7 @@ Since Slice 3.1 the AEM/CQ related modules have been extracted to separate proje
 
 # Commercial Support
 
-Technical support can be made available if needed. Please [contact us](mailto:slice@cognifide.com) for more details.
+Technical support can be made available if needed. Please [contact us](mailto:slice-support@cognifide.com) for more details.
 
 We can:
 
