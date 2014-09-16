@@ -141,13 +141,14 @@ public final class SliceTagUtils {
 			throw new IllegalStateException("Guice injector not found: " + injectorName);
 		}
 
-		injector.pushContextProvider(contextProvider);
+		final ContextProvider previousContextProvider = injector.getContextProvider();
+		injector.setContextProvider(contextProvider);
 		try {
 			final ModelProvider modelProvider = injector.getInstance(ModelProvider.class);
 			final Resource resource = request.getResource();
-			return (T) modelProvider.get(type, resource);
+			return modelProvider.get(type, resource);
 		} finally {
-			injector.popContextProvider();
+			injector.setContextProvider(previousContextProvider);
 		}
 	}
 }

@@ -22,8 +22,6 @@ package com.cognifide.slice.api.injector;
  * #L%
  */
 
-import java.io.Closeable;
-
 import com.cognifide.slice.api.context.ContextProvider;
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -41,16 +39,17 @@ import com.google.inject.Key;
  * private InjectorsRepository injectorsRepository;
  * 
  * final InjectorWithContext injector = injectorsRepository.getInjector(APP_NAME);
+ * final ContextProvider previousContextProvider = injector.getContextProvider();
  * final ContextProviderFactory contextProviderFactory = injector.getInstance(ContextProviderFactory.class);
  * final SimpleContextProvider simpleContextProvider = contextProviderFactory.getSimpleContextProvider();
  * final ContextFactory contextFactory = injector.getInstance(ContextFactory.class);
  * simpleContextProvider.setContext(contextFactory.getServletRequestContext(request, response));
  * 
- * injector.pushContextProvider(simpleContextProvider);
+ * injector.setContextProvider(simpleContextProvider);
  * try {
  *   ...
  * } finally {
- *   injector.popContextProvider();
+ *   injector.setContextProvider(previousContextProvider);
  * }
  * }
  * </pre>
@@ -59,7 +58,7 @@ import com.google.inject.Key;
  * 
  * This decoration has two delegate getInstance() methods added for convenience.
  */
-public interface InjectorWithContext extends Closeable {
+public interface InjectorWithContext {
 
 	/**
 	 * Return Guice Injector behind this InjectorWithContext.
@@ -67,19 +66,18 @@ public interface InjectorWithContext extends Closeable {
 	Injector getInjector();
 
 	/**
-	 * Push new ContextProvider on ContextProvider stack and set it as current on Guice Injector.
+	 * Sets ContextProvides for Guice Injector.
+	 *
+	 * @param contextProvider contextProvider to be set as current on Guice Injector.
 	 */
-	void pushContextProvider(final ContextProvider contextProvider);
+	void setContextProvider(final ContextProvider contextProvider);
 
 	/**
-	 * Pop top ContextProvider from ContextProvider stack and set previous one as current on Guice Injector.
+	 * Returns current ContextProvider for Guice Injector.
+	 * 
+	 * @return current ContextProvider
 	 */
-	ContextProvider popContextProvider();
-
-	/**
-	 * Easy to remember alias for the {@code #popContextProvider()} method.
-	 */
-	void close();
+	ContextProvider getContextProvider();
 
 	/**
 	 * Return new instance of given class using Guice Injector.
