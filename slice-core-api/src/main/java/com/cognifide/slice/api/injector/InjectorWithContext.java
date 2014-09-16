@@ -66,14 +66,14 @@ public interface InjectorWithContext {
 	Injector getInjector();
 
 	/**
-	 * Sets ContextProvides for Guice Injector.
+	 * Set ContextProvider for Guice Injector.
 	 *
 	 * @param contextProvider contextProvider to be set as current on Guice Injector.
 	 */
 	void setContextProvider(final ContextProvider contextProvider);
 
 	/**
-	 * Returns current ContextProvider for Guice Injector.
+	 * Return current ContextProvider for Guice Injector.
 	 * 
 	 * @return current ContextProvider
 	 */
