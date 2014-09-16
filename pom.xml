@@ -281,7 +281,7 @@
 					</configuration>
 					<executions>
 						<execution>
-							<phase>check-poms</phase>
+							<phase>install</phase>
 							<goals>
 								<goal>check-file-header</goal>
 							</goals>
