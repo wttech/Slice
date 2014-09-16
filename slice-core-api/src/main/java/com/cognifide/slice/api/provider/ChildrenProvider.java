@@ -1,8 +1,6 @@
-package com.cognifide.slice.api.provider;
-
 /*-
  * #%L
- * Slice - Core
+ * Slice - Core API
  * $Id:$
  * $HeadURL:$
  * %%
@@ -21,6 +19,8 @@ package com.cognifide.slice.api.provider;
  * limitations under the License.
  * #L%
  */
+
+package com.cognifide.slice.api.provider;
 
 import java.util.List;
 

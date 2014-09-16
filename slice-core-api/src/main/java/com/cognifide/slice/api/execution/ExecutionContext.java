@@ -1,6 +1,4 @@
-package com.cognifide.slice.api.execution;
-
-/*
+/*-
  * #%L
  * Slice - Core API
  * $Id:$
@@ -22,6 +20,7 @@ package com.cognifide.slice.api.execution;
  * #L%
  */
 
+package com.cognifide.slice.api.execution;
 
 import org.apache.sling.api.resource.Resource;
 

@@ -1,5 +1,3 @@
-package com.cognifide.slice.core.internal.module;
-
 /*-
  * #%L
  * Slice - Core
@@ -21,6 +19,8 @@ package com.cognifide.slice.core.internal.module;
  * limitations under the License.
  * #L%
  */
+
+package com.cognifide.slice.core.internal.module;
 
 import java.util.Arrays;
 import java.util.List;

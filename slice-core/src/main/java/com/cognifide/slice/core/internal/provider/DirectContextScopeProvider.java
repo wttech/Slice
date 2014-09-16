@@ -1,6 +1,4 @@
-package com.cognifide.slice.core.internal.provider;
-
-/*
+/*-
  * #%L
  * Slice - Core
  * $Id:$
@@ -22,6 +20,7 @@ package com.cognifide.slice.core.internal.provider;
  * #L%
  */
 
+package com.cognifide.slice.core.internal.provider;
 
 import com.cognifide.slice.api.context.ContextScope;
 import com.google.inject.Key;

@@ -1,6 +1,4 @@
-package com.cognifide.slice.core.internal.module;
-
-/*
+/*-
  * #%L
  * Slice - Core
  * $Id:$
@@ -22,6 +20,7 @@ package com.cognifide.slice.core.internal.module;
  * #L%
  */
 
+package com.cognifide.slice.core.internal.module;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;

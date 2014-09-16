@@ -1,6 +1,6 @@
 /*-
  * #%L
- * Slice - Core API
+ * Slice - Core
  * $Id:$
  * $HeadURL:$
  * %%
@@ -19,6 +19,7 @@
  * limitations under the License.
  * #L%
  */
+
 package com.cognifide.slice.core.internal.injector;
 
 import java.util.ArrayDeque;

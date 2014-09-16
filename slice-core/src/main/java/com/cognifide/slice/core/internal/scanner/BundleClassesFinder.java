@@ -1,5 +1,3 @@
-package com.cognifide.slice.core.internal.scanner;
-
 /*-
  * #%L
  * Slice - Core
@@ -22,6 +20,7 @@ package com.cognifide.slice.core.internal.scanner;
  * #L%
  */
 
+package com.cognifide.slice.core.internal.scanner;
 
 import java.io.IOException;
 import java.net.URL;

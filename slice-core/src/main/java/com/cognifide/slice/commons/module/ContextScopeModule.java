@@ -1,6 +1,4 @@
-package com.cognifide.slice.commons.module;
-
-/*
+/*-
  * #%L
  * Slice - Core
  * $Id:$
@@ -22,6 +20,7 @@ package com.cognifide.slice.commons.module;
  * #L%
  */
 
+package com.cognifide.slice.commons.module;
 
 import com.cognifide.slice.api.context.ContextScope;
 import com.cognifide.slice.core.internal.provider.DirectContextScopeProvider;

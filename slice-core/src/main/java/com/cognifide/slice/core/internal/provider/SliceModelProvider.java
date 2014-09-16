@@ -19,6 +19,7 @@
  * limitations under the License.
  * #L%
  */
+
 package com.cognifide.slice.core.internal.provider;
 
 import java.util.ArrayList;

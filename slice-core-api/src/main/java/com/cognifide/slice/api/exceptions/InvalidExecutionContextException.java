@@ -1,6 +1,4 @@
-package com.cognifide.slice.api.exceptions;
-
-/*
+/*-
  * #%L
  * Slice - Core API
  * $Id:$
@@ -21,6 +19,8 @@ package com.cognifide.slice.api.exceptions;
  * limitations under the License.
  * #L%
  */
+
+package com.cognifide.slice.api.exceptions;
 
 
 /**

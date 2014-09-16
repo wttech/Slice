@@ -1,5 +1,3 @@
-package com.cognifide.slice.core;
-
 /*-
  * #%L
  * Slice - Core
@@ -21,6 +19,8 @@ package com.cognifide.slice.core;
  * limitations under the License.
  * #L%
  */
+
+package com.cognifide.slice.core;
 
 import java.util.ArrayList;
 import java.util.HashMap;
