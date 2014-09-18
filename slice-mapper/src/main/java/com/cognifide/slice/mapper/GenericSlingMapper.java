@@ -25,6 +25,8 @@ package com.cognifide.slice.mapper;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.reflect.FieldUtils;
@@ -47,8 +49,6 @@ import com.cognifide.slice.mapper.helper.ReflectionHelper;
 import com.cognifide.slice.mapper.impl.processor.DefaultFieldProcessor;
 import com.cognifide.slice.mapper.strategy.MapperStrategy;
 import com.cognifide.slice.mapper.strategy.MapperStrategyFactory;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Generic implementation of {@link Mapper} that maps Sling {@link Resource} to a {@link SliceResource} using
@@ -149,7 +149,11 @@ public class GenericSlingMapper implements Mapper {
 				MapperStrategy mapperStrategy = mapperStrategyFactory.getMapperStrategy(field
 						.getDeclaringClass());
 				if (shouldFieldBeMapped(field, mapperStrategy)) {
-					Object value = mapResourceToField(resource, valueMap, field);
+					field.setAccessible(true);
+					Object value = field.get(object);
+					if (value == null) {
+						value = mapResourceToField(resource, valueMap, field);
+					}
 					FieldUtils.writeField(field, object, value, ReflectionHelper.FORCE_ACCESS);
 				}
 			}
