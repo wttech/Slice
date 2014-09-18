@@ -24,8 +24,10 @@ package com.cognifide.slice.core.internal.provider;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -65,6 +67,8 @@ public class SliceModelProvider implements ModelProvider {
 
 	private final ResourceResolver resourceResolver;
 
+	private final Map<String, Object> cachedModels;
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -78,6 +82,7 @@ public class SliceModelProvider implements ModelProvider {
 		this.classToKeyMapper = classToKeyMapper;
 		this.currentExecutionContext = currentExecutionContext;
 		this.resourceResolver = resourceResolver;
+		this.cachedModels = new HashMap<String, Object>();
 	}
 
 	/**
@@ -228,13 +233,20 @@ public class SliceModelProvider implements ModelProvider {
 	}
 
 	private <T> T get(Key<T> key, ExecutionContextImpl executionItem) {
-		final ContextProvider oldContextProvider = contextScope.getContextProvider();
-		contextScope.setContextProvider(contextProvider);
-
 		if ((executionItem.getResource() == null) && (executionItem.getPath() != null)) {
 			executionItem.setPath(currentExecutionContext.getAbsolutePath(executionItem.getPath()));
 		}
+		T cachedModel = (T) cachedModels.get(executionItem.getPath());
+		if (cachedModel == null) {
+			cachedModel = getFromInjector(key, executionItem);
+			cachedModels.put(executionItem.getPath(), cachedModel);
+		}
+		return cachedModel;
+	}
 
+	private <T> T getFromInjector(Key<T> key, ExecutionContextImpl executionItem) {
+		final ContextProvider oldContextProvider = contextScope.getContextProvider();
+		contextScope.setContextProvider(contextProvider);
 		currentExecutionContext.push(executionItem);
 		try {
 			return injector.getInstance(key);
@@ -243,4 +255,5 @@ public class SliceModelProvider implements ModelProvider {
 			contextScope.setContextProvider(oldContextProvider);
 		}
 	}
+
 }
