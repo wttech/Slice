@@ -278,12 +278,15 @@
 						<licenseName>apache_v2</licenseName>
 						<failOnMissingHeader>true</failOnMissingHeader>
 						<failOnNotUptodateHeader>true</failOnNotUptodateHeader>
+						<canUpdateCopyright>true</canUpdateCopyright>
+						<canUpdateDescription>true</canUpdateDescription>
+						<addSvnKeyWords>true</addSvnKeyWords>
 					</configuration>
 					<executions>
 						<execution>
-							<phase>install</phase>
+							<phase>compile</phase>
 							<goals>
-								<goal>check-file-header</goal>
+								<goal>update-file-header</goal>
 							</goals>
 						</execution>
 					</executions>
