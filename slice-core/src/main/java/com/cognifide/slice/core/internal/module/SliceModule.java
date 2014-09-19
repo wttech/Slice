@@ -22,6 +22,7 @@ package com.cognifide.slice.core.internal.module;
  * #L%
  */
 
+import com.cognifide.slice.core.internal.context.CacheableContextScope;
 import org.apache.sling.api.resource.Resource;
 import org.ops4j.peaberry.Peaberry;
 import org.osgi.framework.Bundle;
@@ -37,14 +38,17 @@ import com.cognifide.slice.api.qualifier.InjectorName;
 import com.cognifide.slice.api.qualifier.Nullable;
 import com.cognifide.slice.api.qualifier.RequestedResource;
 import com.cognifide.slice.api.qualifier.RequestedResourcePath;
+import com.cognifide.slice.api.scope.Cacheable;
 import com.cognifide.slice.api.scope.ContextScoped;
 import com.cognifide.slice.commons.module.ContextScopeModule;
+import com.cognifide.slice.core.internal.context.CacheableContext;
 import com.cognifide.slice.core.internal.context.SliceContextFactory;
 import com.cognifide.slice.core.internal.execution.ExecutionContextStackImpl;
 import com.cognifide.slice.core.internal.provider.SliceChildrenProvider;
 import com.cognifide.slice.core.internal.provider.SliceModelProvider;
 import com.google.inject.Injector;
 import com.google.inject.Key;
+import com.google.inject.Provider;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 
@@ -64,6 +68,8 @@ public final class SliceModule extends ContextScopeModule {
 		bind(InjectorsRepository.class).toProvider(
 				Peaberry.service(InjectorsRepository.class).single().direct());
 
+		bindCacheableScope();
+
 		bindScope(ContextScoped.class, getContextScope());
 		bind(ContextScope.class).toInstance(getContextScope());
 
@@ -72,6 +78,13 @@ public final class SliceModule extends ContextScopeModule {
 		bind(ContextFactory.class).to(SliceContextFactory.class);
 
 		bindToContextScope(Key.get(Resource.class, RequestedResource.class));
+	}
+
+	private void bindCacheableScope() {
+		Provider<CacheableContext> cacheableContextProvider = getProvider(CacheableContext.class);
+		Provider<String> resourcePathProvider = getProvider(Key.get(String.class, CurrentResourcePath.class));
+		CacheableContextScope cacheableScope = new CacheableContextScope(cacheableContextProvider, resourcePathProvider);
+		bindScope(Cacheable.class, cacheableScope);
 	}
 
 	@Provides
