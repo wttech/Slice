@@ -284,7 +284,7 @@
 					</configuration>
 					<executions>
 						<execution>
-							<phase>compile</phase>
+							<phase>validate</phase>
 							<goals>
 								<goal>update-file-header</goal>
 							</goals>
