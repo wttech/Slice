@@ -43,6 +43,7 @@ public class CacheableContextScope implements Scope {
 		this.resourcePathProvider = resourcePathProvider;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T> Provider<T> scope(final Key<T> key, final Provider<T> unscoped) {
 		return new Provider<T>() {
@@ -50,10 +51,10 @@ public class CacheableContextScope implements Scope {
 			public T get() {
 				CacheableContext cacheableContext = cacheableContextProvider.get();
 				String resourcePath = resourcePathProvider.get();
-				T scoped = (T) cacheableContext.get(resourcePathProvider);
-				if (resourcePathProvider == null) {
-					T current = unscoped.get();
-					cacheableContext.put(resourcePath, current);
+				T scoped = (T) cacheableContext.get(resourcePath);
+				if (scoped == null) {
+					scoped = unscoped.get();
+					cacheableContext.put(resourcePath, scoped);
 				}
 				return scoped;
 			}

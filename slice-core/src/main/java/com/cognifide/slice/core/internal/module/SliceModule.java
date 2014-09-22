@@ -22,7 +22,6 @@ package com.cognifide.slice.core.internal.module;
  * #L%
  */
 
-import com.cognifide.slice.core.internal.context.CacheableContextScope;
 import org.apache.sling.api.resource.Resource;
 import org.ops4j.peaberry.Peaberry;
 import org.osgi.framework.Bundle;
@@ -42,6 +41,7 @@ import com.cognifide.slice.api.scope.Cacheable;
 import com.cognifide.slice.api.scope.ContextScoped;
 import com.cognifide.slice.commons.module.ContextScopeModule;
 import com.cognifide.slice.core.internal.context.CacheableContext;
+import com.cognifide.slice.core.internal.context.CacheableContextScope;
 import com.cognifide.slice.core.internal.context.SliceContextFactory;
 import com.cognifide.slice.core.internal.execution.ExecutionContextStackImpl;
 import com.cognifide.slice.core.internal.provider.SliceChildrenProvider;
@@ -83,7 +83,8 @@ public final class SliceModule extends ContextScopeModule {
 	private void bindCacheableScope() {
 		Provider<CacheableContext> cacheableContextProvider = getProvider(CacheableContext.class);
 		Provider<String> resourcePathProvider = getProvider(Key.get(String.class, CurrentResourcePath.class));
-		CacheableContextScope cacheableScope = new CacheableContextScope(cacheableContextProvider, resourcePathProvider);
+		CacheableContextScope cacheableScope = new CacheableContextScope(cacheableContextProvider,
+				resourcePathProvider);
 		bindScope(Cacheable.class, cacheableScope);
 	}
 
