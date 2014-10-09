@@ -1,8 +1,9 @@
 package com.cognifide.slice.core.internal.context;
 
-import com.google.inject.Key;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+
+import com.google.inject.Key;
 
 /**
  * This class presents a wrapper key used in CacheableContext map.
@@ -16,11 +17,11 @@ public class CacheableContextKey {
 
 	private static final int MULTIPLIER = 31;
 
-	private String path;
+	private final String path;
 
-	private Key<?> type;
+	private final Key<?> type;
 
-	public CacheableContextKey(String path, Key<?> type) {
+	public CacheableContextKey(final String path, final Key<?> type) {
 		this.path = path;
 		this.type = type;
 	}
