@@ -27,7 +27,8 @@ import com.google.inject.Provider;
 import com.google.inject.Scope;
 
 /**
- * Created 19.09.14
+ * This Guice Scope enables to cache slice models per request by using proper @Cacheable annotation on model
+ * class
  * 
  * @author kamil.ciecierski
  */
@@ -43,18 +44,19 @@ public class CacheableContextScope implements Scope {
 		this.resourcePathProvider = resourcePathProvider;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public <T> Provider<T> scope(final Key<T> key, final Provider<T> unscoped) {
 		return new Provider<T>() {
+			@SuppressWarnings("unchecked")
 			@Override
 			public T get() {
 				CacheableContext cacheableContext = cacheableContextProvider.get();
 				String resourcePath = resourcePathProvider.get();
-				T scoped = (T) cacheableContext.get(resourcePath);
+				CacheableContextKey contextKey = new CacheableContextKey(resourcePath, key);
+				T scoped = (T) cacheableContext.get(contextKey);
 				if (scoped == null) {
 					scoped = unscoped.get();
-					cacheableContext.put(resourcePath, scoped);
+					cacheableContext.put(contextKey, scoped);
 				}
 				return scoped;
 			}
