@@ -55,8 +55,11 @@ public class CacheableContextScope implements Scope {
 				CacheableContextKey contextKey = new CacheableContextKey(resourcePath, key);
 				T scoped = (T) cacheableContext.get(contextKey);
 				if (scoped == null) {
-					scoped = unscoped.get();
-					cacheableContext.put(contextKey, scoped);
+					T unscopedValue = unscoped.get();
+					scoped = (T) cacheableContext.putIfAbsent(contextKey, unscopedValue);
+					if (scoped == null) {
+						scoped = unscopedValue;
+					}
 				}
 				return scoped;
 			}
