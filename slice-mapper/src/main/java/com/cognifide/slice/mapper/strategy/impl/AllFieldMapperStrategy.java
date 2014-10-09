@@ -3,10 +3,8 @@ package com.cognifide.slice.mapper.strategy.impl;
 /*
  * #%L
  * Slice - Mapper
- * $Id:$
- * $HeadURL:$
  * %%
- * Copyright (C) 2012 - 2014 Cognifide Limited
+ * Copyright (C) 2012 Cognifide Limited
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

@@ -278,9 +278,7 @@
 						<licenseName>apache_v2</licenseName>
 						<failOnMissingHeader>true</failOnMissingHeader>
 						<failOnNotUptodateHeader>true</failOnNotUptodateHeader>
-						<canUpdateCopyright>true</canUpdateCopyright>
-						<canUpdateDescription>true</canUpdateDescription>
-						<addSvnKeyWords>true</addSvnKeyWords>
+                        <canUpdateDescription>true</canUpdateDescription>
 					</configuration>
 					<executions>
 						<execution>
