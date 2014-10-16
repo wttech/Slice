@@ -53,26 +53,26 @@ import com.cognifide.slice.mapper.strategy.MapperStrategyFactory;
 /**
  * Generic implementation of {@link Mapper} that maps Sling {@link Resource} to a {@link SliceResource} using
  * reflection.<br>
- *
+ * 
  * It is assumed that SliceResource field names are exactly the same as property names in the JCR node
  * represented by the resource. Mapper iterates over fields in the SliceResource and assigns values from
  * resource to SliceResource using mapping strategy defined by the SliceResource.<br>
  * <br>
- *
+ * 
  * The mapper is extendable - it can process fields depending on a list of specified {@link FieldProcessor}s.
  * The mapper uses at least one {@link FieldProcessor} which is {@link DefaultFieldProcessor}.<br>
  * <br>
- *
+ * 
  * A field in SliceResource must be assignable from type of associated field in the repository, or an
  * exception will be thrown during mapping. Using primitive types supported, but discouraged: if corresponding
  * property is missing, the SliceResource should contain <tt>null</tt> value, and a higher level logic should
  * handle it and assign default value. Such behavior is not possible with primitive types.<br>
  * <br>
- *
+ * 
  * Once a value of a field has been set (mapped) it can be post-processed by specified
  * {@link FieldPostProcessor}s.<br>
  * <br>
- *
+ * 
  * SliceResource fields can also be tagged with annotations to enable custom logic. Currently supported
  * annotations are:
  * <ul>
@@ -94,7 +94,7 @@ import com.cognifide.slice.mapper.strategy.MapperStrategyFactory;
  * </li>
  * </ul>
  * See each annotation documentation for more detailed use guidelines.
- *
+ * 
  */
 public class GenericSlingMapper implements Mapper {
 
@@ -134,7 +134,7 @@ public class GenericSlingMapper implements Mapper {
 	/**
 	 * Maps resource to a SliceResource object using reflection. See {@link GenericSlingMapper} documentation
 	 * for detailed behavior description.
-	 *
+	 * 
 	 * @param resource resource to be mapped; cannot be null or empty
 	 * @return SliceResource instance with fields populated from resource (if associated properties are
 	 * present in the resource).
@@ -149,10 +149,10 @@ public class GenericSlingMapper implements Mapper {
 				MapperStrategy mapperStrategy = mapperStrategyFactory.getMapperStrategy(field
 						.getDeclaringClass());
 				if (shouldFieldBeMapped(field, mapperStrategy)) {
-                    Object value = mapResourceToField(resource, valueMap, field);
-                    if (value != null) {
-                        FieldUtils.writeField(field, object, value, ReflectionHelper.FORCE_ACCESS);
-                    }
+					Object value = mapResourceToField(resource, valueMap, field);
+					if (value != null) {
+						FieldUtils.writeField(field, object, value, ReflectionHelper.FORCE_ACCESS);
+					}
 				}
 			}
 			return object;
@@ -171,7 +171,7 @@ public class GenericSlingMapper implements Mapper {
 
 	/**
 	 * Returns true if a field can be assigned, i.e. is not final, nor static
-	 *
+	 * 
 	 * @param field the field being investigated
 	 * @return true if the field is assignable, false otherwise
 	 */
@@ -189,7 +189,7 @@ public class GenericSlingMapper implements Mapper {
 
 	/**
 	 * Maps given resource to an object that can be assigned to a given field.
-	 *
+	 * 
 	 * @param resource resource to be mapped; cannot be null or empty
 	 * @param valueMap value map from a resource; passed for efficiency reasons only
 	 * @param field used to deduce assignable value type and get meta-data from field's annotations
@@ -216,7 +216,7 @@ public class GenericSlingMapper implements Mapper {
 	/**
 	 * Gets name of property associated with given field. Usually - same as field name, but can be overridden
 	 * using {@link JcrProperty} annotation.
-	 *
+	 * 
 	 * @param field field to get associated property name for
 	 * @return property name associated with given field, never null.
 	 */
