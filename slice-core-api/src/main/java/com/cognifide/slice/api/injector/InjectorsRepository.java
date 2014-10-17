@@ -72,4 +72,12 @@ public interface InjectorsRepository {
 	 * @return
 	 */
 	Collection<String> getInjectorNames();
+
+
+	/**
+	 * Returns injector by its path
+	 *
+	 * @return
+	 */
+	InjectorWithContext getInjectorByPath(final String path);
 }

@@ -47,6 +47,8 @@ public class InjectorRunner {
 
 	private String parentInjectorName;
 
+	private String injectorPath;
+
 	/**
 	 * @param bundleContext Context used to get access to the OSGi
 	 * @param injectorName Name of the new injector
@@ -57,10 +59,15 @@ public class InjectorRunner {
 		this.injectorName = injectorName;
 		this.bundleNameFilter = bundleNameFilter;
 		this.basePackage = basePackage;
+		this.injectorPath = injectorName;
 	}
 
 	public void setParentInjectorName(String parentInjectorName) {
 		this.parentInjectorName = parentInjectorName;
+	}
+
+	public void setInjectorPath(String injectorPath) {
+		this.injectorPath = injectorPath;
 	}
 
 	public void installModule(final Module newModule) {
@@ -101,5 +108,9 @@ public class InjectorRunner {
 
 	String getParentName() {
 		return parentInjectorName;
+	}
+
+	public String getInjectorPath() {
+		return injectorPath;
 	}
 }

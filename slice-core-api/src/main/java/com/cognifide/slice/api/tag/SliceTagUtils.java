@@ -68,9 +68,10 @@ public final class SliceTagUtils {
 	public static <T> T getFromCurrentPath(final SlingHttpServletRequest request,
 			final InjectorsRepository injectorsRepository,
 			final RequestContextProvider requestContextProvider, final Class<T> type, final String appName) {
-		final String injectorName = getInjectorName(request, appName);
+		String injectorName = getInjectorName(request, appName);
+		String injectorPath = getInjectorPath(request, appName);
 		return getFromCurrentPath(request, injectorsRepository,
-				requestContextProvider.getContextProvider(injectorName), type, injectorName);
+				requestContextProvider.getContextProvider(injectorName), type, injectorPath);
 	}
 
 	public static SlingHttpServletRequest slingRequestFrom(final PageContext pageContext) {
@@ -130,15 +131,16 @@ public final class SliceTagUtils {
 	public static <T> T getFromCurrentPath(final SlingHttpServletRequest request,
 			final InjectorsRepository injectorsRepository, final ContextProvider contextProvider,
 			final Class<T> type, final String appName) {
-		final String injectorName = getInjectorName(request, appName);
+
+		final String injectorPath = getInjectorPath(request, appName);
 
 		if (null == contextProvider) {
 			throw new IllegalStateException("ContextProvider is not available");
 		}
 
-		final InjectorWithContext injector = injectorsRepository.getInjector(injectorName);
+		final InjectorWithContext injector = injectorsRepository.getInjectorByPath(injectorPath);
 		if (injector == null) {
-			throw new IllegalStateException("Guice injector not found: " + injectorName);
+			throw new IllegalStateException("Guice injector not found: " + injectorPath);
 		}
 
 		injector.pushContextProvider(contextProvider);
@@ -149,5 +151,19 @@ public final class SliceTagUtils {
 		} finally {
 			injector.popContextProvider();
 		}
+	}
+
+	private static String getInjectorPath(SlingHttpServletRequest request, String appName) {
+
+		String injectorPath;
+		if (StringUtils.isNotBlank(appName)) {
+			injectorPath = appName;
+		} else {
+			injectorPath = InjectorNameUtil.getPathFromRequest(request);
+		}
+		if (StringUtils.isBlank(injectorPath)) {
+			throw new IllegalStateException("Guice injector path not available");
+		}
+		return injectorPath;
 	}
 }
