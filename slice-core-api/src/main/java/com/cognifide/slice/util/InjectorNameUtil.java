@@ -60,14 +60,6 @@ public final class InjectorNameUtil {
 		return StringUtils.EMPTY;
 	}
 
-	public static String getPathFromRequest(final SlingHttpServletRequest request)
-	{
-		if (null != request.getResource()) {
-			return request.getResource().getResourceType();
-		}
-		return StringUtils.EMPTY;
-	}
-
 	public static String getFromResourceType(String resourceType) {
 		String injectorName = null;
 		if (StringUtils.isNotEmpty(resourceType)) {

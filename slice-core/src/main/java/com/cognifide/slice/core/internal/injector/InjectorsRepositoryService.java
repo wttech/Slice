@@ -89,15 +89,16 @@ public final class InjectorsRepositoryService implements InjectorsRepository {
 				injectorWithContext = new InjectorWithContextImpl(injector);
 				break;
 			}
-
-			int lastIndexOfSlash = iteratedPath.lastIndexOf('/');
-			if (lastIndexOfSlash != -1) {
-				iteratedPath = iteratedPath.substring(0, iteratedPath.lastIndexOf('/'));
-			}
-			else {
-				iteratedPath = StringUtils.EMPTY;
-			}
+			iteratedPath = getParentPath(iteratedPath);
 		}
 		return injectorWithContext;
+	}
+
+	private String getParentPath(String iteratedPath) {
+		int lastIndexOfSlash = iteratedPath.lastIndexOf('/');
+		if (lastIndexOfSlash != -1) {
+			return iteratedPath.substring(0, iteratedPath.lastIndexOf('/'));
+		}
+		return StringUtils.EMPTY;
 	}
 }
