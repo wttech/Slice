@@ -22,96 +22,141 @@ package com.cognifide.slice.core.internal.scanner;
  * #L%
  */
 
-
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
 
+import com.cognifide.slice.annotations.OsgiService;
 import org.objectweb.asm.ClassReader;
 import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+import org.osgi.service.packageadmin.ExportedPackage;
+import org.osgi.service.packageadmin.PackageAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class BundleClassesFinder {
 
-	private static final Logger LOG = LoggerFactory.getLogger(BundleClassesFinder.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BundleClassesFinder.class);
 
-	private static final String RESOURCE_PATTERN = "*.class";
+    private static final String RESOURCE_PATTERN = "*.class";
 
-	private final Collection<Bundle> bundles;
+    private final Collection<Bundle> bundles;
 
-	private final String basePackage;
+    private final String basePackage;
 
-	private List<ClassFilter> filters = new ArrayList<BundleClassesFinder.ClassFilter>();
+    private List<ClassFilter> filters = new ArrayList<BundleClassesFinder.ClassFilter>();
 
-	public BundleClassesFinder(Collection<Bundle> bundles, String basePackage) {
-		this.bundles = bundles;
-		this.basePackage = basePackage.replace('.', '/');
-	}
+    public BundleClassesFinder(Collection<Bundle> bundles, String basePackage) {
+        this.bundles = bundles;
+        this.basePackage = basePackage.replace('.', '/');
+    }
 
-	public Collection<Class<?>> getClasses() {
+    public Collection<Class<?>> getClasses() {
 
-		Collection<Class<?>> classes = new ArrayList<Class<?>>();
+        Collection<Class<?>> classes = new ArrayList<Class<?>>();
 
-		for (Bundle bundle : this.bundles) {
+        for (Bundle bundle : this.bundles) {
 
-			if (LOG.isInfoEnabled()) {
-				LOG.info("Searching for classes annotated with SliceResource in '"
-						+ bundle.getSymbolicName() + "' bundle, package: " + this.basePackage);
-			}
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Searching for classes annotated with SliceResource in '"
+                        + bundle.getSymbolicName() + "' bundle, package: " + this.basePackage);
+            }
 
-			@SuppressWarnings("unchecked")
-			Enumeration<URL> classEntries = bundle.findEntries(this.basePackage, RESOURCE_PATTERN, true);
+            @SuppressWarnings("unchecked")
+            Enumeration<URL> classEntries = bundle.findEntries(this.basePackage, RESOURCE_PATTERN, true);
 
-			while ((classEntries != null) && classEntries.hasMoreElements()) {
-				try {
-					URL classURL = classEntries.nextElement();
-					ClassReader classReader = new ClassReader(classURL.openStream());
+            while ((classEntries != null) && classEntries.hasMoreElements()) {
+                try {
+                    URL classURL = classEntries.nextElement();
+                    ClassReader classReader = new ClassReader(classURL.openStream());
 
-					if (accepts(classReader)) {
-						String className = classReader.getClassName().replace('/', '.');
+                    if (accepts(classReader)) {
+                        String className = classReader.getClassName().replace('/', '.');
 
-						if (LOG.isDebugEnabled()) {
-							LOG.debug("Slice Resource class: " + className + " has been found.");
-						}
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("Slice Resource class: " + className + " has been found.");
+                        }
 
-						Class<?> clazz = bundle.loadClass(className);
-						classes.add(clazz);
-					}
-				} catch (ClassNotFoundException e) {
-					LOG.error("Error loading class!", e);
-				} catch (IOException e) {
-					LOG.error("Error reading the class!", e);
-				}
-			}
-		}
+                        Class<?> clazz = bundle.loadClass(className);
+                        classes.add(clazz);
+                    }
+                } catch (ClassNotFoundException e) {
+                    LOG.error("Error loading class!", e);
+                } catch (IOException e) {
+                    LOG.error("Error reading the class!", e);
+                }
+            }
+        }
 
-		if (LOG.isInfoEnabled()) {
-			LOG.info("Found: " + classes.size()
-					+ " Slice Resource classes. Switch to debug logging level to see them all.");
-		}
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Found: " + classes.size()
+                    + " Slice Resource classes. Switch to debug logging level to see them all.");
+        }
 
-		return classes;
-	}
+        return classes;
+    }
 
-	private boolean accepts(ClassReader classReader) {
-		for (ClassFilter classFilter : this.filters) {
-			if (classFilter.accepts(classReader)) {
-				return true;
-			}
-		}
-		return false;
-	}
+    private boolean accepts(ClassReader classReader) {
+        for (ClassFilter classFilter : this.filters) {
+            if (classFilter.accepts(classReader)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	public void addFilter(ClassFilter classFilter) {
-		this.filters.add(classFilter);
-	}
+    public void addFilter(ClassFilter classFilter) {
+        this.filters.add(classFilter);
+    }
 
-	public interface ClassFilter {
-		boolean accepts(ClassReader classReader);
-	}
+    public interface ClassFilter {
+        boolean accepts(ClassReader classReader);
+    }
 
+    public List<Class<?>> traverseBundlesForOsgiServices() {
+        List<Class<?>> osgiClasses = new ArrayList<Class<?>>();
+        for (Bundle bundle : bundles) {
+            BundleContext context = bundle.getBundleContext();
+            ServiceReference ref = context.getServiceReference(PackageAdmin.class.getName());
+            PackageAdmin packageAdmin = (PackageAdmin) context.getService(ref);
+            ExportedPackage[] exportedPackages = packageAdmin.getExportedPackages(bundle);
+            for (ExportedPackage ePackage : exportedPackages) {
+                String packageName = ePackage.getName();
+                String packagePath = "/" + packageName.replace('.', '/');
+                //find all the class files in current exported package
+                Enumeration clazzes = bundle.findEntries(packagePath, "*.class", false);
+                while (clazzes.hasMoreElements()) {
+                    URL url = (URL) clazzes.nextElement();
+                    String path = url.getPath();
+                    int index = path.lastIndexOf("/");
+                    int endIndex = path.length() - 6;//Strip ".class" substring
+                    String className = path.substring(index + 1, endIndex);
+                    String fullClassName = packageName + "." + className;
+                    try {
+                        Class clazz = bundle.loadClass(fullClassName);
+                        //check whether any class field is annotated with OsgiService tag.
+                        Field[] fields = clazz.getDeclaredFields();
+                        for (Field field : fields) {
+                            if (field.isAnnotationPresent(OsgiService.class)) {
+                                Class fieldClass = field.getType();
+                                if (!osgiClasses.contains(fieldClass)) {
+                                    osgiClasses.add(fieldClass);
+                                }
+                                break;
+                            }
+                        }
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return osgiClasses;
+    }
 }
