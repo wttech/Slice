@@ -133,10 +133,7 @@ public class BundleClassesFinder {
                 Enumeration clazzes = bundle.findEntries(packagePath, "*.class", false);
                 while (clazzes.hasMoreElements()) {
                     URL url = (URL) clazzes.nextElement();
-                    String path = url.getPath();
-                    int index = path.lastIndexOf("/");
-                    int endIndex = path.length() - 6;//Strip ".class" substring
-                    String className = path.substring(index + 1, endIndex);
+                    String className = getClassNameFromUrl(url);
                     String fullClassName = packageName + "." + className;
                     try {
                         Class clazz = bundle.loadClass(fullClassName);
@@ -153,10 +150,18 @@ public class BundleClassesFinder {
                         }
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
+                        LOG.error("Class not found in the bundle!",e);
                     }
                 }
             }
         }
         return osgiClasses;
+    }
+
+    private String getClassNameFromUrl(URL url) {
+        String path = url.getPath();
+        int index = path.lastIndexOf("/");
+        int endIndex = path.length() - 6;//Strip ".class" substring
+        return path.substring(index + 1, endIndex);
     }
 }
