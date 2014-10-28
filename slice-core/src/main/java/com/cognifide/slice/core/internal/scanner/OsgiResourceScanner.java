@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 /**
  * @author Jaromir Celejewski
  * @class OsgiResourceScanner
- *
+ * <p/>
  * Helper class for scanning bundles
  */
 public class OsgiResourceScanner {
