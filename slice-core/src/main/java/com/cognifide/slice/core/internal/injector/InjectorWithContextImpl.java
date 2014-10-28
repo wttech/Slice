@@ -22,8 +22,6 @@ package com.cognifide.slice.core.internal.injector;
  * #L%
  */
 
-import java.util.Stack;
-
 import com.cognifide.slice.api.context.ContextProvider;
 import com.cognifide.slice.api.context.ContextScope;
 import com.cognifide.slice.api.injector.InjectorWithContext;
@@ -34,20 +32,21 @@ import com.google.inject.Key;
  * @author Rafał Malinowski
  * @class InjectorWithContext
  * 
- * Decoration for Guice Injector class with simple access to modyfing and restoring ContextProvider. For use
- * in Servlets or Services use following idiom:
+ * Decoration for Guice Injector class with simple access to getting and setting ContextProvider. For use in
+ * Servlets or Services use following idiom:
  * 
  * <pre>
  * {@code
  * final InjectorWithContext injector = InjectorsRepository.getInjector(APP_NAME);
+ * final ContextProvider previousContextProvider = injector.getContextProvider();
  * final SimpleContextProvider simpleContextProvider = new SimpleContextProvider();
  * simpleContextProvider.setContext(ContextFactory.getServletRequestContext(request, response));
  * 
- * injector.pushContextProvider(simpleContextProvider);
+ * injector.setContextProvider(simpleContextProvider);
  * try {
  *   ...
  * } finally {
- *   injector.popContextProvider();
+ *   injector.setContextProvider(previousContextProvider);
  * }
  * }
  * </pre>
@@ -62,8 +61,6 @@ public class InjectorWithContextImpl implements InjectorWithContext {
 
 	private final ContextScope contextScope;
 
-	private final Stack<ContextProvider> contextProviders;
-
 	/**
 	 * Create decoration for Injector.
 	 * 
@@ -72,7 +69,6 @@ public class InjectorWithContextImpl implements InjectorWithContext {
 	public InjectorWithContextImpl(final Injector injector) {
 		this.injector = injector;
 		this.contextScope = injector.getInstance(ContextScope.class);
-		this.contextProviders = new Stack<ContextProvider>();
 	}
 
 	/**
@@ -85,34 +81,23 @@ public class InjectorWithContextImpl implements InjectorWithContext {
 	}
 
 	/**
-	 * Set new ContextProvider for decorated Injector. Push previous one on internal stack.
+	 * Set new ContextProvider for decorated Injector
 	 * 
 	 * @param contextProvider new ContextProvider
 	 */
 	@Override
-	public void pushContextProvider(final ContextProvider contextProvider) {
-		contextProviders.push(contextScope.getContextProvider());
+	public void setContextProvider(final ContextProvider contextProvider) {
 		contextScope.setContextProvider(contextProvider);
 	}
 
 	/**
-	 * Restore previous ContextProvider for decorated Injector. Returns current one.
+	 * Get current ContextProvider for decorated Injector
 	 * 
 	 * @return current ContextProvider
 	 */
 	@Override
-	public ContextProvider popContextProvider() {
-		final ContextProvider result = contextScope.getContextProvider();
-		contextScope.setContextProvider(contextProviders.pop());
-		return result;
-	}
-
-	/**
-	 * Alias for the {@link #popContextProvider()} method.
-	 * 
-	 */
-	public void close() {
-		popContextProvider();
+	public ContextProvider getContextProvider() {
+		return contextScope.getContextProvider();
 	}
 
 	@Override

@@ -75,7 +75,7 @@ public final class InjectorUtil {
 	public static InjectorWithContext getInjector(String injectorName, SlingHttpServletRequest request) {
 		InjectorWithContext injector = request.adaptTo(InjectorsRepository.class).getInjector(injectorName);
 		RequestContextProvider requestContextProvider = request.adaptTo(RequestContextProvider.class);
-		injector.pushContextProvider(requestContextProvider.getContextProvider(injectorName));
+		injector.setContextProvider(requestContextProvider.getContextProvider(injectorName));
 		return injector;
 	}
 
@@ -95,7 +95,7 @@ public final class InjectorUtil {
 		InjectorWithContext injector = resolver.adaptTo(InjectorsRepository.class).getInjector(injectorName);
 		ContextFactory factory = injector.getInstance(ContextFactory.class);
 		Context context = factory.getResourceResolverContext(resolver);
-		injector.pushContextProvider(new ConstantContextProvider(context));
+		injector.setContextProvider(new ConstantContextProvider(context));
 		return injector;
 	}
 }

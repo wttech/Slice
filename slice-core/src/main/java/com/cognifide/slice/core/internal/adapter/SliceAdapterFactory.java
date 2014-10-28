@@ -54,27 +54,29 @@ public class SliceAdapterFactory implements AdapterFactory {
 		if (!(adaptable instanceof Resource)) {
 			return null;
 		}
-		Resource resource = (Resource) adaptable;
+		final Resource resource = (Resource) adaptable;
 
-		InjectorWithContext injector = getInjector(resource);
+		final InjectorWithContext injector = repository.getInjector(injectorName);
+		final ContextProvider previousContextProvider = injector.getContextProvider();
+		final ContextProvider contextProvider = getContextProvider(injector, resource);
+
+		injector.setContextProvider(contextProvider);
 		try {
 			ModelProvider modelProvider = injector.getInstance(ModelProvider.class);
 			return modelProvider.get(type, resource);
 		} finally {
-			injector.popContextProvider();
+			injector.setContextProvider(previousContextProvider);
 		}
 	}
 
-	private InjectorWithContext getInjector(Resource resource) {
-		InjectorWithContext injector = repository.getInjector(injectorName);
+	private ContextProvider getContextProvider(final InjectorWithContext injector, final Resource resource) {
 		ContextProvider contextProvider = requestContextProvider.getContextProvider(injectorName);
 		if (contextProvider == null) {
 			ContextFactory factory = injector.getInstance(ContextFactory.class);
 			Context context = factory.getResourceResolverContext(resource.getResourceResolver());
 			contextProvider = new ConstantContextProvider(context);
 		}
-		injector.pushContextProvider(contextProvider);
-		return injector;
+		return contextProvider;
 	}
 
 }
