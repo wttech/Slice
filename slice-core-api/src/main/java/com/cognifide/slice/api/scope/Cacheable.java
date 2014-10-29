@@ -32,7 +32,7 @@ import com.google.inject.ScopeAnnotation;
 /**
  * Apply this to implementation classes of slice models when you want one model per context.
  */
-@Target({ ElementType.TYPE, ElementType.METHOD })
+@Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @ScopeAnnotation
 public @interface Cacheable {

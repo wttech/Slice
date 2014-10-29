@@ -13,10 +13,6 @@ import com.google.inject.Key;
 
 public class CacheableContextKey {
 
-	private static final int INITIAL = 1;
-
-	private static final int MULTIPLIER = 31;
-
 	private final String path;
 
 	private final Key<?> type;
@@ -28,7 +24,7 @@ public class CacheableContextKey {
 
 	@Override
 	public int hashCode() {
-		HashCodeBuilder builder = new HashCodeBuilder(INITIAL, MULTIPLIER);
+		HashCodeBuilder builder = new HashCodeBuilder();
 		builder.append(path);
 		builder.append(type);
 		return builder.toHashCode();
