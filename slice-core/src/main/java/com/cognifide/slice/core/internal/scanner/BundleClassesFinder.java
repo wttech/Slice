@@ -23,12 +23,13 @@ package com.cognifide.slice.core.internal.scanner;
  */
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.TypeVariable;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
+import java.util.regex.Pattern;
 
 import com.cognifide.slice.annotations.OsgiService;
 import org.objectweb.asm.ClassReader;
@@ -54,6 +55,11 @@ public class BundleClassesFinder {
 
 	public BundleClassesFinder(Collection<Bundle> bundles, String basePackage) {
 		this.bundles = bundles;
+		this.basePackage = basePackage.replace('.', '/');
+	}
+
+	public BundleClassesFinder(String basePackage, String bundleNameFilter, BundleContext bundleContext) {
+		this.bundles = findBundles(bundleNameFilter, bundleContext);
 		this.basePackage = basePackage.replace('.', '/');
 	}
 
@@ -119,38 +125,33 @@ public class BundleClassesFinder {
 		boolean accepts(ClassReader classReader);
 	}
 
-	public List<Class<?>> traverseBundlesForOsgiServices() {
-		List<Class<?>> osgiClasses = new ArrayList<Class<?>>();
-		for (Bundle bundle : bundles) {
-			BundleContext context = bundle.getBundleContext();
-			ServiceReference ref = context.getServiceReference(PackageAdmin.class.getName());
-			PackageAdmin packageAdmin = (PackageAdmin) context.getService(ref);
-			ExportedPackage[] exportedPackages = packageAdmin.getExportedPackages(bundle);
-			for (ExportedPackage ePackage : exportedPackages) {
-				String packageName = ePackage.getName();
-				String packagePath = "/" + packageName.replace('.', '/');
-				//find all the class files in current exported package
-				Enumeration clazzes = bundle.findEntries(packagePath, "*.class", false);
-				while (clazzes.hasMoreElements()) {
-					URL url = (URL) clazzes.nextElement();
-					String className = getClassNameFromUrl(url);
-					String fullClassName = packageName + "." + className;
-					try {
-						Class clazz = bundle.loadClass(fullClassName);
-						//check whether any class field is annotated with OsgiService tag.
-						Field[] fields = clazz.getDeclaredFields();
-						for (Field field : fields) {
-							if (field.isAnnotationPresent(OsgiService.class)) {
-								Class fieldClass = field.getType();
-								if (!osgiClasses.contains(fieldClass)) {
-									osgiClasses.add(fieldClass);
-								}
-								break;
-							}
+	public Collection<Class<?>> traverseBundlesForOsgiServices() {
+		Collection<Class<?>> allClasses = getClasses();
+		Set<Class<?>> osgiClasses = new HashSet<Class<?>>();
+		for(Class clazz:allClasses)
+		{
+			Field[] fields = clazz.getDeclaredFields();
+			for (Field field : fields) {
+				if (field.isAnnotationPresent(OsgiService.class)) {
+					Class fieldClass = field.getType();
+					osgiClasses.add(fieldClass);
+				}
+			}
+
+			Constructor<?>[] constructors = clazz.getConstructors();
+			for (Constructor constructor:constructors)
+			{
+				Class<?>[] parameterTypes = constructor.getParameterTypes();
+				Annotation[][] annotations = constructor.getParameterAnnotations();
+				for (int i=0;i<parameterTypes.length;i++)
+				{
+					for (Annotation annotation:annotations[i])
+					{
+						if (annotation.annotationType().equals(OsgiService.class))
+						{
+							osgiClasses.add(parameterTypes[i]);
 						}
-					} catch (ClassNotFoundException e) {
-						e.printStackTrace();
-						LOG.error("Class not found in the bundle!", e);
+						break;
 					}
 				}
 			}
@@ -163,5 +164,16 @@ public class BundleClassesFinder {
 		int index = path.lastIndexOf("/");
 		int endIndex = path.length() - 6;//Strip ".class" substring
 		return path.substring(index + 1, endIndex);
+	}
+
+	public static List<Bundle> findBundles(String bundleNameFilter, BundleContext bundleContext) {
+		Pattern bundleNamePattern = Pattern.compile(bundleNameFilter);
+		List<Bundle> bundles = new ArrayList<Bundle>();
+		for (Bundle bundle : bundleContext.getBundles()) {
+			if (bundleNamePattern.matcher(bundle.getSymbolicName()).matches()) {
+				bundles.add(bundle);
+			}
+		}
+		return bundles;
 	}
 }

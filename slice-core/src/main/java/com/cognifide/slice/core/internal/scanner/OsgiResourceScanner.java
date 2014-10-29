@@ -28,19 +28,13 @@ public class OsgiResourceScanner {
 	 * Returns collection of all classes that match given bundle filter and package.
 	 */
 	public Collection<Class<?>> findResources(String bundleNameFilter, String basePackage) {
-		List<Bundle> bundles = findBundles(bundleNameFilter);
-		BundleClassesFinder classFinder = new BundleClassesFinder(bundles, basePackage);
-		return classFinder.traverseBundlesForOsgiServices();
-	}
-
-	private List<Bundle> findBundles(String bundleNameFilter) {
-		Pattern bundleNamePattern = Pattern.compile(bundleNameFilter);
-		List<Bundle> bundles = new ArrayList<Bundle>();
-		for (Bundle bundle : bundleContext.getBundles()) {
-			if (bundleNamePattern.matcher(bundle.getSymbolicName()).matches()) {
-				bundles.add(bundle);
+		BundleClassesFinder classFinder = new BundleClassesFinder(basePackage, bundleNameFilter, bundleContext);
+		classFinder.addFilter(new BundleClassesFinder.ClassFilter() {
+			@Override
+			public boolean accepts(ClassReader classReader) {
+				return true;
 			}
-		}
-		return bundles;
+		});
+		return classFinder.traverseBundlesForOsgiServices();
 	}
 }

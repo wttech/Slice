@@ -20,11 +20,12 @@ import java.util.Collection;
  * Also @see com.cognifide.slice.annotations.OsgiService
  */
 public class OsgiToGuiceAutoBindModule extends AbstractModule {
-	private String bundleNameFilter;
 
-	private String basePackage;
+	private final String bundleNameFilter;
 
-	private BundleContext bundleContext;
+	private final String basePackage;
+
+	private final BundleContext bundleContext;
 
 	public OsgiToGuiceAutoBindModule(BundleContext bundleContext, String bundleNameFilter,
 			String basePackage) {

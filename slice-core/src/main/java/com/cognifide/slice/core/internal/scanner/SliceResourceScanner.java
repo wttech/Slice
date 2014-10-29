@@ -21,8 +21,7 @@ public class SliceResourceScanner {
 	}
 
 	public Collection<Class<?>> findSliceResources(String bundleNameFilter, String basePackage) {
-		List<Bundle> bundles = findBundles(bundleNameFilter);
-		BundleClassesFinder classFinder = new BundleClassesFinder(bundles, basePackage);
+		BundleClassesFinder classFinder = new BundleClassesFinder(basePackage, bundleNameFilter, bundleContext);
 		classFinder.addFilter(new ClassFilter() {
 			@Override
 			public boolean accepts(ClassReader classReader) {
@@ -34,14 +33,4 @@ public class SliceResourceScanner {
 		return classFinder.getClasses();
 	}
 
-	private List<Bundle> findBundles(String bundleNameFilter) {
-		Pattern bundleNamePattern = Pattern.compile(bundleNameFilter);
-		List<Bundle> bundles = new ArrayList<Bundle>();
-		for (Bundle bundle : bundleContext.getBundles()) {
-			if (bundleNamePattern.matcher(bundle.getSymbolicName()).matches()) {
-				bundles.add(bundle);
-			}
-		}
-		return bundles;
-	}
 }
