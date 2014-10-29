@@ -1,5 +1,3 @@
-package com.cognifide.slice.mapper.strategy.impl;
-
 /*
  * #%L
  * Slice - Mapper
@@ -20,6 +18,7 @@ package com.cognifide.slice.mapper.strategy.impl;
  * #L%
  */
 
+package com.cognifide.slice.mapper.strategy.impl;
 
 import java.lang.reflect.Field;
 
