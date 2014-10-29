@@ -53,11 +53,6 @@ public class BundleClassesFinder {
 
 	private List<ClassFilter> filters = new ArrayList<BundleClassesFinder.ClassFilter>();
 
-	public BundleClassesFinder(Collection<Bundle> bundles, String basePackage) {
-		this.bundles = bundles;
-		this.basePackage = basePackage.replace('.', '/');
-	}
-
 	public BundleClassesFinder(String basePackage, String bundleNameFilter, BundleContext bundleContext) {
 		this.bundles = findBundles(bundleNameFilter, bundleContext);
 		this.basePackage = basePackage.replace('.', '/');
@@ -157,13 +152,6 @@ public class BundleClassesFinder {
 			}
 		}
 		return osgiClasses;
-	}
-
-	private String getClassNameFromUrl(URL url) {
-		String path = url.getPath();
-		int index = path.lastIndexOf("/");
-		int endIndex = path.length() - 6;//Strip ".class" substring
-		return path.substring(index + 1, endIndex);
 	}
 
 	public static List<Bundle> findBundles(String bundleNameFilter, BundleContext bundleContext) {
