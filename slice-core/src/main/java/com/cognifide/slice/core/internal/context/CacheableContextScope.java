@@ -47,13 +47,19 @@ public class CacheableContextScope implements Scope {
 	@Override
 	public <T> Provider<T> scope(final Key<T> key, final Provider<T> unscopedProvider) {
 		return new Provider<T>() {
+
+			@SuppressWarnings("unchecked")
 			@Override
 			public T get() {
 				CacheableContext cacheableContext = cacheableContextProvider.get();
 				String resourcePath = resourcePathProvider.get();
-				T unscoped = unscopedProvider.get();
-				T scoped = cacheableContext.putIfAbsent(resourcePath, key, unscoped);
-				return scoped == null ? unscoped : scoped;
+				CacheableContextKey contextKey = new CacheableContextKey(resourcePath, key);
+				T value = (T) cacheableContext.get(contextKey);
+				if (value == null) {
+					value = unscopedProvider.get();
+					cacheableContext.put(contextKey, value);
+				}
+				return value;
 			}
 		};
 	}
