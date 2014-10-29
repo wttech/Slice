@@ -24,7 +24,7 @@ package com.cognifide.slice.core.internal.context;
 
 import com.cognifide.slice.api.scope.ContextScoped;
 
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashMap;
 
 /**
  * Concurrent HashMap with wrapped key CacheableContextKey, storing slice models as values. The values are
@@ -33,5 +33,5 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author kamil.ciecierski
  */
 @ContextScoped
-public class CacheableContext extends ConcurrentHashMap<CacheableContextKey, Object> {
+public class CacheableContext extends HashMap<CacheableContextKey, Object> {
 }
