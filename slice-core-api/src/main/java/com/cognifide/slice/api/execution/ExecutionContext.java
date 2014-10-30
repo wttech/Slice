@@ -3,8 +3,6 @@ package com.cognifide.slice.api.execution;
 /*
  * #%L
  * Slice - Core API
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%

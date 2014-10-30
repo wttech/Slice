@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/Cognifide/Slice.svg)](https://travis-ci.org/Cognifide/Slice)
 # About Slice
 
 ## Purpose

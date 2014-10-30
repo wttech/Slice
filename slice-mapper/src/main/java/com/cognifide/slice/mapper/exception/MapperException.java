@@ -3,8 +3,6 @@ package com.cognifide.slice.mapper.exception;
 /*-
  * #%L
  * Slice - Mapper
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%

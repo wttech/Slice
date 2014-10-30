@@ -1,10 +1,6 @@
-package com.cognifide.slice.core.internal.filter;
-
-/*
+/*-
  * #%L
  * Slice - Core
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -21,6 +17,8 @@ package com.cognifide.slice.core.internal.filter;
  * limitations under the License.
  * #L%
  */
+
+package com.cognifide.slice.core.internal.filter;
 
 import java.io.IOException;
 import java.util.HashMap;

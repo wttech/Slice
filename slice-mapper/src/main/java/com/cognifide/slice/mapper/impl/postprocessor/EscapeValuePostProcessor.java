@@ -3,8 +3,6 @@ package com.cognifide.slice.mapper.impl.postprocessor;
 /*
  * #%L
  * Slice - Mapper
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%

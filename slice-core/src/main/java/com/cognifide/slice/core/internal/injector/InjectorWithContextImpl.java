@@ -3,8 +3,6 @@ package com.cognifide.slice.core.internal.injector;
 /*-
  * #%L
  * Slice - Core
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%

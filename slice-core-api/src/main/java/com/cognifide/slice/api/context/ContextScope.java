@@ -1,10 +1,6 @@
-package com.cognifide.slice.api.context;
-
-/*
+/*-
  * #%L
  * Slice - Core API
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,6 +18,7 @@ package com.cognifide.slice.api.context;
  * #L%
  */
 
+package com.cognifide.slice.api.context;
 
 import com.google.inject.Scope;
 

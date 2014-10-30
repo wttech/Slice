@@ -3,8 +3,6 @@ package com.cognifide.slice.mapper.api;
 /*
  * #%L
  * Slice - Mapper API
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
