@@ -1,10 +1,6 @@
-package com.cognifide.slice.util;
-
-/*
+/*-
  * #%L
  * Slice - Core API
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -21,6 +17,8 @@ package com.cognifide.slice.util;
  * limitations under the License.
  * #L%
  */
+
+package com.cognifide.slice.util;
 
 
 import javax.servlet.ServletRequest;

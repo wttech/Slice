@@ -1,11 +1,6 @@
-package com.cognifide.slice.api.injector;
-
-//@formatter:off
-/*
+/*-
  * #%L
  * Slice - Core API
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,7 +17,8 @@ package com.cognifide.slice.api.injector;
  * limitations under the License.
  * #L%
  */
-//@formatter:on
+
+package com.cognifide.slice.api.injector;
 
 import java.util.Collection;
 

@@ -1,10 +1,6 @@
-package com.cognifide.slice.api.model;
-
-/*
+/*-
  * #%L
  * Slice - Core API
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,6 +18,7 @@ package com.cognifide.slice.api.model;
  * #L%
  */
 
+package com.cognifide.slice.api.model;
 
 /**
  * Allows a model to be informed after mapping from resource has been finished and all its fields have been

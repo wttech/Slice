@@ -1,10 +1,6 @@
-package com.cognifide.slice.api.qualifier;
-
-/*
+/*-
  * #%L
  * Slice - Core API
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,6 +18,7 @@ package com.cognifide.slice.api.qualifier;
  * #L%
  */
 
+package com.cognifide.slice.api.qualifier;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;

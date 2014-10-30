@@ -1,10 +1,6 @@
-package com.cognifide.slice.mapper.module;
-
 /*-
  * #%L
  * Slice - Mapper
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -21,6 +17,8 @@ package com.cognifide.slice.mapper.module;
  * limitations under the License.
  * #L%
  */
+
+package com.cognifide.slice.mapper.module;
 
 import com.cognifide.slice.api.scope.ContextScoped;
 import com.cognifide.slice.mapper.MapperBuilder;

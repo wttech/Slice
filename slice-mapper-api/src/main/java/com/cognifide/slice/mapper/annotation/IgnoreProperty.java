@@ -1,10 +1,6 @@
-package com.cognifide.slice.mapper.annotation;
-
-/*
+/*-
  * #%L
  * Slice - Mapper API
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,6 +18,7 @@ package com.cognifide.slice.mapper.annotation;
  * #L%
  */
 
+package com.cognifide.slice.mapper.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

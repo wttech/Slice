@@ -252,6 +252,27 @@
 										<ignore />
 									</action>
 								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.codehaus.mojo
+										</groupId>
+										<artifactId>
+											license-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.7,)
+										</versionRange>
+										<goals>
+											<goal>
+												update-file-header
+											</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
 							</pluginExecutions>
 						</lifecycleMappingMetadata>
 					</configuration>
@@ -269,6 +290,25 @@
 						<user>${slice.crx.username}</user>
 						<password>${slice.crx.password}</password>
 					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>license-maven-plugin</artifactId>
+					<version>1.7</version>
+					<configuration>
+						<licenseName>apache_v2</licenseName>
+						<failOnMissingHeader>true</failOnMissingHeader>
+						<failOnNotUptodateHeader>true</failOnNotUptodateHeader>
+						<canUpdateDescription>true</canUpdateDescription>
+					</configuration>
+					<executions>
+						<execution>
+							<phase>validate</phase>
+							<goals>
+								<goal>update-file-header</goal>
+							</goals>
+						</execution>
+					</executions>
 				</plugin>
 			</plugins>
 		</pluginManagement>
