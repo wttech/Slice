@@ -24,6 +24,7 @@ package com.cognifide.slice.core.internal.injector;
 
 import java.util.Collection;
 
+import com.cognifide.slice.api.injector.InjectorConfig;
 import org.apache.commons.lang.StringUtils;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Properties;
@@ -78,20 +79,23 @@ public final class InjectorsRepositoryService implements InjectorsRepository {
 	}
 
 	@Override
-	public InjectorWithContext getInjectorByPath(final String path)
+	public String getInjectorNameByPath(final String path)
 	{
-		InjectorWithContextImpl injectorWithContext = null;
-		String iteratedPath = path;
+		String injectorName = null;
+		String iteratedPath = InjectorConfig.DEFAULT_INJECTOR_PATH + path;
 		while (!iteratedPath.isEmpty())
 		{
-			Injector injector = injectors.getInjectorByPath(iteratedPath);
-			if (injector != null) {
-				injectorWithContext = new InjectorWithContextImpl(injector);
+			injectorName = injectors.getInjectorNameByPath(iteratedPath);
+			if (StringUtils.isEmpty(injectorName))
+			{
+				injectorName = injectors.getInjectorNameByPath(iteratedPath+"/");
+			}
+			if (!StringUtils.isEmpty(injectorName)) {
 				break;
 			}
 			iteratedPath = getParentPath(iteratedPath);
 		}
-		return injectorWithContext;
+		return injectorName;
 	}
 
 	private String getParentPath(String iteratedPath) {

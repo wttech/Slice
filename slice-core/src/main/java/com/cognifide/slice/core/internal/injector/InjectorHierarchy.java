@@ -67,15 +67,12 @@ public class InjectorHierarchy {
 
 	private final Map<String, Injector> injectorByName = new HashMap<String, Injector>();
 
-	private final Map<String, Injector> injectorByPath = new HashMap<String, Injector>();
-
 	private volatile Map<Injector, String> nameLookupMap = new HashMap<Injector, String>();
 
 	@Deactivate
 	public void deactivate() {
 		configByName.clear();
 		injectorByName.clear();
-		injectorByPath.clear();
 		nameLookupMap.clear();
 		listeners.clear();
 	}
@@ -103,7 +100,6 @@ public class InjectorHierarchy {
 	private synchronized void unregisterInjector(InjectorConfig config) {
 		List<InjectorConfig> injectorsToRemove = getSubtree(config);
 		for (InjectorConfig c : injectorsToRemove) {
-			injectorByPath.remove(c.getPath());
 			Injector injector = injectorByName.remove(c.getName());
 			for (InjectorListener listener : listeners) {
 				listener.injectorDestroyed(injector, c);
@@ -124,13 +120,21 @@ public class InjectorHierarchy {
 	}
 
 	/**
-	 * Return injector with given path
+	 * Return name of injector with given path
 	 *
 	 * @param injectorPath Injector path
-	 * @return Injector or null if there is no such injector
+	 * @return Injector name or null if there is no such injector
 	 */
-	public synchronized Injector getInjectorByPath(String injectorPath) {
-		return injectorByPath.get(injectorPath);
+	public synchronized String getInjectorNameByPath(String injectorPath) {
+
+		for (Map.Entry<String, InjectorConfig> entry : configByName.entrySet())
+		{
+			if (entry.getValue().getPath().equals(injectorPath))
+			{
+				return entry.getKey();
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -173,7 +177,6 @@ public class InjectorHierarchy {
 			Injector injector = createInjector(config);
 			if (injector != null) {
 				injectorByName.put(config.getName(), injector);
-				injectorByPath.put(config.getPath(), injector);
 			}
 		}
 	}

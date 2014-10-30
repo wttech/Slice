@@ -31,6 +31,9 @@ import org.apache.commons.lang.StringUtils;
 import com.google.inject.Module;
 
 public class InjectorConfig {
+
+	public static String DEFAULT_INJECTOR_PATH = "/apps/";
+
 	private final List<Module> modules;
 
 	private final String name;
@@ -47,7 +50,7 @@ public class InjectorConfig {
 		// we don't allow to change the module list after creating the configuration
 		modules = Collections.unmodifiableList(new ArrayList<Module>(runner.getModules()));
 		name = runner.getInjectorName();
-		path = runner.getInjectorPath();
+		path = StringUtils.isEmpty(runner.getInjectorPath()) ? DEFAULT_INJECTOR_PATH : runner.getInjectorPath();
 		parentName = runner.getParentName();
 		basePackage = runner.getBasePackage();
 		bundleFilter = runner.getBundleNameFilter();

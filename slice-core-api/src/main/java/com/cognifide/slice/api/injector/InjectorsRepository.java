@@ -79,5 +79,5 @@ public interface InjectorsRepository {
 	 *
 	 * @return
 	 */
-	InjectorWithContext getInjectorByPath(final String path);
+	String getInjectorNameByPath(final String path);
 }

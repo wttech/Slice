@@ -37,7 +37,6 @@ import com.cognifide.slice.api.context.RequestContextProvider;
 import com.cognifide.slice.api.injector.InjectorWithContext;
 import com.cognifide.slice.api.injector.InjectorsRepository;
 import com.cognifide.slice.api.provider.ModelProvider;
-import com.cognifide.slice.util.InjectorNameUtil;
 
 public final class SliceTagUtils {
 
@@ -68,10 +67,9 @@ public final class SliceTagUtils {
 	public static <T> T getFromCurrentPath(final SlingHttpServletRequest request,
 			final InjectorsRepository injectorsRepository,
 			final RequestContextProvider requestContextProvider, final Class<T> type, final String appName) {
-		String injectorName = getInjectorName(request, appName);
-		String injectorPath = getInjectorPath(request, appName);
+		final String injectorName = getInjectorName(request, appName, injectorsRepository);
 		return getFromCurrentPath(request, injectorsRepository,
-				requestContextProvider.getContextProvider(injectorName), type, injectorPath);
+				requestContextProvider.getContextProvider(injectorName), type, injectorName);
 	}
 
 	public static SlingHttpServletRequest slingRequestFrom(final PageContext pageContext) {
@@ -99,16 +97,28 @@ public final class SliceTagUtils {
 	}
 
 	@SuppressWarnings("deprecation")
-	private static String getInjectorName(final SlingHttpServletRequest request, final String appName) {
+	private static String getInjectorName(final SlingHttpServletRequest request, final String appName, final InjectorsRepository injectorsRepository) {
 		String injectorName;
 		if (StringUtils.isNotBlank(appName)) {
 			injectorName = appName;
 		} else {
-			injectorName = InjectorNameUtil.getFromRequest(request);
+			injectorName = getFromRequest(request, injectorsRepository);
 		}
 		if (StringUtils.isBlank(injectorName)) {
 			throw new IllegalStateException("Guice injector name not available");
 		}
+		return injectorName;
+	}
+
+	public static String getFromRequest(final SlingHttpServletRequest request, InjectorsRepository injectorsRepository) {
+		if (null != request.getResource()) {
+			return getFromResourceType(request.getResource().getResourceType(), injectorsRepository);
+		}
+		return StringUtils.EMPTY;
+	}
+
+	public static String getFromResourceType(String resourceType, InjectorsRepository injectorsRepository) {
+		String injectorName = injectorsRepository.getInjectorNameByPath(resourceType);
 		return injectorName;
 	}
 
@@ -131,16 +141,15 @@ public final class SliceTagUtils {
 	public static <T> T getFromCurrentPath(final SlingHttpServletRequest request,
 			final InjectorsRepository injectorsRepository, final ContextProvider contextProvider,
 			final Class<T> type, final String appName) {
-
-		final String injectorPath = getInjectorPath(request, appName);
+		final String injectorName = getInjectorName(request, appName, injectorsRepository);
 
 		if (null == contextProvider) {
 			throw new IllegalStateException("ContextProvider is not available");
 		}
 
-		final InjectorWithContext injector = injectorsRepository.getInjectorByPath(injectorPath);
+		final InjectorWithContext injector = injectorsRepository.getInjector(injectorName);
 		if (injector == null) {
-			throw new IllegalStateException("Guice injector not found: " + injectorPath);
+			throw new IllegalStateException("Guice injector not found: " + injectorName);
 		}
 
 		injector.pushContextProvider(contextProvider);
@@ -151,27 +160,5 @@ public final class SliceTagUtils {
 		} finally {
 			injector.popContextProvider();
 		}
-	}
-
-	private static String getInjectorPath(SlingHttpServletRequest request, String appName) {
-
-		String injectorPath;
-		if (StringUtils.isNotBlank(appName)) {
-			injectorPath = appName;
-		} else {
-			injectorPath = getPathFromRequest(request);
-		}
-		if (StringUtils.isBlank(injectorPath)) {
-			throw new IllegalStateException("Guice injector path not available");
-		}
-		return injectorPath;
-	}
-
-	private static String getPathFromRequest(final SlingHttpServletRequest request)
-	{
-		if (null != request.getResource()) {
-			return request.getResource().getResourceType();
-		}
-		return StringUtils.EMPTY;
 	}
 }
