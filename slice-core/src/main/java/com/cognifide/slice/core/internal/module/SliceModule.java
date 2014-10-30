@@ -1,10 +1,6 @@
-package com.cognifide.slice.core.internal.module;
-
 /*-
  * #%L
  * Slice - Core
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -21,6 +17,8 @@ package com.cognifide.slice.core.internal.module;
  * limitations under the License.
  * #L%
  */
+
+package com.cognifide.slice.core.internal.module;
 
 import org.apache.sling.api.resource.Resource;
 import org.ops4j.peaberry.Peaberry;

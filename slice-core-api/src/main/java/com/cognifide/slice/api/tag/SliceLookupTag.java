@@ -1,10 +1,6 @@
-package com.cognifide.slice.api.tag;
-
 /*-
  * #%L
  * Slice - Core API
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,6 +18,7 @@ package com.cognifide.slice.api.tag;
  * #L%
  */
 
+package com.cognifide.slice.api.tag;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;

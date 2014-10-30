@@ -1,10 +1,6 @@
-package com.cognifide.slice.core.internal.context;
-
-/*
+/*-
  * #%L
  * Slice - Core
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,6 +18,7 @@ package com.cognifide.slice.core.internal.context;
  * #L%
  */
 
+package com.cognifide.slice.core.internal.context;
 
 import com.cognifide.slice.api.context.ContextProvider;
 import com.cognifide.slice.api.context.ContextScope;

@@ -1,8 +1,6 @@
 /*-
  * #%L
  * Slice - Core
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -19,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package com.cognifide.slice.core.internal.provider;
 
 import java.text.MessageFormat;

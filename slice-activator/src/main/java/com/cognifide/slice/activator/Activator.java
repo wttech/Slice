@@ -1,10 +1,6 @@
-package com.cognifide.slice.activator;
-
 /*-
  * #%L
  * Slice - Activator
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -21,6 +17,8 @@ package com.cognifide.slice.activator;
  * limitations under the License.
  * #L%
  */
+
+package com.cognifide.slice.activator;
 
 import java.util.List;
 

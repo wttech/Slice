@@ -1,10 +1,6 @@
-package com.cognifide.slice.mapper.strategy.impl;
-
 /*
  * #%L
  * Slice - Mapper
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,6 +18,7 @@ package com.cognifide.slice.mapper.strategy.impl;
  * #L%
  */
 
+package com.cognifide.slice.mapper.strategy.impl;
 
 import java.lang.reflect.Field;
 
