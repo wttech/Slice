@@ -108,14 +108,14 @@ public final class SliceTagUtils {
 		return injectorName;
 	}
 
-	public static String getFromRequest(final SlingHttpServletRequest request, InjectorsRepository injectorsRepository) {
+	private static String getFromRequest(final SlingHttpServletRequest request, InjectorsRepository injectorsRepository) {
 		if (null != request.getResource()) {
 			return getFromResourceType(request.getResource().getResourceType(), injectorsRepository);
 		}
 		return StringUtils.EMPTY;
 	}
 
-	public static String getFromResourceType(String resourceType, InjectorsRepository injectorsRepository) {
+	private static String getFromResourceType(String resourceType, InjectorsRepository injectorsRepository) {
 		String injectorName = injectorsRepository.getInjectorNameByPath(resourceType);
 		return injectorName;
 	}

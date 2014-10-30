@@ -57,7 +57,6 @@ public class InjectorRunner {
 		this.injectorName = injectorName;
 		this.bundleNameFilter = bundleNameFilter;
 		this.basePackage = basePackage;
-		this.injectorPath = injectorName;
 	}
 
 	public void setParentInjectorName(String parentInjectorName) {
@@ -108,7 +107,7 @@ public class InjectorRunner {
 		return parentInjectorName;
 	}
 
-	public String getInjectorPath() {
+	String getInjectorPath() {
 		return injectorPath;
 	}
 }

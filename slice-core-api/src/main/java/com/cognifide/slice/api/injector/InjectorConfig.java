@@ -48,7 +48,7 @@ public class InjectorConfig {
 		// we don't allow to change the module list after creating the configuration
 		modules = Collections.unmodifiableList(new ArrayList<Module>(runner.getModules()));
 		name = runner.getInjectorName();
-		path = StringUtils.isEmpty(runner.getInjectorPath()) ? DEFAULT_INJECTOR_PATH : runner.getInjectorPath();
+		path = StringUtils.defaultIfEmpty(runner.getInjectorPath(), DEFAULT_INJECTOR_PATH + name);
 		parentName = runner.getParentName();
 		basePackage = runner.getBasePackage();
 		bundleFilter = runner.getBundleNameFilter();
