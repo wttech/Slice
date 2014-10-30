@@ -1,3 +1,5 @@
+package com.cognifide.slice.mapper.strategy;
+
 /*-
  * #%L
  * Slice - Mapper
@@ -17,8 +19,6 @@
  * limitations under the License.
  * #L%
  */
-
-package com.cognifide.slice.mapper.strategy;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

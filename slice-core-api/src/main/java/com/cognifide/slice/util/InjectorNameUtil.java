@@ -1,4 +1,6 @@
-/*-
+package com.cognifide.slice.util;
+
+/*
  * #%L
  * Slice - Core API
  * %%
@@ -17,8 +19,6 @@
  * limitations under the License.
  * #L%
  */
-
-package com.cognifide.slice.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -1,3 +1,5 @@
+package com.cognifide.slice.mapper;
+
 /*-
  * #%L
  * Slice - Mapper
@@ -17,8 +19,6 @@
  * limitations under the License.
  * #L%
  */
-
-package com.cognifide.slice.mapper;
 
 import com.cognifide.slice.mapper.api.SliceReferencePathResolver;
 import com.cognifide.slice.mapper.impl.SliceReferencePathResolverImpl;

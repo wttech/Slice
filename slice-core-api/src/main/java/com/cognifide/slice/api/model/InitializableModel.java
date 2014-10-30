@@ -1,4 +1,6 @@
-/*-
+package com.cognifide.slice.api.model;
+
+/*
  * #%L
  * Slice - Core API
  * %%
@@ -18,7 +20,6 @@
  * #L%
  */
 
-package com.cognifide.slice.api.model;
 
 /**
  * Allows a model to be informed after mapping from resource has been finished and all its fields have been

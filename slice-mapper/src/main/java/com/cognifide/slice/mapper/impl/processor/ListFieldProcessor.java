@@ -1,3 +1,5 @@
+package com.cognifide.slice.mapper.impl.processor;
+
 /*-
  * #%L
  * Slice - Mapper
@@ -17,8 +19,6 @@
  * limitations under the License.
  * #L%
  */
-
-package com.cognifide.slice.mapper.impl.processor;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;

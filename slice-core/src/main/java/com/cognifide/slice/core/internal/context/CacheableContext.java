@@ -1,17 +1,17 @@
-package com.cognifide.slice.mapper.exception;
-
 /*-
  * #%L
- * Slice - Mapper
+ * Slice - Core
+ * $Id:$
+ * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,16 +20,18 @@ package com.cognifide.slice.mapper.exception;
  * #L%
  */
 
-public class MapperException extends RuntimeException {
+package com.cognifide.slice.core.internal.context;
 
-	private static final long serialVersionUID = -8268093493798783056L;
+import com.cognifide.slice.api.scope.ContextScoped;
 
-	public MapperException(final String message, final Throwable cause) {
-		super(message, cause);
-	}
+import java.util.HashMap;
 
-	public MapperException(final String message) {
-		super(message);
-	}
-
+/**
+ * Concurrent HashMap with wrapped key CacheableContextKey, storing slice models as values. The values are
+ * stored per request.
+ * 
+ * @author kamil.ciecierski
+ */
+@ContextScoped
+public class CacheableContext extends HashMap<CacheableContextKey, Object> {
 }

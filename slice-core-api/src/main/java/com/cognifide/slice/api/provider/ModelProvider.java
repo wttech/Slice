@@ -1,3 +1,5 @@
+package com.cognifide.slice.api.provider;
+
 /*-
  * #%L
  * Slice - Core API
@@ -17,8 +19,6 @@
  * limitations under the License.
  * #L%
  */
-
-package com.cognifide.slice.api.provider;
 
 import java.util.Iterator;
 import java.util.List;

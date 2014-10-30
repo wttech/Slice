@@ -1,4 +1,6 @@
-/*-
+package com.cognifide.slice.mapper.impl;
+
+/*
  * #%L
  * Slice - Mapper
  * %%
@@ -18,7 +20,6 @@
  * #L%
  */
 
-package com.cognifide.slice.mapper.impl;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;

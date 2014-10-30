@@ -1,4 +1,6 @@
-/*-
+package com.cognifide.slice.api.qualifier;
+
+/*
  * #%L
  * Slice - Core API
  * %%
@@ -18,7 +20,6 @@
  * #L%
  */
 
-package com.cognifide.slice.api.qualifier;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;

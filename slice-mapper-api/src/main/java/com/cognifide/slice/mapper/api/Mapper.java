@@ -1,4 +1,6 @@
-/*-
+package com.cognifide.slice.mapper.api;
+
+/*
  * #%L
  * Slice - Mapper API
  * %%
@@ -18,9 +20,9 @@
  * #L%
  */
 
-package com.cognifide.slice.mapper.api;
 
 import org.apache.sling.api.resource.Resource;
+
 
 /**
  * Mapper is an object that provides an abstract interface to content repository, providing some specific

@@ -1,3 +1,5 @@
+package com.cognifide.slice.activator;
+
 /*-
  * #%L
  * Slice - Activator
@@ -17,8 +19,6 @@
  * limitations under the License.
  * #L%
  */
-
-package com.cognifide.slice.activator;
 
 import java.util.List;
 

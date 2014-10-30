@@ -1,4 +1,7 @@
-/*-
+package com.cognifide.slice.api.injector;
+
+//@formatter:off
+/*
  * #%L
  * Slice - Core API
  * %%
@@ -17,8 +20,7 @@
  * limitations under the License.
  * #L%
  */
-
-package com.cognifide.slice.api.injector;
+//@formatter:on
 
 import java.util.Collection;
 

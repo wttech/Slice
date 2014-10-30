@@ -1,3 +1,5 @@
+package com.cognifide.slice.mapper.impl;
+
 /*-
  * #%L
  * Slice - Mapper
@@ -17,8 +19,6 @@
  * limitations under the License.
  * #L%
  */
-
-package com.cognifide.slice.mapper.impl;
 
 import java.lang.annotation.Annotation;
 import java.util.HashMap;

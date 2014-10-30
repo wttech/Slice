@@ -1,3 +1,5 @@
+package com.cognifide.slice.core.internal.injector;
+
 /*-
  * #%L
  * Slice - Core
@@ -17,8 +19,6 @@
  * limitations under the License.
  * #L%
  */
-
-package com.cognifide.slice.core.internal.injector;
 
 import java.util.Stack;
 

@@ -1,3 +1,5 @@
+package com.cognifide.slice.api.injector;
+
 /*-
  * #%L
  * Slice - Core API
@@ -17,8 +19,6 @@
  * limitations under the License.
  * #L%
  */
-
-package com.cognifide.slice.api.injector;
 
 import java.io.Closeable;
 

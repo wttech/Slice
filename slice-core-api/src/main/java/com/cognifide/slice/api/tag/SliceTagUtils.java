@@ -1,3 +1,5 @@
+package com.cognifide.slice.api.tag;
+
 /*-
  * #%L
  * Slice - Core API
@@ -17,8 +19,6 @@
  * limitations under the License.
  * #L%
  */
-
-package com.cognifide.slice.api.tag;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.PageContext;

@@ -1,8 +1,8 @@
-package com.cognifide.slice.api.execution;
-
-/*
+/*-
  * #%L
  * Slice - Core API
+ * $Id:$
+ * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -20,25 +20,20 @@ package com.cognifide.slice.api.execution;
  * #L%
  */
 
+package com.cognifide.slice.api.scope;
 
-import org.apache.sling.api.resource.Resource;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import com.google.inject.ScopeAnnotation;
 
 /**
- * Execution context of Slice Injector. This interface specifies the current resource that Injector is using.
- * Current context can be changed by calling ModelProvider with new path.
- * 
- * Path is always available. Resource can be null.
+ * Apply this to implementation classes of slice models when you want one model per context.
  */
-public interface ExecutionContext {
-
-	/**
-	 * Get Resource of this ExecutionItem. This value can be null.
-	 */
-	Resource getResource();
-
-	/**
-	 * Get path of this ExecutionItem. This value can not be null.
-	 */
-	String getPath();
-
+@Target({ ElementType.TYPE })
+@Retention(RetentionPolicy.RUNTIME)
+@ScopeAnnotation
+public @interface Cacheable {
 }

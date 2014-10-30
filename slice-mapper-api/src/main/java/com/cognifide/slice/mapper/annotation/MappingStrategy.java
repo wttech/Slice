@@ -1,4 +1,6 @@
-/*-
+package com.cognifide.slice.mapper.annotation;
+
+/*
  * #%L
  * Slice - Mapper API
  * %%
@@ -18,7 +20,6 @@
  * #L%
  */
 
-package com.cognifide.slice.mapper.annotation;
 
 import com.cognifide.slice.mapper.api.Mapper;
 

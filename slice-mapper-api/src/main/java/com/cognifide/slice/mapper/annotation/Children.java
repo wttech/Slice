@@ -1,3 +1,5 @@
+package com.cognifide.slice.mapper.annotation;
+
 /*-
  * #%L
  * Slice - Mapper API
@@ -17,8 +19,6 @@
  * limitations under the License.
  * #L%
  */
-
-package com.cognifide.slice.mapper.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
