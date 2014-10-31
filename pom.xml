@@ -156,27 +156,27 @@
 					<groupId>com.mycila</groupId>
 					<artifactId>license-maven-plugin</artifactId>
 					<version>2.3</version>
-				    <configuration>
-				    	<skipExistingHeaders>false</skipExistingHeaders>
-				    	<header>${basedir}/license-template.txt</header>
-				    	<headerDefinitions>
-							<header>${basedir}/license-header-def.txt</header>
-				    	</headerDefinitions>
-				        <excludes>
-				            <exclude>**/README</exclude>
-				            <exclude>src/main/resources/**</exclude>
-				            <exclude>**/LICENSE</exclude>
-				            <exclude>**/pom.xml</exclude>
-				        </excludes>
-				    </configuration>
-				    <executions>
-				        <execution>
-				        	<phase>validate</phase>
-				            <goals>
-				                <goal>format</goal>
-				            </goals>
-				        </execution>
-				    </executions>
+					<configuration>
+						<skipExistingHeaders>false</skipExistingHeaders>
+						<header>${basedir}/license-template.txt</header>
+						<headerDefinitions>
+							<header>${basedir}/license-header-definition.txt</header>
+						</headerDefinitions>
+						<excludes>
+							<exclude>**/README</exclude>
+							<exclude>src/main/resources/**</exclude>
+							<exclude>**/LICENSE.txt</exclude>
+							<exclude>**/pom.xml</exclude>
+						</excludes>
+					</configuration>
+					<executions>
+						<execution>
+							<phase>validate</phase>
+							<goals>
+								<goal>format</goal>
+							</goals>
+						</execution>
+					</executions>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
