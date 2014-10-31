@@ -24,20 +24,22 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.TypeVariable;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
-import com.cognifide.slice.annotations.OsgiService;
 import org.objectweb.asm.ClassReader;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
-import org.osgi.service.packageadmin.ExportedPackage;
-import org.osgi.service.packageadmin.PackageAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.cognifide.slice.annotations.OsgiService;
 
 public class BundleClassesFinder {
 
@@ -63,8 +65,8 @@ public class BundleClassesFinder {
 		for (Bundle bundle : this.bundles) {
 
 			if (LOG.isInfoEnabled()) {
-				LOG.info("Searching for classes annotated with SliceResource in '"
-						+ bundle.getSymbolicName() + "' bundle, package: " + this.basePackage);
+				LOG.info("Searching for classes annotated with SliceResource in '" + bundle.getSymbolicName()
+						+ "' bundle, package: " + this.basePackage);
 			}
 
 			@SuppressWarnings("unchecked")
@@ -121,8 +123,7 @@ public class BundleClassesFinder {
 	public Collection<Class<?>> traverseBundlesForOsgiServices() {
 		Collection<Class<?>> allClasses = getClasses();
 		Set<Class<?>> osgiClasses = new HashSet<Class<?>>();
-		for(Class clazz:allClasses)
-		{
+		for (Class clazz : allClasses) {
 			Field[] fields = clazz.getDeclaredFields();
 			for (Field field : fields) {
 				if (field.isAnnotationPresent(OsgiService.class)) {
@@ -132,16 +133,12 @@ public class BundleClassesFinder {
 			}
 
 			Constructor<?>[] constructors = clazz.getConstructors();
-			for (Constructor constructor:constructors)
-			{
+			for (Constructor constructor : constructors) {
 				Class<?>[] parameterTypes = constructor.getParameterTypes();
 				Annotation[][] annotations = constructor.getParameterAnnotations();
-				for (int i=0;i<parameterTypes.length;i++)
-				{
-					for (Annotation annotation:annotations[i])
-					{
-						if (annotation.annotationType().equals(OsgiService.class))
-						{
+				for (int i = 0; i < parameterTypes.length; i++) {
+					for (Annotation annotation : annotations[i]) {
+						if (annotation.annotationType().equals(OsgiService.class)) {
 							osgiClasses.add(parameterTypes[i]);
 						}
 						break;
