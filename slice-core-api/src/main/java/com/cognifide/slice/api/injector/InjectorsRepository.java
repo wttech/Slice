@@ -30,11 +30,11 @@ import com.google.inject.Injector;
  * @author Witold Szczerba
  * @author Rafał Malinowski
  * @class InjectorsRepository
- * 
+ * <p/>
  * Helper class to get Injector instances. Slice supports multiple injectors installed on one instance, with
  * each injector being tagged with name of the application that created it. By standard, the application name
  * is the name of its folder under /apps.
- * 
+ * <p/>
  * Injector can be retrieved in three different ways:
  * <ul>
  * <li>by specifying injector / application name ({@link #getInjector(String injectorName)}),</li>
@@ -47,7 +47,7 @@ public interface InjectorsRepository {
 
 	/**
 	 * Returns injector (with context) for specific application, or null if no such injector was registered.
-	 * 
+	 *
 	 * @param injectorName name of required injector (same as application name)
 	 * @return InjectorWithContext for given application
 	 * @throws IllegalStateException if Slice is not running
@@ -56,7 +56,7 @@ public interface InjectorsRepository {
 
 	/**
 	 * Returns name of the given injector.
-	 * 
+	 *
 	 * @param injector
 	 * @return
 	 */
@@ -64,11 +64,10 @@ public interface InjectorsRepository {
 
 	/**
 	 * Returns names of all injectors
-	 * 
+	 *
 	 * @return
 	 */
 	Collection<String> getInjectorNames();
-
 
 	/**
 	 * Returns injector by its path

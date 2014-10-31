@@ -84,30 +84,17 @@ public final class InjectorsRepositoryService implements InjectorsRepository {
 	 * "appname/y/..." it will return injector with path "/apps/appname/"
 	 */
 	@Override
-	public String getInjectorNameByPath(final String resourcePath)
-	{
+	public String getInjectorNameByPath(final String resourcePath) {
 		String injectorName = null;
 		String iteratedPath = InjectorConfig.DEFAULT_INJECTOR_PATH + resourcePath;
-		while (!iteratedPath.isEmpty())
-		{
+		while (!iteratedPath.isEmpty()) {
 			injectorName = injectors.getInjectorNameByPath(iteratedPath);
-			if (StringUtils.isEmpty(injectorName))
-			{
-				injectorName = injectors.getInjectorNameByPath(iteratedPath+"/");
-			}
 			if (!StringUtils.isEmpty(injectorName)) {
 				break;
 			}
-			iteratedPath = getParentPath(iteratedPath);
+			iteratedPath = StringUtils.substringBeforeLast(iteratedPath, "/");
 		}
 		return injectorName;
 	}
 
-	private String getParentPath(String iteratedPath) {
-		int lastIndexOfSlash = iteratedPath.lastIndexOf('/');
-		if (lastIndexOfSlash != -1) {
-			return iteratedPath.substring(0, iteratedPath.lastIndexOf('/'));
-		}
-		return StringUtils.EMPTY;
-	}
 }
