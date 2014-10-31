@@ -79,9 +79,9 @@ public final class InjectorsRepositoryService implements InjectorsRepository {
 	/**
 	 * Provides proper injector name for given resource path
 	 * Current implementation finds an injector using "best match" approach, ie:
-	 * if we have two injector, one with path "/apps/appname/" and second with path "/apps/appname/x"
+	 * if we have two injectors, one with path "/apps/appname" and second with path "/apps/appname/x"
 	 * then for resources "appname/x/..." it will return injector "/apps/appname/x" and for resource
-	 * "appname/y/..." it will return injector with path "/apps/appname/"
+	 * "appname/y/..." it will return injector with path "/apps/appname"
 	 */
 	@Override
 	public String getInjectorNameByPath(final String resourcePath) {
