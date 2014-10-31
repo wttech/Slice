@@ -1,10 +1,6 @@
-package com.cognifide.slice.core.internal.provider;
-
-/*
+/*-
  * #%L
  * Slice - Core
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,6 +18,7 @@ package com.cognifide.slice.core.internal.provider;
  * #L%
  */
 
+package com.cognifide.slice.core.internal.provider;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;

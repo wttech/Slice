@@ -1,10 +1,6 @@
-package com.cognifide.slice.core;
-
 /*-
  * #%L
  * Slice - Core
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -21,6 +17,8 @@ package com.cognifide.slice.core;
  * limitations under the License.
  * #L%
  */
+
+package com.cognifide.slice.core;
 
 import java.util.ArrayList;
 import java.util.HashMap;

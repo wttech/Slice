@@ -1,10 +1,6 @@
-package com.cognifide.slice.mapper;
-
 /*-
  * #%L
  * Slice - Mapper
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -21,6 +17,8 @@ package com.cognifide.slice.mapper;
  * limitations under the License.
  * #L%
  */
+
+package com.cognifide.slice.mapper;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

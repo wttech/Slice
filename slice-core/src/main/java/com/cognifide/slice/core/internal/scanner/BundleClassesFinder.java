@@ -1,10 +1,6 @@
-package com.cognifide.slice.core.internal.scanner;
-
 /*-
  * #%L
  * Slice - Core
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -21,6 +17,8 @@ package com.cognifide.slice.core.internal.scanner;
  * limitations under the License.
  * #L%
  */
+
+package com.cognifide.slice.core.internal.scanner;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;

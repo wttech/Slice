@@ -1,10 +1,6 @@
-package com.cognifide.slice.core.internal.execution;
-
-/*
+/*-
  * #%L
  * Slice - Core
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,6 +18,7 @@ package com.cognifide.slice.core.internal.execution;
  * #L%
  */
 
+package com.cognifide.slice.core.internal.execution;
 
 import java.util.Stack;
 

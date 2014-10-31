@@ -1,10 +1,6 @@
-package com.cognifide.slice.core.internal.module;
-
-/*
+/*-
  * #%L
  * Slice - Core
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,6 +18,7 @@ package com.cognifide.slice.core.internal.module;
  * #L%
  */
 
+package com.cognifide.slice.core.internal.module;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
