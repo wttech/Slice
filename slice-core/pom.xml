@@ -37,8 +37,14 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
+				<groupId>com.mycila</groupId>
 				<artifactId>license-maven-plugin</artifactId>
+				<configuration>
+					<header>${project.parent.basedir}/license-template.txt</header>
+					<headerDefinitions>
+						<header>${project.parent.basedir}/license-header-definition.txt</header>
+					</headerDefinitions>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

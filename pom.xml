@@ -153,6 +153,32 @@
 		<pluginManagement>
 			<plugins>
 				<plugin>
+					<groupId>com.mycila</groupId>
+					<artifactId>license-maven-plugin</artifactId>
+					<version>2.3</version>
+					<configuration>
+						<skipExistingHeaders>false</skipExistingHeaders>
+						<header>${basedir}/license-template.txt</header>
+						<headerDefinitions>
+							<header>${basedir}/license-header-definition.txt</header>
+						</headerDefinitions>
+						<excludes>
+							<exclude>**/README</exclude>
+							<exclude>src/main/resources/**</exclude>
+							<exclude>**/LICENSE.txt</exclude>
+							<exclude>**/pom.xml</exclude>
+						</excludes>
+					</configuration>
+					<executions>
+						<execution>
+							<phase>validate</phase>
+							<goals>
+								<goal>format</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-assembly-plugin</artifactId>
 					<version>2.2.1</version>
@@ -254,19 +280,15 @@
 								</pluginExecution>
 								<pluginExecution>
 									<pluginExecutionFilter>
-										<groupId>
-											org.codehaus.mojo
-										</groupId>
+										<groupId>com.mycila</groupId>
 										<artifactId>
 											license-maven-plugin
 										</artifactId>
 										<versionRange>
-											[1.7,)
+											[2.3,)
 										</versionRange>
 										<goals>
-											<goal>
-												update-file-header
-											</goal>
+											<goal>format</goal>
 										</goals>
 									</pluginExecutionFilter>
 									<action>
@@ -290,25 +312,6 @@
 						<user>${slice.crx.username}</user>
 						<password>${slice.crx.password}</password>
 					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>license-maven-plugin</artifactId>
-					<version>1.7</version>
-					<configuration>
-						<licenseName>apache_v2</licenseName>
-						<failOnMissingHeader>true</failOnMissingHeader>
-						<failOnNotUptodateHeader>true</failOnNotUptodateHeader>
-						<canUpdateDescription>true</canUpdateDescription>
-					</configuration>
-					<executions>
-						<execution>
-							<phase>validate</phase>
-							<goals>
-								<goal>update-file-header</goal>
-							</goals>
-						</execution>
-					</executions>
 				</plugin>
 			</plugins>
 		</pluginManagement>
