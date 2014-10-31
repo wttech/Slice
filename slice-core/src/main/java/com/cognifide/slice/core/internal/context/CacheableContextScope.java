@@ -1,8 +1,6 @@
 /*-
  * #%L
  * Slice - Core
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -19,16 +17,16 @@
  * limitations under the License.
  * #L%
  */
-
 package com.cognifide.slice.core.internal.context;
 
+import com.cognifide.slice.api.scope.Cacheable;
 import com.google.inject.Key;
 import com.google.inject.Provider;
 import com.google.inject.Scope;
 
 /**
- * This Guice Scope enables to cache slice models per request by using proper @Cacheable annotation on model
- * class
+ * This Guice scope enables to cache slice objects per request and path using {@link Cacheable} annotation on
+ * model class
  * 
  * @author kamil.ciecierski
  */

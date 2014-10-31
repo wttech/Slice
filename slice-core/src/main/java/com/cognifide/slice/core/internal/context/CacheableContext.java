@@ -1,8 +1,6 @@
 /*-
  * #%L
  * Slice - Core
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -19,19 +17,20 @@
  * limitations under the License.
  * #L%
  */
-
 package com.cognifide.slice.core.internal.context;
-
-import com.cognifide.slice.api.scope.ContextScoped;
 
 import java.util.HashMap;
 
+import com.cognifide.slice.api.scope.Cacheable;
+import com.cognifide.slice.api.scope.ContextScoped;
+
 /**
- * Concurrent HashMap with wrapped key CacheableContextKey, storing slice models as values. The values are
- * stored per request.
+ * Store for {@link Cacheable} objects. The values are stored per context scope (see {@link ContextScoped})
  * 
  * @author kamil.ciecierski
  */
 @ContextScoped
 public class CacheableContext extends HashMap<CacheableContextKey, Object> {
+
+	private static final long serialVersionUID = 1714523029298799664L;
 }
