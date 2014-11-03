@@ -23,17 +23,19 @@ import java.util.Collection;
 
 import org.objectweb.asm.ClassReader;
 import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * @author Jaromir Celejewski
- * @class OsgiResourceScanner
- * <p/>
- * Helper class for scanning bundles
+ * @author Jaromir Celejewski Helper class for scanning bundles
  */
-public class OsgiResourceScanner {
+public class OsgiServiceScanner {
+
+	private static final Logger LOG = LoggerFactory.getLogger(SliceResourceScanner.class);
+
 	private final BundleContext bundleContext;
 
-	public OsgiResourceScanner(BundleContext bundleContext) {
+	public OsgiServiceScanner(BundleContext bundleContext) {
 		this.bundleContext = bundleContext;
 	}
 
@@ -46,9 +48,16 @@ public class OsgiResourceScanner {
 		classFinder.addFilter(new BundleClassesFinder.ClassFilter() {
 			@Override
 			public boolean accepts(ClassReader classReader) {
+				// accept all classes
 				return true;
 			}
 		});
-		return classFinder.traverseBundlesForOsgiServices();
+		LOG.info("Searching for @OsgiServices, packages:{}, bundles:{}" + basePackage, bundleNameFilter);
+
+		Collection<Class<?>> classes = classFinder.traverseBundlesForOsgiServices();
+
+		LOG.info("Found {} OsgiService classes. Switch to debug logging level to see them all.",
+				classes.size());
+		return classes;
 	}
 }

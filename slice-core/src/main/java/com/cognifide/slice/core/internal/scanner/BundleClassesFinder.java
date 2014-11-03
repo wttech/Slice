@@ -39,7 +39,7 @@ import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.cognifide.slice.annotations.OsgiService;
+import com.cognifide.slice.api.annotation.OsgiService;
 
 public class BundleClassesFinder {
 
@@ -59,31 +59,19 @@ public class BundleClassesFinder {
 	}
 
 	public Collection<Class<?>> getClasses() {
-
 		Collection<Class<?>> classes = new ArrayList<Class<?>>();
-
 		for (Bundle bundle : this.bundles) {
-
-			if (LOG.isInfoEnabled()) {
-				LOG.info("Searching for classes annotated with SliceResource in '" + bundle.getSymbolicName()
-						+ "' bundle, package: " + this.basePackage);
-			}
-
 			@SuppressWarnings("unchecked")
 			Enumeration<URL> classEntries = bundle.findEntries(this.basePackage, RESOURCE_PATTERN, true);
-
 			while ((classEntries != null) && classEntries.hasMoreElements()) {
 				try {
 					URL classURL = classEntries.nextElement();
 					ClassReader classReader = new ClassReader(classURL.openStream());
-
 					if (accepts(classReader)) {
 						String className = classReader.getClassName().replace('/', '.');
-
 						if (LOG.isDebugEnabled()) {
-							LOG.debug("Slice Resource class: " + className + " has been found.");
+							LOG.debug("Class: " + className + " has been found.");
 						}
-
 						Class<?> clazz = bundle.loadClass(className);
 						classes.add(clazz);
 					}
@@ -94,12 +82,6 @@ public class BundleClassesFinder {
 				}
 			}
 		}
-
-		if (LOG.isInfoEnabled()) {
-			LOG.info("Found: " + classes.size()
-					+ " Slice Resource classes. Switch to debug logging level to see them all.");
-		}
-
 		return classes;
 	}
 
@@ -123,17 +105,17 @@ public class BundleClassesFinder {
 	public Collection<Class<?>> traverseBundlesForOsgiServices() {
 		Collection<Class<?>> allClasses = getClasses();
 		Set<Class<?>> osgiClasses = new HashSet<Class<?>>();
-		for (Class clazz : allClasses) {
+		for (Class<?> clazz : allClasses) {
 			Field[] fields = clazz.getDeclaredFields();
 			for (Field field : fields) {
 				if (field.isAnnotationPresent(OsgiService.class)) {
-					Class fieldClass = field.getType();
+					Class<?> fieldClass = field.getType();
 					osgiClasses.add(fieldClass);
 				}
 			}
 
 			Constructor<?>[] constructors = clazz.getConstructors();
-			for (Constructor constructor : constructors) {
+			for (Constructor<?> constructor : constructors) {
 				Class<?>[] parameterTypes = constructor.getParameterTypes();
 				Annotation[][] annotations = constructor.getParameterAnnotations();
 				for (int i = 0; i < parameterTypes.length; i++) {
@@ -149,7 +131,7 @@ public class BundleClassesFinder {
 		return osgiClasses;
 	}
 
-	public static List<Bundle> findBundles(String bundleNameFilter, BundleContext bundleContext) {
+	List<Bundle> findBundles(String bundleNameFilter, BundleContext bundleContext) {
 		Pattern bundleNamePattern = Pattern.compile(bundleNameFilter);
 		List<Bundle> bundles = new ArrayList<Bundle>();
 		for (Bundle bundle : bundleContext.getBundles()) {

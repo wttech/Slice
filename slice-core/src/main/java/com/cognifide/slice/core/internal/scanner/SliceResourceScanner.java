@@ -24,12 +24,17 @@ import java.util.Collection;
 
 import org.objectweb.asm.ClassReader;
 import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.cognifide.slice.core.internal.module.AnnotationReader;
 import com.cognifide.slice.core.internal.scanner.BundleClassesFinder.ClassFilter;
 import com.cognifide.slice.mapper.annotation.SliceResource;
 
 public class SliceResourceScanner {
+
+	private static final Logger LOG = LoggerFactory.getLogger(SliceResourceScanner.class);
+
 	private final BundleContext bundleContext;
 
 	public SliceResourceScanner(BundleContext bundleContext) {
@@ -47,7 +52,15 @@ public class SliceResourceScanner {
 				return annotationReader.isAnnotationPresent(SliceResource.class);
 			}
 		});
-		return classFinder.getClasses();
+		LOG.info("Searching for classes annotated with SliceResource, packages:{}, bundles:{}" + basePackage,
+				bundleNameFilter);
+
+		Collection<Class<?>> classes = classFinder.getClasses();
+
+		LOG.info("Found {} Slice Resource classes. Switch to debug logging level to see them all.",
+				classes.size());
+
+		return classes;
 	}
 
 }

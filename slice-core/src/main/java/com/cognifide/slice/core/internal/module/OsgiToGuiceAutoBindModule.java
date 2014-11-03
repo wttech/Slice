@@ -19,14 +19,15 @@
  */
 package com.cognifide.slice.core.internal.module;
 
-import com.cognifide.slice.core.internal.scanner.OsgiResourceScanner;
-import com.google.inject.AbstractModule;
-import com.google.inject.binder.AnnotatedBindingBuilder;
+import java.util.Collection;
+
 import org.ops4j.peaberry.Peaberry;
 import org.ops4j.peaberry.builders.DecoratedServiceBuilder;
 import org.osgi.framework.BundleContext;
 
-import java.util.Collection;
+import com.cognifide.slice.core.internal.scanner.OsgiServiceScanner;
+import com.google.inject.AbstractModule;
+import com.google.inject.binder.AnnotatedBindingBuilder;
 
 /**
  * @author Jaromir Celejewski
@@ -51,9 +52,10 @@ public class OsgiToGuiceAutoBindModule extends AbstractModule {
 		this.bundleContext = bundleContext;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void configure() {
-		OsgiResourceScanner scanner = new OsgiResourceScanner(bundleContext);
+		OsgiServiceScanner scanner = new OsgiServiceScanner(bundleContext);
 		Collection<Class<?>> requestedOsgiClasses = scanner.findResources(bundleNameFilter, basePackage);
 		for (Class<?> clazz : requestedOsgiClasses) {
 			((AnnotatedBindingBuilder<Object>) bind(clazz))
