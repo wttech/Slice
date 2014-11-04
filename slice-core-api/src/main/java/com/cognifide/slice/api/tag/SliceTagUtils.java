@@ -110,7 +110,7 @@ public final class SliceTagUtils {
 
 	private static String getFromRequest(final SlingHttpServletRequest request,
 			InjectorsRepository injectorsRepository) {
-		if (request.getResource() == null) {
+		if (request.getResource() != null) {
 			String resourceType = request.getResource().getResourceType();
 			return injectorsRepository.getInjectorNameForResource(resourceType);
 		}
