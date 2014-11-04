@@ -77,11 +77,11 @@ public final class InjectorsRepositoryService implements InjectorsRepository {
 	}
 
 	@Override
-	public String getInjectorNameByPath(final String resourcePath) {
+	public String getInjectorNameForResource(final String resourcePath) {
 		String injectorName = null;
 		String iteratedPath = getIteratedPath(resourcePath);
 		while (!iteratedPath.isEmpty()) {
-			injectorName = injectors.getInjectorNameByPath(iteratedPath);
+			injectorName = injectors.getInjectorNameByApplicationPath(iteratedPath);
 			if (injectorName != null) {
 				break;
 			}

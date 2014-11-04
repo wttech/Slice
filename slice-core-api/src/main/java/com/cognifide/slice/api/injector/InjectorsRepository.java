@@ -75,5 +75,5 @@ public interface InjectorsRepository {
 	 * 
 	 * @return injector name if found, <code>null</code> otherwise
 	 */
-	String getInjectorNameByPath(final String resourcePath);
+	String getInjectorNameForResource(final String resourcePath);
 }

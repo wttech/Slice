@@ -65,7 +65,7 @@ public class InjectorHierarchy {
 
 	private final Map<String, Injector> injectorByName = new HashMap<String, Injector>();
 
-	private volatile Map<String, String> nameByPath = new HashMap<String, String>();
+	private volatile Map<String, String> namesByPath = new HashMap<String, String>();
 
 	private volatile Map<Injector, String> nameLookupMap = new HashMap<Injector, String>();
 
@@ -75,7 +75,7 @@ public class InjectorHierarchy {
 		injectorByName.clear();
 		nameLookupMap.clear();
 		listeners.clear();
-		nameByPath.clear();
+		namesByPath.clear();
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class InjectorHierarchy {
 		List<InjectorConfig> injectorsToRefresh = getSubtree(config);
 		refreshInjectors(injectorsToRefresh);
 		refreshNameLookupMap();
-		refreshNameByPathMap();
+		refreshNamesByPathMap();
 	}
 
 	/**
@@ -109,7 +109,7 @@ public class InjectorHierarchy {
 		}
 		configByName.remove(config.getName());
 		refreshNameLookupMap();
-		refreshNameByPathMap();
+		refreshNamesByPathMap();
 	}
 
 	/**
@@ -125,11 +125,11 @@ public class InjectorHierarchy {
 	/**
 	 * Return name of injector with given path
 	 * 
-	 * @param injectorPath Injector path
+	 * @param applicationPath Injector path
 	 * @return Injector name or null if there is no such injector
 	 */
-	public synchronized String getInjectorNameByPath(String injectorPath) {
-		return nameByPath.get(injectorPath);
+	public synchronized String getInjectorNameByApplicationPath(String applicationPath) {
+		return namesByPath.get(applicationPath);
 	}
 
 	/**
@@ -224,12 +224,12 @@ public class InjectorHierarchy {
 		nameLookupMap = map;
 	}
 
-	private void refreshNameByPathMap() {
+	private void refreshNamesByPathMap() {
 		Map<String, String> map = new HashMap<String, String>();
 		for (Entry<String, InjectorConfig> entry : configByName.entrySet()) {
-			map.put(entry.getValue().getPath(), entry.getKey());
+			map.put(entry.getValue().getApplicationPath(), entry.getKey());
 		}
-		nameByPath = map;
+		namesByPath = map;
 	}
 
 	protected void bindConfig(final InjectorConfig config) {

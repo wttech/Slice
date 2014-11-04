@@ -68,7 +68,7 @@ public final class InjectorNameUtil {
 	 * Please note that this method is deprecated and it doesn't support injectors registered for a given path
 	 * (with use of {@link InjectorRunner#setInjectorPath(String)})
 	 * 
-	 * @deprecated use {@link InjectorsRepository#getInjectorNameByPath(String)} instead
+	 * @deprecated use {@link InjectorsRepository#getInjectorNameForResource(String)} instead
 	 * 
 	 * @param resourceType resource type to take the injector name from
 	 * @return injector name, always second part of the resource type

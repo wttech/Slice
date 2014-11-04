@@ -94,8 +94,8 @@ public final class SliceTagUtils {
 		return bindings.getSling();
 	}
 
-	@SuppressWarnings("deprecation")
-	private static String getInjectorName(final SlingHttpServletRequest request, final String appName, final InjectorsRepository injectorsRepository) {
+	private static String getInjectorName(final SlingHttpServletRequest request, final String appName,
+			final InjectorsRepository injectorsRepository) {
 		String injectorName;
 		if (StringUtils.isNotBlank(appName)) {
 			injectorName = appName;
@@ -108,16 +108,13 @@ public final class SliceTagUtils {
 		return injectorName;
 	}
 
-	private static String getFromRequest(final SlingHttpServletRequest request, InjectorsRepository injectorsRepository) {
-		if (null != request.getResource()) {
-			return getFromResourceType(request.getResource().getResourceType(), injectorsRepository);
+	private static String getFromRequest(final SlingHttpServletRequest request,
+			InjectorsRepository injectorsRepository) {
+		if (request.getResource() == null) {
+			String resourceType = request.getResource().getResourceType();
+			return injectorsRepository.getInjectorNameForResource(resourceType);
 		}
 		return StringUtils.EMPTY;
-	}
-
-	private static String getFromResourceType(String resourceType, InjectorsRepository injectorsRepository) {
-		String injectorName = injectorsRepository.getInjectorNameByPath(resourceType);
-		return injectorName;
 	}
 
 	/**
