@@ -48,7 +48,7 @@ import com.google.inject.Module;
 
 /**
  * This class stores injector configuration tree and creates injectors associated with these configurations.
- *
+ * 
  * @author Tomasz Rekawek
  */
 @Component
@@ -57,16 +57,15 @@ public class InjectorHierarchy {
 
 	private static final Logger LOG = LoggerFactory.getLogger(InjectorHierarchy.class);
 
-	@Reference(cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE,
-			referenceInterface = InjectorConfig.class, policy = ReferencePolicy.DYNAMIC, bind = "bindConfig",
-			unbind = "unbindConfig")
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, referenceInterface = InjectorConfig.class, policy = ReferencePolicy.DYNAMIC, bind = "bindConfig", unbind = "unbindConfig")
 	private final Map<String, InjectorConfig> configByName = new HashMap<String, InjectorConfig>();
 
-	@Reference(cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE,
-			referenceInterface = InjectorListener.class, policy = ReferencePolicy.DYNAMIC)
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, referenceInterface = InjectorListener.class, policy = ReferencePolicy.DYNAMIC)
 	private final Set<InjectorListener> listeners = new HashSet<InjectorListener>();
 
 	private final Map<String, Injector> injectorByName = new HashMap<String, Injector>();
+
+	private volatile Map<String, String> nameByPath = new HashMap<String, String>();
 
 	private volatile Map<Injector, String> nameLookupMap = new HashMap<Injector, String>();
 
@@ -76,13 +75,14 @@ public class InjectorHierarchy {
 		injectorByName.clear();
 		nameLookupMap.clear();
 		listeners.clear();
+		nameByPath.clear();
 	}
 
 	/**
 	 * Register new injector configuration. If all ancestors of the new config are already registered, method
 	 * will create new injector. If this config is a missing ancestor of some other config, the child injector
 	 * (or injectors) will be created as well.
-	 *
+	 * 
 	 * @param config Injector configuration
 	 */
 	private synchronized void registerInjector(InjectorConfig config) {
@@ -91,11 +91,12 @@ public class InjectorHierarchy {
 		List<InjectorConfig> injectorsToRefresh = getSubtree(config);
 		refreshInjectors(injectorsToRefresh);
 		refreshNameLookupMap();
+		refreshNameByPathMap();
 	}
 
 	/**
 	 * Unregister given injector config, destroy associated injector and all its children.
-	 *
+	 * 
 	 * @param config
 	 */
 	private synchronized void unregisterInjector(InjectorConfig config) {
@@ -108,11 +109,12 @@ public class InjectorHierarchy {
 		}
 		configByName.remove(config.getName());
 		refreshNameLookupMap();
+		refreshNameByPathMap();
 	}
 
 	/**
 	 * Return injector with given name
-	 *
+	 * 
 	 * @param injectorName Injector name
 	 * @return Injector or null if there is no such injector
 	 */
@@ -122,23 +124,17 @@ public class InjectorHierarchy {
 
 	/**
 	 * Return name of injector with given path
-	 *
+	 * 
 	 * @param injectorPath Injector path
 	 * @return Injector name or null if there is no such injector
 	 */
 	public synchronized String getInjectorNameByPath(String injectorPath) {
-
-		for (Map.Entry<String, InjectorConfig> entry : configByName.entrySet()) {
-			if (entry.getValue().getPath().equals(injectorPath)) {
-				return entry.getKey();
-			}
-		}
-		return null;
+		return nameByPath.get(injectorPath);
 	}
 
 	/**
 	 * Return name of the given injector
-	 *
+	 * 
 	 * @param injector Injector object
 	 * @return Injector name or null if there is no such injector
 	 */
@@ -148,7 +144,7 @@ public class InjectorHierarchy {
 
 	/**
 	 * Return names of all created injectors
-	 *
+	 * 
 	 * @return Collection with names of all successfully created injectors.
 	 */
 	public Collection<String> getInjectorNames() {
@@ -226,6 +222,14 @@ public class InjectorHierarchy {
 			map.put(entry.getValue(), entry.getKey());
 		}
 		nameLookupMap = map;
+	}
+
+	private void refreshNameByPathMap() {
+		Map<String, String> map = new HashMap<String, String>();
+		for (Entry<String, InjectorConfig> entry : configByName.entrySet()) {
+			map.put(entry.getValue().getPath(), entry.getKey());
+		}
+		nameByPath = map;
 	}
 
 	protected void bindConfig(final InjectorConfig config) {

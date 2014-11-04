@@ -22,7 +22,6 @@ package com.cognifide.slice.core.internal.injector;
 
 import java.util.Collection;
 
-import com.cognifide.slice.api.injector.InjectorConfig;
 import org.apache.commons.lang.StringUtils;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Properties;
@@ -32,6 +31,7 @@ import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.osgi.framework.Constants;
 
+import com.cognifide.slice.api.injector.InjectorConfig;
 import com.cognifide.slice.api.injector.InjectorWithContext;
 import com.cognifide.slice.api.injector.InjectorsRepository;
 import com.google.inject.Injector;
@@ -76,20 +76,13 @@ public final class InjectorsRepositoryService implements InjectorsRepository {
 		return injectors.getInjectorNames();
 	}
 
-	/**
-	 * Provides proper injector name for given resource path
-	 * Current implementation finds an injector using "best match" approach, ie:
-	 * if we have two injectors, one with path "/apps/appname" and second with path "/apps/appname/x"
-	 * then for resources "appname/x/..." it will return injector "/apps/appname/x" and for resource
-	 * "appname/y/..." it will return injector with path "/apps/appname"
-	 */
 	@Override
 	public String getInjectorNameByPath(final String resourcePath) {
 		String injectorName = null;
-		String iteratedPath = InjectorConfig.DEFAULT_INJECTOR_PATH + resourcePath;
+		String iteratedPath = getIteratedPath(resourcePath);
 		while (!iteratedPath.isEmpty()) {
 			injectorName = injectors.getInjectorNameByPath(iteratedPath);
-			if (!StringUtils.isEmpty(injectorName)) {
+			if (injectorName != null) {
 				break;
 			}
 			iteratedPath = StringUtils.substringBeforeLast(iteratedPath, "/");
@@ -97,4 +90,13 @@ public final class InjectorsRepositoryService implements InjectorsRepository {
 		return injectorName;
 	}
 
+	private String getIteratedPath(final String resourcePath) {
+		String iteratedPath;
+		if (!StringUtils.startsWith(resourcePath, InjectorConfig.DEFAULT_INJECTOR_PATH)) {
+			iteratedPath = InjectorConfig.DEFAULT_INJECTOR_PATH + resourcePath;
+		} else {
+			iteratedPath = resourcePath;
+		}
+		return iteratedPath;
+	}
 }

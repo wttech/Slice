@@ -22,8 +22,6 @@ package com.cognifide.slice.api.injector;
 
 import java.util.Collection;
 
-import org.apache.sling.api.resource.Resource;
-
 import com.google.inject.Injector;
 
 /**
@@ -32,22 +30,21 @@ import com.google.inject.Injector;
  * @class InjectorsRepository
  * <p/>
  * Helper class to get Injector instances. Slice supports multiple injectors installed on one instance, with
- * each injector being tagged with name of the application that created it. By standard, the application name
+ * each injector being tagged with name of the application that created it. By default, the application name
  * is the name of its folder under /apps.
  * <p/>
- * Injector can be retrieved in three different ways:
+ * Injector can be retrieved in two different ways:
  * <ul>
  * <li>by specifying injector / application name ({@link #getInjector(String injectorName)}),</li>
- * <li>for specific resource, by passing the resource ({@link #getInjectorForResource(Resource resource)}), or
- * </li>
- * <li>for specific resource, by passing it's path ({@link #getInjectorForResource(String resourcePath)}).</li>
+ * <li>by specifying resource path for which an injector has been registered (
+ * {@link #getInjectorForResource(String resourcePath)}).</li>
  * </ul>
  */
 public interface InjectorsRepository {
 
 	/**
 	 * Returns injector (with context) for specific application, or null if no such injector was registered.
-	 *
+	 * 
 	 * @param injectorName name of required injector (same as application name)
 	 * @return InjectorWithContext for given application
 	 * @throws IllegalStateException if Slice is not running
@@ -56,7 +53,7 @@ public interface InjectorsRepository {
 
 	/**
 	 * Returns name of the given injector.
-	 *
+	 * 
 	 * @param injector
 	 * @return
 	 */
@@ -64,15 +61,19 @@ public interface InjectorsRepository {
 
 	/**
 	 * Returns names of all injectors
-	 *
+	 * 
 	 * @return
 	 */
 	Collection<String> getInjectorNames();
 
 	/**
-	 * Returns injector by its path
-	 *
-	 * @return
+	 * Returns injector name for specified resource path. It looks for an injector name using "best match"
+	 * approach, i.e. if there are two injectors registered, one for path "/apps/appname" and the other for
+	 * path "/apps/appname/x" then for resourcePath "appname/x/(...)" it will return injector registered for
+	 * "/apps/appname/x"; for resourcePath "appname/y/(...)" it will return injector registered for
+	 * "/apps/appname". If no injector can be found for a given resourcePath, <code>null</code> is returned.
+	 * 
+	 * @return injector name if found, <code>null</code> otherwise
 	 */
 	String getInjectorNameByPath(final String resourcePath);
 }
