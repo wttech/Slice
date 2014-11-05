@@ -45,6 +45,18 @@ public class InjectorRunner {
 
 	private String parentInjectorName;
 
+	private String applicationPath;
+
+	/**
+	 * @param bundleContext Context used to get access to the OSGi
+	 * @param injectorName Name of the new injector
+	 */
+	public InjectorRunner(final BundleContext bundleContext, final String injectorName,
+			final String applicationPath, final String bundleNameFilter, final String basePackage) {
+		this(bundleContext, injectorName, bundleNameFilter, basePackage);
+		this.applicationPath = applicationPath;
+	}
+
 	/**
 	 * @param bundleContext Context used to get access to the OSGi
 	 * @param injectorName Name of the new injector
@@ -79,6 +91,7 @@ public class InjectorRunner {
 		InjectorConfig config = new InjectorConfig(this);
 		Dictionary<String, Object> properties = new Hashtable<String, Object>();
 		bundleContext.registerService(InjectorConfig.class.getName(), config, properties);
+		started = true;
 	}
 
 	public String getInjectorName() {
@@ -99,5 +112,9 @@ public class InjectorRunner {
 
 	String getParentName() {
 		return parentInjectorName;
+	}
+
+	String getApplicationPath() {
+		return applicationPath;
 	}
 }

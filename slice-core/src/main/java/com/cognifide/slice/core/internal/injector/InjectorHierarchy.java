@@ -50,7 +50,6 @@ import com.google.inject.Module;
  * This class stores injector configuration tree and creates injectors associated with these configurations.
  * 
  * @author Tomasz Rekawek
- * 
  */
 @Component
 @Service(value = InjectorHierarchy.class)
@@ -66,6 +65,8 @@ public class InjectorHierarchy {
 
 	private final Map<String, Injector> injectorByName = new HashMap<String, Injector>();
 
+	private volatile Map<String, String> namesByPath = new HashMap<String, String>();
+
 	private volatile Map<Injector, String> nameLookupMap = new HashMap<Injector, String>();
 
 	@Deactivate
@@ -74,6 +75,7 @@ public class InjectorHierarchy {
 		injectorByName.clear();
 		nameLookupMap.clear();
 		listeners.clear();
+		namesByPath.clear();
 	}
 
 	/**
@@ -89,6 +91,7 @@ public class InjectorHierarchy {
 		List<InjectorConfig> injectorsToRefresh = getSubtree(config);
 		refreshInjectors(injectorsToRefresh);
 		refreshNameLookupMap();
+		refreshNamesByPathMap();
 	}
 
 	/**
@@ -106,6 +109,7 @@ public class InjectorHierarchy {
 		}
 		configByName.remove(config.getName());
 		refreshNameLookupMap();
+		refreshNamesByPathMap();
 	}
 
 	/**
@@ -116,6 +120,16 @@ public class InjectorHierarchy {
 	 */
 	public synchronized Injector getInjectorByName(String injectorName) {
 		return injectorByName.get(injectorName);
+	}
+
+	/**
+	 * Return name of injector with given path
+	 * 
+	 * @param applicationPath Injector path
+	 * @return Injector name or null if there is no such injector
+	 */
+	public synchronized String getInjectorNameByApplicationPath(String applicationPath) {
+		return namesByPath.get(applicationPath);
 	}
 
 	/**
@@ -208,6 +222,14 @@ public class InjectorHierarchy {
 			map.put(entry.getValue(), entry.getKey());
 		}
 		nameLookupMap = map;
+	}
+
+	private void refreshNamesByPathMap() {
+		Map<String, String> map = new HashMap<String, String>();
+		for (Entry<String, InjectorConfig> entry : configByName.entrySet()) {
+			map.put(entry.getValue().getApplicationPath(), entry.getKey());
+		}
+		namesByPath = map;
 	}
 
 	protected void bindConfig(final InjectorConfig config) {

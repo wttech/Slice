@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,7 +17,6 @@
  * limitations under the License.
  * #L%
  */
-
 package com.cognifide.slice.util;
 
 import java.util.regex.Matcher;
@@ -25,14 +24,18 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
-import org.apache.sling.api.resource.Resource;
+
+import com.cognifide.slice.api.injector.InjectorRunner;
+import com.cognifide.slice.api.injector.InjectorsRepository;
 
 /**
  * Util for getting injector name required for given request.
  * 
  * @author rafal.malinowski
  * @author Jan Kuźniak
+ * @deprecated since 4.1. User {@link InjectorsRepository} instead
  */
+@Deprecated
 public final class InjectorNameUtil {
 
 	private static final Pattern RESOURCE_TYPE_PATTERN = Pattern.compile("(/[^/]+/)?([^/]+)(/.*)?");
@@ -42,13 +45,10 @@ public final class InjectorNameUtil {
 	}
 
 	/**
-	 * Gets injector name for given request. First a CRX tree is searched from current resource to top one.
-	 * First found injectorName is returned. For each resource subresource jcr:content is also checked.
+	 * Gets injector name for resource from specified request . It is name of path item directly after apps.
+	 * For /apps/slice/... it will return slice.
 	 * 
-	 * If no injectorName property is found then name is fetched from current resource type. It is name of
-	 * path item directly after apps. For /apps/slice/... it will return slice.
-	 * 
-	 * @deprecated use {@link com.cognifide.slice.api.injector.InjectorsRepository#getInjectorForResource(Resource)} instead
+	 * @deprecated use {@link InjectorsRepository#getInjectorNameForResource(String)} instead
 	 */
 	@Deprecated
 	public static String getFromRequest(final SlingHttpServletRequest request) {
@@ -58,6 +58,20 @@ public final class InjectorNameUtil {
 		return StringUtils.EMPTY;
 	}
 
+	/**
+	 * This util provides injector name for a given resource. The name is read from second part of the
+	 * resource type, i.e. part after /apps/. For instance, for /apps/myapp/someresource, it will return
+	 * <code>myapp</code> <br>
+	 * <br>
+	 * Please note that this method is deprecated and it doesn't support injectors registered for a given path
+	 * (with use of {@link InjectorRunner#setInjectorPath(String)})
+	 * 
+	 * @deprecated use {@link InjectorsRepository#getInjectorNameForResource(String)} instead
+	 * 
+	 * @param resourceType resource type to take the injector name from
+	 * @return injector name, always second part of the resource type
+	 */
+	@Deprecated
 	public static String getFromResourceType(String resourceType) {
 		String injectorName = null;
 		if (StringUtils.isNotEmpty(resourceType)) {
