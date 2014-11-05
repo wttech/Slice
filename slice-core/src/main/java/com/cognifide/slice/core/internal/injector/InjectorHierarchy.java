@@ -60,8 +60,8 @@ public class InjectorHierarchy {
 	@Reference(cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, referenceInterface = InjectorConfig.class, policy = ReferencePolicy.DYNAMIC, bind = "bindConfig", unbind = "unbindConfig")
 	private final Map<String, InjectorConfig> configByName = new HashMap<String, InjectorConfig>();
 
-	@Reference(cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, referenceInterface = InjectorListener.class, policy = ReferencePolicy.DYNAMIC)
-	private final Set<InjectorListener> listeners = new HashSet<InjectorListener>();
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, referenceInterface = InjectorLifecycleListener.class, policy = ReferencePolicy.DYNAMIC)
+	private final Set<InjectorLifecycleListener> listeners = new HashSet<InjectorLifecycleListener>();
 
 	private final Map<String, Injector> injectorByName = new HashMap<String, Injector>();
 
@@ -103,7 +103,7 @@ public class InjectorHierarchy {
 		List<InjectorConfig> injectorsToRemove = getSubtree(config);
 		for (InjectorConfig c : injectorsToRemove) {
 			Injector injector = injectorByName.remove(c.getName());
-			for (InjectorListener listener : listeners) {
+			for (InjectorLifecycleListener listener : listeners) {
 				listener.injectorDestroyed(injector, c);
 			}
 		}
@@ -195,7 +195,7 @@ public class InjectorHierarchy {
 		} while (current != null);
 		try {
 			Injector injector = Guice.createInjector(modules);
-			for (InjectorListener listener : listeners) {
+			for (InjectorLifecycleListener listener : listeners) {
 				listener.injectorCreated(injector, config);
 			}
 			return injector;
@@ -240,7 +240,7 @@ public class InjectorHierarchy {
 		unregisterInjector(config);
 	}
 
-	protected void bindListeners(final InjectorListener listener) {
+	protected void bindListeners(final InjectorLifecycleListener listener) {
 		for (Entry<String, Injector> entry : injectorByName.entrySet()) {
 			String name = entry.getKey();
 			InjectorConfig config = configByName.get(name);
@@ -249,7 +249,7 @@ public class InjectorHierarchy {
 		listeners.add(listener);
 	}
 
-	protected void unbindListeners(final InjectorListener listener) {
+	protected void unbindListeners(final InjectorLifecycleListener listener) {
 		listeners.remove(listener);
 	}
 }
