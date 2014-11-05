@@ -30,7 +30,7 @@ import com.google.inject.Module;
 
 public class InjectorConfig {
 
-	public static String DEFAULT_INJECTOR_PATH = "/apps/";
+	public static final String DEFAULT_INJECTOR_PATH = "/apps/";
 
 	private final List<Module> modules;
 
