@@ -24,7 +24,6 @@
 	</licenses>
 
 	<modules>
-		<module>slice-activator</module>
 		<module>slice-core-api</module>
 		<module>slice-core</module>
 		<module>slice-mapper-api</module>
