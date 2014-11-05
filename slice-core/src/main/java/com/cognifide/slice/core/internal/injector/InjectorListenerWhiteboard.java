@@ -20,6 +20,7 @@
 
 package com.cognifide.slice.core.internal.injector;
 
+import java.util.Hashtable;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
@@ -59,8 +60,9 @@ public class InjectorListenerWhiteboard {
 
 	protected void bindListeners(final InjectorListener listener) {
 		final InjectorLifecycleListener lifecycleListener = new InjectorListenerBridge(listener);
-		final ServiceRegistration registration = context.registerService(
-				InjectorLifecycleListener.class.getName(), lifecycleListener, null);
+		final ServiceRegistration registration = context
+				.registerService(InjectorLifecycleListener.class.getName(), lifecycleListener,
+						new Hashtable<String, Object>());
 		listeners.put(listener, registration);
 	}
 
