@@ -30,9 +30,17 @@ package com.cognifide.slice.api.injector;
  * {@literal @}Service
  * public class MyComponent implements InjectorListener {
  * 
+ *   // we need to have this atomic boolean, as the injector may become available a few times during component lifecycle
+ *   private final AtomicBoolean initialized = new AtomicBoolean();
+ * 
+ *   {@literal @}Activate
+ *   protected void activate() {
+ *     initialized.set(false);
+ *   }
+ * 
  *   {@literal @}Override
  *   public void injectorAvailable(String injectorName) {
- *     if ("myapp".equals(injectorName)) {
+ *     if ("myapp".equals(injectorName) && !initialized.getAndSet()) {
  *             InjectorWithContext injector = InjectorUtil.getInjector("myapp", getResolver());
  *             // do something clever with the injector
  *         }
