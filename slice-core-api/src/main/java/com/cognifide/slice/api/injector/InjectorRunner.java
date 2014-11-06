@@ -80,7 +80,7 @@ public class InjectorRunner {
 		modules.add(newModule);
 	}
 
-	public void installModules(final List<Module> newModules) {
+	public void installModules(final List<? extends Module> newModules) {
 		if (started) {
 			throw new IllegalStateException("Installing new modules is not allowed after Injector was stared");
 		}
@@ -106,7 +106,7 @@ public class InjectorRunner {
 		return basePackage;
 	}
 
-	List<Module> getModules() {
+	List<? extends Module> getModules() {
 		return modules;
 	}
 
