@@ -25,12 +25,13 @@ import com.google.inject.Injector;
 
 /**
  * OSGi services implementing this interface will be informed about events related to the Slice injector
- * lifecycle.
+ * lifecycle. It gets more information about the created/destroyed injector than {@link InjectorListener} and
+ * is meant to be used internally.
  * 
  * @author Tomasz Rękawek
  * 
  */
-public interface InjectorListener {
+public interface InjectorLifecycleListener {
 	/**
 	 * Called when Slice injector is successfully created.
 	 * 
