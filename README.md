@@ -257,7 +257,8 @@ We can:
 
 # More documentation
 ------------------
-* [Full documentation of Slice](https://cognifide.atlassian.net/wiki/display/SLICE/About+Slice+-+4.1)
-* [Slice wiki](https://cognifide.atlassian.net/wiki/display/SLICE)
+* [Full documentation of Slice 4.1](https://cognifide.atlassian.net/wiki/display/SLICE/About+Slice+-+4.1)
+* [Slice 4.1 APIdocs](http://cognifide.github.io/Slice/apidocs/4-1-0/)
+* [Slice Wiki](https://cognifide.atlassian.net/wiki/display/SLICE)
 * [Slice users mailing group](http://slice-users.2340343.n4.nabble.com/) if you have any question on how to use it
 * [Slice issue tracking](https://cognifide.atlassian.net/browse/SLICE)
