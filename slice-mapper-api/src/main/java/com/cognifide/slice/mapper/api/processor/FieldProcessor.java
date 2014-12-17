@@ -25,10 +25,13 @@ import java.lang.reflect.Field;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 
+import aQute.bnd.annotation.ConsumerType;
+
 /**
  * Defines if a field can be mapped to a specified field and performs actual mapping.
  * 
  */
+@ConsumerType
 public interface FieldProcessor {
 
 	/**

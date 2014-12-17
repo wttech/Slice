@@ -20,6 +20,8 @@
 
 package com.cognifide.slice.api.model;
 
+import aQute.bnd.annotation.ConsumerType;
+
 /**
  * Allows a model to be informed after mapping from resource has been finished and all its fields have been
  * mapped to appropriate values of corresponding resource.<br>
@@ -31,6 +33,7 @@ package com.cognifide.slice.api.model;
  * @author maciej.majchrzak
  * 
  */
+@ConsumerType
 public interface InitializableModel {
 
 	/**

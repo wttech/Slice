@@ -20,6 +20,8 @@
 
 package com.cognifide.slice.api.context;
 
+import aQute.bnd.annotation.ConsumerType;
+
 import com.google.inject.Key;
 
 /**
@@ -31,6 +33,7 @@ import com.google.inject.Key;
  * given Key is available in Context. Calling get() and checking for null is not enough, because Context can
  * store null values as well.
  */
+@ConsumerType
 public interface Context {
 
 	/**

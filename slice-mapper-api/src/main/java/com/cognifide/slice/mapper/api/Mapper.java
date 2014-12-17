@@ -22,6 +22,8 @@ package com.cognifide.slice.mapper.api;
 
 import org.apache.sling.api.resource.Resource;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Mapper is an object that provides an abstract interface to content repository, providing some specific
  * operations without exposing details of the repository. It provides a mapping from application calls to the
@@ -29,6 +31,7 @@ import org.apache.sling.api.resource.Resource;
  * terms of domain-specific objects and data types (the public interface of the Mapper), and how these can be
  * satisfied with a repository (the implementation of the Mapper).
  */
+@ProviderType
 public interface Mapper {
 
 	/**

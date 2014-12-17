@@ -20,6 +20,9 @@
 
 package com.cognifide.slice.api.context;
 
+import aQute.bnd.annotation.ProviderType;
+
+@ProviderType
 public interface RequestContextProvider {
 	/**
 	 * Return context provider that stores data in the request attributes. Bindings are stored separately for

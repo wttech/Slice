@@ -20,6 +20,8 @@
 
 package com.cognifide.slice.core.internal.injector;
 
+import aQute.bnd.annotation.ConsumerType;
+
 import com.cognifide.slice.api.injector.InjectorConfig;
 import com.google.inject.Injector;
 
@@ -31,6 +33,7 @@ import com.google.inject.Injector;
  * @author Tomasz Rękawek
  * 
  */
+@ConsumerType
 public interface InjectorLifecycleListener {
 	/**
 	 * Called when Slice injector is successfully created.

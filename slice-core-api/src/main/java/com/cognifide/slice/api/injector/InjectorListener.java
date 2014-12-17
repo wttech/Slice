@@ -20,6 +20,8 @@
 
 package com.cognifide.slice.api.injector;
 
+import aQute.bnd.annotation.ConsumerType;
+
 /**
  * OSGi services implementing this interface are informed about the availability of injectors registered in
  * Slice. Listener can be used to implement initialization logic inside OSGi component that needs to use Slice
@@ -49,8 +51,9 @@ package com.cognifide.slice.api.injector;
  * </pre>
  * 
  * @author Tomasz Rękawek
- *
+ * 
  */
+@ConsumerType
 public interface InjectorListener {
 	void injectorAvailable(String injectorName);
 }
