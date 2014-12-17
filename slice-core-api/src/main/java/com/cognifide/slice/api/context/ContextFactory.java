@@ -25,11 +25,14 @@ import javax.servlet.ServletResponse;
 
 import org.apache.sling.api.resource.ResourceResolver;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * @author Rafał Malinowski
  * 
  * Factory for creating Context instances.
  */
+@ProviderType
 public interface ContextFactory {
 
 	public static final String COMMON_CONTEXT_NAME = ContextFactory.class.getName() + ".commonContext";

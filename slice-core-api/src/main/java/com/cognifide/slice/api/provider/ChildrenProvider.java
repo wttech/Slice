@@ -24,6 +24,8 @@ import java.util.List;
 
 import org.apache.sling.api.resource.Resource;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * @deprecated See {@link com.cognifide.slice.api.provider.ModelProvider} and one of its methods:
  * <ul>
@@ -33,6 +35,7 @@ import org.apache.sling.api.resource.Resource;
  * </ul>
  */
 @Deprecated
+@ProviderType
 public interface ChildrenProvider {
 
 	/**

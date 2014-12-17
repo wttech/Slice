@@ -20,11 +20,14 @@
 
 package com.cognifide.slice.api.context;
 
+import aQute.bnd.annotation.ConsumerType;
+
 /**
  * @author Rafał Malinowski
  * 
  * Provider for Context instance.
  */
+@ConsumerType
 public interface ContextProvider {
 
 	/**

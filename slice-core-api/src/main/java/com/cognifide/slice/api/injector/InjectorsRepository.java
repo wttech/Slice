@@ -22,6 +22,8 @@ package com.cognifide.slice.api.injector;
 
 import java.util.Collection;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.google.inject.Injector;
 
 /**
@@ -40,6 +42,7 @@ import com.google.inject.Injector;
  * {@link #getInjectorForResource(String resourcePath)}).</li>
  * </ul>
  */
+@ProviderType
 public interface InjectorsRepository {
 
 	/**

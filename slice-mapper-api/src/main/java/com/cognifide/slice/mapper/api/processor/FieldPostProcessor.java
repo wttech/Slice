@@ -24,10 +24,13 @@ import java.lang.reflect.Field;
 
 import org.apache.sling.api.resource.Resource;
 
+import aQute.bnd.annotation.ConsumerType;
+
 /**
  * Defines if a value can be processed and performs actual processing.
  * 
  */
+@ConsumerType
 public interface FieldPostProcessor {
 
 	/**

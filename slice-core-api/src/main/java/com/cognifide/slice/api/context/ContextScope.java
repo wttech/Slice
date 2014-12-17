@@ -20,6 +20,8 @@
 
 package com.cognifide.slice.api.context;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.google.inject.Scope;
 
 /**
@@ -33,6 +35,7 @@ import com.google.inject.Scope;
  * providing can change. Thanks to that objects that are ContextScoped can be stored per-thread, per-request
  * or even per-second. It only requires good implementation of ContextProvider and Context interfaces.
  */
+@ProviderType
 public interface ContextScope extends Scope {
 
 	/**

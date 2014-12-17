@@ -25,6 +25,8 @@ import java.util.List;
 
 import org.apache.sling.api.resource.Resource;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.google.inject.Key;
 
 /**
@@ -33,6 +35,7 @@ import com.google.inject.Key;
  * @author Witold Szczerba
  * @author Rafał Malinowski
  */
+@ProviderType
 public interface ModelProvider {
 
 	/**

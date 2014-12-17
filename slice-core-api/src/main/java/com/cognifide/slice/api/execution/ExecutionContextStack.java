@@ -20,10 +20,13 @@
 
 package com.cognifide.slice.api.execution;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Execution context stack of Slice Injector. New ExecutionContext is put on this stack each time a new call
  * to ModelProvider is made. After call is finished the ExecutionContext is taken from this stack.
  */
+@ProviderType
 public interface ExecutionContextStack {
 
 	/**

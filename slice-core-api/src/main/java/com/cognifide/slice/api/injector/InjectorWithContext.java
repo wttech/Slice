@@ -22,6 +22,8 @@ package com.cognifide.slice.api.injector;
 
 import java.io.Closeable;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.cognifide.slice.api.context.ContextProvider;
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -57,6 +59,7 @@ import com.google.inject.Key;
  * 
  * This decoration has two delegate getInstance() methods added for convenience.
  */
+@ProviderType
 public interface InjectorWithContext extends Closeable {
 
 	/**

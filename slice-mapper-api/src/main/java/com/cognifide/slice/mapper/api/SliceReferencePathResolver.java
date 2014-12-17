@@ -21,6 +21,9 @@
 package com.cognifide.slice.mapper.api;
 
 import java.lang.annotation.Annotation;
+
+import aQute.bnd.annotation.ConsumerType;
+
 import com.cognifide.slice.mapper.annotation.SliceReference;
 
 /**
@@ -30,6 +33,7 @@ import com.cognifide.slice.mapper.annotation.SliceReference;
  * @author maciej.majchrzak
  * 
  */
+@ConsumerType
 public interface SliceReferencePathResolver {
 
 	/**
