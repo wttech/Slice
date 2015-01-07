@@ -33,6 +33,7 @@
 							com.cognifide.slice.core*;version="${project.version}",
 						</Export-Package>
 						<Embed-Dependency>asm</Embed-Dependency>
+						<Sling-Nodetypes>SLING-INF/nodetypes/nodetypes.cnd</Sling-Nodetypes>
 					</instructions>
 				</configuration>
 			</plugin>

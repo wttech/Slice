@@ -63,19 +63,22 @@ public class SliceModelProvider implements ModelProvider {
 
 	private final ResourceResolver resourceResolver;
 
+	private final SliceModelClassResolver modelClassResolver;
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Inject
 	public SliceModelProvider(final Injector injector, final ContextScope contextScope,
 			final ClassToKeyMapper classToKeyMapper, final ExecutionContextStack currentExecutionContext,
-			final ResourceResolver resourceResolver) {
+			final ResourceResolver resourceResolver, SliceModelClassResolver modelClassResolver) {
 		this.injector = injector;
 		this.contextScope = contextScope;
 		this.contextProvider = contextScope.getContextProvider();
 		this.classToKeyMapper = classToKeyMapper;
 		this.currentExecutionContext = currentExecutionContext;
 		this.resourceResolver = resourceResolver;
+		this.modelClassResolver = modelClassResolver;
 	}
 
 	/**
@@ -240,5 +243,17 @@ public class SliceModelProvider implements ModelProvider {
 			currentExecutionContext.pop();
 			contextScope.setContextProvider(oldContextProvider);
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Object get(Resource resource) throws ClassNotFoundException {
+		final Class<?> clazz = modelClassResolver.getModelClass(resource.getResourceType());
+		if (clazz == null) {
+			return null;
+		}
+		return get(clazz, resource);
 	}
 }
