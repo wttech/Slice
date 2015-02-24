@@ -20,11 +20,16 @@
 
 package com.cognifide.slice.core.internal.adapter;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Dictionary;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
@@ -33,7 +38,10 @@ import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.adapter.AdapterFactory;
 import org.apache.sling.api.resource.Resource;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleEvent;
+import org.osgi.framework.BundleListener;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 
@@ -41,6 +49,7 @@ import com.cognifide.slice.api.context.RequestContextProvider;
 import com.cognifide.slice.api.injector.InjectorConfig;
 import com.cognifide.slice.api.injector.InjectorsRepository;
 import com.cognifide.slice.core.internal.injector.InjectorLifecycleListener;
+import com.cognifide.slice.core.internal.scanner.BundleNameMatcher;
 import com.cognifide.slice.core.internal.scanner.SliceResourceScanner;
 import com.google.inject.Injector;
 
@@ -53,8 +62,8 @@ import com.google.inject.Injector;
  * 
  */
 @Component(immediate = true)
-@Service
-public class AdapterFactoryManager implements InjectorLifecycleListener {
+@Service(value = InjectorLifecycleListener.class)
+public class AdapterFactoryManager implements InjectorLifecycleListener, BundleListener {
 
 	@Reference
 	private InjectorsRepository repository;
@@ -63,6 +72,8 @@ public class AdapterFactoryManager implements InjectorLifecycleListener {
 	private RequestContextProvider requestContextProvider;
 
 	private Map<String, ServiceRegistration> registrationByInjector;
+	
+	private Map<String, BundleNameMatcher> matchers;
 
 	private BundleContext bundleContext;
 
@@ -72,7 +83,11 @@ public class AdapterFactoryManager implements InjectorLifecycleListener {
 	public void activate(ComponentContext componentContext) {
 		bundleContext = componentContext.getBundleContext();
 		registrationByInjector = new HashMap<String, ServiceRegistration>();
+		matchers = new HashMap<String, BundleNameMatcher>();
 		scanner = new SliceResourceScanner(bundleContext);
+		
+		bundleContext = componentContext.getBundleContext();
+		bundleContext.addBundleListener(this);
 	}
 
 	@Deactivate
@@ -80,7 +95,40 @@ public class AdapterFactoryManager implements InjectorLifecycleListener {
 		for (ServiceRegistration adapterFactory : registrationByInjector.values()) {
 			adapterFactory.unregister();
 		}
+
+		bundleContext.removeBundleListener(this);
 	}
+	
+	public void bundleChanged(BundleEvent event) {
+		if (event.getType() != BundleEvent.STARTED) {
+			return;
+		}
+		final Bundle bundle = event.getBundle();
+		for (Entry<String, BundleNameMatcher> entry : matchers.entrySet()) {
+			final String injectorName = entry.getKey();
+			final BundleNameMatcher matcher = entry.getValue();
+			if (matcher.matches(bundle.getSymbolicName())) {
+				ServiceRegistration serviceRegistration = registrationByInjector.get(injectorName);
+				String[] adapterClasses = (String[])serviceRegistration.getReference().getProperty("adapters");
+
+				Collection<Class<?>> classes = scanner.findSliceResources(matcher.getBundleNameFilter(), "com.cognifide.cq.slice.bundle");
+				String[] classNames = getClassNames(classes);
+
+				List<String> adapters = Arrays.asList(adapterClasses);
+				List<String> names  = Arrays.asList(classNames);
+				if (!adapters.containsAll(names)) {
+					serviceRegistration.unregister();
+					
+					Set<String> set = new HashSet<String>(adapters);
+					set.addAll(names);
+					ServiceRegistration newRegistration = createAdapterFactory(set.toArray(new String[set.size()]), injectorName);
+					registrationByInjector.put(injectorName, newRegistration);
+				}
+
+			}
+		}
+	}
+	
 
 	@Override
 	public void injectorCreated(Injector injector, InjectorConfig config) {
@@ -88,6 +136,7 @@ public class AdapterFactoryManager implements InjectorLifecycleListener {
 				config.getBasePackage());
 		ServiceRegistration registration = createAdapterFactory(classes, config.getName());
 		registrationByInjector.put(config.getName(), registration);
+		matchers.put(config.getName(), new BundleNameMatcher(config.getBundleNameFilter()));
 	}
 
 	@Override
@@ -96,22 +145,33 @@ public class AdapterFactoryManager implements InjectorLifecycleListener {
 		if (registration != null) {
 			registration.unregister();
 		}
+		matchers.remove(config.getName());
 	}
 
 	private ServiceRegistration createAdapterFactory(Collection<Class<?>> classes, String name) {
-		String[] adapterClasses = new String[classes.size()];
-		int i = 0;
-		for (Class<?> clazz : classes) {
-			adapterClasses[i++] = clazz.getName();
-		}
+		String[] adapterClasses = getClassNames(classes);
 
+		return createAdapterFactory(adapterClasses, name);
+	}
+	
+	private ServiceRegistration createAdapterFactory(String[] adapterClasses, String name) {
 		SliceAdapterFactory factory = new SliceAdapterFactory(name, repository, requestContextProvider);
 		Dictionary<String, Object> properties = new Hashtable<String, Object>();
 		properties.put(AdapterFactory.ADAPTABLE_CLASSES, new String[] { Resource.class.getName() });
 		properties.put(AdapterFactory.ADAPTER_CLASSES, adapterClasses);
 		ServiceRegistration registration = bundleContext.registerService(AdapterFactory.class.getName(),
 				factory, properties);
-
+		
 		return registration;
+	}
+	
+	private String[] getClassNames(Collection<Class<?>> classes) {
+		String[] classNames = new String[classes.size()];
+		int i = 0;
+		for (Class<?> clazz : classes) {
+			classNames[i++] = clazz.getName();
+		}
+		
+		return classNames;
 	}
 }

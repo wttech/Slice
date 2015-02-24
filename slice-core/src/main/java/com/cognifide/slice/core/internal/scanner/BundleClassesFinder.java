@@ -31,7 +31,6 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import org.objectweb.asm.ClassReader;
 import org.osgi.framework.Bundle;
@@ -54,7 +53,7 @@ public class BundleClassesFinder {
 	private List<ClassFilter> filters = new ArrayList<BundleClassesFinder.ClassFilter>();
 
 	public BundleClassesFinder(String basePackage, String bundleNameFilter, BundleContext bundleContext) {
-		this.bundles = findBundles(bundleNameFilter, bundleContext);
+		this.bundles = findBundles(bundleContext, new BundleNameMatcher(bundleNameFilter));
 		this.basePackage = basePackage.replace('.', '/');
 	}
 
@@ -131,11 +130,10 @@ public class BundleClassesFinder {
 		return osgiClasses;
 	}
 
-	List<Bundle> findBundles(String bundleNameFilter, BundleContext bundleContext) {
-		Pattern bundleNamePattern = Pattern.compile(bundleNameFilter);
+	List<Bundle> findBundles(BundleContext bundleContext, BundleNameMatcher matcher) {
 		List<Bundle> bundles = new ArrayList<Bundle>();
 		for (Bundle bundle : bundleContext.getBundles()) {
-			if (bundleNamePattern.matcher(bundle.getSymbolicName()).matches()) {
+			if (matcher.matches(bundle.getSymbolicName())) {
 				bundles.add(bundle);
 			}
 		}
