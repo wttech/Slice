@@ -20,16 +20,12 @@
 
 package com.cognifide.slice.core.internal.adapter;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Dictionary;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
@@ -49,16 +45,23 @@ import com.cognifide.slice.api.context.RequestContextProvider;
 import com.cognifide.slice.api.injector.InjectorConfig;
 import com.cognifide.slice.api.injector.InjectorsRepository;
 import com.cognifide.slice.core.internal.injector.InjectorLifecycleListener;
-import com.cognifide.slice.core.internal.scanner.BundleNameMatcher;
+import com.cognifide.slice.core.internal.scanner.BundleClassesFinder;
+import com.cognifide.slice.core.internal.scanner.BundleFinder;
+import com.cognifide.slice.core.internal.scanner.BundleInfo;
+import com.cognifide.slice.core.internal.scanner.BundleMatcher;
 import com.cognifide.slice.core.internal.scanner.SliceResourceScanner;
 import com.google.inject.Injector;
 
 /**
  * This component is responsible for creation and destruction of the AdapterFactory services. Every time a
- * injector is created, it looks for all modules implementing AdaptableModule interface and creates a separate
- * AdapterFactory for each module it founds.
+ * injector is created, it looks for all classes annotated with SliceResource annotation and creates a
+ * separate AdapterFactory for each bundle containing matching classes.
+ * <p/>
+ * Each time a bundle is restarted, corresponding AdapterFactory is updated with the most recent list of
+ * adapters.
  * 
  * @author Tomasz Rękawek
+ * @author Dominik Kornaś
  * 
  */
 @Component(immediate = true)
@@ -71,9 +74,9 @@ public class AdapterFactoryManager implements InjectorLifecycleListener, BundleL
 	@Reference
 	private RequestContextProvider requestContextProvider;
 
-	private Map<String, ServiceRegistration> registrationByInjector;
-	
-	private Map<String, BundleNameMatcher> matchers;
+	private AdapterFactoryRegistry registry;
+
+	private Map<String, BundleMatcher> matchersByInjector;
 
 	private BundleContext bundleContext;
 
@@ -82,96 +85,81 @@ public class AdapterFactoryManager implements InjectorLifecycleListener, BundleL
 	@Activate
 	public void activate(ComponentContext componentContext) {
 		bundleContext = componentContext.getBundleContext();
-		registrationByInjector = new HashMap<String, ServiceRegistration>();
-		matchers = new HashMap<String, BundleNameMatcher>();
+		registry = new AdapterFactoryRegistry();
+		matchersByInjector = new HashMap<String, BundleMatcher>();
 		scanner = new SliceResourceScanner(bundleContext);
-		
+
 		bundleContext = componentContext.getBundleContext();
 		bundleContext.addBundleListener(this);
 	}
 
 	@Deactivate
 	public void deactivate() {
-		for (ServiceRegistration adapterFactory : registrationByInjector.values()) {
-			adapterFactory.unregister();
-		}
-
 		bundleContext.removeBundleListener(this);
+
+		registry.clearAll();
+		matchersByInjector.clear();
 	}
-	
+
+	@Override
+	public void injectorCreated(Injector injector, InjectorConfig config) {
+		final BundleInfo bundleInfo = new BundleInfo(config.getBundleNameFilter(), config.getBasePackage());
+		final BundleFinder bundleFinder = new BundleFinder(bundleInfo, bundleContext);
+		for (Bundle bundle : bundleFinder.findBundles()) {
+			final Collection<Class<?>> classes = scanner.findSliceResources(bundle, config.getBasePackage());
+
+			final ServiceRegistration registration = createAdapterFactory(classes, config.getName());
+			registry.addAdapter(registration, config.getName(), bundle.getSymbolicName());
+		}
+		matchersByInjector.put(config.getName(), new BundleMatcher(bundleInfo));
+	}
+
+	@Override
+	public void injectorDestroyed(Injector injector, InjectorConfig config) {
+		registry.clearInjectorAdapters(config.getName());
+		matchersByInjector.remove(config.getName());
+	}
+
 	public void bundleChanged(BundleEvent event) {
 		if (event.getType() != BundleEvent.STARTED) {
 			return;
 		}
 		final Bundle bundle = event.getBundle();
-		for (Entry<String, BundleNameMatcher> entry : matchers.entrySet()) {
-			final String injectorName = entry.getKey();
-			final BundleNameMatcher matcher = entry.getValue();
-			if (matcher.matches(bundle.getSymbolicName())) {
-				ServiceRegistration serviceRegistration = registrationByInjector.get(injectorName);
-				String[] adapterClasses = (String[])serviceRegistration.getReference().getProperty("adapters");
-
-				Collection<Class<?>> classes = scanner.findSliceResources(matcher.getBundleNameFilter(), "com.cognifide.cq.slice.bundle");
-				String[] classNames = getClassNames(classes);
-
-				List<String> adapters = Arrays.asList(adapterClasses);
-				List<String> names  = Arrays.asList(classNames);
-				if (!adapters.containsAll(names)) {
-					serviceRegistration.unregister();
-					
-					Set<String> set = new HashSet<String>(adapters);
-					set.addAll(names);
-					ServiceRegistration newRegistration = createAdapterFactory(set.toArray(new String[set.size()]), injectorName);
-					registrationByInjector.put(injectorName, newRegistration);
-				}
-
+		for (Entry<String, BundleMatcher> entry : matchersByInjector.entrySet()) {
+			BundleMatcher matcher = entry.getValue();
+			if (entry.getValue().matches(bundle.getSymbolicName())) {
+				updateAdapterFactory(bundle, entry.getKey(), matcher.getBundleInfo());
 			}
 		}
 	}
-	
-
-	@Override
-	public void injectorCreated(Injector injector, InjectorConfig config) {
-		Collection<Class<?>> classes = scanner.findSliceResources(config.getBundleNameFilter(),
-				config.getBasePackage());
-		ServiceRegistration registration = createAdapterFactory(classes, config.getName());
-		registrationByInjector.put(config.getName(), registration);
-		matchers.put(config.getName(), new BundleNameMatcher(config.getBundleNameFilter()));
-	}
-
-	@Override
-	public void injectorDestroyed(Injector injector, InjectorConfig config) {
-		ServiceRegistration registration = registrationByInjector.remove(config.getName());
-		if (registration != null) {
-			registration.unregister();
-		}
-		matchers.remove(config.getName());
-	}
 
 	private ServiceRegistration createAdapterFactory(Collection<Class<?>> classes, String name) {
-		String[] adapterClasses = getClassNames(classes);
-
-		return createAdapterFactory(adapterClasses, name);
-	}
-	
-	private ServiceRegistration createAdapterFactory(String[] adapterClasses, String name) {
+		String[] adapterClassNames = getClassNames(classes);
 		SliceAdapterFactory factory = new SliceAdapterFactory(name, repository, requestContextProvider);
+
 		Dictionary<String, Object> properties = new Hashtable<String, Object>();
 		properties.put(AdapterFactory.ADAPTABLE_CLASSES, new String[] { Resource.class.getName() });
-		properties.put(AdapterFactory.ADAPTER_CLASSES, adapterClasses);
-		ServiceRegistration registration = bundleContext.registerService(AdapterFactory.class.getName(),
-				factory, properties);
-		
-		return registration;
+		properties.put(AdapterFactory.ADAPTER_CLASSES, adapterClassNames);
+		return bundleContext.registerService(AdapterFactory.class.getName(), factory, properties);
 	}
-	
+
+	private void updateAdapterFactory(final Bundle bundle, final String injectorName,
+			final BundleInfo bundleInfo) {
+		registry.clearBundleAdapter(injectorName, bundle.getSymbolicName());
+
+		final BundleClassesFinder classFinder = new BundleClassesFinder(bundleInfo.getBasePackage());
+		final Collection<Class<?>> classes = classFinder.getClasses(bundle);
+		ServiceRegistration newRegistration = createAdapterFactory(classes, injectorName);
+		registry.addAdapter(newRegistration, injectorName, bundle.getSymbolicName());
+	}
+
 	private String[] getClassNames(Collection<Class<?>> classes) {
 		String[] classNames = new String[classes.size()];
 		int i = 0;
 		for (Class<?> clazz : classes) {
 			classNames[i++] = clazz.getName();
 		}
-		
+
 		return classNames;
 	}
 }

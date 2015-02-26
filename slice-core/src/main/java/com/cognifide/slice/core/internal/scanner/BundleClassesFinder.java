@@ -34,7 +34,6 @@ import java.util.Set;
 
 import org.objectweb.asm.ClassReader;
 import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,40 +45,45 @@ public class BundleClassesFinder {
 
 	private static final String RESOURCE_PATTERN = "*.class";
 
-	private final Collection<Bundle> bundles;
-
 	private final String basePackage;
 
-	private List<ClassFilter> filters = new ArrayList<BundleClassesFinder.ClassFilter>();
+	private List<ClassFilter> filters = new ArrayList<ClassFilter>();
 
-	public BundleClassesFinder(String basePackage, String bundleNameFilter, BundleContext bundleContext) {
-		this.bundles = findBundles(bundleContext, new BundleNameMatcher(bundleNameFilter));
+	public BundleClassesFinder(String basePackage) {
 		this.basePackage = basePackage.replace('.', '/');
 	}
 
-	public Collection<Class<?>> getClasses() {
+	public Collection<Class<?>> getClasses(final Bundle bundle) {
 		Collection<Class<?>> classes = new ArrayList<Class<?>>();
-		for (Bundle bundle : this.bundles) {
-			@SuppressWarnings("unchecked")
-			Enumeration<URL> classEntries = bundle.findEntries(this.basePackage, RESOURCE_PATTERN, true);
-			while ((classEntries != null) && classEntries.hasMoreElements()) {
-				try {
-					URL classURL = classEntries.nextElement();
-					ClassReader classReader = new ClassReader(classURL.openStream());
-					if (accepts(classReader)) {
-						String className = classReader.getClassName().replace('/', '.');
-						if (LOG.isDebugEnabled()) {
-							LOG.debug("Class: " + className + " has been found.");
-						}
-						Class<?> clazz = bundle.loadClass(className);
-						classes.add(clazz);
+		
+		@SuppressWarnings("unchecked")
+		Enumeration<URL> classEntries = bundle.findEntries(this.basePackage, RESOURCE_PATTERN, true);
+		while ((classEntries != null) && classEntries.hasMoreElements()) {
+			try {
+				URL classURL = classEntries.nextElement();
+				ClassReader classReader = new ClassReader(classURL.openStream());
+				if (accepts(classReader)) {
+					String className = classReader.getClassName().replace('/', '.');
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("Class: " + className + " has been found.");
 					}
-				} catch (ClassNotFoundException e) {
-					LOG.error("Error loading class!", e);
-				} catch (IOException e) {
-					LOG.error("Error reading the class!", e);
+					Class<?> clazz = bundle.loadClass(className);
+					classes.add(clazz);
 				}
+			} catch (ClassNotFoundException e) {
+				LOG.error("Error loading class!", e);
+			} catch (IOException e) {
+				LOG.error("Error reading the class!", e);
 			}
+		}
+		
+		return classes;
+	}
+
+	public Collection<Class<?>> getClasses(final Collection<Bundle> bundles) {
+		Collection<Class<?>> classes = new ArrayList<Class<?>>();
+		for (Bundle bundle : bundles) {
+			classes.addAll(getClasses(bundle));
 		}
 		return classes;
 	}
@@ -97,12 +101,8 @@ public class BundleClassesFinder {
 		this.filters.add(classFilter);
 	}
 
-	public interface ClassFilter {
-		boolean accepts(ClassReader classReader);
-	}
-
-	public Collection<Class<?>> traverseBundlesForOsgiServices() {
-		Collection<Class<?>> allClasses = getClasses();
+	public Collection<Class<?>> traverseBundlesForOsgiServices(final Collection<Bundle> bundles) {
+		Collection<Class<?>> allClasses = getClasses(bundles);
 		Set<Class<?>> osgiClasses = new HashSet<Class<?>>();
 		for (Class<?> clazz : allClasses) {
 			Field[] fields = clazz.getDeclaredFields();
@@ -129,14 +129,8 @@ public class BundleClassesFinder {
 		}
 		return osgiClasses;
 	}
-
-	List<Bundle> findBundles(BundleContext bundleContext, BundleNameMatcher matcher) {
-		List<Bundle> bundles = new ArrayList<Bundle>();
-		for (Bundle bundle : bundleContext.getBundles()) {
-			if (matcher.matches(bundle.getSymbolicName())) {
-				bundles.add(bundle);
-			}
-		}
-		return bundles;
+	
+	public interface ClassFilter {
+		boolean accepts(ClassReader classReader);
 	}
 }

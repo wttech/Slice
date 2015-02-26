@@ -23,6 +23,7 @@ package com.cognifide.slice.core.internal.scanner;
 import java.util.Collection;
 
 import org.objectweb.asm.ClassReader;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,25 +43,43 @@ public class SliceResourceScanner {
 	}
 
 	public Collection<Class<?>> findSliceResources(String bundleNameFilter, String basePackage) {
-		BundleClassesFinder classFinder = new BundleClassesFinder(basePackage, bundleNameFilter,
-				bundleContext);
-		classFinder.addFilter(new ClassFilter() {
-			@Override
-			public boolean accepts(ClassReader classReader) {
-				AnnotationReader annotationReader = new AnnotationReader();
-				classReader.accept(annotationReader, ClassReader.SKIP_DEBUG);
-				return annotationReader.isAnnotationPresent(SliceResource.class);
-			}
-		});
+		BundleFinder bundleFinder = new BundleFinder(new BundleInfo(bundleNameFilter, basePackage), bundleContext);
+		BundleClassesFinder classFinder = new BundleClassesFinder(basePackage);
+		classFinder.addFilter(new SliceResourceFilter());
+
 		LOG.info("Searching for classes annotated with SliceResource, packages:{}, bundles:{}" + basePackage,
 				bundleNameFilter);
 
-		Collection<Class<?>> classes = classFinder.getClasses();
+		Collection<Class<?>> classes = classFinder.getClasses(bundleFinder.findBundles());
 
 		LOG.info("Found {} Slice Resource classes. Switch to debug logging level to see them all.",
 				classes.size());
 
 		return classes;
+	}
+
+	public Collection<Class<?>> findSliceResources(Bundle bundle, String basePackage) {
+		BundleClassesFinder classFinder = new BundleClassesFinder(basePackage);
+		classFinder.addFilter(new SliceResourceFilter());
+
+		LOG.info("Searching for classes annotated with SliceResource, packages:{}, bundle:{}" + basePackage,
+				bundle.getSymbolicName());
+
+		Collection<Class<?>> classes = classFinder.getClasses(bundle);
+
+		LOG.info("Found {} Slice Resource classes. Switch to debug logging level to see them all.",
+				classes.size());
+
+		return classes;
+	}
+
+	final class SliceResourceFilter implements ClassFilter {
+		@Override
+		public boolean accepts(ClassReader classReader) {
+			AnnotationReader annotationReader = new AnnotationReader();
+			classReader.accept(annotationReader, ClassReader.SKIP_DEBUG);
+			return annotationReader.isAnnotationPresent(SliceResource.class);
+		}
 	}
 
 }

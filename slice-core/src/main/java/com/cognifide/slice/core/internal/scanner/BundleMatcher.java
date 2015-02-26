@@ -21,22 +21,23 @@ package com.cognifide.slice.core.internal.scanner;
 
 import java.util.regex.Pattern;
 
-public class BundleNameMatcher {
+public class BundleMatcher {
 
-	private Pattern p;
+	private final Pattern pattern;
 
-	private String bundleNameFilter;
+	private final BundleInfo bundleInfo;
 
-	public BundleNameMatcher(final String bundleNameFilter) {
-		this.bundleNameFilter = bundleNameFilter;
-		this.p = Pattern.compile(bundleNameFilter);
+	public BundleMatcher(final BundleInfo bundleInfo) {
+		this.bundleInfo = bundleInfo;
+		this.pattern = Pattern.compile(bundleInfo.getBundleNameFilter());
 	}
 
 	public boolean matches(final String bundleName) {
-		return p.matcher(bundleName).matches();
+		return pattern.matcher(bundleName).matches();
 	}
 
-	public String getBundleNameFilter() {
-		return bundleNameFilter;
+	public BundleInfo getBundleInfo() {
+		return bundleInfo;
 	}
+
 }
