@@ -40,12 +40,13 @@ import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleListener;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.cognifide.slice.api.context.RequestContextProvider;
 import com.cognifide.slice.api.injector.InjectorConfig;
 import com.cognifide.slice.api.injector.InjectorsRepository;
 import com.cognifide.slice.core.internal.injector.InjectorLifecycleListener;
-import com.cognifide.slice.core.internal.scanner.BundleClassesFinder;
 import com.cognifide.slice.core.internal.scanner.BundleFinder;
 import com.cognifide.slice.core.internal.scanner.BundleInfo;
 import com.cognifide.slice.core.internal.scanner.BundleMatcher;
@@ -67,6 +68,8 @@ import com.google.inject.Injector;
 @Component(immediate = true)
 @Service(value = InjectorLifecycleListener.class)
 public class AdapterFactoryManager implements InjectorLifecycleListener, BundleListener {
+
+	private static final Logger LOG = LoggerFactory.getLogger(AdapterFactoryManager.class);
 
 	@Reference
 	private InjectorsRepository repository;
@@ -107,7 +110,12 @@ public class AdapterFactoryManager implements InjectorLifecycleListener, BundleL
 		final BundleFinder bundleFinder = new BundleFinder(bundleInfo, bundleContext);
 		for (Bundle bundle : bundleFinder.findBundles()) {
 			final Collection<Class<?>> classes = scanner.findSliceResources(bundle, config.getBasePackage());
-
+			if (classes.isEmpty()) {
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("No classes found, skipping creation of AdapterFactory.");
+				}
+				continue;
+			}
 			final ServiceRegistration registration = createAdapterFactory(classes, config.getName());
 			registry.addAdapter(registration, config.getName(), bundle.getSymbolicName());
 		}
@@ -121,14 +129,23 @@ public class AdapterFactoryManager implements InjectorLifecycleListener, BundleL
 	}
 
 	public void bundleChanged(BundleEvent event) {
-		if (event.getType() != BundleEvent.STARTED) {
+		if (event.getType() != BundleEvent.RESOLVED && event.getType() != BundleEvent.UNRESOLVED) {
+			//other event type; don't handle
 			return;
 		}
+
 		final Bundle bundle = event.getBundle();
 		for (Entry<String, BundleMatcher> entry : matchersByInjector.entrySet()) {
+			String injectorName = entry.getKey();
 			BundleMatcher matcher = entry.getValue();
 			if (entry.getValue().matches(bundle.getSymbolicName())) {
-				updateAdapterFactory(bundle, entry.getKey(), matcher.getBundleInfo());
+				if (event.getType() == BundleEvent.RESOLVED) {
+					updateAdapterFactory(bundle, injectorName, matcher.getBundleInfo().getBasePackage());
+					return;
+				} else if (event.getType() == BundleEvent.UNRESOLVED) {
+					registry.clearBundleAdapter(injectorName, bundle.getSymbolicName());
+					return;
+				}
 			}
 		}
 	}
@@ -144,13 +161,16 @@ public class AdapterFactoryManager implements InjectorLifecycleListener, BundleL
 	}
 
 	private void updateAdapterFactory(final Bundle bundle, final String injectorName,
-			final BundleInfo bundleInfo) {
+			final String basePackage) {
 		registry.clearBundleAdapter(injectorName, bundle.getSymbolicName());
 
-		final BundleClassesFinder classFinder = new BundleClassesFinder(bundleInfo.getBasePackage());
-		final Collection<Class<?>> classes = classFinder.getClasses(bundle);
-		ServiceRegistration newRegistration = createAdapterFactory(classes, injectorName);
-		registry.addAdapter(newRegistration, injectorName, bundle.getSymbolicName());
+		final Collection<Class<?>> classes = scanner.findSliceResources(bundle, basePackage);
+		if (!classes.isEmpty()) {
+			ServiceRegistration newRegistration = createAdapterFactory(classes, injectorName);
+			registry.addAdapter(newRegistration, injectorName, bundle.getSymbolicName());
+		} else if (LOG.isDebugEnabled()) {
+			LOG.debug("No classes found, skipping creation of AdapterFactory.");
+		}
 	}
 
 	private String[] getClassNames(Collection<Class<?>> classes) {

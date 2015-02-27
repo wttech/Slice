@@ -47,7 +47,7 @@ public class SliceResourceScanner {
 		BundleClassesFinder classFinder = new BundleClassesFinder(basePackage);
 		classFinder.addFilter(new SliceResourceFilter());
 
-		LOG.info("Searching for classes annotated with SliceResource, packages:{}, bundles:{}" + basePackage,
+		LOG.info("Searching for classes annotated with SliceResource, packages:{}, bundles:{}", basePackage,
 				bundleNameFilter);
 
 		Collection<Class<?>> classes = classFinder.getClasses(bundleFinder.findBundles());
@@ -62,7 +62,7 @@ public class SliceResourceScanner {
 		BundleClassesFinder classFinder = new BundleClassesFinder(basePackage);
 		classFinder.addFilter(new SliceResourceFilter());
 
-		LOG.info("Searching for classes annotated with SliceResource, packages:{}, bundle:{}" + basePackage,
+		LOG.info("Searching for classes annotated with SliceResource, packages:{}, bundle:{}", basePackage,
 				bundle.getSymbolicName());
 
 		Collection<Class<?>> classes = classFinder.getClasses(bundle);
