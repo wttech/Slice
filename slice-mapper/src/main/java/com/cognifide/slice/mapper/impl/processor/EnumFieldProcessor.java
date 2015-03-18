@@ -39,6 +39,9 @@ public class EnumFieldProcessor implements FieldProcessor {
 
 	@Override
 	public Object mapResourceToField(Resource resource, ValueMap valueMap, Field field, String propertyName) {
+		if (valueMap == null) {
+			return null;
+		}
 		String value = valueMap.get(propertyName, String.class);
 		if (value == null) {
 			return null;
