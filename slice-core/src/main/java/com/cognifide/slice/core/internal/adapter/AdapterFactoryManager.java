@@ -57,9 +57,6 @@ import com.google.inject.Injector;
 public class AdapterFactoryManager implements InjectorLifecycleListener {
 
 	@Reference
-	private InjectorsRepository repository;
-
-	@Reference
 	private RequestContextProvider requestContextProvider;
 
 	private Map<String, ServiceRegistration> registrationByInjector;
@@ -86,7 +83,7 @@ public class AdapterFactoryManager implements InjectorLifecycleListener {
 	public void injectorCreated(Injector injector, InjectorConfig config) {
 		Collection<Class<?>> classes = scanner.findSliceResources(config.getBundleNameFilter(),
 				config.getBasePackage());
-		ServiceRegistration registration = createAdapterFactory(classes, config.getName());
+		ServiceRegistration registration = createAdapterFactory(classes, config.getName(), injector);
 		registrationByInjector.put(config.getName(), registration);
 	}
 
@@ -98,14 +95,14 @@ public class AdapterFactoryManager implements InjectorLifecycleListener {
 		}
 	}
 
-	private ServiceRegistration createAdapterFactory(Collection<Class<?>> classes, String name) {
+	private ServiceRegistration createAdapterFactory(Collection<Class<?>> classes, String name,Injector injector) {
 		String[] adapterClasses = new String[classes.size()];
 		int i = 0;
 		for (Class<?> clazz : classes) {
 			adapterClasses[i++] = clazz.getName();
 		}
 
-		SliceAdapterFactory factory = new SliceAdapterFactory(name, repository, requestContextProvider);
+		SliceAdapterFactory factory = new SliceAdapterFactory(name, injector, requestContextProvider);
 		Dictionary<String, Object> properties = new Hashtable<String, Object>();
 		properties.put(AdapterFactory.ADAPTABLE_CLASSES, new String[] { Resource.class.getName() });
 		properties.put(AdapterFactory.ADAPTER_CLASSES, adapterClasses);
