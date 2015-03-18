@@ -20,18 +20,14 @@
 
 package com.cognifide.slice.core.internal.adapter;
 
-import com.cognifide.slice.core.internal.injector.InjectorWithContextImpl;
-import com.google.inject.Injector;
 import org.apache.sling.api.adapter.AdapterFactory;
 import org.apache.sling.api.resource.Resource;
 
-import com.cognifide.slice.api.context.ConstantContextProvider;
-import com.cognifide.slice.api.context.Context;
-import com.cognifide.slice.api.context.ContextFactory;
-import com.cognifide.slice.api.context.ContextProvider;
-import com.cognifide.slice.api.context.RequestContextProvider;
+import com.cognifide.slice.api.context.*;
 import com.cognifide.slice.api.injector.InjectorWithContext;
 import com.cognifide.slice.api.provider.ModelProvider;
+import com.cognifide.slice.core.internal.injector.InjectorWithContextImpl;
+import com.google.inject.Injector;
 
 public class SliceAdapterFactory implements AdapterFactory {
 
@@ -41,7 +37,7 @@ public class SliceAdapterFactory implements AdapterFactory {
 
 	private final RequestContextProvider requestContextProvider;
 
-	public SliceAdapterFactory(String injectorName,Injector injector,
+	public SliceAdapterFactory(String injectorName, Injector injector,
 			RequestContextProvider requestContextProvider) {
 		this.injector = injector;
 		this.requestContextProvider = requestContextProvider;
@@ -65,14 +61,14 @@ public class SliceAdapterFactory implements AdapterFactory {
 	}
 
 	private InjectorWithContext getInjector(Resource resource) {
-		InjectorWithContext injectorWithContext =new InjectorWithContextImpl(injector);
+		InjectorWithContext injectorWithContext = new InjectorWithContextImpl(injector);
 		ContextProvider contextProvider = requestContextProvider.getContextProvider(injectorName);
 		if (contextProvider == null) {
 			ContextFactory factory = injectorWithContext.getInstance(ContextFactory.class);
 			Context context = factory.getResourceResolverContext(resource.getResourceResolver());
 			contextProvider = new ConstantContextProvider(context);
 		}
-        injectorWithContext.pushContextProvider(contextProvider);
+		injectorWithContext.pushContextProvider(contextProvider);
 		return injectorWithContext;
 	}
 
