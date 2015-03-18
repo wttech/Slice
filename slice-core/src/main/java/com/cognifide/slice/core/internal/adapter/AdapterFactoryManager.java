@@ -39,7 +39,6 @@ import org.osgi.service.component.ComponentContext;
 
 import com.cognifide.slice.api.context.RequestContextProvider;
 import com.cognifide.slice.api.injector.InjectorConfig;
-import com.cognifide.slice.api.injector.InjectorsRepository;
 import com.cognifide.slice.core.internal.injector.InjectorLifecycleListener;
 import com.cognifide.slice.core.internal.scanner.SliceResourceScanner;
 import com.google.inject.Injector;

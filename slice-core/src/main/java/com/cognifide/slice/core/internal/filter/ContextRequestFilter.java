@@ -21,7 +21,9 @@
 package com.cognifide.slice.core.internal.filter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.Filter;
@@ -31,10 +33,12 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import com.cognifide.slice.api.injector.InjectorConfig;
+import com.cognifide.slice.core.internal.injector.InjectorLifecycleListener;
+import com.google.inject.Injector;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.osgi.framework.Constants;
 
@@ -42,7 +46,6 @@ import com.cognifide.slice.api.context.ConstantContextProvider;
 import com.cognifide.slice.api.context.Context;
 import com.cognifide.slice.api.context.ContextProvider;
 import com.cognifide.slice.api.context.RequestContextProvider;
-import com.cognifide.slice.api.injector.InjectorsRepository;
 import com.cognifide.slice.core.internal.context.SliceContextFactory;
 
 // @formatter:off
@@ -63,12 +66,11 @@ import com.cognifide.slice.core.internal.context.SliceContextFactory;
 		@Property(name = Constants.SERVICE_RANKING, intValue = ContextRequestFilter.RANKING),
 		@Property(name = "filter.scope", value = {"request","forward"}) })
 // @formatter:on
-public class ContextRequestFilter implements Filter, RequestContextProvider {
-
-	@Reference
-	private InjectorsRepository injectorsRepo;
+public class ContextRequestFilter implements Filter, RequestContextProvider, InjectorLifecycleListener {
 
 	public static final int RANKING = -650;
+
+    private final List<String> injectorNames = new ArrayList<String>();
 
 	private final ThreadLocal<Map<String, Context>> contexts = new ThreadLocal<Map<String, Context>>();
 
@@ -81,7 +83,7 @@ public class ContextRequestFilter implements Filter, RequestContextProvider {
 		final Map<String, Context> previous = contexts.get();
 		try {
 			Map<String, Context> current = new HashMap<String, Context>();
-			for (String injector : injectorsRepo.getInjectorNames()) {
+			for (String injector : injectorNames) {
 				current.put(injector, createContext(injector, request, response));
 			}
 			current.put(SliceContextFactory.COMMON_CONTEXT_NAME,
@@ -124,4 +126,18 @@ public class ContextRequestFilter implements Filter, RequestContextProvider {
 	public void destroy() {
 	}
 
+    @Override
+    public void injectorCreated(Injector injector, InjectorConfig config) {
+        synchronized(this){
+            injectorNames.add(config.getName());
+        }
+    }
+
+    @Override
+    public void injectorDestroyed(Injector injector, InjectorConfig config) {
+        synchronized(this) {
+            injectorNames.remove(config.getName());
+        }
+
+    }
 }
