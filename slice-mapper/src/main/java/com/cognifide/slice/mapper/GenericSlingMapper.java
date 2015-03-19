@@ -140,25 +140,28 @@ public class GenericSlingMapper implements Mapper {
 	 */
 	private <T> T mapResourceToObject(final Resource resource, final T object) {
 		ValueMap valueMap = resource.adaptTo(ValueMap.class);
-		try {
-			Class<?> type = object.getClass();
-			Field[] fields = ReflectionHelper.readAllDeclaredFields(type);
-			for (Field field : fields) {
-				MapperStrategy mapperStrategy = mapperStrategyFactory.getMapperStrategy(field
-						.getDeclaringClass());
-				if (shouldFieldBeMapped(field, mapperStrategy)) {
-					Object value = mapResourceToField(resource, valueMap, field);
-					FieldUtils.writeField(field, object, value, ReflectionHelper.FORCE_ACCESS);
+		if (valueMap != null) {
+			try {
+				Class<?> type = object.getClass();
+				Field[] fields = ReflectionHelper.readAllDeclaredFields(type);
+				for (Field field : fields) {
+					MapperStrategy mapperStrategy = mapperStrategyFactory.getMapperStrategy(field
+							.getDeclaringClass());
+					if (shouldFieldBeMapped(field, mapperStrategy)) {
+						Object value = mapResourceToField(resource, valueMap, field);
+						FieldUtils.writeField(field, object, value, ReflectionHelper.FORCE_ACCESS);
+					}
 				}
+			} catch (Exception e) {
+				String path = resource.getPath();
+				String format = "[path={0}]: cannot map to object({1})";
+				String message = MessageFormat.format(format, path, e.getMessage());
+				logger.warn(message);
+				throw new MapperException("mapResourceToObject failed", e);
 			}
-			return object;
-		} catch (Exception e) {
-			String path = resource.getPath();
-			String format = "[path={0}]: cannot map to object({1})";
-			String message = MessageFormat.format(format, path, e.getMessage());
-			logger.warn(message);
-			throw new MapperException("mapResourceToObject failed", e);
 		}
+
+		return object;
 	}
 
 	private boolean shouldFieldBeMapped(Field field, MapperStrategy mapperStrategy) {
