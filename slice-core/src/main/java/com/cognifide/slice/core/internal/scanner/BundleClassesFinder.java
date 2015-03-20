@@ -131,7 +131,7 @@ public class BundleClassesFinder {
 		return osgiClasses;
 	}
 
-	List<Bundle> findBundles(String bundleNameFilter, BundleContext bundleContext) {
+	final List<Bundle> findBundles(String bundleNameFilter, BundleContext bundleContext) {
 		Pattern bundleNamePattern = Pattern.compile(bundleNameFilter);
 		List<Bundle> bundles = new ArrayList<Bundle>();
 		for (Bundle bundle : bundleContext.getBundles()) {
