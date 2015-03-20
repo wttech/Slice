@@ -24,6 +24,7 @@ import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Opcodes;
@@ -45,6 +46,13 @@ public class AnnotationReader extends ClassVisitor {
 	public void visit(int paramInt1, int paramInt2, String paramString1, String paramString2,
 			String paramString3, String[] paramArrayOfString) {
 		annotations.clear();
+	}
+
+	@Override
+	public AnnotationVisitor visitAnnotation(String paramString, boolean paramBoolean) {
+		String annotationClassName = getAnnotationClassName(paramString);
+		annotations.add(annotationClassName);
+		return super.visitAnnotation(paramString, paramBoolean);
 	}
 
 	/**
