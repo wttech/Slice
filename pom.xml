@@ -257,6 +257,7 @@
 							<goals>
 								<goal>baseline</goal>
 							</goals>
+							<phase>package</phase>
 						</execution>
 					</executions>
 				</plugin>
