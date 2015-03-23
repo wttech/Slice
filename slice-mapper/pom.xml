@@ -24,7 +24,7 @@
 				<configuration>
 					<instructions>
 						<Export-Package>
-							com.cognifide.slice.mapper;version="${project.version}"
+							com.cognifide.slice.mapper
 						</Export-Package>
 					</instructions>
 				</configuration>
