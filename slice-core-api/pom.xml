@@ -29,8 +29,8 @@
 				<configuration>
 					<instructions>
 						<Export-Package>
-							com.cognifide.slice.api*;version="${project.version}",
-							com.cognifide.slice.util*;version="${project.version}",
+							com.cognifide.slice.api*,
+							com.cognifide.slice.util*,
 						</Export-Package>
 					</instructions>
 				</configuration>

@@ -29,8 +29,8 @@
 				<configuration>
 					<instructions>
 						<Export-Package>
-							com.cognifide.slice.commons*;version="${project.version}",
-							com.cognifide.slice.core*;version="${project.version}",
+							com.cognifide.slice.commons*,
+							com.cognifide.slice.core*,
 						</Export-Package>
 						<Embed-Dependency>asm</Embed-Dependency>
 					</instructions>
