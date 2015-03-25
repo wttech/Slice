@@ -113,7 +113,6 @@ public class SliceResourceFieldProcessor implements FieldProcessor {
 		return modelProvider.get(fieldType, followUpResource);
 	}
 
-
 	private boolean shouldFollow(Field field) {
 		final JcrProperty annotation = field.getAnnotation(JcrProperty.class);
 		if (annotation != null) {
