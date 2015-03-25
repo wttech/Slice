@@ -37,7 +37,6 @@ public class SliceResourceFieldProcessor implements FieldProcessor {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SliceResourceFieldProcessor.class);
 
-
 	@Inject
 	private ModelProvider modelProvider;
 
