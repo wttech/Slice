@@ -31,6 +31,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface JcrProperty {
 
+
 	/**
 	 * Custom property name. If empty, property name is read from field's name.
 	 * 
