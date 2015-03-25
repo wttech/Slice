@@ -22,6 +22,7 @@ package com.cognifide.slice.mapper.impl.processor;
 
 import java.lang.reflect.Field;
 
+import com.cognifide.slice.mapper.annotation.JcrProperty;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.slf4j.Logger;
@@ -48,8 +49,15 @@ public class SliceResourceFieldProcessor implements FieldProcessor {
 
 	@Override
 	public Object mapResourceToField(Resource resource, ValueMap valueMap, Field field, String propertyName) {
-		Resource nestedResource = resource.getChild(propertyName);
+		if (shouldFollow(field)) {
+			return mapFollowUpResourceToField(resource, valueMap, field, propertyName);
+		}
+		return mapChildResourceToField(resource, field, propertyName);
+	}
+
+	private Object mapChildResourceToField(Resource resource, Field field, String propertyName) {
 		final Class<?> fieldType = field.getType();
+		Resource nestedResource = resource.getChild(propertyName);
 		// create instance only if nested resource isn't null
 		if (nestedResource == null) {
 			// nested SliceResources are not instantiated as empty - not to erase information about them not
@@ -62,9 +70,55 @@ public class SliceResourceFieldProcessor implements FieldProcessor {
 								field.getName() });
 			}
 			return null;
-		} else {
-			return modelProvider.get(fieldType, nestedResource);
 		}
+		return modelProvider.get(fieldType, nestedResource);
+	}
+
+	private Object mapFollowUpResourceToField(Resource resource, ValueMap valueMap, Field field,
+			String propertyName) {
+		final Class<?> fieldType = field.getType();
+		Object value = valueMap.get(propertyName);
+		if (value == null) {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(
+						"the property [{}/{}] is undefined, assigning null value for [{}#{}]",
+						new Object[] { resource.getPath(), propertyName,
+								fieldType.getCanonicalName(), field.getName() });
+			}
+			return null;
+		}
+		if (!(value instanceof String)) {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(
+						"the property [{}/{}] annotated is not of String type as required by " +
+								"@JcrProperty(..., follow = true) in the model, assigning null " +
+								"value for [{}#{}]",
+						new Object[] { resource.getPath(), propertyName, fieldType.getCanonicalName(),
+								field.getName() });
+			}
+			return null;
+		}
+		String nestedResourcePath = (String) value;
+		Resource followUpResource = resource.getResourceResolver().getResource(nestedResourcePath);
+		if (followUpResource == null) {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(
+						"the nested resource [{}/{}] expected under path [{}] doesn't exist, " +
+								"assigning null value for [{}#{}]",
+						new Object[] { resource.getPath(), propertyName, nestedResourcePath,
+								fieldType.getCanonicalName(), field.getName() });
+			}
+			return null;
+		}
+		return modelProvider.get(fieldType, followUpResource);
+	}
+
+	private boolean shouldFollow(Field field) {
+		final JcrProperty annotation = field.getAnnotation(JcrProperty.class);
+		if (annotation != null) {
+			return annotation.follow();
+		}
+		return false;
 	}
 
 }

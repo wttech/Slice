@@ -38,4 +38,12 @@ public @interface JcrProperty {
 	 */
 	String value() default "";
 
+	/**
+	 * If 'true' Slice will try to use value parameter as a resource path to instantiate
+	 * the annotated property with a slice model
+	 *
+	 * @return
+	 */
+	boolean follow() default false;
+
 }
