@@ -160,5 +160,4 @@ public class ChildrenFieldProcessor implements FieldProcessor {
 	private boolean shouldFollow(Field field) {
 		return field.getAnnotation(Follow.class) != null;
 	}
-
 }
