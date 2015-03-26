@@ -31,20 +31,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface JcrProperty {
 
-
 	/**
 	 * Custom property name. If empty, property name is read from field's name.
 	 * 
 	 * @return
 	 */
 	String value() default "";
-
-	/**
-	 * If 'true' Slice will try to use value parameter as a resource path to instantiate
-	 * the annotated property with a slice model
-	 *
-	 * @return
-	 */
-	boolean follow() default false;
 
 }

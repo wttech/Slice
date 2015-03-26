@@ -22,6 +22,7 @@ package com.cognifide.slice.mapper.impl.processor;
 
 import java.lang.reflect.Field;
 
+import com.cognifide.slice.mapper.annotation.Follow;
 import com.cognifide.slice.mapper.annotation.JcrProperty;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
@@ -76,8 +77,10 @@ public class SliceResourceFieldProcessor implements FieldProcessor {
 
 	private Object mapFollowUpResourceToField(Resource resource, ValueMap valueMap, Field field,
 			String propertyName) {
+
 		final Class<?> fieldType = field.getType();
 		Object value = valueMap.get(propertyName);
+
 		if (value == null) {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug(
@@ -87,6 +90,7 @@ public class SliceResourceFieldProcessor implements FieldProcessor {
 			}
 			return null;
 		}
+
 		if (!(value instanceof String)) {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug(
@@ -98,8 +102,10 @@ public class SliceResourceFieldProcessor implements FieldProcessor {
 			}
 			return null;
 		}
+
 		String nestedResourcePath = (String) value;
 		Resource followUpResource = resource.getResourceResolver().getResource(nestedResourcePath);
+
 		if (followUpResource == null) {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug(
@@ -110,15 +116,12 @@ public class SliceResourceFieldProcessor implements FieldProcessor {
 			}
 			return null;
 		}
+
 		return modelProvider.get(fieldType, followUpResource);
 	}
 
 	private boolean shouldFollow(Field field) {
-		final JcrProperty annotation = field.getAnnotation(JcrProperty.class);
-		if (annotation != null) {
-			return annotation.follow();
-		}
-		return false;
+		return field.getAnnotation(Follow.class) != null;
 	}
 
 }

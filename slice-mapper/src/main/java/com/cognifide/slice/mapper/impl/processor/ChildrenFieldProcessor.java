@@ -26,6 +26,9 @@ import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
 
+import com.cognifide.slice.mapper.annotation.Follow;
+import com.cognifide.slice.mapper.annotation.JcrProperty;
+import org.apache.commons.lang.StringUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 
@@ -35,8 +38,12 @@ import com.cognifide.slice.mapper.api.processor.FieldProcessor;
 import com.cognifide.slice.mapper.exception.MapperException;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ChildrenFieldProcessor implements FieldProcessor {
+
+	private static final Logger LOG = LoggerFactory.getLogger(ChildrenFieldProcessor.class);
 
 	private final Provider<ModelProvider> modelProvider;
 
@@ -56,7 +63,12 @@ public class ChildrenFieldProcessor implements FieldProcessor {
 
 	@Override
 	public Object mapResourceToField(Resource resource, ValueMap valueMap, Field field, String propertyName) {
-		List<?> mappedModels = getChildrenList(resource, field, propertyName);
+		List<?> mappedModels;
+		if (shouldFollow(field)) {
+			mappedModels = getRemoteChildrenList(resource, valueMap, field, propertyName);
+		} else {
+			mappedModels = getChildrenList(resource, field, propertyName);
+		}
 
 		final Class<?> fieldType = field.getType();
 		if (fieldType.isArray()) {
@@ -71,8 +83,12 @@ public class ChildrenFieldProcessor implements FieldProcessor {
 			throw new IllegalArgumentException(
 					"Property name must not start with \"/\" as it doesn't indicate a relative resource");
 		}
-		List<?> result;
 		Resource parentResource = resource.getChild(propertyName);
+		return getChildrenList(parentResource, field);
+	}
+
+	private List<?> getChildrenList(Resource parentResource, Field field) {
+		List<?> result;
 		if (parentResource == null) {
 			result = Collections.EMPTY_LIST;
 		} else {
@@ -95,4 +111,54 @@ public class ChildrenFieldProcessor implements FieldProcessor {
 		}
 		return array;
 	}
+
+	private List<?> getRemoteChildrenList(Resource resource, ValueMap valueMap, Field field,
+			String propertyName) {
+
+		final Class<?> fieldType = field.getType();
+		Object value = valueMap.get(propertyName);
+
+		if (value == null) {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(
+						"the property [{}/{}] is undefined, assigning null value for [{}#{}]",
+						new Object[] { resource.getPath(), propertyName,
+								fieldType.getCanonicalName(), field.getName() });
+			}
+			return Collections.EMPTY_LIST;
+		}
+
+		if (!(value instanceof String)) {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(
+						"the property [{}/{}] annotated is not of String type as required by " +
+								"@JcrProperty(..., follow = true) in the model, assigning null " +
+								"value for [{}#{}]",
+						new Object[] { resource.getPath(), propertyName, fieldType.getCanonicalName(),
+								field.getName() });
+			}
+			return Collections.EMPTY_LIST;
+		}
+
+		String nestedResourcePath = (String) value;
+		Resource followUpResource = resource.getResourceResolver().getResource(nestedResourcePath);
+
+		if (followUpResource == null) {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(
+						"the nested resource [{}/{}] expected under path [{}] doesn't exist, " +
+								"assigning null value for [{}#{}]",
+						new Object[] { resource.getPath(), propertyName, nestedResourcePath,
+								fieldType.getCanonicalName(), field.getName() });
+			}
+			return Collections.EMPTY_LIST;
+		}
+
+		return getChildrenList(followUpResource, field);
+	}
+
+	private boolean shouldFollow(Field field) {
+		return field.getAnnotation(Follow.class) != null;
+	}
+
 }
