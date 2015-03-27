@@ -64,7 +64,7 @@ public class ChildrenFieldProcessor implements FieldProcessor {
 	@Override
 	public Object mapResourceToField(Resource resource, ValueMap valueMap, Field field, String propertyName) {
 		List<?> mappedModels;
-		if (shouldFollow(field)) {
+		if (field.isAnnotationPresent(Follow.class)) {
 			mappedModels = getRemoteChildrenList(resource, valueMap, field, propertyName);
 		} else {
 			mappedModels = getChildrenList(resource, field, propertyName);
@@ -115,49 +115,14 @@ public class ChildrenFieldProcessor implements FieldProcessor {
 	private List<?> getRemoteChildrenList(Resource resource, ValueMap valueMap, Field field,
 			String propertyName) {
 
-		final Class<?> fieldType = field.getType();
-		Object value = valueMap.get(propertyName);
-
-		if (value == null) {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(
-						"the property [{}/{}] is undefined, assigning null value for [{}#{}]",
-						new Object[] { resource.getPath(), propertyName,
-								fieldType.getCanonicalName(), field.getName() });
-			}
-			return Collections.EMPTY_LIST;
-		}
-
-		if (!(value instanceof String)) {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(
-						"the property [{}/{}] annotated is not of String type as required by " +
-								"@JcrProperty(..., follow = true) in the model, assigning null " +
-								"value for [{}#{}]",
-						new Object[] { resource.getPath(), propertyName, fieldType.getCanonicalName(),
-								field.getName() });
-			}
-			return Collections.EMPTY_LIST;
-		}
-
-		String nestedResourcePath = (String) value;
-		Resource followUpResource = resource.getResourceResolver().getResource(nestedResourcePath);
+		Resource followUpResource = FollowUpProcessorUtil.getFollowUpResource(resource, valueMap, field,
+				propertyName);
 
 		if (followUpResource == null) {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(
-						"the nested resource [{}/{}] expected under path [{}] doesn't exist, " +
-								"assigning null value for [{}#{}]",
-						new Object[] { resource.getPath(), propertyName, nestedResourcePath,
-								fieldType.getCanonicalName(), field.getName() });
-			}
 			return Collections.EMPTY_LIST;
 		}
 
 		return getChildrenList(followUpResource, field);
 	}
 
-	private boolean shouldFollow(Field field) {
-		return field.getAnnotation(Follow.class) != null;
-	}
 }
