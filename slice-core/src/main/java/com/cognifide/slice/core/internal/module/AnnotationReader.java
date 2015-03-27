@@ -25,19 +25,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.objectweb.asm.AnnotationVisitor;
-import org.objectweb.asm.Attribute;
+import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.FieldVisitor;
-import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 /**
  * It is used by {@link ClassReader} to visit all annotations of a class. Names of read annotations are stored
  * internally so that one can verify if a class is annotated by a given annotation or not.
- * 
+ *
  */
-public class AnnotationReader implements AnnotationVisitor, ClassVisitor {
+public class AnnotationReader extends ClassVisitor {
 
-	private List<String> annotations = new ArrayList<String>();;
+	private List<String> annotations = new ArrayList<String>();
+
+	public AnnotationReader() {
+		super(Opcodes.ASM5);
+	}
 
 	@Override
 	public void visit(int paramInt1, int paramInt2, String paramString1, String paramString2,
@@ -49,12 +52,12 @@ public class AnnotationReader implements AnnotationVisitor, ClassVisitor {
 	public AnnotationVisitor visitAnnotation(String paramString, boolean paramBoolean) {
 		String annotationClassName = getAnnotationClassName(paramString);
 		annotations.add(annotationClassName);
-		return this;
+		return super.visitAnnotation(paramString, paramBoolean);
 	}
 
 	/**
 	 * Verifies if a class contains a specified annotation or not
-	 * 
+	 *
 	 * @param annotation
 	 * @return <code>true</code> if a class is annotated by specified annotation, <code>false</code> otherwise
 	 */
@@ -71,59 +74,6 @@ public class AnnotationReader implements AnnotationVisitor, ClassVisitor {
 
 	private String getAnnotationClassName(String rawName) {
 		return rawName.substring(1, rawName.length() - 1).replace('/', '.');
-	}
-
-	// ---------------------UNUSED METHODS------------------------------------------------
-
-	@Override
-	public void visit(String paramString, Object paramObject) {
-	}
-
-	@Override
-	public void visitEnum(String paramString1, String paramString2, String paramString3) {
-	}
-
-	@Override
-	public AnnotationVisitor visitAnnotation(String paramString1, String paramString2) {
-		return this;
-	}
-
-	@Override
-	public AnnotationVisitor visitArray(String paramString) {
-		return this;
-	}
-
-	@Override
-	public void visitEnd() {
-	}
-
-	@Override
-	public void visitAttribute(Attribute paramAttribute) {
-
-	}
-
-	@Override
-	public FieldVisitor visitField(int paramInt, String paramString1, String paramString2,
-			String paramString3, Object paramObject) {
-		return null;
-	}
-
-	@Override
-	public void visitInnerClass(String paramString1, String paramString2, String paramString3, int paramInt) {
-	}
-
-	@Override
-	public MethodVisitor visitMethod(int paramInt, String paramString1, String paramString2,
-			String paramString3, String[] paramArrayOfString) {
-		return null;
-	}
-
-	@Override
-	public void visitOuterClass(String paramString1, String paramString2, String paramString3) {
-	}
-
-	@Override
-	public void visitSource(String paramString1, String paramString2) {
 	}
 
 }
