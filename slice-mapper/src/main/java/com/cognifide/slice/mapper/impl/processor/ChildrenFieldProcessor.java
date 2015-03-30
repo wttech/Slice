@@ -26,24 +26,18 @@ import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
 
-import com.cognifide.slice.mapper.annotation.Follow;
-import com.cognifide.slice.mapper.annotation.JcrProperty;
-import org.apache.commons.lang.StringUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 
 import com.cognifide.slice.api.provider.ModelProvider;
 import com.cognifide.slice.mapper.annotation.Children;
+import com.cognifide.slice.mapper.annotation.Follow;
 import com.cognifide.slice.mapper.api.processor.FieldProcessor;
 import com.cognifide.slice.mapper.exception.MapperException;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ChildrenFieldProcessor implements FieldProcessor {
-
-	private static final Logger LOG = LoggerFactory.getLogger(ChildrenFieldProcessor.class);
 
 	private final Provider<ModelProvider> modelProvider;
 
@@ -114,7 +108,6 @@ public class ChildrenFieldProcessor implements FieldProcessor {
 
 	private List<?> getRemoteChildrenList(Resource resource, ValueMap valueMap, Field field,
 			String propertyName) {
-
 		Resource followUpResource = FollowUpProcessorUtil.getFollowUpResource(resource, valueMap, field,
 				propertyName);
 

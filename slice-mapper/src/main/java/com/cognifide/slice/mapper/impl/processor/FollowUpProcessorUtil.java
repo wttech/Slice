@@ -20,64 +20,58 @@
 
 package com.cognifide.slice.mapper.impl.processor;
 
+import java.lang.reflect.Field;
+
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.lang.reflect.Field;
 
 public class FollowUpProcessorUtil {
 
 	private static final Logger LOG = LoggerFactory.getLogger(FollowUpProcessorUtil.class);
 
 	/**
-	 * Finds a resource referenced by path provided in a property @param propertyName of @param resource.
-	 *
-	 * @param resource     - a resource
-	 * @param valueMap     - map of all jcr properties values this resource
-	 * @param field        - the result of this method will be injected into this field, this parameter is not
-	 *                     affecting the logic of this method but is needed for log information
+	 * Finds a resource referenced by path kept in specified resource under a property of specified name.
+	 * 
+	 * @param resource - a resource
+	 * @param valueMap - map of all jcr properties values this resource
+	 * @param field - the result of this method will be injected into this field, this parameter is not
+	 * affecting the logic of this method but is needed for log information
 	 * @param propertyName - name of jcr property
 	 * @return the result resource if any found or null otherwise
 	 */
 	public static Resource getFollowUpResource(Resource resource, ValueMap valueMap, Field field,
 			String propertyName) {
-
 		final Class<?> fieldType = field.getType();
 		Object value = valueMap.get(propertyName);
 
 		if (value == null) {
 			if (LOG.isDebugEnabled()) {
-				LOG.debug(
-						"the property [{}/{}] is undefined, assigning null value for [{}#{}]",
-						new Object[] { resource.getPath(), propertyName,
-								fieldType.getCanonicalName(), field.getName() });
+				LOG.debug("Property [{}/{}] is undefined, assigning null value for [{}#{}]", new Object[] {
+						resource.getPath(), propertyName, fieldType.getCanonicalName(), field.getName() });
 			}
 			return null;
 		}
 
 		if (!(value instanceof String)) {
 			if (LOG.isWarnEnabled()) {
-				LOG.warn(
-						"the property [{}/{}] annotated is not of String type as required by " +
-								"@Follow in the model, assigning null " +
-								"value for [{}#{}]",
-						new Object[] { resource.getPath(), propertyName, fieldType.getCanonicalName(),
-								field.getName() });
+				LOG.warn("Property [{}/{}] is not of String type as required by "
+						+ "@Follow in the model, assigning null " + "value for [{}#{}]", new Object[] {
+						resource.getPath(), propertyName, fieldType.getCanonicalName(), field.getName() });
 			}
 			return null;
 		}
 
-		String nestedResourcePath = (String) value;
-		Resource followUpResource = resource.getResourceResolver().getResource(nestedResourcePath);
+		String referencedResourcePath = (String) value;
+		Resource followUpResource = resource.getResourceResolver().getResource(referencedResourcePath);
 
 		if (followUpResource == null) {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug(
-						"the nested resource [{}/{}] expected under path [{}] doesn't exist, " +
-								"assigning null value for [{}#{}]",
-						new Object[] { resource.getPath(), propertyName, nestedResourcePath,
+						"A resource [{}] referenced by [{}/{}] doesn't exist, "
+								+ "assigning null value for [{}#{}]",
+						new Object[] { referencedResourcePath, resource.getPath(), propertyName,
 								fieldType.getCanonicalName(), field.getName() });
 			}
 			return null;

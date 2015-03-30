@@ -22,14 +22,13 @@ package com.cognifide.slice.mapper.impl.processor;
 
 import java.lang.reflect.Field;
 
-import com.cognifide.slice.mapper.annotation.Follow;
-import com.cognifide.slice.mapper.annotation.JcrProperty;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.cognifide.slice.api.provider.ModelProvider;
+import com.cognifide.slice.mapper.annotation.Follow;
 import com.cognifide.slice.mapper.annotation.SliceResource;
 import com.cognifide.slice.mapper.api.processor.FieldProcessor;
 import com.google.inject.Inject;
@@ -77,11 +76,9 @@ public class SliceResourceFieldProcessor implements FieldProcessor {
 
 	private Object mapFollowUpResourceToField(Resource resource, ValueMap valueMap, Field field,
 			String propertyName) {
-
 		final Class<?> fieldType = field.getType();
 		Resource followUpResource = FollowUpProcessorUtil.getFollowUpResource(resource, valueMap, field,
 				propertyName);
-
 		return modelProvider.get(fieldType, followUpResource);
 	}
 
