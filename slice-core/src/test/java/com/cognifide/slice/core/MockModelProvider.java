@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 
 import com.cognifide.slice.api.provider.ModelProvider;
@@ -140,6 +141,12 @@ public class MockModelProvider implements ModelProvider {
 			result.add(get(type, resource));
 		}
 		return result;
+	}
+
+	@Override
+	public <T> T get(Class<T> clazz, SlingHttpServletRequest request) throws ClassNotFoundException {
+		// TODO
+		return null;
 	}
 
 	private class ClassPathPair {

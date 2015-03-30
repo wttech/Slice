@@ -23,6 +23,7 @@ package com.cognifide.slice.api.provider;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 
 import aQute.bnd.annotation.ProviderType;
@@ -192,4 +193,14 @@ public interface ModelProvider {
 	 * is <code>null</code>, then an empty list is returned. It never returns <code>null</code>.
 	 */
 	<T> List<T> getListFromResources(final Class<T> type, final Iterator<Resource> resources);
+
+	/**
+	 * Creates new model object of type T from given request.
+	 *
+	 * @param <T> type of model object to create
+	 * @param type class of model object to create
+	 * @param request Sling http servlet request to create object from
+	 * @return model object from given request
+	 */
+	<T> T get(final Class<T> type, final SlingHttpServletRequest request) throws ClassNotFoundException;
 }

@@ -20,11 +20,15 @@
 
 package com.cognifide.slice.core.internal.provider;
 
+import java.beans.PropertyEditor;
+import java.beans.PropertyEditorManager;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.slf4j.Logger;
@@ -39,6 +43,9 @@ import com.cognifide.slice.core.internal.execution.ExecutionContextImpl;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Key;
+
+import javax.servlet.http.Cookie;
+import javax.ws.rs.*;
 
 /**
  * This class creates object or list of objects of given injectable type using Guice injector.
@@ -194,6 +201,35 @@ public class SliceModelProvider implements ModelProvider {
 		return result;
 	}
 
+	@Override
+	public <T> T get(Class<T> clazz, SlingHttpServletRequest request) throws ClassNotFoundException {
+		T instance = injector.getInstance(clazz);
+
+		for (Field field : clazz.getDeclaredFields()) {
+			if (field.isAnnotationPresent(FormParam.class)) {
+				String parameterName = field.getAnnotation(FormParam.class).value();
+				String stringValue = request.getRequestParameter(parameterName).getString();
+				instance = insertValue(instance, field, stringValue);
+			} else if (field.isAnnotationPresent(CookieParam.class)) {
+				String parameterName = field.getAnnotation(CookieParam.class).value();
+				Cookie cookie = request.getCookie(parameterName);
+				if (cookie != null) {
+					field.setAccessible(true);
+					try {
+						field.set(instance, cookie);
+					} catch (IllegalAccessException e) {
+						LOG.error("Cannot insert cookie {} into field {}", cookie.getName(), field.getName());
+					}
+				}
+			} else if (field.isAnnotationPresent(HeaderParam.class)) {
+				String parameterName = field.getAnnotation(HeaderParam.class).value();
+				String stringValue = request.getHeader(parameterName);
+				instance = insertValue(instance, field, stringValue);
+			}
+		}
+		return instance;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -219,6 +255,28 @@ public class SliceModelProvider implements ModelProvider {
 			}
 		}
 		return result;
+	}
+
+	private <T> T insertValue(T instance, Field field, String stringValue) {
+		Object parameterValue = convert(field.getType(), stringValue);
+		if (parameterValue != null) {
+			try {
+				field.setAccessible(true);
+				field.set(instance, parameterValue);
+			} catch (IllegalAccessException e) {
+				LOG.error("Cannot insert value {} into field {}", stringValue, field.getName());
+			}
+		}
+		return instance;
+	}
+
+	private Object convert(Class<?> targetType, String text) {
+		PropertyEditor editor = PropertyEditorManager.findEditor(targetType);
+		if (text.isEmpty()) {
+			text = null;
+		}
+		editor.setAsText(text);
+		return editor.getValue();
 	}
 
 	private <T> T get(Class<T> type, ExecutionContextImpl executionItem) {
