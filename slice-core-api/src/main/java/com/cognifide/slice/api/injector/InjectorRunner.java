@@ -29,6 +29,38 @@ import org.osgi.framework.BundleContext;
 
 import com.google.inject.Module;
 
+/**
+ * Injector runner is an entry point to configure and activate slice in an application. It wraps all ....
+ * An application activator (an implementation of {@link org.osgi.framework.BundleActivator}) should
+ * create its injector runner, add all needed modules ({@link #installModule(Module) installModule} or
+ * {@link #installModules(List) installModules}) and start it ({@link #start() start})
+ *
+ * Example:
+ * <pre>
+ *
+ * public class Activator implements BundleActivator {
+ *
+ *	{@literal @}Override
+ *	public void start(BundleContext bundleContext) throws Exception {
+ *
+ *		final InjectorRunner injectorRunner = new InjectorRunner(bundleContext, "slice-test",
+ *		"slice-test-app.*", "com.cognifide.example");
+ *
+ *		List<Module> sliceModules = SliceModulesFactory.createModules(bundleContext);
+ *		List<Module> cqModules = CQModulesFactory.createModules();
+ *
+ *		injectorRunner.installModules(sliceModules);
+ *		injectorRunner.installModules(cqModules);
+ *		injectorRunner.installModule(...);
+ *
+ *		injectorRunner.start();
+ *	}
+ *	}
+ *
+ *	</pre>
+ */
+
+
 public class InjectorRunner {
 
 	private final String injectorName;

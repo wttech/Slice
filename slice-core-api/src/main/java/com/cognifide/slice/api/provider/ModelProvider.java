@@ -30,29 +30,92 @@ import aQute.bnd.annotation.ProviderType;
 import com.google.inject.Key;
 
 /**
- * This class creates object or list of objects of given injectable type using Guice injector.
- * 
+ * A base interface in Slice. It allows to fetch an injectable object(s) mapped from specified
+ * resource or path. It resembles Guice com.google.inject.Injector ecause it is used for fetching objects
+ * of different classes but it is closely tied to Slice because if fills requested objects with data obtained
+ * from JCR.
+ * ModelProvider can be also injected directly to your models, so that you can read a model from an arbitrary
+ * resource or path, e.g.:
+ * <pre>
+ *@SliceResource
+ * public class OrderModel {
+ *
+ * private final static String CONFIGURATION_PATH = "/content/app/configuration/jcr:content/currency";
+ * private final ModelProvider modelProvider;
+ *
+ * @JcrProperty
+ * private int value;
+ *
+ * @Inject
+ * public OrderModel(ModelProvider modelProvider) {
+ * 	this.modelProvider = modelProvider;
+ * }
+ *
+ * public int getValue() {
+ * 	Currency currency = modelProvider.get(Currency.class, CONFIGURATION_PATH);
+ * 	return formatToCurrency(value, currency);
+ * 	}
+ * 	...
+ * 	}
+ * </pre>
+ *
+ * All methods of ModelProvider are thread safe
+ *
  * @author Witold Szczerba
  * @author Rafał Malinowski
  */
+
 @ProviderType
 public interface ModelProvider {
 
 	/**
-	 * Creates new model object of type T from given CRX repository path. During this method call state of
-	 * {@link ExecutionContextStack} is modified - path attribute is added on top of execution stack. It
-	 * allows for recursive call of ModelProvider methods from model object that is being created.
-	 * 
+	 * Creates new model object of type T and fills all its matching properties with data found under
+	 * given Sling repository path.
+	 *
+	 * Lets consider an example. There is model:
+	 *
+	 * <pre>
+	 *{@literal @}SliceResource
+	 * public class OrderModel {
+	 *
+	 *{@literal @}JcrProperty("orderValue")
+	 * private int value;
+	 *
+	 *{@literal @}JcrProperty
+	 * private Date deliveryDate;
+	 *
+	 *{@literal @}JcrProperty
+	 * private String status;
+	 *
+	 * }
+	 * </pre>
+	 *
+	 * There is also a node in JCR under '/content/app/orders/order-id-12345' and it has the
+	 * following properties:
+	 * type:Decimal, name:'orderValue', value:1000
+	 * type:String, name:'status', value:"incomplete"
+	 * type:String, name:'createdBy', value:"admin"
+	 *
+	 * Somewhere in the code there is an invocation:
+	 * <code>
+	 *     OrderModel model = modelProvider.get(OrderModel.class, "/content/app/orders/order-id-12345");
+	 * </code>
+	 *
+	 * In this case the result model will have:
+	 * value=1000,
+	 * status="incomplete"
+	 * deliveryDate=null
+	 *
 	 * It is possible to use absolute and relative (with "./" prefix) paths in recursive calls. All gets are
 	 * performed with Context that was used to create this ModelProvider.
-	 * 
+	 *
 	 * <code>
 	 *   modelProvider.get(ModelType.class, "/absolute/patch");
 	 *   modelProvider.get(SubModelType.class, "./relative/path");
 	 * </code>
-	 * 
+	 *
 	 * This method is thread-safe.
-	 * 
+	 *
 	 * @parem T type of model object to create
 	 * @param type class of model object to create
 	 * @param path CRX repository path to create object from
@@ -61,11 +124,8 @@ public interface ModelProvider {
 	<T> T get(final Class<T> type, final String path);
 
 	/**
-	 * Creates new model object of type T from given resource. During this method call state of
-	 * {@link ExecutionContextStack} is modified - resource attribute is added on top of execution stack. It
-	 * allows for recursive call of ModelProvider methods from model object that is being created.
-	 * 
-	 * This method is thread-safe.
+	 * Creates new model object of type T and fills all its matching properties with data obtained from
+	 * given resource. The concept is the same as in {@link #get(Class, String) get}
 	 * 
 	 * @parem T type of model object to create
 	 * @param type class of model object to create
@@ -75,10 +135,9 @@ public interface ModelProvider {
 	<T> T get(final Class<T> type, final Resource resource);
 
 	/**
-	 * Creates new model object of type T from given resource. During this method call state of
-	 * {@link ExecutionContextStack} is modified - resource attribute is added on top of execution stack. It
-	 * allows for recursive call of ModelProvider methods from model object that is being created.
-	 * 
+	 * Creates new model object of type T and fills all its matching properties with data obtained from
+	 * given resource. The concept is the same as in {@link #get(Class, String) get}
+	 *
 	 * This method is thread-safe.
 	 * 
 	 * @param T type of model object to create
@@ -91,14 +150,8 @@ public interface ModelProvider {
 	<T> T get(final Key<T> key, final Resource resource);
 
 	/**
-	 * Creates new model object of type T from given CRX repository path. During this method call state of
-	 * {@link ExecutionContextStack} is modified - path attribute is added on top of execution stack. It
-	 * allows for recursive call of ModelProvider methods from model object that is being created.
-	 * 
-	 * It is possible to use absolute and relative (with "./" prefix) paths in recursive calls. All gets are
-	 * performed with Context that was used to create this ModelProvider.
-	 * 
-	 * This method is thread-safe.
+	 * Creates new model object of type T and fills all its matching properties with data found under
+	 * given CRX repository path. The concept is the same as in {@link #get(Class, String) get}
 	 * 
 	 * @param T type of model object to create
 	 * @param key a Guice {@link Key} which defines binding to a required object
@@ -110,10 +163,9 @@ public interface ModelProvider {
 	<T> T get(final Key<T> key, final String path);
 
 	/**
-	 * Creates new model object of type specified by given class name. During this method call state of
-	 * {@link ExecutionContextStack} is modified - path attribute is added on top of execution stack. It
-	 * allows for recursive call of ModelProvider methods from model object that is being created.
-	 * 
+	 * Creates new model object of type T and fills all its matching properties with data found under
+	 * given CRX repository path. The concept is the same as in {@link #get(Class, String) get}
+	 *
 	 * @param className canonical name of a class to be resolved, e.g. com.cognifide.slice.api.ModelProvider
 	 * @param path CRX repository path to create object from
 	 * @return model object of specified className from given CRX repository path
@@ -123,10 +175,9 @@ public interface ModelProvider {
 	Object get(final String className, final String path) throws ClassNotFoundException;
 
 	/**
-	 * Creates new model object of type specified by given class name. During this method call state of
-	 * {@link ExecutionContextStack} is modified - path attribute is added on top of execution stack. It
-	 * allows for recursive call of ModelProvider methods from model object that is being created.
-	 * 
+	 * Creates new model object of type T and fills all its matching properties with data found under
+	 * given CRX repository path. The concept is the same as in {@link #get(Class, String) get}
+	 *
 	 * @param className canonical name of a class to be resolved, e.g. com.cognifide.slice.api.ModelProvider
 	 * @param resource Sling resource to create object from
 	 * @return model object from given resource
@@ -135,9 +186,8 @@ public interface ModelProvider {
 	Object get(final String className, final Resource resource) throws ClassNotFoundException;
 
 	/**
-	 * Creates list of model objects of type T from given CRX repository paths. During this method call state
-	 * of {@link ExecutionContextStack} is modified for each path from iterator - path is added on top of path
-	 * stack. It allows for recursive call of ModelProvider methods from model objects that are being created.
+	 * Creates new model object of type T and fills all its matching properties with data obtained from
+	 * given resource. The concept is the same as in {@link #get(Class, String) get}
 	 * 
 	 * It is possible to use absolute and relative (with "./" prefix) paths in recursive calls.
 	 * 

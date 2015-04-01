@@ -28,6 +28,12 @@ import org.apache.commons.lang.StringUtils;
 
 import com.google.inject.Module;
 
+/**
+ * InjectorConfig is created for each instance of InjectorRunner. It also represents an OSGi service
+ * (each InjectorConfig is registered as OSGi service by its InjectorRunner during bundle startup). It
+ * contains all information necessary to create an injector or decide if given injector should be used
+ * to handle given application.
+ */
 public class InjectorConfig {
 
 	public static final String DEFAULT_INJECTOR_PATH = "/apps/";
