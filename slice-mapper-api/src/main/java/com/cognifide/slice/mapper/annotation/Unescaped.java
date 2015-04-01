@@ -28,7 +28,17 @@ import java.lang.annotation.Target;
 /**
  * By default each text property will have HTML entities escaped; this annotation indicates the escaping
  * should not be done (e.g. when a property represents a part of HTML markup)
- * 
+ *
+ * <pre>
+ * {@literal @}SliceResource
+ * public class ExampleModel {
+ *
+ *   {@literal @}JcrProperty
+ *   {@literal @}Unescaped
+ *   private String text;
+ * }
+ * </pre>
+ *
  * @author Jan Kuźniak
  */
 @Retention(RetentionPolicy.RUNTIME)

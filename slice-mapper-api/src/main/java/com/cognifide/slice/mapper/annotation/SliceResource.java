@@ -26,10 +26,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-
 /**
- * Marks class as a Slice resource which means that fields of this class will be mapped by {@link Mapper}
- * using dedicated {@link MappingStrategy}. By default {@link MappingStrategy#ANNOTATED} strategy is used.
+ * Marks class as a Slice resource which means that fields of this class will be mapped by
+ * {@link com.cognifide.slice.mapper.api.Mapper} using dedicated {@link MappingStrategy}. By default
+ * {@link MappingStrategy#ANNOTATED} strategy is used.
  * 
  * @author maciej.majchrzak
  * 

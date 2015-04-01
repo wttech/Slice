@@ -29,7 +29,18 @@ import java.lang.annotation.Target;
  * Allows mapper to map a resource by following a path stored under given jcr property. The path to a parent
  * resource is the one indicated by the name of the field or {@link JcrProperty}. It is possible to use this
  * annotation in conjunction with @Children as well.
- * 
+ *
+ * <pre>
+ * {@literal @}SliceResource
+ * public class ExampleModel {
+ *
+ *   {@literal @}Follow
+ *   {@literal @}JcrProperty("secondModelPath")
+ *   private SecondModel secondModel;
+ *
+ * }
+ * </pre>
+ *
  * @author Jaromir Celejewski
  */
 @Retention(RetentionPolicy.RUNTIME)
