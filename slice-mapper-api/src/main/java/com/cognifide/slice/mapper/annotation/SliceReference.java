@@ -54,6 +54,17 @@ import java.lang.annotation.Target;
  * }
  * </code>
  * </pre>
+ *
+ * Example usage:
+ * <pre>
+ * {@literal @}SliceResource
+ * public class ExampleModel {
+ *
+ *   {@literal @}SliceReference("home")
+ *   private HomeModel home;
+ *
+ * }
+ * </pre>
  * 
  * @author maciej.majchrzak
  * 

@@ -27,6 +27,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Objects marked with this annotation can be adapted from Resource.
  * Marks class as a Slice resource which means that fields of this class will be mapped by
  * {@link com.cognifide.slice.mapper.api.Mapper} using dedicated {@link MappingStrategy}. By default
  * {@link MappingStrategy#ANNOTATED} strategy is used.

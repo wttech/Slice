@@ -28,7 +28,9 @@ import org.apache.sling.api.resource.ValueMap;
 import aQute.bnd.annotation.ConsumerType;
 
 /**
- * Defines if a field can be mapped to a specified field and performs actual mapping.
+ * Defines if a field can be mapped to a specified field and performs actual mapping. Class which implements
+ * this interface should be added to list of processors in
+ * {@link com.cognifide.slice.mapper.MapperBuilder#addFieldProcessor(FieldProcessor fieldProcessor)}
  * 
  */
 @ConsumerType
