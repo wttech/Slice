@@ -27,8 +27,9 @@ import org.apache.sling.api.resource.Resource;
 import aQute.bnd.annotation.ConsumerType;
 
 /**
- * Defines if a value can be processed and performs actual processing.
- * 
+ * Defines if a value can be processed and performs actual processing. Class which implements
+ * this interface should be added to list of post processors in
+ * {@link com.cognifide.slice.mapper.MapperBuilder#addFieldPostProcessor(FieldPostProcessor fieldPostProcessor)}
  */
 @ConsumerType
 public interface FieldPostProcessor {
