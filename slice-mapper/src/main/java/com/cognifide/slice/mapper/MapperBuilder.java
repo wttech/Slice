@@ -90,19 +90,38 @@ public final class MapperBuilder {
 	}
 
 	/**
-	 * Adds default processors and post processors - the same that was added in SlingMapperFactory
+	 * Adds default processors and post processors
 	 * 
 	 * @return
 	 */
 	public MapperBuilder addDefaultSliceProcessors() {
+		addSliceProcessors();
+		addSlicePostProcessors();
+		return this;
+	}
+
+	/**
+	 * Adds default processors
+	 * 
+	 * @return
+	 */
+	public MapperBuilder addSliceProcessors() {
 		processors.add(sliceReferenceFieldProcessor); // @SliceReference
 		processors.add(sliceResourceFieldProcessor); // @SliceResource
-		processors.add(childrenFieldProcessor); // child models @Children 
+		processors.add(childrenFieldProcessor); // child models @Children
 		processors.add(new ListFieldProcessor()); // Subclasses of Collection<?> and arrays
 		processors.add(new BooleanFieldProcessor()); // booleans
 		processors.add(new EnumFieldProcessor()); // enums
 		processors.add(new DefaultFieldProcessor()); // any other fields
+		return this;
+	}
 
+	/**
+	 * Adds default post-processors
+	 * 
+	 * @return
+	 */
+	public MapperBuilder addSlicePostProcessors() {
 		postProcessors.add(new EscapeValuePostProcessor());
 		return this;
 	}
