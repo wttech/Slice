@@ -39,7 +39,6 @@ import org.osgi.service.component.ComponentContext;
 
 import com.cognifide.slice.api.context.RequestContextProvider;
 import com.cognifide.slice.api.injector.InjectorConfig;
-import com.cognifide.slice.api.injector.InjectorsRepository;
 import com.cognifide.slice.core.internal.injector.InjectorLifecycleListener;
 import com.cognifide.slice.core.internal.scanner.SliceResourceScanner;
 import com.google.inject.Injector;
@@ -55,9 +54,6 @@ import com.google.inject.Injector;
 @Component(immediate = true)
 @Service
 public class AdapterFactoryManager implements InjectorLifecycleListener {
-
-	@Reference
-	private InjectorsRepository repository;
 
 	@Reference
 	private RequestContextProvider requestContextProvider;
@@ -86,7 +82,7 @@ public class AdapterFactoryManager implements InjectorLifecycleListener {
 	public void injectorCreated(Injector injector, InjectorConfig config) {
 		Collection<Class<?>> classes = scanner.findSliceResources(config.getBundleNameFilter(),
 				config.getBasePackage());
-		ServiceRegistration registration = createAdapterFactory(classes, config.getName());
+		ServiceRegistration registration = createAdapterFactory(classes, config.getName(), injector);
 		registrationByInjector.put(config.getName(), registration);
 	}
 
@@ -98,14 +94,14 @@ public class AdapterFactoryManager implements InjectorLifecycleListener {
 		}
 	}
 
-	private ServiceRegistration createAdapterFactory(Collection<Class<?>> classes, String name) {
+	private ServiceRegistration createAdapterFactory(Collection<Class<?>> classes, String name,Injector injector) {
 		String[] adapterClasses = new String[classes.size()];
 		int i = 0;
 		for (Class<?> clazz : classes) {
 			adapterClasses[i++] = clazz.getName();
 		}
 
-		SliceAdapterFactory factory = new SliceAdapterFactory(name, repository, requestContextProvider);
+		SliceAdapterFactory factory = new SliceAdapterFactory(name, injector, requestContextProvider);
 		Dictionary<String, Object> properties = new Hashtable<String, Object>();
 		properties.put(AdapterFactory.ADAPTABLE_CLASSES, new String[] { Resource.class.getName() });
 		properties.put(AdapterFactory.ADAPTER_CLASSES, adapterClasses);

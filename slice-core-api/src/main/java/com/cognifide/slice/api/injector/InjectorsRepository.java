@@ -20,8 +20,6 @@
 
 package com.cognifide.slice.api.injector;
 
-import java.util.Collection;
-
 import aQute.bnd.annotation.ProviderType;
 
 import com.google.inject.Injector;
@@ -61,13 +59,6 @@ public interface InjectorsRepository {
 	 * @return
 	 */
 	String getInjectorName(Injector injector);
-
-	/**
-	 * Returns names of all injectors
-	 * 
-	 * @return
-	 */
-	Collection<String> getInjectorNames();
 
 	/**
 	 * Returns injector name for specified resource path. It looks for an injector name using "best match"

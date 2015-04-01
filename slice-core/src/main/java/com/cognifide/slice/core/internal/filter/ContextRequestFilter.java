@@ -22,19 +22,16 @@ package com.cognifide.slice.core.internal.filter;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.osgi.framework.Constants;
 
@@ -42,8 +39,10 @@ import com.cognifide.slice.api.context.ConstantContextProvider;
 import com.cognifide.slice.api.context.Context;
 import com.cognifide.slice.api.context.ContextProvider;
 import com.cognifide.slice.api.context.RequestContextProvider;
-import com.cognifide.slice.api.injector.InjectorsRepository;
+import com.cognifide.slice.api.injector.InjectorConfig;
 import com.cognifide.slice.core.internal.context.SliceContextFactory;
+import com.cognifide.slice.core.internal.injector.InjectorLifecycleListener;
+import com.google.inject.Injector;
 
 // @formatter:off
 /**
@@ -61,14 +60,13 @@ import com.cognifide.slice.core.internal.context.SliceContextFactory;
 		@Property(name = Constants.SERVICE_DESCRIPTION, value = "Filter that is injected into request chain to provide access to request, resource and response."),
 		@Property(name = Constants.SERVICE_VENDOR, value = "Cognifide"),
 		@Property(name = Constants.SERVICE_RANKING, intValue = ContextRequestFilter.RANKING),
-		@Property(name = "filter.scope", value = {"request","forward"}) })
+		@Property(name = "filter.scope", value = { "request", "forward" }) })
 // @formatter:on
-public class ContextRequestFilter implements Filter, RequestContextProvider {
-
-	@Reference
-	private InjectorsRepository injectorsRepo;
+public class ContextRequestFilter implements Filter, RequestContextProvider, InjectorLifecycleListener {
 
 	public static final int RANKING = -650;
+
+	private final List<String> injectorNames = new CopyOnWriteArrayList<String>();
 
 	private final ThreadLocal<Map<String, Context>> contexts = new ThreadLocal<Map<String, Context>>();
 
@@ -81,8 +79,10 @@ public class ContextRequestFilter implements Filter, RequestContextProvider {
 		final Map<String, Context> previous = contexts.get();
 		try {
 			Map<String, Context> current = new HashMap<String, Context>();
-			for (String injector : injectorsRepo.getInjectorNames()) {
-				current.put(injector, createContext(injector, request, response));
+			Iterator<String> injectorNamesIterator = injectorNames.iterator();
+			while (injectorNamesIterator.hasNext()) {
+				String injectorName = injectorNamesIterator.next();
+				current.put(injectorName, createContext(injectorName, request, response));
 			}
 			current.put(SliceContextFactory.COMMON_CONTEXT_NAME,
 					createContext(SliceContextFactory.COMMON_CONTEXT_NAME, request, response));
@@ -124,4 +124,13 @@ public class ContextRequestFilter implements Filter, RequestContextProvider {
 	public void destroy() {
 	}
 
+	@Override
+	public void injectorCreated(Injector injector, InjectorConfig config) {
+		injectorNames.add(config.getName());
+	}
+
+	@Override
+	public void injectorDestroyed(Injector injector, InjectorConfig config) {
+		injectorNames.remove(config.getName());
+	}
 }
