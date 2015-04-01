@@ -33,20 +33,21 @@ import com.google.inject.Key;
  * A base interface in Slice. It allows to fetch an injectable object(s) mapped from specified
  * resource or path. It resembles Guice com.google.inject.Injector ecause it is used for fetching objects
  * of different classes but it is closely tied to Slice because if fills requested objects with data obtained
- * from JCR.
+ * from Sling JCR.
+ *
  * ModelProvider can be also injected directly to your models, so that you can read a model from an arbitrary
  * resource or path, e.g.:
  * <pre>
- *@SliceResource
+ *{@literal @}SliceResource
  * public class OrderModel {
  *
  * private final static String CONFIGURATION_PATH = "/content/app/configuration/jcr:content/currency";
  * private final ModelProvider modelProvider;
  *
- * @JcrProperty
+ * {@literal @}JcrProperty
  * private int value;
  *
- * @Inject
+ * {@literal @}Inject
  * public OrderModel(ModelProvider modelProvider) {
  * 	this.modelProvider = modelProvider;
  * }
@@ -90,22 +91,22 @@ public interface ModelProvider {
 	 * }
 	 * </pre>
 	 *
-	 * There is also a node in JCR under '/content/app/orders/order-id-12345' and it has the
-	 * following properties:
-	 * type:Decimal, name:'orderValue', value:1000
-	 * type:String, name:'status', value:"incomplete"
-	 * type:String, name:'createdBy', value:"admin"
-	 *
-	 * Somewhere in the code there is an invocation:
+	 * There is also a node in Sling JCR under '/content/app/orders/order-id-12345' and it has the
+	 * following properties:<br>
+	 * type:Decimal, name:'orderValue', value:1000<br>
+	 * type:String, name:'status', value:"incomplete"<br>
+	 * type:String, name:'createdBy', value:"admin"<br>
+	 *	<br>
+	 * Somewhere in the code there is an invocation:<br>
 	 * <code>
 	 *     OrderModel model = modelProvider.get(OrderModel.class, "/content/app/orders/order-id-12345");
 	 * </code>
-	 *
-	 * In this case the result model will have:
-	 * value=1000,
-	 * status="incomplete"
-	 * deliveryDate=null
-	 *
+	 * <br><br>
+	 * In this case the result model will have:<br>
+	 * value=1000,<br>
+	 * status="incomplete"<br>
+	 * deliveryDate=null<br>
+	 * <br>
 	 * It is possible to use absolute and relative (with "./" prefix) paths in recursive calls. All gets are
 	 * performed with Context that was used to create this ModelProvider.
 	 *
@@ -114,12 +115,10 @@ public interface ModelProvider {
 	 *   modelProvider.get(SubModelType.class, "./relative/path");
 	 * </code>
 	 *
-	 * This method is thread-safe.
-	 *
-	 * @parem T type of model object to create
+	 * @param <T> type of model object to create
 	 * @param type class of model object to create
-	 * @param path CRX repository path to create object from
-	 * @return model object from given CRX repository path
+	 * @param path Sling repository path to create object from
+	 * @return model object from given Sling repository path
 	 */
 	<T> T get(final Class<T> type, final String path);
 
@@ -137,8 +136,6 @@ public interface ModelProvider {
 	/**
 	 * Creates new model object of type T and fills all its matching properties with data obtained from
 	 * given resource. The concept is the same as in {@link #get(Class, String) get}
-	 *
-	 * This method is thread-safe.
 	 * 
 	 * @param T type of model object to create
 	 * @param key a Guice {@link Key} which defines binding to a required object
@@ -151,12 +148,12 @@ public interface ModelProvider {
 
 	/**
 	 * Creates new model object of type T and fills all its matching properties with data found under
-	 * given CRX repository path. The concept is the same as in {@link #get(Class, String) get}
+	 * given Sling repository path. The concept is the same as in {@link #get(Class, String) get}
 	 * 
 	 * @param T type of model object to create
 	 * @param key a Guice {@link Key} which defines binding to a required object
-	 * @param path CRX repository path to create object from
-	 * @return model object from given CRX repository path
+	 * @param path Sling repository path to create object from
+	 * @return model object from given Sling repository path
 	 * 
 	 * @see Key
 	 */
@@ -164,11 +161,11 @@ public interface ModelProvider {
 
 	/**
 	 * Creates new model object of type T and fills all its matching properties with data found under
-	 * given CRX repository path. The concept is the same as in {@link #get(Class, String) get}
+	 * given Sling repository path. The concept is the same as in {@link #get(Class, String) get}
 	 *
 	 * @param className canonical name of a class to be resolved, e.g. com.cognifide.slice.api.ModelProvider
-	 * @param path CRX repository path to create object from
-	 * @return model object of specified className from given CRX repository path
+	 * @param path Sling repository path to create object from
+	 * @return model object of specified className from given Sling repository path
 	 * @throws ClassNotFoundException if specified className cannot be resolved by Injector,
 	 * {@link ClassNotFoundException} is thrown
 	 */
@@ -176,7 +173,7 @@ public interface ModelProvider {
 
 	/**
 	 * Creates new model object of type T and fills all its matching properties with data found under
-	 * given CRX repository path. The concept is the same as in {@link #get(Class, String) get}
+	 * given Sling repository path. The concept is the same as in {@link #get(Class, String) get}
 	 *
 	 * @param className canonical name of a class to be resolved, e.g. com.cognifide.slice.api.ModelProvider
 	 * @param resource Sling resource to create object from
@@ -193,8 +190,8 @@ public interface ModelProvider {
 	 * 
 	 * @param T type of model objects to create
 	 * @param type class of model objects to create
-	 * @param paths iterator that returns CRX repository paths to create objects from
-	 * @return list of model objects from given CRX repository paths
+	 * @param paths iterator that returns Sling repository paths to create objects from
+	 * @return list of model objects from given Sling repository paths
 	 */
 	<T> List<T> getList(final Class<T> type, final Iterator<String> paths);
 
@@ -203,8 +200,8 @@ public interface ModelProvider {
 	 * 
 	 * @param T type of model objects to create
 	 * @param type class of model objects to create
-	 * @param paths array of CRX repository paths to create objects from
-	 * @return list of model objects from given CRX repository paths
+	 * @param paths array of Sling repository paths to create objects from
+	 * @return list of model objects from given Sling repository paths
 	 */
 	<T> List<T> getList(final Class<T> type, final String[] paths);
 
@@ -214,7 +211,7 @@ public interface ModelProvider {
 	 * @param <T> type of model objects to create
 	 * @param type class of model objects to create
 	 * @param parentPath Sling resource path to obtain children (could be relative)
-	 * @return list of model objects from given CRX repository paths or empty list if parentPath is invalid
+	 * @return list of model objects from given Sling repository paths or empty list if parentPath is invalid
 	 */
 	<T> List<T> getChildModels(final Class<T> type, final String parentPath);
 
@@ -226,7 +223,7 @@ public interface ModelProvider {
 	 * @param <T> type of model objects to create
 	 * @param type class of model objects to create
 	 * @param parentResource Sling resource to obtain children
-	 * @return list of model objects from given CRX repository paths or empty list if parentResource is null
+	 * @return list of model objects from given Sling repository paths or empty list if parentResource is null
 	 */
 	<T> List<T> getChildModels(final Class<T> type, final Resource parentResource);
 
@@ -237,7 +234,7 @@ public interface ModelProvider {
 	 * 
 	 * @param <T> type of model objects to create
 	 * @param type class of model objects to create
-	 * @param resources iterator that returns CRX repository resources to create objects from
+	 * @param resources iterator that returns Sling repository resources to create objects from
 	 * @return list of model objects mapped from given resources. If the resource iterator has no element or
 	 * is <code>null</code>, then an empty list is returned. It never returns <code>null</code>.
 	 */
