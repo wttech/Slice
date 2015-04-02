@@ -31,7 +31,7 @@ import com.google.inject.Key;
 
 /**
  * A base interface in Slice. It allows to fetch an injectable object(s) mapped from specified
- * resource or path. It resembles Guice com.google.inject.Injector ecause it is used for fetching objects
+ * resource or path. It resembles Guice com.google.inject.Injector in being used for fetching objects
  * of different classes but it is closely tied to Slice because if fills requested objects with data obtained
  * from Sling JCR.
  *
@@ -126,7 +126,7 @@ public interface ModelProvider {
 	 * Creates new model object of type T and fills all its matching properties with data obtained from
 	 * given resource. The concept is the same as in {@link #get(Class, String) get}
 	 * 
-	 * @parem T type of model object to create
+	 * @param <T> type of model object to create
 	 * @param type class of model object to create
 	 * @param resource Sling resource to create object from
 	 * @return model object from given resource
@@ -137,7 +137,7 @@ public interface ModelProvider {
 	 * Creates new model object of type T and fills all its matching properties with data obtained from
 	 * given resource. The concept is the same as in {@link #get(Class, String) get}
 	 * 
-	 * @param T type of model object to create
+	 * @param <T> type of model object to create
 	 * @param key a Guice {@link Key} which defines binding to a required object
 	 * @param resource Sling resource to create object from
 	 * @return model object from given resource
@@ -150,7 +150,7 @@ public interface ModelProvider {
 	 * Creates new model object of type T and fills all its matching properties with data found under
 	 * given Sling repository path. The concept is the same as in {@link #get(Class, String) get}
 	 * 
-	 * @param T type of model object to create
+	 * @param <T> type of model object to create
 	 * @param key a Guice {@link Key} which defines binding to a required object
 	 * @param path Sling repository path to create object from
 	 * @return model object from given Sling repository path
@@ -188,7 +188,7 @@ public interface ModelProvider {
 	 * 
 	 * It is possible to use absolute and relative (with "./" prefix) paths in recursive calls.
 	 * 
-	 * @param T type of model objects to create
+	 * @param <T> type of model objects to create
 	 * @param type class of model objects to create
 	 * @param paths iterator that returns Sling repository paths to create objects from
 	 * @return list of model objects from given Sling repository paths
@@ -198,7 +198,7 @@ public interface ModelProvider {
 	/**
 	 * This is convenience method that works exactly like {@link #getList(Class, Iterator)}
 	 * 
-	 * @param T type of model objects to create
+	 * @param <T> type of model objects to create
 	 * @param type class of model objects to create
 	 * @param paths array of Sling repository paths to create objects from
 	 * @return list of model objects from given Sling repository paths
