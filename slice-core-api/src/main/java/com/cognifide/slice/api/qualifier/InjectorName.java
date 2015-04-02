@@ -31,8 +31,22 @@ import java.lang.annotation.Target;
 import com.google.inject.BindingAnnotation;
 
 /**
+ * Get name of current Injector.
+ *
+ * <pre>
+ * {@literal @}SliceResource
+ * public class ExampleModel {
+ *
+ * private String injectorName;
+ *
+ * {@literal @}Inject
+ * public ExampleModel({@literal @}InjectorName String injectorName) {
+ *      this.injectorName = injectorName;
+ *      }
+ * }
+ * </pre>
+ *
  * @author Rafał Malinowski
- * @short Get name of current Injector. 
  */
 @BindingAnnotation
 @Target({ FIELD, PARAMETER, METHOD })

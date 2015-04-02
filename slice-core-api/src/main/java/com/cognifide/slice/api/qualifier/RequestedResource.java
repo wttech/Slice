@@ -31,8 +31,22 @@ import java.lang.annotation.Target;
 import com.google.inject.BindingAnnotation;
 
 /**
+ * Get resource requested by end user.
+ * 
+ * <pre>
+ * {@literal @}SliceResource
+ * public class ExampleModel {
+ * 
+ * private Resource resource;
+ * 
+ * {@literal @}Inject
+ * public ExampleModel({@literal @}RequestedResource Resource resource) {
+ *      this.resource = resource;
+ *      }
+ * }
+ * </pre>
+ *
  * @author Rafał Malinowski
- * @short Get resource requested by end user. 
  */
 @BindingAnnotation
 @Target({ FIELD, PARAMETER, METHOD })
