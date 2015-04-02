@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.cognifide.slice.api.provider.ModelProvider;
+import com.cognifide.slice.mapper.annotation.Follow;
 import com.cognifide.slice.mapper.annotation.SliceResource;
 import com.cognifide.slice.mapper.api.processor.FieldProcessor;
 import com.google.inject.Inject;
@@ -48,8 +49,15 @@ public class SliceResourceFieldProcessor implements FieldProcessor {
 
 	@Override
 	public Object mapResourceToField(Resource resource, ValueMap valueMap, Field field, String propertyName) {
-		Resource nestedResource = resource.getChild(propertyName);
+		if (field.isAnnotationPresent(Follow.class)) {
+			return mapFollowUpResourceToField(resource, valueMap, field, propertyName);
+		}
+		return mapChildResourceToField(resource, field, propertyName);
+	}
+
+	private Object mapChildResourceToField(Resource resource, Field field, String propertyName) {
 		final Class<?> fieldType = field.getType();
+		Resource nestedResource = resource.getChild(propertyName);
 		// create instance only if nested resource isn't null
 		if (nestedResource == null) {
 			// nested SliceResources are not instantiated as empty - not to erase information about them not
@@ -62,9 +70,16 @@ public class SliceResourceFieldProcessor implements FieldProcessor {
 								field.getName() });
 			}
 			return null;
-		} else {
-			return modelProvider.get(fieldType, nestedResource);
 		}
+		return modelProvider.get(fieldType, nestedResource);
+	}
+
+	private Object mapFollowUpResourceToField(Resource resource, ValueMap valueMap, Field field,
+			String propertyName) {
+		final Class<?> fieldType = field.getType();
+		Resource followUpResource = FollowUpProcessorUtil.getFollowUpResource(resource, valueMap, field,
+				propertyName);
+		return modelProvider.get(fieldType, followUpResource);
 	}
 
 }
