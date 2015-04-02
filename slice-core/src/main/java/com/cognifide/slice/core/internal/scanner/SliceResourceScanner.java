@@ -24,7 +24,6 @@ import java.util.Collection;
 
 import org.objectweb.asm.ClassReader;
 import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,33 +35,11 @@ public class SliceResourceScanner {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SliceResourceScanner.class);
 
-	private final BundleContext bundleContext;
-
-	public SliceResourceScanner(BundleContext bundleContext) {
-		this.bundleContext = bundleContext;
-	}
-
-	public Collection<Class<?>> findSliceResources(String bundleNameFilter, String basePackage) {
-		BundleFinder bundleFinder = new BundleFinder(new BundleInfo(bundleNameFilter, basePackage), bundleContext);
-		BundleClassesFinder classFinder = new BundleClassesFinder(basePackage);
-		classFinder.addFilter(new SliceResourceFilter());
-
-		LOG.info("Searching for classes annotated with SliceResource, packages:{}, bundles:{}", basePackage,
-				bundleNameFilter);
-
-		Collection<Class<?>> classes = classFinder.getClasses(bundleFinder.findBundles());
-
-		LOG.info("Found {} Slice Resource classes. Switch to debug logging level to see them all.",
-				classes.size());
-
-		return classes;
-	}
-
 	public Collection<Class<?>> findSliceResources(Bundle bundle, String basePackage) {
 		BundleClassesFinder classFinder = new BundleClassesFinder(basePackage);
 		classFinder.addFilter(new SliceResourceFilter());
 
-		LOG.info("Searching for classes annotated with SliceResource, packages:{}, bundle:{}", basePackage,
+		LOG.info("Searching for classes annotated with SliceResource, packages: {}, bundle: {}", basePackage,
 				bundle.getSymbolicName());
 
 		Collection<Class<?>> classes = classFinder.getClasses(bundle);

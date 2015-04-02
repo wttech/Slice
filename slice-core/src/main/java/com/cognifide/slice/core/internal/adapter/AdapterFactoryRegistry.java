@@ -30,55 +30,57 @@ public class AdapterFactoryRegistry {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AdapterFactoryRegistry.class);
 
-	private Map<String, Map<String, ServiceRegistration>> registrationByInjectorAndBundle;
+	private Map<String, Map<String, ServiceRegistration>> adapterFactoriesByInjectorAndBundle;
 
 	public AdapterFactoryRegistry() {
-		this.registrationByInjectorAndBundle = new HashMap<String, Map<String, ServiceRegistration>>();
+		this.adapterFactoriesByInjectorAndBundle = new HashMap<String, Map<String, ServiceRegistration>>();
 	}
 
-	public void addAdapter(ServiceRegistration registration, String injectorName, String bundleSymbolicName) {
-		Map<String, ServiceRegistration> bundleRegistrations = registrationByInjectorAndBundle
+	public void addAdapter(String injectorName, String bundleSymbolicName,
+			ServiceRegistration adapterFactoryService) {
+		Map<String, ServiceRegistration> injectorAdapterFactories = adapterFactoriesByInjectorAndBundle
 				.get(injectorName);
-		if (null == bundleRegistrations) {
-			bundleRegistrations = new HashMap<String, ServiceRegistration>();
-			registrationByInjectorAndBundle.put(injectorName, bundleRegistrations);
+		if (injectorAdapterFactories == null) {
+			injectorAdapterFactories = new HashMap<String, ServiceRegistration>();
+			adapterFactoriesByInjectorAndBundle.put(injectorName, injectorAdapterFactories);
 		}
-		LOG.info("Adding AdapterFactory, injector:{}, bundle:{}", injectorName, bundleSymbolicName);
+		LOG.debug("Adding AdapterFactory, injector: {}, bundle: {}", injectorName, bundleSymbolicName);
 
-		bundleRegistrations.put(bundleSymbolicName, registration);
+		injectorAdapterFactories.put(bundleSymbolicName, adapterFactoryService);
 	}
 
 	public void clearAll() {
-		for (Map<String, ServiceRegistration> registrationByBundle : registrationByInjectorAndBundle.values()) {
-			for (ServiceRegistration registration : registrationByBundle.values()) {
-				registration.unregister();
+		LOG.debug("Removing all AdapterFactories");
+		for (Map<String, ServiceRegistration> adapterFactories : adapterFactoriesByInjectorAndBundle.values()) {
+			for (ServiceRegistration adapterFactoryService : adapterFactories.values()) {
+				adapterFactoryService.unregister();
 			}
 		}
-		registrationByInjectorAndBundle.clear();
+		adapterFactoriesByInjectorAndBundle.clear();
 	}
 
 	public void clearInjectorAdapters(String injectorName) {
-		Map<String, ServiceRegistration> registrationByBundle = registrationByInjectorAndBundle
+		Map<String, ServiceRegistration> injectorAdapterFactories = adapterFactoriesByInjectorAndBundle
 				.remove(injectorName);
-		if (registrationByBundle != null) {
-			for (ServiceRegistration registration : registrationByBundle.values()) {
-				LOG.info("Removing AdapterFactory instances for injector, injector:{}", injectorName);
+		if (injectorAdapterFactories != null) {
+			for (ServiceRegistration adapterFactoryService : injectorAdapterFactories.values()) {
+				LOG.debug("Removing AdapterFactory instances for injector, injector: {}", injectorName);
 
-				registration.unregister();
+				adapterFactoryService.unregister();
 			}
 		}
 	}
 
 	public void clearBundleAdapter(String injectorName, String bundleSymbolicName) {
-		Map<String, ServiceRegistration> registrationByBundle = registrationByInjectorAndBundle
+		Map<String, ServiceRegistration> injectorAdapterFactories = adapterFactoriesByInjectorAndBundle
 				.get(injectorName);
-		if (registrationByBundle != null) {
-			ServiceRegistration registration = registrationByBundle.remove(bundleSymbolicName);
-			if (registration != null) {
-				LOG.info("Removing AdapterFactory for specific injector and bundle, injector:{}, bundle:{}",
+		if (injectorAdapterFactories != null) {
+			ServiceRegistration adapterFactoryService = injectorAdapterFactories.remove(bundleSymbolicName);
+			if (adapterFactoryService != null) {
+				LOG.debug("Removing AdapterFactory for specific injector and bundle, injector:{}, bundle:{}",
 						injectorName, bundleSymbolicName);
 
-				registration.unregister();
+				adapterFactoryService.unregister();
 			}
 		}
 	}

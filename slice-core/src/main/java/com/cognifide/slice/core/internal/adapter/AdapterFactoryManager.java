@@ -90,9 +90,8 @@ public class AdapterFactoryManager implements InjectorLifecycleListener, BundleL
 		bundleContext = componentContext.getBundleContext();
 		registry = new AdapterFactoryRegistry();
 		matchersByInjector = new HashMap<String, BundleMatcher>();
-		scanner = new SliceResourceScanner(bundleContext);
+		scanner = new SliceResourceScanner();
 
-		bundleContext = componentContext.getBundleContext();
 		bundleContext.addBundleListener(this);
 	}
 
@@ -117,7 +116,7 @@ public class AdapterFactoryManager implements InjectorLifecycleListener, BundleL
 				continue;
 			}
 			final ServiceRegistration registration = createAdapterFactory(classes, config.getName());
-			registry.addAdapter(registration, config.getName(), bundle.getSymbolicName());
+			registry.addAdapter(config.getName(), bundle.getSymbolicName(), registration);
 		}
 		matchersByInjector.put(config.getName(), new BundleMatcher(bundleInfo));
 	}
@@ -128,9 +127,10 @@ public class AdapterFactoryManager implements InjectorLifecycleListener, BundleL
 		matchersByInjector.remove(config.getName());
 	}
 
+	@Override
 	public void bundleChanged(BundleEvent event) {
 		if (event.getType() != BundleEvent.RESOLVED && event.getType() != BundleEvent.UNRESOLVED) {
-			//other event type; don't handle
+			// other event type; don't handle
 			return;
 		}
 
@@ -140,7 +140,7 @@ public class AdapterFactoryManager implements InjectorLifecycleListener, BundleL
 			BundleMatcher matcher = entry.getValue();
 			if (entry.getValue().matches(bundle.getSymbolicName())) {
 				if (event.getType() == BundleEvent.RESOLVED) {
-					updateAdapterFactory(bundle, injectorName, matcher.getBundleInfo().getBasePackage());
+					updateAdapterFactory(injectorName, bundle, matcher.getBundleInfo().getBasePackage());
 					return;
 				} else if (event.getType() == BundleEvent.UNRESOLVED) {
 					registry.clearBundleAdapter(injectorName, bundle.getSymbolicName());
@@ -160,14 +160,13 @@ public class AdapterFactoryManager implements InjectorLifecycleListener, BundleL
 		return bundleContext.registerService(AdapterFactory.class.getName(), factory, properties);
 	}
 
-	private void updateAdapterFactory(final Bundle bundle, final String injectorName,
-			final String basePackage) {
+	private void updateAdapterFactory(final String injectorName, final Bundle bundle, final String basePackage) {
 		registry.clearBundleAdapter(injectorName, bundle.getSymbolicName());
 
 		final Collection<Class<?>> classes = scanner.findSliceResources(bundle, basePackage);
 		if (!classes.isEmpty()) {
 			ServiceRegistration newRegistration = createAdapterFactory(classes, injectorName);
-			registry.addAdapter(newRegistration, injectorName, bundle.getSymbolicName());
+			registry.addAdapter(injectorName, bundle.getSymbolicName(), newRegistration);
 		} else if (LOG.isDebugEnabled()) {
 			LOG.debug("No classes found, skipping creation of AdapterFactory.");
 		}

@@ -44,10 +44,9 @@ public class BundleFinder {
 	public List<Bundle> findBundles() {
 		List<Bundle> bundles = new ArrayList<Bundle>();
 		for (Bundle bundle : bundleContext.getBundles()) {
-			if (matcher.matches(bundle.getSymbolicName())) {
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("Bundle: " + bundle.getSymbolicName() + " has been found.");
-				}
+			String symbolicName = bundle.getSymbolicName();
+			if (matcher.matches(symbolicName)) {
+				LOG.debug("Bundle {} has been found.", symbolicName);
 				bundles.add(bundle);
 			}
 		}
