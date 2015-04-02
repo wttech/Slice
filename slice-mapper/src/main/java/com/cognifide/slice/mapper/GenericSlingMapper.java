@@ -23,6 +23,8 @@ package com.cognifide.slice.mapper;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.reflect.FieldUtils;
@@ -45,8 +47,6 @@ import com.cognifide.slice.mapper.helper.ReflectionHelper;
 import com.cognifide.slice.mapper.impl.processor.DefaultFieldProcessor;
 import com.cognifide.slice.mapper.strategy.MapperStrategy;
 import com.cognifide.slice.mapper.strategy.MapperStrategyFactory;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Generic implementation of {@link Mapper} that maps Sling {@link Resource} to a {@link SliceResource} using
@@ -140,28 +140,25 @@ public class GenericSlingMapper implements Mapper {
 	 */
 	private <T> T mapResourceToObject(final Resource resource, final T object) {
 		ValueMap valueMap = resource.adaptTo(ValueMap.class);
-		if (valueMap != null) {
-			try {
-				Class<?> type = object.getClass();
-				Field[] fields = ReflectionHelper.readAllDeclaredFields(type);
-				for (Field field : fields) {
-					MapperStrategy mapperStrategy = mapperStrategyFactory.getMapperStrategy(field
-							.getDeclaringClass());
-					if (shouldFieldBeMapped(field, mapperStrategy)) {
-						Object value = mapResourceToField(resource, valueMap, field);
-						FieldUtils.writeField(field, object, value, ReflectionHelper.FORCE_ACCESS);
-					}
+		try {
+			Class<?> type = object.getClass();
+			Field[] fields = ReflectionHelper.readAllDeclaredFields(type);
+			for (Field field : fields) {
+				MapperStrategy mapperStrategy = mapperStrategyFactory.getMapperStrategy(field
+						.getDeclaringClass());
+				if (shouldFieldBeMapped(field, mapperStrategy)) {
+					Object value = mapResourceToField(resource, valueMap, field);
+					FieldUtils.writeField(field, object, value, ReflectionHelper.FORCE_ACCESS);
 				}
-			} catch (Exception e) {
-				String path = resource.getPath();
-				String format = "[path={0}]: cannot map to object({1})";
-				String message = MessageFormat.format(format, path, e.getMessage());
-				logger.warn(message);
-				throw new MapperException("mapResourceToObject failed", e);
 			}
+			return object;
+		} catch (Exception e) {
+			String path = resource.getPath();
+			String format = "[path={0}]: cannot map to object({1})";
+			String message = MessageFormat.format(format, path, e.getMessage());
+			logger.warn(message);
+			throw new MapperException("mapResourceToObject failed", e);
 		}
-
-		return object;
 	}
 
 	private boolean shouldFieldBeMapped(Field field, MapperStrategy mapperStrategy) {
