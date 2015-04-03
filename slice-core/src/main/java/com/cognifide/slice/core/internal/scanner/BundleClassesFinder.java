@@ -117,13 +117,15 @@ public class BundleClassesFinder {
 			for (Constructor<?> constructor : constructors) {
 				Class<?>[] parameterTypes = constructor.getParameterTypes();
 				Annotation[][] annotations = constructor.getParameterAnnotations();
-				for (int i = 0; i < parameterTypes.length; i++) {
-					for (Annotation annotation : annotations[i]) {
+				int j = 0;
+				for (int i = (parameterTypes.length - annotations.length); i < parameterTypes.length; i++) {
+					for (Annotation annotation : annotations[j]) {
 						if (annotation.annotationType().equals(OsgiService.class)) {
-							osgiClasses.add(parameterTypes[i]);
+							osgiClasses.add(parameterTypes[j]);
+							break;
 						}
-						break;
 					}
+					j++;
 				}
 			}
 		}
