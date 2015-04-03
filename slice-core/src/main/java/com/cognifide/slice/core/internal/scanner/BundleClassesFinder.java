@@ -55,7 +55,7 @@ public class BundleClassesFinder {
 
 	public Collection<Class<?>> getClasses(final Bundle bundle) {
 		Collection<Class<?>> classes = new ArrayList<Class<?>>();
-		
+
 		@SuppressWarnings("unchecked")
 		Enumeration<URL> classEntries = bundle.findEntries(this.basePackage, RESOURCE_PATTERN, true);
 		while ((classEntries != null) && classEntries.hasMoreElements()) {
@@ -76,7 +76,7 @@ public class BundleClassesFinder {
 				LOG.error("Error reading the class!", e);
 			}
 		}
-		
+
 		return classes;
 	}
 
@@ -118,6 +118,10 @@ public class BundleClassesFinder {
 				Class<?>[] parameterTypes = constructor.getParameterTypes();
 				Annotation[][] annotations = constructor.getParameterAnnotations();
 				int j = 0;
+				/**
+				 * parameterTypes of constructor of inner classes contain types of parent classes in front of
+				 * the array.
+				 */
 				for (int i = (parameterTypes.length - annotations.length); i < parameterTypes.length; i++) {
 					for (Annotation annotation : annotations[j]) {
 						if (annotation.annotationType().equals(OsgiService.class)) {
@@ -131,7 +135,7 @@ public class BundleClassesFinder {
 		}
 		return osgiClasses;
 	}
-	
+
 	public interface ClassFilter {
 		boolean accepts(ClassReader classReader);
 	}
