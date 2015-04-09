@@ -125,7 +125,7 @@ public class BundleClassesFinder {
 				for (int i = (parameterTypes.length - annotations.length); i < parameterTypes.length; i++) {
 					for (Annotation annotation : annotations[j]) {
 						if (annotation.annotationType().equals(OsgiService.class)) {
-							osgiClasses.add(parameterTypes[j]);
+							osgiClasses.add(parameterTypes[i]);
 							break;
 						}
 					}
