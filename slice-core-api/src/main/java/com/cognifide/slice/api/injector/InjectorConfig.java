@@ -44,8 +44,6 @@ public class InjectorConfig {
 
 	private final String bundleFilter;
 
-	private boolean success = true;
-
 	private InjectorCreationFailListener listener;
 
 	InjectorConfig(InjectorRunner runner) {
@@ -85,14 +83,6 @@ public class InjectorConfig {
 
 	public String getApplicationPath() {
 		return applicationPath;
-	}
-
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
 	}
 
 	public InjectorCreationFailListener getListener() {

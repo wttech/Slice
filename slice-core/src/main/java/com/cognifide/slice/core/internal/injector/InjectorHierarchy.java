@@ -87,7 +87,7 @@ public class InjectorHierarchy {
 	 * 
 	 * @param config Injector configuration
 	 */
-	private synchronized void registerInjector(InjectorConfig config) throws ServiceException, BundleException{
+	private synchronized void registerInjector(InjectorConfig config) {
 		configByName.put(config.getName(), config);
 
 		List<InjectorConfig> injectorsToRefresh = getSubtree(config);
@@ -169,7 +169,7 @@ public class InjectorHierarchy {
 		return flatSubtree;
 	}
 
-	private void refreshInjectors(List<InjectorConfig> injectors)throws ServiceException, BundleException {
+	private void refreshInjectors(List<InjectorConfig> injectors) {
 		for (InjectorConfig config : injectors) {
 			Injector injector = createInjector(config);
 			if (injector != null) {
@@ -178,8 +178,7 @@ public class InjectorHierarchy {
 		}
 	}
 
-	private Injector createInjector(InjectorConfig config)
-			throws ServiceException, BundleException {
+	private Injector createInjector(InjectorConfig config) {
 		List<Module> modules = new ArrayList<Module>();
 		InjectorConfig current = config;
 		do {
@@ -203,12 +202,8 @@ public class InjectorHierarchy {
 			}
 			return injector;
 		} catch (CreationException e) {
-			//LOG.error("Can't create injector " + config.getName(), e);
-			config.setSuccess(false);
 			config.getListener().creationFailed();
 			return null;
-			//throw new BundleException("Failed to create an injector", BundleException.ACTIVATOR_ERROR, e);
-			//throw new ServiceException("Failed to create an injector", ServiceException.UNREGISTERED, e);
 		}
 	}
 
@@ -239,7 +234,7 @@ public class InjectorHierarchy {
 		namesByPath = map;
 	}
 
-	protected void bindConfig(final InjectorConfig config) throws ServiceException, BundleException{
+	protected void bindConfig(final InjectorConfig config) {
 		registerInjector(config);
 	}
 

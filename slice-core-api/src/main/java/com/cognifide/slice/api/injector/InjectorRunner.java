@@ -25,10 +25,9 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
 
-import org.osgi.framework.BundleContext;
+import org.osgi.framework.*;
 
 import com.google.inject.Module;
-import org.osgi.framework.BundleException;
 
 public class InjectorRunner {
 
@@ -47,6 +46,10 @@ public class InjectorRunner {
 	private String parentInjectorName;
 
 	private String applicationPath;
+
+	private ServiceRegistration registration;
+
+	private boolean injectorCreationSuccess = true;
 
 	/**
 	 * @param bundleContext Context used to get access to the OSGi
@@ -89,14 +92,15 @@ public class InjectorRunner {
 	}
 
 	public void start() throws BundleException {
-		InjectorConfig config = new InjectorConfig(this);
-
-
+		final InjectorConfig config = new InjectorConfig(this);
 
 		config.setListener(new InjectorCreationFailListener() {
 			@Override public void creationFailed() {
 				try {
+					injectorCreationSuccess = false;
+					started = false;
 					bundleContext.getBundle().stop();
+					//bundleContext.getBundle().start();//this would leave bundle in RESOLVED state instead of INSTALLED
 				} catch (BundleException e) {
 					e.printStackTrace();
 				}
@@ -104,8 +108,9 @@ public class InjectorRunner {
 		});
 
 		Dictionary<String, Object> properties = new Hashtable<String, Object>();
-		bundleContext.registerService(InjectorConfig.class.getName(), config, properties);
-		if (config.isSuccess()) {
+		registration = bundleContext.registerService(InjectorConfig.class.getName(), config, properties);
+
+		if (injectorCreationSuccess) {
 			started = true;
 		}
 		else {
