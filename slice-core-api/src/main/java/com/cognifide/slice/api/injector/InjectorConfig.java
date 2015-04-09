@@ -44,6 +44,10 @@ public class InjectorConfig {
 
 	private final String bundleFilter;
 
+	private boolean success = true;
+
+	private InjectorCreationFailListener listener;
+
 	InjectorConfig(InjectorRunner runner) {
 		// we don't allow to change the module list after creating the configuration
 		modules = Collections.unmodifiableList(new ArrayList<Module>(runner.getModules()));
@@ -81,5 +85,21 @@ public class InjectorConfig {
 
 	public String getApplicationPath() {
 		return applicationPath;
+	}
+
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
+
+	public InjectorCreationFailListener getListener() {
+		return listener;
+	}
+
+	public void setListener(InjectorCreationFailListener listener) {
+		this.listener = listener;
 	}
 }

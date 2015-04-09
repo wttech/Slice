@@ -31,12 +31,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.cognifide.slice.api.injector.InjectorListener;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Deactivate;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.ReferenceCardinality;
 import org.apache.felix.scr.annotations.ReferencePolicy;
 import org.apache.felix.scr.annotations.Service;
+import org.osgi.framework.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,7 +87,7 @@ public class InjectorHierarchy {
 	 * 
 	 * @param config Injector configuration
 	 */
-	private synchronized void registerInjector(InjectorConfig config) {
+	private synchronized void registerInjector(InjectorConfig config) throws ServiceException, BundleException{
 		configByName.put(config.getName(), config);
 
 		List<InjectorConfig> injectorsToRefresh = getSubtree(config);
@@ -167,7 +169,7 @@ public class InjectorHierarchy {
 		return flatSubtree;
 	}
 
-	private void refreshInjectors(List<InjectorConfig> injectors) {
+	private void refreshInjectors(List<InjectorConfig> injectors)throws ServiceException, BundleException {
 		for (InjectorConfig config : injectors) {
 			Injector injector = createInjector(config);
 			if (injector != null) {
@@ -176,7 +178,8 @@ public class InjectorHierarchy {
 		}
 	}
 
-	private Injector createInjector(InjectorConfig config) {
+	private Injector createInjector(InjectorConfig config)
+			throws ServiceException, BundleException {
 		List<Module> modules = new ArrayList<Module>();
 		InjectorConfig current = config;
 		do {
@@ -200,8 +203,12 @@ public class InjectorHierarchy {
 			}
 			return injector;
 		} catch (CreationException e) {
-			LOG.error("Can't create injector " + config.getName(), e);
+			//LOG.error("Can't create injector " + config.getName(), e);
+			config.setSuccess(false);
+			config.getListener().creationFailed();
 			return null;
+			//throw new BundleException("Failed to create an injector", BundleException.ACTIVATOR_ERROR, e);
+			//throw new ServiceException("Failed to create an injector", ServiceException.UNREGISTERED, e);
 		}
 	}
 
@@ -232,7 +239,7 @@ public class InjectorHierarchy {
 		namesByPath = map;
 	}
 
-	protected void bindConfig(final InjectorConfig config) {
+	protected void bindConfig(final InjectorConfig config) throws ServiceException, BundleException{
 		registerInjector(config);
 	}
 

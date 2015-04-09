@@ -28,6 +28,7 @@ import java.util.List;
 import org.osgi.framework.BundleContext;
 
 import com.google.inject.Module;
+import org.osgi.framework.BundleException;
 
 public class InjectorRunner {
 
@@ -87,11 +88,30 @@ public class InjectorRunner {
 		modules.addAll(newModules);
 	}
 
-	public void start() {
+	public void start() throws BundleException {
 		InjectorConfig config = new InjectorConfig(this);
+
+
+
+		config.setListener(new InjectorCreationFailListener() {
+			@Override public void creationFailed() {
+				try {
+					bundleContext.getBundle().stop();
+				} catch (BundleException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+
 		Dictionary<String, Object> properties = new Hashtable<String, Object>();
 		bundleContext.registerService(InjectorConfig.class.getName(), config, properties);
-		started = true;
+		if (config.isSuccess()) {
+			started = true;
+		}
+		else {
+			started = false;
+			throw new BundleException("Failed to create an injector", BundleException.ACTIVATOR_ERROR);
+		}
 	}
 
 	public String getInjectorName() {
