@@ -44,7 +44,7 @@ public class FollowUpProcessorUtil {
 	public static Resource getFollowUpResource(Resource resource, ValueMap valueMap, Field field,
 			String propertyName) {
 		final Class<?> fieldType = field.getType();
-		Object value = valueMap.get(propertyName);
+		Object value = getValue(valueMap, propertyName);
 
 		if (value == null) {
 			if (LOG.isDebugEnabled()) {
@@ -77,5 +77,13 @@ public class FollowUpProcessorUtil {
 			return null;
 		}
 		return followUpResource;
+	}
+
+	private static Object getValue(ValueMap valueMap, String propertyName) {
+		Object value = null;
+		if (valueMap != null) {
+			value = valueMap.get(propertyName);
+		}
+		return value;
 	}
 }
