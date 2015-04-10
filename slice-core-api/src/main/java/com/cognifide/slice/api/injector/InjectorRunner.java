@@ -28,7 +28,7 @@ import java.util.List;
 import com.google.inject.Module;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
-import org.osgi.framework.ServiceRegistration;
+
 import org.slf4j.LoggerFactory;
 
 public class InjectorRunner implements InjectorCreationFailListener {
@@ -110,7 +110,7 @@ public class InjectorRunner implements InjectorCreationFailListener {
 		final InjectorConfig config = new InjectorConfig(this);
 
 		Dictionary<String, Object> properties = new Hashtable<String, Object>();
-		registration = bundleContext.registerService(InjectorConfig.class.getName(), config, properties);
+		bundleContext.registerService(InjectorConfig.class.getName(), config, properties);
 
 		//In some situations InjectorCreationFailListener.creationFailed() is called synchronously inside
 		// registerService() method. To prevent bundle activation in this case it is necessary to check
