@@ -22,12 +22,19 @@ package com.cognifide.slice.api.execution;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.cognifide.slice.api.provider.ModelProvider;
+
 /**
  * Execution context stack of Slice Injector. New ExecutionContext is put on this stack each time a new call
- * to ModelProvider is made. After call is finished the ExecutionContext is taken from this stack. This
- * allows Slice to build recursively complex models that need to have other models injected.
+ * to ModelProvider is made. After call is finished the ExecutionContext is taken from this stack. This allows
+ * Slice to build recursively complex models that need to have other models injected or changing a scope of
+ * current resource by using ModelProvider in client code.
+ * 
+ * @deprecated This interface will be hidden from public use in next major version. Use {@link ModelProvider}
+ * instead.
  */
 @ProviderType
+@Deprecated
 public interface ExecutionContextStack {
 
 	/**
