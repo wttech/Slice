@@ -44,9 +44,9 @@ public class InjectorConfig {
 
 	private final String bundleFilter;
 
-	private InjectorCreationFailListener listener;
+	private final InjectorCreationFailListener listener;
 
-	InjectorConfig(InjectorRunner runner) {
+	InjectorConfig(final InjectorRunner runner) {
 		// we don't allow to change the module list after creating the configuration
 		modules = Collections.unmodifiableList(new ArrayList<Module>(runner.getModules()));
 		name = runner.getInjectorName();
