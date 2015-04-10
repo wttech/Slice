@@ -111,6 +111,9 @@ public class InjectorRunner implements InjectorCreationFailListener{
 		Dictionary<String, Object> properties = new Hashtable<String, Object>();
 		registration = bundleContext.registerService(InjectorConfig.class.getName(), config, properties);
 
+		//In some situations InjectorCreationFailListener.creationFailed() is called synchronously inside
+		// registerService() method. To prevent bundle activation in this case it is necessary to check
+		// injector status here once more and eventually leave by calling BundleException
 		if (injectorCreationSuccess) {
 			started = true;
 		}
