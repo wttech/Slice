@@ -31,14 +31,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.cognifide.slice.api.injector.InjectorListener;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Deactivate;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.ReferenceCardinality;
 import org.apache.felix.scr.annotations.ReferencePolicy;
 import org.apache.felix.scr.annotations.Service;
-import org.osgi.framework.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -200,8 +198,11 @@ public class InjectorHierarchy {
 			for (InjectorLifecycleListener listener : listeners) {
 				listener.injectorCreated(injector, config);
 			}
+			LOG.error("STEP A");
 			return injector;
 		} catch (CreationException e) {
+			LOG.error("STEP B");
+			LOG.error("Can't create injector " + config.getName(), e);
 			config.getListener().creationFailed();
 			return null;
 		}

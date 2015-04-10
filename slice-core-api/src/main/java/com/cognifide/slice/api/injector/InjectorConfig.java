@@ -55,6 +55,7 @@ public class InjectorConfig {
 		parentName = runner.getParentName();
 		basePackage = runner.getBasePackage();
 		bundleFilter = runner.getBundleNameFilter();
+		listener = runner;
 	}
 
 	public String getName() {
@@ -87,9 +88,5 @@ public class InjectorConfig {
 
 	public InjectorCreationFailListener getListener() {
 		return listener;
-	}
-
-	public void setListener(InjectorCreationFailListener listener) {
-		this.listener = listener;
 	}
 }

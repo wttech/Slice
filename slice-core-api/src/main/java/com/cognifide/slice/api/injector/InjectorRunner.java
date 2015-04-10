@@ -25,11 +25,15 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
 
-import org.osgi.framework.*;
-
 import com.google.inject.Module;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
+import org.osgi.framework.ServiceRegistration;
+import org.slf4j.LoggerFactory;
 
-public class InjectorRunner {
+public class InjectorRunner implements InjectorCreationFailListener{
+
+	private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(InjectorRunner.class);
 
 	private final String injectorName;
 
@@ -91,21 +95,18 @@ public class InjectorRunner {
 		modules.addAll(newModules);
 	}
 
+	@Override public void creationFailed() {
+		try {
+			injectorCreationSuccess = false;
+			started = false;
+			bundleContext.getBundle().stop();
+		} catch (BundleException e) {
+			LOG.error("InjectorRunner failed to stop the bundle on injector creation failure", e);
+		}
+	}
+
 	public void start() throws BundleException {
 		final InjectorConfig config = new InjectorConfig(this);
-
-		config.setListener(new InjectorCreationFailListener() {
-			@Override public void creationFailed() {
-				try {
-					injectorCreationSuccess = false;
-					started = false;
-					bundleContext.getBundle().stop();
-					//bundleContext.getBundle().start();//this would leave bundle in RESOLVED state instead of INSTALLED
-				} catch (BundleException e) {
-					e.printStackTrace();
-				}
-			}
-		});
 
 		Dictionary<String, Object> properties = new Hashtable<String, Object>();
 		registration = bundleContext.registerService(InjectorConfig.class.getName(), config, properties);
