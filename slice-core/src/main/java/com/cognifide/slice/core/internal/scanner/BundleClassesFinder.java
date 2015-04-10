@@ -106,7 +106,7 @@ public class BundleClassesFinder {
 		Set<Class<?>> osgiClasses = new HashSet<Class<?>>();
 		for (Class<?> clazz : allClasses) {
 			Set<Class<?>> osgiServicesForClass = readOsgiServicesForClass(clazz);
-			osgiServicesForClass.addAll(osgiServicesForClass);
+			osgiClasses.addAll(osgiServicesForClass);
 		}
 		return osgiClasses;
 	}
