@@ -30,7 +30,6 @@ import java.util.Map.Entry;
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Deactivate;
-import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.adapter.AdapterFactory;
 import org.apache.sling.api.resource.Resource;
@@ -43,9 +42,7 @@ import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.cognifide.slice.api.context.RequestContextProvider;
 import com.cognifide.slice.api.injector.InjectorConfig;
-import com.cognifide.slice.api.injector.InjectorsRepository;
 import com.cognifide.slice.core.internal.injector.InjectorLifecycleListener;
 import com.cognifide.slice.core.internal.scanner.BundleFinder;
 import com.cognifide.slice.core.internal.scanner.BundleInfo;
@@ -70,12 +67,6 @@ import com.google.inject.Injector;
 public class AdapterFactoryManager implements InjectorLifecycleListener, BundleListener {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AdapterFactoryManager.class);
-
-	@Reference
-	private InjectorsRepository repository;
-
-	@Reference
-	private RequestContextProvider requestContextProvider;
 
 	private AdapterFactoryRegistry registry;
 
@@ -152,7 +143,7 @@ public class AdapterFactoryManager implements InjectorLifecycleListener, BundleL
 
 	private ServiceRegistration createAdapterFactory(Collection<Class<?>> classes, String name) {
 		String[] adapterClassNames = getClassNames(classes);
-		SliceAdapterFactory factory = new SliceAdapterFactory(name, repository, requestContextProvider);
+		SliceAdapterFactory factory = new SliceAdapterFactory(name);
 
 		Dictionary<String, Object> properties = new Hashtable<String, Object>();
 		properties.put(AdapterFactory.ADAPTABLE_CLASSES, new String[] { Resource.class.getName() });
