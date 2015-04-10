@@ -22,7 +22,9 @@ package com.cognifide.slice.mapper.api.processor;
 
 import java.lang.reflect.Field;
 
+import org.apache.sling.api.resource.NonExistingResource;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.SyntheticResource;
 import org.apache.sling.api.resource.ValueMap;
 
 import aQute.bnd.annotation.ConsumerType;
@@ -49,7 +51,8 @@ public interface FieldProcessor {
 	 * valueMap using specified propertyName
 	 * 
 	 * @param resource
-	 * @param valueMap
+	 * @param valueMap obtained from resource - may be null, if resource is a {@link SyntheticResource} or
+	 * {@link NonExistingResource}
 	 * @param field
 	 * @param propertyName
 	 * @return

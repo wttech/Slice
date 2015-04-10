@@ -26,6 +26,8 @@ import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.cognifide.slice.core.internal.scanner.BundleClassesFinder.ClassFilter;
+
 /**
  * @author Jaromir Celejewski Helper class for scanning bundles
  */
@@ -43,9 +45,10 @@ public class OsgiServiceScanner {
 	 * Returns collection of all classes that match given bundle filter and package.
 	 */
 	public Collection<Class<?>> findResources(String bundleNameFilter, String basePackage) {
-		BundleClassesFinder classFinder = new BundleClassesFinder(basePackage, bundleNameFilter,
-				bundleContext);
-		classFinder.addFilter(new BundleClassesFinder.ClassFilter() {
+		BundleFinder bundleFinder = new BundleFinder(new BundleInfo(bundleNameFilter, basePackage), bundleContext);
+		BundleClassesFinder classFinder = new BundleClassesFinder(basePackage);
+		classFinder.addFilter(new ClassFilter() {
+
 			@Override
 			public boolean accepts(ClassReader classReader) {
 				// accept all classes
@@ -54,7 +57,7 @@ public class OsgiServiceScanner {
 		});
 		LOG.info("Searching for @OsgiServices, packages:{}, bundles:{}" + basePackage, bundleNameFilter);
 
-		Collection<Class<?>> classes = classFinder.traverseBundlesForOsgiServices();
+		Collection<Class<?>> classes = classFinder.traverseBundlesForOsgiServices(bundleFinder.findBundles());
 
 		LOG.info("Found {} OsgiService classes. Switch to debug logging level to see them all.",
 				classes.size());

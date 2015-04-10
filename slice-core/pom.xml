@@ -29,13 +29,27 @@
 				<configuration>
 					<instructions>
 						<Export-Package>
-							com.cognifide.slice.commons*;version="${project.version}",
-							com.cognifide.slice.core*;version="${project.version}",
+							com.cognifide.slice.commons*,
+							com.cognifide.slice.core*,
 						</Export-Package>
 						<Embed-Dependency>asm</Embed-Dependency>
 						<Sling-Nodetypes>SLING-INF/nodetypes/nodetypes.cnd</Sling-Nodetypes>
 					</instructions>
 				</configuration>
+				<executions>
+					<execution>
+						<id>baseline</id>
+						<goals>
+							<goal>baseline</goal>
+						</goals>
+						<configuration>
+							<filters>
+								<filter>com.cognifide.slice.commons*</filter>
+							</filters>
+						</configuration>
+						<phase>package</phase>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>com.mycila</groupId>
@@ -49,7 +63,7 @@
 			</plugin>
 		</plugins>
 	</build>
-
+	
 	<dependencies>
 		<!-- Slice -->	
 		<dependency>
@@ -69,12 +83,11 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Asm -->	
+		<!-- Asm -->
 		<dependency>
-			<groupId>asm</groupId>
+			<groupId>org.ow2.asm</groupId>
 			<artifactId>asm</artifactId>
-			<version>3.3.1</version>
-			<scope>provided</scope>
+			<version>5.0.3</version>
 		</dependency>
 
 		<!-- Guice -->
