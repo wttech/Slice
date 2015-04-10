@@ -31,7 +31,7 @@ import org.osgi.framework.BundleException;
 import org.osgi.framework.ServiceRegistration;
 import org.slf4j.LoggerFactory;
 
-public class InjectorRunner implements InjectorCreationFailListener{
+public class InjectorRunner implements InjectorCreationFailListener {
 
 	private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(InjectorRunner.class);
 
@@ -57,7 +57,7 @@ public class InjectorRunner implements InjectorCreationFailListener{
 
 	/**
 	 * @param bundleContext Context used to get access to the OSGi
-	 * @param injectorName Name of the new injector
+	 * @param injectorName  Name of the new injector
 	 */
 	public InjectorRunner(final BundleContext bundleContext, final String injectorName,
 			final String applicationPath, final String bundleNameFilter, final String basePackage) {
@@ -67,7 +67,7 @@ public class InjectorRunner implements InjectorCreationFailListener{
 
 	/**
 	 * @param bundleContext Context used to get access to the OSGi
-	 * @param injectorName Name of the new injector
+	 * @param injectorName  Name of the new injector
 	 */
 	public InjectorRunner(final BundleContext bundleContext, final String injectorName,
 			final String bundleNameFilter, final String basePackage) {
@@ -83,19 +83,22 @@ public class InjectorRunner implements InjectorCreationFailListener{
 
 	public void installModule(final Module newModule) {
 		if (started) {
-			throw new IllegalStateException("Installing new modules is not allowed after Injector was stared");
+			throw new IllegalStateException(
+					"Installing new modules is not allowed after Injector was stared");
 		}
 		modules.add(newModule);
 	}
 
 	public void installModules(final List<? extends Module> newModules) {
 		if (started) {
-			throw new IllegalStateException("Installing new modules is not allowed after Injector was stared");
+			throw new IllegalStateException(
+					"Installing new modules is not allowed after Injector was stared");
 		}
 		modules.addAll(newModules);
 	}
 
-	@Override public void creationFailed() {
+	@Override
+	public void creationFailed() {
 		try {
 			injectorCreationSuccess = false;
 			started = false;
@@ -116,8 +119,7 @@ public class InjectorRunner implements InjectorCreationFailListener{
 		// injector status here once more and eventually leave by calling BundleException
 		if (injectorCreationSuccess) {
 			started = true;
-		}
-		else {
+		} else {
 			started = false;
 			throw new BundleException("Failed to create an injector", BundleException.ACTIVATOR_ERROR);
 		}

@@ -19,9 +19,6 @@
  */
 package com.cognifide.slice.api.injector;
 
-/**
- * Created by T530 on 2015-04-08.
- */
 public interface InjectorCreationFailListener {
 	void creationFailed();
 }
