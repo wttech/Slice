@@ -22,6 +22,7 @@ package com.cognifide.slice.core.internal.adapter;
 
 import org.apache.sling.api.adapter.AdapterFactory;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
 
 import com.cognifide.slice.api.context.ConstantContextProvider;
 import com.cognifide.slice.api.context.Context;
@@ -34,16 +35,9 @@ import com.cognifide.slice.api.provider.ModelProvider;
 
 public class SliceAdapterFactory implements AdapterFactory {
 
-	private final InjectorsRepository repository;
-
 	private final String injectorName;
 
-	private final RequestContextProvider requestContextProvider;
-
-	public SliceAdapterFactory(String injectorName, InjectorsRepository repository,
-			RequestContextProvider requestContextProvider) {
-		this.repository = repository;
-		this.requestContextProvider = requestContextProvider;
+	public SliceAdapterFactory(String injectorName) {
 		this.injectorName = injectorName;
 	}
 
@@ -64,6 +58,11 @@ public class SliceAdapterFactory implements AdapterFactory {
 	}
 
 	private InjectorWithContext getInjector(Resource resource) {
+		ResourceResolver resourceResolver = resource.getResourceResolver();
+		InjectorsRepository repository = resourceResolver.adaptTo(InjectorsRepository.class);
+		RequestContextProvider requestContextProvider = resourceResolver
+				.adaptTo(RequestContextProvider.class);
+
 		InjectorWithContext injector = repository.getInjector(injectorName);
 		ContextProvider contextProvider = requestContextProvider.getContextProvider(injectorName);
 		if (contextProvider == null) {
