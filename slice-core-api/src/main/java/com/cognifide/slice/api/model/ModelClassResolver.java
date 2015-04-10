@@ -20,18 +20,21 @@
 
 package com.cognifide.slice.api.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * This service finds out a model class from a given Slice-aware CQ component.
  * 
  * @author Tomasz Rękawek
  *
  */
+@ProviderType
 public interface ModelClassResolver {
 
 	/**
 	 * Get model class from a given resource type.
 	 * 
-	 * @param resourceType Sling resoruce type String
+	 * @param resourceType Sling resource type String
 	 * @return model class defined in the slice:model property or null if there is no such property
 	 * @throws ClassNotFoundException if the defined class can't be found
 	 */

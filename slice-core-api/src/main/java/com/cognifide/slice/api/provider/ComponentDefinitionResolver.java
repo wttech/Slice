@@ -22,16 +22,27 @@ package com.cognifide.slice.api.provider;
 
 import java.util.Map;
 
+import aQute.bnd.annotation.ConsumerType;
+
 /**
  * An optional service creating a component definition. If there is no OSGi service implementing this
- * interface, Slice will an administrative resource resolver to create definition. This may be used as a
- * bridge between already existing component definition provider (eg. ComponentManager in AEM) and Slice.
+ * interface, Slice will use an administrative resource resolver to create a component definition. This may be
+ * used as a bridge between already existing component definition provider (eg. ComponentManager in AEM) and
+ * Slice.
  * 
  * @author Tomasz Rękawek
- *
+ * 
  */
+@ConsumerType
 public interface ComponentDefinitionResolver {
 
+	/**
+	 * Returns a definition of a component defined by specified resourceType in form of its properties map.
+	 * 
+	 * @param resourceType resource type of a component
+	 * @return Map of resource properties or null if there's no resource under path specified in resourceType
+	 * parameter.
+	 */
 	Map<String, Object> getComponentDefinition(String resourceType);
 
 }
