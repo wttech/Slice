@@ -51,8 +51,6 @@ public class InjectorRunner implements InjectorCreationFailListener {
 
 	private String applicationPath;
 
-	private ServiceRegistration registration;
-
 	private boolean injectorCreationSuccess = true;
 
 	/**
