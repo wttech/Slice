@@ -31,21 +31,23 @@ import java.lang.annotation.Target;
 import com.google.inject.BindingAnnotation;
 
 /**
- * Get resource requested by end user.
+ * Get resource requested by end user. This is a resource request by initial call to Sling instance. Please
+ * note a difference between requested and current resource. Current resource can be chagned by calling
+ * ModelProvider methods, requested resource is always constant within single request processing
  * 
  * <pre>
  * {@literal @}SliceResource
  * public class ExampleModel {
  * 
- * private Resource resource;
+ *   private Resource resource;
  * 
- * {@literal @}Inject
- * public ExampleModel({@literal @}RequestedResource Resource resource) {
+ *   {@literal @}Inject
+ *   public ExampleModel({@literal @}RequestedResource Resource resource) {
  *      this.resource = resource;
- *      }
+ *   }
  * }
  * </pre>
- *
+ * 
  * @author Rafał Malinowski
  */
 @BindingAnnotation

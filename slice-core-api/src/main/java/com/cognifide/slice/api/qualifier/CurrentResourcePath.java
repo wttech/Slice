@@ -37,12 +37,12 @@ import com.google.inject.BindingAnnotation;
  * {@literal @}SliceResource
  * public class ExampleModel {
  *
- * private String currentPath;
+ *   private String currentPath;
  *
- * {@literal @}Inject
- * public ExampleModel({@literal @}CurrentResourcePath String currentPath) {
- *      this.currentPath = currentPath;
- *      }
+ *   {@literal @}Inject
+ *   public ExampleModel({@literal @}CurrentResourcePath String currentPath) {
+ *     this.currentPath = currentPath;
+ *   }
  * }
  * </pre>
  * 

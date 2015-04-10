@@ -27,183 +27,197 @@ import org.apache.sling.api.resource.Resource;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.cognifide.slice.api.context.Context;
+import com.cognifide.slice.mapper.annotation.SliceResource;
+import com.cognifide.slice.mapper.api.Mapper;
+import com.google.inject.Injector;
 import com.google.inject.Key;
 
 /**
- * A base interface in Slice. It allows to fetch an injectable object(s) mapped from specified
- * resource or path. It resembles Guice com.google.inject.Injector in being used for fetching objects
- * of different classes but it is closely tied to Slice because if fills requested objects with data obtained
- * from Sling JCR.
- *
+ * A base interface in Slice. It allows to fetch an injectable object(s) mapped from specified resource or
+ * path. It resembles Guice com.google.inject.Injector in being used for fetching objects of different classes
+ * but it is closely tied to Slice because it also support mappings of requested objects with data obtained
+ * from specified resources.
+ * 
  * ModelProvider can be also injected directly to your models, so that you can read a model from an arbitrary
  * resource or path, e.g.:
+ * 
  * <pre>
- *{@literal @}SliceResource
- * public class OrderModel {
- *
- * private final static String CONFIGURATION_PATH = "/content/app/configuration/jcr:content/currency";
- * private final ModelProvider modelProvider;
- *
- * {@literal @}JcrProperty
- * private int value;
- *
- * {@literal @}Inject
- * public OrderModel(ModelProvider modelProvider) {
- * 	this.modelProvider = modelProvider;
- * }
- *
- * public int getValue() {
- * 	Currency currency = modelProvider.get(Currency.class, CONFIGURATION_PATH);
- * 	return formatToCurrency(value, currency);
- * 	}
- * 	...
- * 	}
+ *  {@literal @}SliceResource
+ *  public class OrderModel {
+ * 
+ *    private final static String CONFIGURATION_PATH = "/content/app/configuration/jcr:content/currency";
+ *    private final ModelProvider modelProvider;
+ * 
+ *    {@literal @}JcrProperty
+ *    private int value;
+ * 
+ *    {@literal @}Inject
+ *    public OrderModel(ModelProvider modelProvider) {
+ *      this.modelProvider = modelProvider;
+ *    }
+ * 
+ *    public int getValue() {
+ *      Currency currency = modelProvider.get(Currency.class, CONFIGURATION_PATH);
+ *      return formatToCurrency(value, currency);
+ *    }
+ *  ...
+ *  }
  * </pre>
- *
+ * 
  * All methods of ModelProvider are thread safe
- *
- * @author Witold Szczerba
- * @author Rafał Malinowski
+ * 
  */
 
 @ProviderType
 public interface ModelProvider {
 
 	/**
-	 * Creates new model object of type T and fills all its matching properties with data found under
-	 * given Sling repository path.
-	 *
-	 * Lets consider an example. There is model:
-	 *
-	 * <pre>
-	 *{@literal @}SliceResource
-	 * public class OrderModel {
-	 *
-	 *{@literal @}JcrProperty("orderValue")
-	 * private int value;
-	 *
-	 *{@literal @}JcrProperty
-	 * private Date deliveryDate;
-	 *
-	 *{@literal @}JcrProperty
-	 * private String status;
-	 *
-	 * }
-	 * </pre>
-	 *
-	 * There is also a node in Sling JCR under '/content/app/orders/order-id-12345' and it has the
-	 * following properties:<br>
-	 * type:Decimal, name:'orderValue', value:1000<br>
-	 * type:String, name:'status', value:"incomplete"<br>
-	 * type:String, name:'createdBy', value:"admin"<br>
-	 *	<br>
-	 * Somewhere in the code there is an invocation:<br>
-	 * <code>
-	 *     OrderModel model = modelProvider.get(OrderModel.class, "/content/app/orders/order-id-12345");
-	 * </code>
-	 * <br><br>
-	 * In this case the result model will have:<br>
-	 * value=1000,<br>
-	 * status="incomplete"<br>
-	 * deliveryDate=null<br>
+	 * Instantiates an object of specified type using Guice injector. Additionally, Slice remembers the
+	 * resource of specified path internally, so it can be either injected or used for mapping of objects
+	 * annotated with {@link SliceResource}. Mapping is triggered automatically by Slice (with use of
+	 * {@link Mapper}), so if the specified class is annotated with {@link SliceResource} it will be mapped
+	 * from specified resource.<br>
 	 * <br>
-	 * It is possible to use absolute and relative (with "./" prefix) paths in recursive calls. All gets are
-	 * performed with Context that was used to create this ModelProvider.
-	 *
-	 * <code>
-	 *   modelProvider.get(ModelType.class, "/absolute/patch");
-	 *   modelProvider.get(SubModelType.class, "./relative/path");
-	 * </code>
-	 *
-	 * @param <T> type of model object to create
-	 * @param type class of model object to create
-	 * @param path Sling repository path to create object from
-	 * @return model object from given Sling repository path
+	 * Please note that objects which are injected to instantiated one, can also leverage specified resource,
+	 * so they can also be mapped automatically. Let's consider an example.
+	 * 
+	 * <pre>
+	 *  {@literal @}SliceResource
+	 *  public class Order {
+	 *    {@literal @}JcrProperty
+	 *    String orderProperty;
+	 *    
+	 *    {@literal @}Inject
+	 *    public Order(Currency currency) {
+	 *    ..
+	 *    }
+	 *  ..
+	 *  }
+	 *  
+	 *  {@literal @}SliceResource
+	 *  public class Currency {
+	 *    {@literal @}JcrProperty
+	 *    String currencyProperty;
+	 *   ..
+	 *  }
+	 *  ..
+	 *  modelProvider.get(Order.class, "/content/app/orders/order1");
+	 * </pre>
+	 * 
+	 * In above execution, both Order and Currency objects will be mapped from resource defined by
+	 * /content/app/orders/order1. It means that the above code expects the resource to contain two
+	 * properties: orderProperty, currencyProperty. <br>
+	 * <br>
+	 * It is possible to use absolute and relative (with "./" prefix) paths in recursive calls. All get
+	 * methods are invoked with {@link Context} that was used to create this ModelProvider. Example:
+	 * 
+	 * <pre>
+	 *  modelProvider.get(Order.class, "/content/app/orders/order1");
+	 *   
+	 *  public class Order {
+	 *    {@literal @}Inject
+	 *    public Order(ModelProvider modelProvider) {
+	 *       modelProvider.get(Currency.class, "./currency");
+	 *    }
+	 *  }
+	 * </pre>
+	 * 
+	 * In above case, Currency object will be mapped from a resource defined by
+	 * /content/app/orders/order1/currency.
+	 * 
+	 * @param <T> type of object to be created
+	 * @param type class of object to be created
+	 * @param path Path to a resource which will be used to map @SliceResource objects
+	 * @return instantiated object of specified type. If the type is annotated by {@link SliceResource} it
+	 * will be mapped from resource from under specified path
 	 */
 	<T> T get(final Class<T> type, final String path);
 
 	/**
-	 * Creates new model object of type T and fills all its matching properties with data obtained from
-	 * given resource. The concept is the same as in {@link #get(Class, String) get}
+	 * Instantiates an object of specified type using Guice injector and map it from specified resource. It
+	 * works exactly as {@link #get(Class, String) get(type, path)}.
 	 * 
-	 * @param <T> type of model object to create
-	 * @param type class of model object to create
-	 * @param resource Sling resource to create object from
-	 * @return model object from given resource
+	 * @param <T> type of object to be created
+	 * @param type class of object to be created
+	 * @param resource resource which will be used to map @SliceResource objects
+	 * @return instantiated object of specified type. If the type is annotated by {@link SliceResource} it
+	 * will be mapped from resource from under specified path
 	 */
 	<T> T get(final Class<T> type, final Resource resource);
 
 	/**
-	 * Creates new model object of type T and fills all its matching properties with data obtained from
-	 * given resource. The concept is the same as in {@link #get(Class, String) get}
+	 * Instantiates an object of specified type using Guice injector and specified {@link Key}. It maps the
+	 * object from specified resource, exactly as described in {@link #get(Class, String) get(type, path)}.
 	 * 
-	 * @param <T> type of model object to create
+	 * @param <T> type of model object to be created
 	 * @param key a Guice {@link Key} which defines binding to a required object
-	 * @param resource Sling resource to create object from
-	 * @return model object from given resource
+	 * @param resource resource which will be used to map @SliceResource objects
+	 * @return instantiated object of specified type. If the type is annotated by {@link SliceResource} it
+	 * will be mapped from resource from under specified path
 	 * 
-	 * @see Key
+	 * @see Injector#getInstance(Key)
 	 */
 	<T> T get(final Key<T> key, final Resource resource);
 
 	/**
-	 * Creates new model object of type T and fills all its matching properties with data found under
-	 * given Sling repository path. The concept is the same as in {@link #get(Class, String) get}
+	 * Instantiates an object of specified type using Guice injector and specified {@link Key}. It maps the
+	 * object from specified resource, exactly as described in {@link #get(Class, String) get(type, path)}.
 	 * 
-	 * @param <T> type of model object to create
+	 * @param <T> type of model object to be created
 	 * @param key a Guice {@link Key} which defines binding to a required object
-	 * @param path Sling repository path to create object from
-	 * @return model object from given Sling repository path
+	 * @param path path to a resource which will be used to map @SliceResource objects
+	 * @return instantiated object of specified type. If the type is annotated by {@link SliceResource} it
+	 * will be mapped from resource from under specified path
 	 * 
-	 * @see Key
+	 * @see Injector#getInstance(Key)
 	 */
 	<T> T get(final Key<T> key, final String path);
 
 	/**
-	 * Creates new model object of type T and fills all its matching properties with data found under
-	 * given Sling repository path. The concept is the same as in {@link #get(Class, String) get}
-	 *
+	 * Instantiates an object of specified type using Guice injector and map it from specified resource. It
+	 * works exactly as {@link #get(Class, String) get(type, path)}.
+	 * 
 	 * @param className canonical name of a class to be resolved, e.g. com.cognifide.slice.api.ModelProvider
-	 * @param path Sling repository path to create object from
-	 * @return model object of specified className from given Sling repository path
-	 * @throws ClassNotFoundException if specified className cannot be resolved by Injector,
-	 * {@link ClassNotFoundException} is thrown
+	 * @param path path to a resource which will be used to map @SliceResource objects
+	 * @return instantiated object of specified type. If the type is annotated by {@link SliceResource} it
+	 * will be mapped from resource from under specified path
+	 * @throws ClassNotFoundException if specified className cannot be loaded
 	 */
 	Object get(final String className, final String path) throws ClassNotFoundException;
 
 	/**
-	 * Creates new model object of type T and fills all its matching properties with data found under
-	 * given Sling repository path. The concept is the same as in {@link #get(Class, String) get}
-	 *
-	 * @param className canonical name of a class to be resolved, e.g. com.cognifide.slice.api.ModelProvider
-	 * @param resource Sling resource to create object from
-	 * @return model object from given resource
-	 * @throws ClassNotFoundException if specified className cannot be resolved by Injector,
+	 * Instantiates an object of specified type using Guice injector and map it from specified resource. It
+	 * works exactly as {@link #get(Class, String) get(type, path)}.
+	 * 
+	 * @param className canonical name of a class to be resolved, e.g. com.cognifide.example.MyClass
+	 * @param resource resource which will be used to map @SliceResource objects
+	 * @return instantiated object of specified type. If the type is annotated by {@link SliceResource} it
+	 * will be mapped from resource from under specified path
+	 * @throws ClassNotFoundException if specified className cannot be loaded
 	 */
 	Object get(final String className, final Resource resource) throws ClassNotFoundException;
 
 	/**
 	 * Creates new model object of type specified by the slice:model property defined in the component
-	 * definition resource. During this method call state of {@link ExecutionContextStack} is modified - path
-	 * attribute is added on top of execution stack. It allows for recursive call of ModelProvider methods
-	 * from model object that is being created.
+	 * definition resource (basically resource indicated by sling:resourceType). It works exactly as
+	 * {@link #get(String, Resource)} where String property is read from component definition resource.
 	 * 
-	 * @param resource Sling resource to create object from
-	 * @return model object from given resource or null if there is no slice:model property
-	 * @throws ClassNotFoundException if specified className cannot be resolved by Injector,
+	 * @param resource resource which will be used to map @SliceResource objects
+	 * @return model object from given resource or null if there is no slice:model property in component
+	 * definition resource
+	 * @throws ClassNotFoundException if class found under slice:model cannot be loaded
 	 */
 	Object get(final Resource resource) throws ClassNotFoundException;
 
 	/**
-	 * Creates new model object of type T and fills all its matching properties with data obtained from
-	 * given resource. The concept is the same as in {@link #get(Class, String) get}
+	 * This is convenience method that works exactly like {@link #getListFromResources(Class, Iterator)}
 	 * 
-	 * It is possible to use absolute and relative (with "./" prefix) paths in recursive calls.
-	 * 
-	 * @param <T> type of model objects to create
-	 * @param type class of model objects to create
-	 * @param paths iterator that returns Sling repository paths to create objects from
-	 * @return list of model objects from given Sling repository paths
+	 * @param <T> type of model objects to be created
+	 * @param type class of model objects to be created
+	 * @param paths iterator that returns paths to resources from which objects will be mapped
+	 * @return list of model objects mapped from given resources. If the resource iterator has no element or
+	 * is <code>null</code>, then an empty list is returned. It never returns <code>null</code>.
 	 */
 	<T> List<T> getList(final Class<T> type, final Iterator<String> paths);
 
@@ -230,12 +244,13 @@ public interface ModelProvider {
 	/**
 	 * This method lists children of the given resource via {@code parentResource.listChildren()}, invokes
 	 * {@link ModelProvider#get(Class, Resource)} for each of them and returns a {@code List} containing
-	 * mapped models. If the {@code parentResource} is null, an empty list will be returned.
+	 * mapped models. If the {@code parentResource} is null or doesn't exist, an empty list will be returned.
 	 * 
-	 * @param <T> type of model objects to create
-	 * @param type class of model objects to create
-	 * @param parentResource Sling resource to obtain children
+	 * @param <T> type of model objects to be created
+	 * @param type class of model objects to be created
+	 * @param parentResource Sling resource to obtain children resources
 	 * @return list of model objects from given Sling repository paths or empty list if parentResource is null
+	 * or doesn't exist
 	 */
 	<T> List<T> getChildModels(final Class<T> type, final Resource parentResource);
 

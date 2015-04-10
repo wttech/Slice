@@ -37,12 +37,12 @@ import com.google.inject.BindingAnnotation;
  * {@literal @}SliceResource
  * public class ExampleModel {
  *
- * private String suffix;
+ *   private String suffix;
  *
- * {@literal @}Inject
- * public ExampleModel({@literal @}Nullable {@literal @}Suffix String suffix) {
- *      this.suffix = suffix;
- *      }
+ *   {@literal @}Inject
+ *   public ExampleModel({@literal @}Nullable {@literal @}Suffix String suffix) {
+ *     this.suffix = suffix;
+ *   }
  * }
  * </pre>
  *

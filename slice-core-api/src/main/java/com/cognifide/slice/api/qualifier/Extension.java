@@ -37,12 +37,12 @@ import com.google.inject.BindingAnnotation;
  * {@literal @}SliceResource
  * public class ExampleModel {
  *
- * private String extension;
+ *   private String extension;
  *
- * {@literal @}Inject
- * public ExampleModel({@literal @}Nullable{@literal @}Extension String extension) {
+ *   {@literal @}Inject
+ *   public ExampleModel({@literal @}Nullable{@literal @}Extension String extension) {
  *      this.extension = extension;
- *      }
+ *   }
  * }
  * </pre>
  *

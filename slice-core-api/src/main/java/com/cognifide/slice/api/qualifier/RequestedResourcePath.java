@@ -31,18 +31,18 @@ import java.lang.annotation.Target;
 import com.google.inject.BindingAnnotation;
 
 /**
- * Get path of resource requested by end user.
+ * Get path of resource requested by end user. Works as {@link RequestedResource}.
  * 
  * <pre>
  * {@literal @}SliceResource
  * public class ExampleModel {
  * 
- * private String resourcePath;
+ *   private String resourcePath;
  * 
- * {@literal @}Inject
- * public ExampleModel({@literal @}RequestedResourcePath String resourcePath) {
+ *   {@literal @}Inject
+ *   public ExampleModel({@literal @}RequestedResourcePath String resourcePath) {
  *      this.resourcePath = resourcePath;
- *      }
+ *   }
  * }
  * </pre>
  *

@@ -37,12 +37,12 @@ import com.google.inject.BindingAnnotation;
  * {@literal @}SliceResource
  * public class ExampleModel {
  *
- * private String injectorName;
+ *   private String injectorName;
  *
- * {@literal @}Inject
- * public ExampleModel({@literal @}InjectorName String injectorName) {
+ *   {@literal @}Inject
+ *   public ExampleModel({@literal @}InjectorName String injectorName) {
  *      this.injectorName = injectorName;
- *      }
+ *    }
  * }
  * </pre>
  *
