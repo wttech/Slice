@@ -1,6 +1,6 @@
 /*-
  * #%L
- * Slice - Core API
+ * Slice - Core
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -17,8 +17,19 @@
  * limitations under the License.
  * #L%
  */
-@Version("4.2.0")
-package com.cognifide.slice.api.tag;
+package com.cognifide.slice.core.internal.scanner;
 
-import aQute.bnd.annotation.Version;
+import com.cognifide.slice.api.annotation.OsgiService;
+import com.cognifide.slice.mapper.annotation.JcrProperty;
 
+public class ClassTestConstructorService {
+
+	@OsgiService
+	private Double service;
+
+	@JcrProperty
+	private String anotherProperty;
+
+	public ClassTestConstructorService(@OsgiService Long serviceLong) {
+	}
+}

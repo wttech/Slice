@@ -55,4 +55,19 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
+	<tag>
+		<description>
+			Defines regularly used scripting variables
+		</description>
+		<name>defineObjects</name>
+		<tag-class>
+			com.cognifide.slice.api.tag.DefineObjectsTag
+		</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<name>modelName</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
 </taglib>

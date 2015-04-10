@@ -31,11 +31,9 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import org.objectweb.asm.ClassReader;
 import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,40 +45,45 @@ public class BundleClassesFinder {
 
 	private static final String RESOURCE_PATTERN = "*.class";
 
-	private final Collection<Bundle> bundles;
-
 	private final String basePackage;
 
-	private List<ClassFilter> filters = new ArrayList<BundleClassesFinder.ClassFilter>();
+	private List<ClassFilter> filters = new ArrayList<ClassFilter>();
 
-	public BundleClassesFinder(String basePackage, String bundleNameFilter, BundleContext bundleContext) {
-		this.bundles = findBundles(bundleNameFilter, bundleContext);
+	public BundleClassesFinder(String basePackage) {
 		this.basePackage = basePackage.replace('.', '/');
 	}
 
-	public Collection<Class<?>> getClasses() {
+	public Collection<Class<?>> getClasses(final Bundle bundle) {
 		Collection<Class<?>> classes = new ArrayList<Class<?>>();
-		for (Bundle bundle : this.bundles) {
-			@SuppressWarnings("unchecked")
-			Enumeration<URL> classEntries = bundle.findEntries(this.basePackage, RESOURCE_PATTERN, true);
-			while ((classEntries != null) && classEntries.hasMoreElements()) {
-				try {
-					URL classURL = classEntries.nextElement();
-					ClassReader classReader = new ClassReader(classURL.openStream());
-					if (accepts(classReader)) {
-						String className = classReader.getClassName().replace('/', '.');
-						if (LOG.isDebugEnabled()) {
-							LOG.debug("Class: " + className + " has been found.");
-						}
-						Class<?> clazz = bundle.loadClass(className);
-						classes.add(clazz);
+
+		@SuppressWarnings("unchecked")
+		Enumeration<URL> classEntries = bundle.findEntries(this.basePackage, RESOURCE_PATTERN, true);
+		while ((classEntries != null) && classEntries.hasMoreElements()) {
+			try {
+				URL classURL = classEntries.nextElement();
+				ClassReader classReader = new ClassReader(classURL.openStream());
+				if (accepts(classReader)) {
+					String className = classReader.getClassName().replace('/', '.');
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("Class: " + className + " has been found.");
 					}
-				} catch (ClassNotFoundException e) {
-					LOG.error("Error loading class!", e);
-				} catch (IOException e) {
-					LOG.error("Error reading the class!", e);
+					Class<?> clazz = bundle.loadClass(className);
+					classes.add(clazz);
 				}
+			} catch (ClassNotFoundException e) {
+				LOG.error("Error loading class!", e);
+			} catch (IOException e) {
+				LOG.error("Error reading the class!", e);
 			}
+		}
+
+		return classes;
+	}
+
+	public Collection<Class<?>> getClasses(final Collection<Bundle> bundles) {
+		Collection<Class<?>> classes = new ArrayList<Class<?>>();
+		for (Bundle bundle : bundles) {
+			classes.addAll(getClasses(bundle));
 		}
 		return classes;
 	}
@@ -98,47 +101,49 @@ public class BundleClassesFinder {
 		this.filters.add(classFilter);
 	}
 
-	public interface ClassFilter {
-		boolean accepts(ClassReader classReader);
-	}
-
-	public Collection<Class<?>> traverseBundlesForOsgiServices() {
-		Collection<Class<?>> allClasses = getClasses();
+	public Collection<Class<?>> traverseBundlesForOsgiServices(final Collection<Bundle> bundles) {
+		Collection<Class<?>> allClasses = getClasses(bundles);
 		Set<Class<?>> osgiClasses = new HashSet<Class<?>>();
 		for (Class<?> clazz : allClasses) {
-			Field[] fields = clazz.getDeclaredFields();
-			for (Field field : fields) {
-				if (field.isAnnotationPresent(OsgiService.class)) {
-					Class<?> fieldClass = field.getType();
-					osgiClasses.add(fieldClass);
-				}
-			}
+			Set<Class<?>> osgiServicesForClass = readOsgiServicesForClass(clazz);
+			osgiClasses.addAll(osgiServicesForClass);
+		}
+		return osgiClasses;
+	}
 
-			Constructor<?>[] constructors = clazz.getConstructors();
-			for (Constructor<?> constructor : constructors) {
-				Class<?>[] parameterTypes = constructor.getParameterTypes();
-				Annotation[][] annotations = constructor.getParameterAnnotations();
-				for (int i = 0; i < parameterTypes.length; i++) {
-					for (Annotation annotation : annotations[i]) {
-						if (annotation.annotationType().equals(OsgiService.class)) {
-							osgiClasses.add(parameterTypes[i]);
-						}
+	Set<Class<?>> readOsgiServicesForClass(Class<?> clazz) {
+		Set<Class<?>> osgiClasses = new HashSet<Class<?>>();
+		Field[] fields = clazz.getDeclaredFields();
+		for (Field field : fields) {
+			if (field.isAnnotationPresent(OsgiService.class)) {
+				Class<?> fieldClass = field.getType();
+				osgiClasses.add(fieldClass);
+			}
+		}
+
+		Constructor<?>[] constructors = clazz.getConstructors();
+		for (Constructor<?> constructor : constructors) {
+			Class<?>[] parameterTypes = constructor.getParameterTypes();
+			Annotation[][] annotations = constructor.getParameterAnnotations();
+			int j = 0;
+			/**
+			 * parameterTypes of constructor of inner classes contain types of parent classes in front of
+			 * the array.
+			 */
+			for (int i = (parameterTypes.length - annotations.length); i < parameterTypes.length; i++) {
+				for (Annotation annotation : annotations[j]) {
+					if (annotation.annotationType().equals(OsgiService.class)) {
+						osgiClasses.add(parameterTypes[i]);
 						break;
 					}
 				}
+				j++;
 			}
 		}
 		return osgiClasses;
 	}
 
-	final List<Bundle> findBundles(String bundleNameFilter, BundleContext bundleContext) {
-		Pattern bundleNamePattern = Pattern.compile(bundleNameFilter);
-		List<Bundle> bundles = new ArrayList<Bundle>();
-		for (Bundle bundle : bundleContext.getBundles()) {
-			if (bundleNamePattern.matcher(bundle.getSymbolicName()).matches()) {
-				bundles.add(bundle);
-			}
-		}
-		return bundles;
+	public interface ClassFilter {
+		boolean accepts(ClassReader classReader);
 	}
 }

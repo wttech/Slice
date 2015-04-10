@@ -1,6 +1,6 @@
 /*-
  * #%L
- * Slice - Core API
+ * Slice - Core
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -17,8 +17,25 @@
  * limitations under the License.
  * #L%
  */
-@Version("4.2.0")
-package com.cognifide.slice.api.tag;
+package com.cognifide.slice.core.internal.scanner;
 
-import aQute.bnd.annotation.Version;
+public class BundleInfo {
 
+	private final String bundleNameFilter;
+
+	private final String basePackage;
+
+	public BundleInfo(String bundleNameFilter, String basePackage) {
+		this.bundleNameFilter = bundleNameFilter;
+		this.basePackage = basePackage;
+	}
+
+	public String getBundleNameFilter() {
+		return bundleNameFilter;
+	}
+
+	public String getBasePackage() {
+		return basePackage;
+	}
+
+}
