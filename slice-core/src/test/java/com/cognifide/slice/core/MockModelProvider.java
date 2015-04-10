@@ -192,4 +192,10 @@ public class MockModelProvider implements ModelProvider {
 		}
 	}
 
+	@Override
+	public Object get(Resource resource) throws ClassNotFoundException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

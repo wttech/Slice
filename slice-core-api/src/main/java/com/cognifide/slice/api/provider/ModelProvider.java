@@ -135,6 +135,18 @@ public interface ModelProvider {
 	Object get(final String className, final Resource resource) throws ClassNotFoundException;
 
 	/**
+	 * Creates new model object of type specified by the slice:model property defined in the component
+	 * definition resource. During this method call state of {@link ExecutionContextStack} is modified - path
+	 * attribute is added on top of execution stack. It allows for recursive call of ModelProvider methods
+	 * from model object that is being created.
+	 * 
+	 * @param resource Sling resource to create object from
+	 * @return model object from given resource or null if there is no slice:model property
+	 * @throws ClassNotFoundException if specified className cannot be resolved by Injector,
+	 */
+	Object get(final Resource resource) throws ClassNotFoundException;
+
+	/**
 	 * Creates list of model objects of type T from given CRX repository paths. During this method call state
 	 * of {@link ExecutionContextStack} is modified for each path from iterator - path is added on top of path
 	 * stack. It allows for recursive call of ModelProvider methods from model objects that are being created.
