@@ -26,6 +26,8 @@ import java.util.Hashtable;
 import java.util.List;
 
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
+import org.slf4j.LoggerFactory;
 
 import com.google.inject.Module;
 
@@ -60,7 +62,9 @@ import com.google.inject.Module;
  * 
  * </pre>
  */
-public class InjectorRunner {
+public class InjectorRunner implements InjectorCreationFailListener {
+
+	private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(InjectorRunner.class);
 
 	private final String injectorName;
 
@@ -77,6 +81,8 @@ public class InjectorRunner {
 	private String parentInjectorName;
 
 	private String applicationPath;
+
+	private boolean injectorCreationSuccess = true;
 
 	/**
 	 * @param bundleContext Context used to get access to the OSGi
@@ -118,11 +124,32 @@ public class InjectorRunner {
 		modules.addAll(newModules);
 	}
 
-	public void start() {
-		InjectorConfig config = new InjectorConfig(this);
+	@Override
+	public void creationFailed() {
+		try {
+			injectorCreationSuccess = false;
+			started = false;
+			bundleContext.getBundle().stop();
+		} catch (BundleException e) {
+			LOG.error("InjectorRunner failed to stop the bundle on injector creation failure", e);
+		}
+	}
+
+	public void start() throws BundleException {
+		final InjectorConfig config = new InjectorConfig(this);
+
 		Dictionary<String, Object> properties = new Hashtable<String, Object>();
 		bundleContext.registerService(InjectorConfig.class.getName(), config, properties);
-		started = true;
+
+		// In some situations InjectorCreationFailListener.creationFailed() is called synchronously inside
+		// registerService() method. To prevent bundle activation in this case it is necessary to check
+		// injector status here once more and eventually leave by calling BundleException
+		if (injectorCreationSuccess) {
+			started = true;
+		} else {
+			started = false;
+			throw new BundleException("Failed to create an injector", BundleException.ACTIVATOR_ERROR);
+		}
 	}
 
 	public String getInjectorName() {
