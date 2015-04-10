@@ -34,10 +34,7 @@ import com.google.inject.Module;
  * an OSGi service (each InjectorConfig is registered as OSGi service by its InjectorRunner during bundle
  * startup).
  * 
- * @deprecated This class will be hidden from public use in next major version. Use {@link InjectorRunner}
- * instead
  */
-@Deprecated
 public class InjectorConfig {
 
 	public static final String DEFAULT_INJECTOR_PATH = "/apps/";
