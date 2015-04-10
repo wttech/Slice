@@ -19,6 +19,17 @@
  */
 package com.cognifide.slice.api.injector;
 
+import aQute.bnd.annotation.ProviderType;
+
+/**
+ * Listener which is called when an injector fails during creation. It's implemented by {@link InjectorRunner}
+ * .
+ * 
+ */
+@ProviderType
 public interface InjectorCreationFailListener {
+	/**
+	 * Called when an injector fails during creation.
+	 */
 	void creationFailed();
 }
