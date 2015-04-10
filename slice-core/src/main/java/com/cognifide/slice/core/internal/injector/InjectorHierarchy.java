@@ -201,6 +201,7 @@ public class InjectorHierarchy {
 			return injector;
 		} catch (CreationException e) {
 			LOG.error("Can't create injector " + config.getName(), e);
+			config.getListener().creationFailed();
 			return null;
 		}
 	}

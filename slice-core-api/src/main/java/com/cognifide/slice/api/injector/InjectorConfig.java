@@ -44,7 +44,9 @@ public class InjectorConfig {
 
 	private final String bundleFilter;
 
-	InjectorConfig(InjectorRunner runner) {
+	private final InjectorCreationFailListener listener;
+
+	InjectorConfig(final InjectorRunner runner) {
 		// we don't allow to change the module list after creating the configuration
 		modules = Collections.unmodifiableList(new ArrayList<Module>(runner.getModules()));
 		name = runner.getInjectorName();
@@ -53,6 +55,7 @@ public class InjectorConfig {
 		parentName = runner.getParentName();
 		basePackage = runner.getBasePackage();
 		bundleFilter = runner.getBundleNameFilter();
+		listener = runner;
 	}
 
 	public String getName() {
@@ -81,5 +84,9 @@ public class InjectorConfig {
 
 	public String getApplicationPath() {
 		return applicationPath;
+	}
+
+	public InjectorCreationFailListener getListener() {
+		return listener;
 	}
 }
