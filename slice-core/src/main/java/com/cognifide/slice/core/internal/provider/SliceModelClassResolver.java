@@ -53,12 +53,15 @@ public class SliceModelClassResolver implements ModelClassResolver {
 
 	public Class<?> getModelClass(String resourceType) throws ClassNotFoundException {
 		final Map<String, Object> definition = getDefinition(resourceType);
-		final String className = (String) definition.get("slice:model");
-		if (StringUtils.isBlank(className)) {
-			return null;
-		} else {
-			return dynamicClassLoaderManager.getDynamicClassLoader().loadClass(className);
+		if (definition != null) { // definition may not be available for types like cq:Page
+			final String className = (String) definition.get("slice:model");
+			if (StringUtils.isBlank(className)) {
+				return null;
+			} else {
+				return dynamicClassLoaderManager.getDynamicClassLoader().loadClass(className);
+			}
 		}
+		return null;
 	}
 
 	private Map<String, Object> getDefinition(String resourceType) throws ClassNotFoundException {
