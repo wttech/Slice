@@ -23,6 +23,8 @@ package com.cognifide.slice.core.internal.adapter;
 import org.apache.sling.api.adapter.AdapterFactory;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.cognifide.slice.api.context.ConstantContextProvider;
 import com.cognifide.slice.api.context.Context;
@@ -34,6 +36,8 @@ import com.cognifide.slice.api.injector.InjectorsRepository;
 import com.cognifide.slice.api.provider.ModelProvider;
 
 public class SliceAdapterFactory implements AdapterFactory {
+
+	private final static Logger LOG = LoggerFactory.getLogger(SliceAdapterFactory.class);
 
 	private final String injectorName;
 
@@ -49,29 +53,52 @@ public class SliceAdapterFactory implements AdapterFactory {
 		Resource resource = (Resource) adaptable;
 
 		InjectorWithContext injector = getInjector(resource);
-		try {
-			ModelProvider modelProvider = injector.getInstance(ModelProvider.class);
-			return modelProvider.get(type, resource);
-		} finally {
-			injector.popContextProvider();
+		if (injector != null) {
+			try {
+				ModelProvider modelProvider = injector.getInstance(ModelProvider.class);
+				return modelProvider.get(type, resource);
+			} finally {
+				injector.popContextProvider();
+			}
+		} else {
+			LOG.warn("Trying to adapt resource to {}, but suitable injector (named {}) not found!",
+					new Object[] { type.toString(), injectorName });
+			return null;
 		}
 	}
 
 	private InjectorWithContext getInjector(Resource resource) {
 		ResourceResolver resourceResolver = resource.getResourceResolver();
 		InjectorsRepository repository = resourceResolver.adaptTo(InjectorsRepository.class);
+		if (repository == null) {
+			return null;
+		}
+		InjectorWithContext injector = repository.getInjector(injectorName);
+		if (injector != null) {
+			ContextProvider contextProvider = getContextProviderFromRequest(resourceResolver);
+			if (contextProvider == null) {
+				contextProvider = getContextProviderFromResourceResolver(resourceResolver, injector);
+			}
+			injector.pushContextProvider(contextProvider);
+		}
+		return injector;
+	}
+
+	private ContextProvider getContextProviderFromRequest(ResourceResolver resourceResolver) {
 		RequestContextProvider requestContextProvider = resourceResolver
 				.adaptTo(RequestContextProvider.class);
-
-		InjectorWithContext injector = repository.getInjector(injectorName);
-		ContextProvider contextProvider = requestContextProvider.getContextProvider(injectorName);
-		if (contextProvider == null) {
-			ContextFactory factory = injector.getInstance(ContextFactory.class);
-			Context context = factory.getResourceResolverContext(resource.getResourceResolver());
-			contextProvider = new ConstantContextProvider(context);
+		ContextProvider contextProvider = null;
+		if (requestContextProvider != null) {
+			contextProvider = requestContextProvider.getContextProvider(injectorName);
 		}
-		injector.pushContextProvider(contextProvider);
-		return injector;
+		return contextProvider;
+	}
+
+	private ContextProvider getContextProviderFromResourceResolver(ResourceResolver resourceResolver,
+			InjectorWithContext injector) {
+		ContextFactory factory = injector.getInstance(ContextFactory.class);
+		Context context = factory.getResourceResolverContext(resourceResolver);
+		return new ConstantContextProvider(context);
 	}
 
 }
