@@ -22,14 +22,19 @@ package com.cognifide.slice.api.context;
 
 import aQute.bnd.annotation.ProviderType;
 
+/**
+ * It can create and return {@link ContextProvider} dedicated for request processing - there will only be one
+ * context (provided by this ContextProvider) for a given request and injector
+ * 
+ */
 @ProviderType
 public interface RequestContextProvider {
 	/**
-	 * Return context provider that stores data in the request attributes. Bindings are stored separately for
-	 * each injector.
+	 * Return context provider dedicated for request processing. Bindings are stored separately for each
+	 * injector.
 	 * 
 	 * @param injectorName Injector name
-	 * @return Context provider that stores data in the request attribute.
+	 * @return Context provider which always returns the same context for given request and injector name.
 	 */
 	ContextProvider getContextProvider(String injectorName);
 }
