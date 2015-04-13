@@ -25,15 +25,14 @@ import aQute.bnd.annotation.ConsumerType;
 /**
  * @author Rafał Malinowski
  * 
- * Provider for Context instance.
+ * Provider which can read and return context instance set for given injector.
  */
 @ConsumerType
 public interface ContextProvider {
 
 	/**
-	 * Provide Context instance.
 	 * 
-	 * @return Context instance.
+	 * @return instance of context instance
 	 */
 	Context getContext();
 

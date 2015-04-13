@@ -22,15 +22,21 @@ package com.cognifide.slice.api.execution;
 
 import org.apache.sling.api.resource.Resource;
 
+import com.cognifide.slice.api.provider.ModelProvider;
+
 import aQute.bnd.annotation.ProviderType;
 
 /**
- * Execution context of Slice Injector. This interface specifies the current resource that Injector is using.
+ * This interface specifies the current resource (and/or path to this resource) that Injector is using.
  * Current context can be changed by calling ModelProvider with new path.
  * 
  * Path is always available. Resource can be null.
+ * 
+ * @deprecated This interface will be hidden from public use in next major version. Use {@link ModelProvider}
+ * instead.
  */
 @ProviderType
+@Deprecated
 public interface ExecutionContext {
 
 	/**

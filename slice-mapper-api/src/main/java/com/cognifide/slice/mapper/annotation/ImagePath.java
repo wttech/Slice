@@ -30,7 +30,17 @@ import java.lang.annotation.Target;
  * logic for accessing them is different. Should be used for fields of type <tt>String</tt>; using it for
  * fields of {@link com.day.cq.wcm.foundation.Image} is not necessary - they are mapped by default. For
  * strings - image's source will be mapped, for {@link com.day.cq.wcm.foundation.Image}s - whole image object.
- * 
+ *
+ * <pre>
+ * {@literal @}SliceResource
+ * public class ExampleModel {
+ *
+ *   {@literal @}ImagePath
+ *   private String imagePath;
+ *
+ * }
+ * </pre>
+ *
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

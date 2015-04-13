@@ -26,6 +26,20 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 import org.apache.commons.lang.StringUtils;
 
+/**
+ * Implementation of the tag which allows to bind given model instance to a jsp variable.
+ *
+ * Example jsp code:
+ *
+ * <code>
+ * <%@taglib prefix="slice" uri="http://cognifide.com/jsp/slice" %>
+ * ...
+ * <slice:lookup var="model" type="<%=com.cognifide.example.core.components.basicjsp.BasicJspModel.class%>"/>
+ * ...
+ * h1>${model.text}</h1>
+ * ...
+ * </code>
+ */
 public class SliceLookupTag extends SimpleTagSupport {
 
 	private String var;

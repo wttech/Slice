@@ -42,10 +42,27 @@ public final class SliceTagUtils {
 		// hidden constructor
 	}
 
+	/**
+	 * A helper method that returns a model of a page
+	 *
+	 * @param pageContext allows to access resource path, request context and injector instance
+	 * @param type of model that should be created
+	 * @param <T>
+	 * @return a model of type T of the page indicated by pageContext
+	 */
 	public static <T> T getFromCurrentPath(final PageContext pageContext, final Class<T> type) {
 		return getFromCurrentPath(pageContext, type, null);
 	}
 
+	/**
+	 * A helper method that returns a model of a page
+	 *
+	 * @param pageContext allows to access resource path, request context and injector instance
+	 * @param type of model that should be created
+	 * @param appName - name of application needed to find a proper injector in multi-app environment
+	 * @param <T>
+	 * @return a model of type T of the page indicated by pageContext
+	 */
 	public static <T> T getFromCurrentPath(final PageContext pageContext, final Class<T> type,
 			final String appName) {
 		final SlingHttpServletRequest request = SliceTagUtils.slingRequestFrom(pageContext);
@@ -56,6 +73,16 @@ public final class SliceTagUtils {
 		return getFromCurrentPath(request, injectorsRepository, requestContextProvider, type, appName);
 	}
 
+	/**
+	 * A helper method that returns a model of the Sling resource related to given request
+	 *
+	 * @param request
+	 * @param injectorsRepository
+	 * @param requestContextProvider
+	 * @param type
+	 * @param <T>
+	 * @return a model of type T
+	 */
 	public static <T> T getFromCurrentPath(final SlingHttpServletRequest request,
 			final InjectorsRepository injectorsRepository,
 			final RequestContextProvider requestContextProvider, final Class<T> type) {

@@ -31,7 +31,24 @@ import java.lang.annotation.Target;
 import com.google.inject.BindingAnnotation;
 
 /**
- * @see org.apache.sling.api.request.RequestPathInfo#getSelectors()
+ * Get URL selectors as an array of strings of empty array if the request has no selectors.
+ *
+ * <pre>
+ * {@literal @}SliceResource
+ * public class ExampleModel {
+ *
+ *   private String[] selectors;
+ *
+ *   {@literal @}Inject
+ *   public ExampleModel({@literal @}Selectors String[] selectors) {
+ *     this.selectors = selectors;
+ *   }
+ * }
+ * </pre>
+ *
+ * @see <a
+ * href="https://sling.apache.org/apidocs/sling5/org/apache/sling/api/request/RequestPathInfo.html#getSelectors%28%29">
+ * org.apache.sling.api.request.RequestPathInfo#getSelectors()</a>
  */
 @BindingAnnotation
 @Target({ FIELD, PARAMETER, METHOD })

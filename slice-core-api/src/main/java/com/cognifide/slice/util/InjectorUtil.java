@@ -79,8 +79,8 @@ public final class InjectorUtil {
 
 	/**
 	 * Returns injector created in the context of given resource resolver. Injector should be closed after
-	 * usage. See {@link #getInjector(String, SlingHttpServletRequest)} for more info.
-	 * <br/><br/>
+	 * usage. See {@link #getInjector(String, SlingHttpServletRequest)} for more info. <br/>
+	 * <br/>
 	 * Please notice that Sling request and response objects won't be bound to the context of the created
 	 * injector. This method is meant to be used to provide Slice injector in OSGi components, where you have
 	 * no request.

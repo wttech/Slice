@@ -26,6 +26,24 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Allows mapper a resource stored under given jcr property. The path to a resource is the one indicated by
+ * the name of the field or {@link JcrProperty}. Field with this annotation will be mapped by
+ * {@link com.cognifide.slice.mapper.api.Mapper} using dedicated {@link MappingStrategy}. By default
+ * {@link MappingStrategy#ANNOTATED} strategy is used.
+ *
+ * <pre>
+ * {@literal @}SliceResource
+ * public class ExampleModel {
+ *
+ *   {@literal @}JcrProperty
+ *   private String pagePath;
+ * 
+ *   {@literal @}JcrProperty("description")
+ *   private String pageDescription;
+ * }
+ * </pre>
+ */
 @Documented
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

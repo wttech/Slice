@@ -31,8 +31,22 @@ import java.lang.annotation.Target;
 import com.google.inject.BindingAnnotation;
 
 /**
+ * Get path of resource currently being processed as String object.
+ *
+ * <pre>
+ * {@literal @}SliceResource
+ * public class ExampleModel {
+ *
+ *   private String currentPath;
+ *
+ *   {@literal @}Inject
+ *   public ExampleModel({@literal @}CurrentResourcePath String currentPath) {
+ *     this.currentPath = currentPath;
+ *   }
+ * }
+ * </pre>
+ * 
  * @author Rafał Malinowski
- * @short Get path of resource currently being processed as String object. 
  */
 @BindingAnnotation
 @Target({ FIELD, PARAMETER, METHOD })

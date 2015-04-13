@@ -37,7 +37,7 @@ import aQute.bnd.annotation.ConsumerType;
 public interface InitializableModel {
 
 	/**
-	 * It is called after the SliceResource model has been mapped to a corresponding resource. It can do an
+	 * It is called after the SliceResource model has been mapped from a corresponding resource. It can do an
 	 * arbitrary logic.
 	 */
 	void afterCreated();

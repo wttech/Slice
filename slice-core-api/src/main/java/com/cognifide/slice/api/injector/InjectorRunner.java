@@ -31,6 +31,37 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Module;
 
+/**
+ * InjectorRunner is an entry point to configure and create injector in an application using Slice. It should
+ * mainly be used in application activator (an implementation of {@link org.osgi.framework.BundleActivator})
+ * Basically, one needs to create injector runner, add all needed modules ({@link #installModule(Module)
+ * installModule} or {@link #installModules(List) installModules}) and start it ({@link #start() start})
+ * 
+ * Example:
+ * 
+ * <pre>
+ * 
+ * public class Activator implements BundleActivator {
+ * 
+ * {@literal @}Override
+ * public void start(BundleContext bundleContext) throws Exception {
+ * 
+ * 	final InjectorRunner injectorRunner = new InjectorRunner(bundleContext, "slice-test",
+ * 	"slice-test-app.*", "com.cognifide.example");
+ * 
+ * 	List<Module> sliceModules = SliceModulesFactory.createModules(bundleContext);
+ * 	List<Module> cqModules = CQModulesFactory.createModules();
+ * 
+ * 	injectorRunner.installModules(sliceModules);
+ * 	injectorRunner.installModules(cqModules);
+ * 	injectorRunner.installModule(...);
+ * 
+ * 	injectorRunner.start();
+ * }
+ * }
+ * 
+ * </pre>
+ */
 public class InjectorRunner implements InjectorCreationFailListener {
 
 	private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(InjectorRunner.class);

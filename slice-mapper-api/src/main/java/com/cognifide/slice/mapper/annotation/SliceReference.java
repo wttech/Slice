@@ -39,9 +39,10 @@ import java.lang.annotation.Target;
  * <br>
  * 
  * The value can contain placeholders in form of: <b>${placeholderName}</b>. The placeholders are resolved
- * using {@link SliceReferencePathResolver}, therefore a proper configuration of it is needed. A Guice module
- * must provide the SliceReferencePathResolver object which have all placeholders added using its
- * <code>addReference</code> methods. A simple snippet of code which provides the object can look like this:
+ * using {@link com.cognifide.slice.mapper.api.SliceReferencePathResolver}, therefore a proper configuration
+ * of it is needed. A Guice module must provide the SliceReferencePathResolver object which have all
+ * placeholders added using its <code>addReference</code> methods. A simple snippet of code which provides the
+ * object can look like this:
  * 
  * <pre>
  * <code>@</code>Provides
@@ -52,6 +53,17 @@ import java.lang.annotation.Target;
  * 	return pathResolver;
  * }
  * </code>
+ * </pre>
+ *
+ * Example usage:
+ * <pre>
+ * {@literal @}SliceResource
+ * public class ExampleModel {
+ *
+ *   {@literal @}SliceReference("home")
+ *   private HomeModel home;
+ *
+ * }
  * </pre>
  * 
  * @author maciej.majchrzak

@@ -27,13 +27,10 @@ import aQute.bnd.annotation.ProviderType;
 import com.google.inject.Injector;
 
 /**
- * @author Witold Szczerba
- * @author Rafał Malinowski
- * @class InjectorsRepository
  * <p/>
- * Helper class to get Injector instances. Slice supports multiple injectors installed on one instance, with
- * each injector being tagged with name of the application that created it. By default, the application name
- * is the name of its folder under /apps.
+ * Helper class to get Injector instances. Slice supports multiple injectors installed on a single Sling/AEM
+ * instance, with each injector being tagged with name of the application that created it. By default, the
+ * application name is the name of its folder under /apps.
  * <p/>
  * Injector can be retrieved in two different ways:
  * <ul>
@@ -63,7 +60,7 @@ public interface InjectorsRepository {
 	String getInjectorName(Injector injector);
 
 	/**
-	 * Returns names of all injectors
+	 * Returns names of all registered injectors
 	 * 
 	 * @return
 	 */

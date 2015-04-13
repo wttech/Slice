@@ -29,7 +29,18 @@ import java.lang.annotation.Target;
  * Allows mapper to map all child resources of a parent resource into array or list. The parent resource is
  * the one indicated by the name of the field or {@link JcrProperty}. If the child resource doesn't exist,
  * then the list will be empty, but never <code>null</code>.
- * 
+ *
+ * <pre>
+ * {@literal @}SliceResource
+ * public class ExampleModel {
+ *
+ *   {@literal @}Children(LinkModel.class)
+ *   {@literal @}JcrProperty
+ *   private List<LinkModel> links;
+ *
+ * }
+ * </pre>
+ *
  * @author Kamil Ciecierski
  */
 @Retention(RetentionPolicy.RUNTIME)
