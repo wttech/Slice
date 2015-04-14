@@ -1,7 +1,5 @@
 package com.cognifide.slice.mapper.annotation
 
-import com.cognifide.slice.mapper.annotation.FollowModel
-import com.cognifide.slice.mapper.annotation.JcrPropertyModel
 import com.cognifide.slice.test.setup.BaseSetup
 import org.junit.Assert
 

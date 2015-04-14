@@ -13,7 +13,7 @@ public class JcrPropertyModel {
 	@JcrProperty(value = "style")
 	private String secondProperty;
 
-	@JcrProperty()
+	@JcrProperty
 	private int size;
 
 	public String getText() {
