@@ -9,10 +9,10 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <name>Slice - Mapper API Test</name>
-    <description>Slice Mapper API Test</description>
+    <name>Slice - Mapper Test</name>
+    <description>Slice Mapper Test</description>
 
-    <artifactId>slice-mapper-api-test</artifactId>
+    <artifactId>slice-mapper-test</artifactId>
 
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>

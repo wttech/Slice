@@ -9,10 +9,10 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <name>Slice - Core API Test</name>
-    <description>Slice Core API Test</description>
+    <name>Slice - Core Test</name>
+    <description>Slice Core Test</description>
 
-    <artifactId>slice-core-api-test</artifactId>
+    <artifactId>slice-core-test</artifactId>
 
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>

@@ -5,8 +5,8 @@
     <packaging>pom</packaging>
     <modules>
         <module>slice-base-test</module>
-        <module>slice-core-api-test</module>
-        <module>slice-mapper-api-test</module>
+        <module>slice-core-test</module>
+        <module>slice-mapper-test</module>
     </modules>
     <parent>
         <artifactId>slice-parent</artifactId>
@@ -31,6 +31,12 @@
             <groupId>com.citytechinc.aem.prosper</groupId>
             <artifactId>prosper</artifactId>
             <version>3.0.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.api</artifactId>
+            <version>2.9.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
