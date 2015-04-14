@@ -1,0 +1,46 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>slice-test</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>slice-base-test</module>
+        <module>slice-core-api-test</module>
+        <module>slice-mapper-api-test</module>
+    </modules>
+    <parent>
+        <artifactId>slice-parent</artifactId>
+        <groupId>com.cognifide.slice</groupId>
+        <version>4.2.0-SNAPSHOT</version>
+    </parent>
+    <name>Slice - Test</name>
+    <description>Slice test</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.cognifide.slice</groupId>
+            <artifactId>slice-core</artifactId>
+            <version>4.2.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.cognifide.slice</groupId>
+            <artifactId>slice-mapper</artifactId>
+            <version>4.2.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.citytechinc.aem.prosper</groupId>
+            <artifactId>prosper</artifactId>
+            <version>3.0.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.commons.classloader</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.scripting.api</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>
