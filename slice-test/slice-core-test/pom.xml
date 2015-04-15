@@ -69,6 +69,12 @@
         <dependency>
             <groupId>com.cognifide.slice</groupId>
             <artifactId>slice-base-test</artifactId>
+            <version>4.2.0-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.cognifide.slice</groupId>
+            <artifactId>slice-base-test</artifactId>
             <type>test-jar</type>
             <version>4.2.0-SNAPSHOT</version>
             <scope>test</scope>

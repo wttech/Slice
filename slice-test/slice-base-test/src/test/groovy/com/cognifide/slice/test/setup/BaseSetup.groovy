@@ -12,6 +12,7 @@ import com.cognifide.slice.core.internal.module.SliceModule
 import com.cognifide.slice.core.internal.module.SliceResourceModule
 import com.cognifide.slice.core.internal.module.SlingModule
 import com.cognifide.slice.mapper.module.MapperModule
+import com.cognifide.slice.test.module.TestModule
 import com.google.inject.Guice
 import com.google.inject.Injector
 import com.google.inject.Module
@@ -39,6 +40,7 @@ class BaseSetup extends ProsperSpec {
         modules.add(new JcrModule())
         modules.add(new MapperModule())
         modules.add(new SliceResourceModule())
+        modules.add(new TestModule())
 
         injector = Guice.createInjector(modules)
 
