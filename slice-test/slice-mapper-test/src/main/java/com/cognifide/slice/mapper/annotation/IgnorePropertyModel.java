@@ -6,10 +6,8 @@ package com.cognifide.slice.mapper.annotation;
 @SliceResource(MappingStrategy.ALL)
 public class IgnorePropertyModel {
 
-	@JcrProperty
 	private String text;
 
-	@JcrProperty
 	@IgnoreProperty
 	private String style;
 
