@@ -7,6 +7,7 @@ import com.cognifide.slice.api.context.ContextFactory
 import com.cognifide.slice.api.context.ContextScope
 import com.cognifide.slice.api.injector.InjectorConfig
 import com.cognifide.slice.api.injector.InjectorRunner
+import com.cognifide.slice.api.injector.InjectorWithContext
 import com.cognifide.slice.api.provider.ModelProvider
 import com.cognifide.slice.api.qualifier.CurrentResourcePathModel
 import com.cognifide.slice.core.internal.context.SliceContextScope
@@ -37,6 +38,9 @@ class SliceTagUtilsTest extends ProsperSpec{
 
     @Shared
     InjectorHierarchy injectorHierarchy
+
+    @Shared
+    InjectorsRepositoryService repositoryService
 
     @Shared
     protected Injector injector1
@@ -89,7 +93,7 @@ class SliceTagUtilsTest extends ProsperSpec{
         injectorRunner3.setParentInjectorName("slice-test")
         InjectorConfig config3 = new InjectorConfig(injectorRunner3)
 
-        InjectorsRepositoryService repositoryService = new InjectorsRepositoryService()
+        repositoryService = new InjectorsRepositoryService()
         injectorHierarchy = new InjectorHierarchy()
         injectHierarchyIntoRepositoryService(repositoryService, injectorHierarchy)
 
@@ -124,6 +128,18 @@ class SliceTagUtilsTest extends ProsperSpec{
         Assert.assertTrue(injectorHierarchy.getInjectorNames().contains("slice-test2"))
         Assert.assertTrue(injectorHierarchy.getInjectorNames().contains("slice-test/subtest"))
         Assert.assertFalse(injectorHierarchy.getInjectorNames().contains("slice-test/subtestx"))
+
+        String injectorNameForRes1 = repositoryService.getInjectorNameForResource("slice-test/abc/abc")
+        Assert.assertEquals("slice-test",injectorNameForRes1)
+        String injectorNameForRes2 = repositoryService.getInjectorNameForResource("slice-test/subtest/abc")
+        Assert.assertEquals("slice-test/subtest",injectorNameForRes2)
+        String injectorNameForResNull = repositoryService.getInjectorNameForResource("slice-test3/subtest/abc")
+        Assert.assertNull(injectorNameForResNull)
+
+        InjectorWithContext injectorWithContext1 = repositoryService.getInjector("slice-test/subtest")
+        Assert.assertNotNull(injectorWithContext1)
+        InjectorWithContext injectorWithContext2 = repositoryService.getInjector("slice-test/subtestx")
+        Assert.assertNull(injectorWithContext2)
     }
 
 
