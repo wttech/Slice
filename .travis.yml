@@ -16,6 +16,6 @@ addons:
     project:
       name: "Cognifide/Slice"
       description: "Build submitted via Travis CI"
-    notification_email: mariusz.kubis@cognifide.com
+    notification_email: maciej.majchrzak@cognifide.com
     build_command: "mvn clean package"
     branch_pattern: master
