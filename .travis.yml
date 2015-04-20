@@ -1,6 +1,9 @@
 language: java
 script: mvn clean package
 
+after_success:
+  - mvn test jacoco:report org.eluder.coveralls:coveralls-maven-plugin:report
+
 env:
   global:
    # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created

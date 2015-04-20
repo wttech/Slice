@@ -50,6 +50,8 @@
 		<slice.instance.url>http://localhost:5402</slice.instance.url>
 		<slice.crx.username>admin</slice.crx.username>
 		<slice.crx.password>admin</slice.crx.password>
+
+		<coveralls.repo.token>d6gCI42XTZsvT4VoOTr5qX6vn1G9zgdY0</coveralls.repo.token>
 	</properties>
 
 	<scm>
@@ -148,6 +150,35 @@
 					<arguments>-Psonatype-oss-release</arguments>
 					<mavenExecutorId>forked-path</mavenExecutorId>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.9</version>
+				<configuration>
+					<argLine>${argLine} -Duser.language=en -Duser.country=US -XX:-UseSplitVerifier</argLine>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eluder.coveralls</groupId>
+				<artifactId>coveralls-maven-plugin</artifactId>
+				<version>3.1.0</version>
+				<configuration>
+					<repoToken>${coveralls.repo.token}</repoToken>
+				</configuration>
+		</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.7.4.201502262128</version>
+				<executions>
+					<execution>
+						<id>prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 		<pluginManagement>
