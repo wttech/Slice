@@ -20,7 +20,7 @@ import java.lang.reflect.Method
 /**
  * Created by T530 on 2015-04-21.
  */
-class InjectorsBaseTest  extends ProsperSpec{
+class InjectorsTestSetup extends ProsperSpec{
 
     @Shared
     InjectorHierarchy injectorHierarchy
