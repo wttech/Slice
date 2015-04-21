@@ -10,7 +10,14 @@ public class FollowModel {
 	@JcrProperty
 	private JcrPropertyModel jcrPropertyModel;
 
+	@JcrProperty(value = "jcrPropertyModel")
+	private String jcrPropertyModelPath;
+
 	public JcrPropertyModel getJcrPropertyModel() {
 		return jcrPropertyModel;
+	}
+
+	public String getJcrPropertyModelPath() {
+		return jcrPropertyModelPath;
 	}
 }
