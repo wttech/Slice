@@ -11,7 +11,7 @@
     <parent>
         <artifactId>slice-parent</artifactId>
         <groupId>com.cognifide.slice</groupId>
-        <version>4.2.0-SNAPSHOT</version>
+        <version>4.2.1-SNAPSHOT</version>
     </parent>
     <name>Slice - Test</name>
     <description>Slice test</description>
@@ -20,12 +20,12 @@
         <dependency>
             <groupId>com.cognifide.slice</groupId>
             <artifactId>slice-core</artifactId>
-            <version>4.2.0-SNAPSHOT</version>
+            <version>4.2.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.cognifide.slice</groupId>
             <artifactId>slice-mapper</artifactId>
-            <version>4.2.0-SNAPSHOT</version>
+            <version>4.2.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.citytechinc.aem.prosper</groupId>
