@@ -13,13 +13,13 @@ class InjectorHierarchyTest extends InjectorsBaseTest{
         given: "defined injectors: 'slice-test', 'slice-test2', 'slice-test/subtest'"
 
         when:
-
-        expect: "'slice-test', 'slice-test2', 'slice-test/subtest' exist in injector's hierarchy"
         Injector injector = injectorHierarchy.getInjectorByName("slice-test")
-        Assert.assertNotNull(injector)
         Injector injector2 = injectorHierarchy.getInjectorByName("slice-test2")
-        Assert.assertNotNull(injector2)
         Injector injector3 = injectorHierarchy.getInjectorByName("slice-test/subtest")
+
+        then: "'slice-test', 'slice-test2', 'slice-test/subtest' exist in injector's hierarchy"
+        Assert.assertNotNull(injector)
+        Assert.assertNotNull(injector2)
         Assert.assertNotNull(injector3)
     }
 
@@ -27,9 +27,9 @@ class InjectorHierarchyTest extends InjectorsBaseTest{
         given: "defined injectors: 'slice-test', 'slice-test2', 'slice-test/subtest'"
 
         when:
-
-        expect: "'slice-test3' does not exist in hierarchy"
         Injector injectorNonExistent = injectorHierarchy.getInjectorByName("slice-test3")
+
+        then: "'slice-test3' does not exist in hierarchy"
         Assert.assertNull(injectorNonExistent)
     }
 
@@ -37,9 +37,9 @@ class InjectorHierarchyTest extends InjectorsBaseTest{
         given: "defined injectors: 'slice-test', 'slice-test2', 'slice-test/subtest'"
 
         when:
-
-        expect: "injector with null name does not exist in hierarchy"
         Injector injectorNonExistent = injectorHierarchy.getInjectorByName(null)
+
+        then: "injector with null name does not exist in hierarchy"
         Assert.assertNull(injectorNonExistent)
     }
 
@@ -47,13 +47,13 @@ class InjectorHierarchyTest extends InjectorsBaseTest{
         given: "defined injectors: 'slice-test', 'slice-test2', 'slice-test/subtest'"
 
         when:
-
-        expect: "'slice-test', 'slice-test2', 'slice-test/subtest' can be found by path in injector's hierarchy"
         String injector1name = injectorHierarchy.getInjectorNameByApplicationPath("/apps/slice-test")
-        Assert.assertEquals("slice-test", injector1name)
         String injector2name = injectorHierarchy.getInjectorNameByApplicationPath("/apps/slice-test2")
-        Assert.assertEquals("slice-test2", injector2name)
         String injector3name = injectorHierarchy.getInjectorNameByApplicationPath("/apps/slice-test/subtest")
+
+        then: "'slice-test', 'slice-test2', 'slice-test/subtest' can be found by path in injector's hierarchy"
+        Assert.assertEquals("slice-test", injector1name)
+        Assert.assertEquals("slice-test2", injector2name)
         Assert.assertEquals("slice-test/subtest", injector3name)
     }
 
@@ -61,13 +61,13 @@ class InjectorHierarchyTest extends InjectorsBaseTest{
         given: "defined injectors: 'slice-test', 'slice-test2', 'slice-test/subtest'"
 
         when:
-
-        expect: "'slice-test3', 'slice-test/subtest2' and null name cannot be found by path in injector's hierarchy"
         String injector1name = injectorHierarchy.getInjectorNameByApplicationPath("/apps/slice-test3")
-        Assert.assertNull(injector1name)
         String injector2name = injectorHierarchy.getInjectorNameByApplicationPath("/apps/slice-test/subtest2")
-        Assert.assertNull(injector2name)
         String injectorForNullName = injectorHierarchy.getInjectorNameByApplicationPath(null)
+
+        then: "'slice-test3', 'slice-test/subtest2' and null name cannot be found by path in injector's hierarchy"
+        Assert.assertNull(injector1name)
+        Assert.assertNull(injector2name)
         Assert.assertNull(injectorForNullName)
     }
 
@@ -75,16 +75,16 @@ class InjectorHierarchyTest extends InjectorsBaseTest{
         given: "defined injectors: 'slice-test', 'slice-test2', 'slice-test/subtest'"
 
         when:
-
-        expect: "names of all three given injectors can be found in the hierarchy"
         Injector injector1 = injectorHierarchy.getInjectorByName("slice-test")
         String injector1regName = injectorHierarchy.getRegisteredName(injector1)
-        Assert.assertEquals("slice-test", injector1regName)
         Injector injector2 = injectorHierarchy.getInjectorByName("slice-test2")
         String injector2regName = injectorHierarchy.getRegisteredName(injector2)
-        Assert.assertEquals("slice-test2", injector2regName)
         Injector injector3 = injectorHierarchy.getInjectorByName("slice-test/subtest")
         String injector3regName = injectorHierarchy.getRegisteredName(injector3)
+
+        then: "names of all three given injectors can be found in the hierarchy"
+        Assert.assertEquals("slice-test", injector1regName)
+        Assert.assertEquals("slice-test2", injector2regName)
         Assert.assertEquals("slice-test/subtest", injector3regName)
     }
 
@@ -94,7 +94,7 @@ class InjectorHierarchyTest extends InjectorsBaseTest{
         when:
 
         expect: "Collection of injector's names contains: 'slice-test', 'slice-test2', 'slice-test/subtest'"
-                Assert.assertTrue(injectorHierarchy.getInjectorNames().contains("slice-test"))
+        Assert.assertTrue(injectorHierarchy.getInjectorNames().contains("slice-test"))
         Assert.assertTrue(injectorHierarchy.getInjectorNames().contains("slice-test2"))
         Assert.assertTrue(injectorHierarchy.getInjectorNames().contains("slice-test/subtest"))
         Assert.assertFalse(injectorHierarchy.getInjectorNames().contains("slice-test/subtestx"))

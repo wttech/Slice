@@ -12,15 +12,15 @@ class InjectorsRepositoryServiceTest extends InjectorsBaseTest{
         given: "defined injectors: 'slice-test', 'slice-test2', 'slice-test/subtest'"
 
         when:
-
-        expect: "Find best matching injectors for given resource path or return null if no matching injector found"
         String injectorNameForRes1 = repositoryService.getInjectorNameForResource("slice-test/abc/abc")
-        Assert.assertEquals("slice-test",injectorNameForRes1)
         String injectorNameForRes2 = repositoryService.getInjectorNameForResource("slice-test/subtest/abc")
-        Assert.assertEquals("slice-test/subtest",injectorNameForRes2)
         String injectorNameForRes3 = repositoryService.getInjectorNameForResource("slice-test3/subtest/abc")
-        Assert.assertNull(injectorNameForRes3)
         String injectorNameForResNull = repositoryService.getInjectorNameForResource(null)
+
+        then: "Find best matching injectors for given resource path or return null if no matching injector found"
+        Assert.assertEquals("slice-test",injectorNameForRes1)
+        Assert.assertEquals("slice-test/subtest",injectorNameForRes2)
+        Assert.assertNull(injectorNameForRes3)
         Assert.assertNull(injectorNameForResNull)
     }
 
@@ -28,17 +28,17 @@ class InjectorsRepositoryServiceTest extends InjectorsBaseTest{
         given: "defined injectors: 'slice-test', 'slice-test2', 'slice-test/subtest'"
 
         when:
-
-        expect: "Return non null InjectorWithContext wheever injector with given name exists"
         InjectorWithContext injectorWithContext1 = repositoryService.getInjector("slice-test/subtest")
-        Assert.assertNotNull(injectorWithContext1)
         InjectorWithContext injectorWithContext2 = repositoryService.getInjector("slice-test")
-        Assert.assertNotNull(injectorWithContext2)
         InjectorWithContext injectorWithContext3 = repositoryService.getInjector("slice-test2")
-        Assert.assertNotNull(injectorWithContext3)
         InjectorWithContext injectorWithContext4 = repositoryService.getInjector("slice-test/subtestx")
-        Assert.assertNull(injectorWithContext4)
         InjectorWithContext injectorWithContext5 = repositoryService.getInjector(null)
+
+        then: "Return non null InjectorWithContext wheever injector with given name exists"
+        Assert.assertNotNull(injectorWithContext1)
+        Assert.assertNotNull(injectorWithContext2)
+        Assert.assertNotNull(injectorWithContext3)
+        Assert.assertNull(injectorWithContext4)
         Assert.assertNull(injectorWithContext5)
     }
 }
