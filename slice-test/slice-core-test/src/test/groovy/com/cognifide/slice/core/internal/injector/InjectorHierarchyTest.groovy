@@ -7,7 +7,7 @@ import org.junit.Assert
  * @author Jaromir Celejewski
  * Date: 10.04.15
  */
-class InjectorHierarchyTest extends InjectorsBaseTest{
+class InjectorHierarchyTest extends InjectorsTestSetup{
 
     def "Find injector by name"() {
         given: "defined injectors: 'slice-test', 'slice-test2', 'slice-test/subtest'"
@@ -93,7 +93,7 @@ class InjectorHierarchyTest extends InjectorsBaseTest{
 
         when:
 
-        expect: "Collection of injector's names contains: 'slice-test', 'slice-test2', 'slice-test/subtest'"
+        expect: "collection of injector's names contains: 'slice-test', 'slice-test2', 'slice-test/subtest'"
         Assert.assertTrue(injectorHierarchy.getInjectorNames().contains("slice-test"))
         Assert.assertTrue(injectorHierarchy.getInjectorNames().contains("slice-test2"))
         Assert.assertTrue(injectorHierarchy.getInjectorNames().contains("slice-test/subtest"))
