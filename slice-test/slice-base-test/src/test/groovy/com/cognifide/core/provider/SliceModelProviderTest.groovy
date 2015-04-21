@@ -2,6 +2,7 @@ package com.cognifide.core.provider
 
 import com.cognifide.slice.test.module.SimpleModel
 import com.cognifide.slice.test.setup.BaseSetup
+import com.google.inject.Key
 import com.google.inject.ProvisionException
 import org.junit.Assert
 
@@ -30,6 +31,19 @@ class SliceModelProviderTest extends BaseSetup {
 
         setup: "Creating model for non-existing path: " << nonExistingPath
         SimpleModel model = modelProvider.get(SimpleModel.class, nonExistingPath);
+
+        expect: "Model should not be null"
+        Assert.assertNotNull(model)
+
+        and: "Model should have a null value for property 'prop1' set"
+        Assert.assertNull(model.getProp1())
+    }
+
+    def "Create model based on non-existing content by key and path"() {
+        def nonExistingPath = "/content/bar"
+
+        setup: "Creating model for non-existing path: " << nonExistingPath
+        SimpleModel model = modelProvider.get(Key.get(SimpleModel.class), nonExistingPath);
 
         expect: "Model should not be null"
         Assert.assertNotNull(model)
@@ -79,11 +93,36 @@ class SliceModelProviderTest extends BaseSetup {
         Assert.assertNull(models[1].getProp1())
     }
 
+    def "Create a list of models based on non-existing content by class and resources iterator"() {
+        def nonExistingPath1 = "/content/bar"
+        def nonExistingPath2 = "/content/bar/foo"
+        def nonExistingResources = [resourceResolver.getResource(nonExistingPath1), resourceResolver.getResource(nonExistingPath2)]
+
+        when: "Creating model for paths: " << nonExistingPath1 << nonExistingPath2
+        modelProvider.getListFromResources(SimpleModel.class, nonExistingResources.iterator())
+
+        then: "Throw ProvisionException - either path or resource should be set"
+        thrown(ProvisionException)
+    }
+
     def "Get Child Models of non-existing parentPath"() {
         def nonExistingParentPath = "/content/bar"
 
         setup: "Creating child models for path: " + nonExistingParentPath
         def models = modelProvider.getChildModels(SimpleModel.class, nonExistingParentPath);
+
+        expect: "Child models should not be null"
+        Assert.assertNotNull(models)
+
+        and: "Child models should be empty"
+        Assert.assertEquals(0, models.size())
+    }
+
+    def "Get Child Models of non-existing parent resource"() {
+        def nonExistingParentPath = "/content/bar"
+
+        setup: "Creating child models for path: " + nonExistingParentPath
+        def models = modelProvider.getChildModels(SimpleModel.class, resourceResolver.getResource(nonExistingParentPath));
 
         expect: "Child models should not be null"
         Assert.assertNotNull(models)
@@ -132,6 +171,19 @@ class SliceModelProviderTest extends BaseSetup {
 
         when: "Creating model for non-existing (null) resource"
         modelProvider.get(SimpleModel.class, resource);
+
+        then: "Throw ProvisionException - either path or resource should be set"
+        thrown(ProvisionException)
+    }
+
+    def "Create model based on non-existing resource by key"() {
+        def nonExistingPath = "/content/bar"
+
+        setup: "Get non-existing resource"
+        def resource = resourceResolver.getResource(nonExistingPath)
+
+        when: "Creating model for non-existing (null) resource"
+        modelProvider.get(Key.get(SimpleModel.class), resource);
 
         then: "Throw ProvisionException - either path or resource should be set"
         thrown(ProvisionException)
