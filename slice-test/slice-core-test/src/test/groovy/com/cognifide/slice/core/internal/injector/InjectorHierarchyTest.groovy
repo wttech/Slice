@@ -7,7 +7,7 @@ import org.junit.Assert
  * @author Jaromir Celejewski
  * Date: 10.04.15
  */
-class InjectorHierarchyTestSetup extends InjectorsTestSetup{
+class InjectorHierarchyTest extends InjectorsTestSetup{
 
     def "Find injector by name"() {
         given: "defined injectors: 'slice-test', 'slice-test2', 'slice-test/subtest'"

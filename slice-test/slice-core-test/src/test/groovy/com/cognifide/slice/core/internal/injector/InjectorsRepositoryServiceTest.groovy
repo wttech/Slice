@@ -6,7 +6,7 @@ import org.junit.Assert
 /**
  * Created by T530 on 2015-04-21.
  */
-class InjectorsRepositoryServiceTestSetup extends InjectorsTestSetup{
+class InjectorsRepositoryServiceTest extends InjectorsTestSetup{
 
     def "Find name of proper injector for given resource path"() {
         given: "defined injectors: 'slice-test', 'slice-test2', 'slice-test/subtest'"
