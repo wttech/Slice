@@ -93,7 +93,7 @@ class InjectorHierarchyTest extends InjectorsBaseTest{
 
         when:
 
-        expect: "Collection of injector's names contains: 'slice-test', 'slice-test2', 'slice-test/subtest'"
+        expect: "collection of injector's names contains: 'slice-test', 'slice-test2', 'slice-test/subtest'"
         Assert.assertTrue(injectorHierarchy.getInjectorNames().contains("slice-test"))
         Assert.assertTrue(injectorHierarchy.getInjectorNames().contains("slice-test2"))
         Assert.assertTrue(injectorHierarchy.getInjectorNames().contains("slice-test/subtest"))

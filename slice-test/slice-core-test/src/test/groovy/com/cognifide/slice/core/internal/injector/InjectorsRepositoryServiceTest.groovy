@@ -17,7 +17,7 @@ class InjectorsRepositoryServiceTest extends InjectorsBaseTest{
         String injectorNameForRes3 = repositoryService.getInjectorNameForResource("slice-test3/subtest/abc")
         String injectorNameForResNull = repositoryService.getInjectorNameForResource(null)
 
-        then: "Find best matching injectors for given resource path or return null if no matching injector found"
+        then: "find best matching injector for given resource path or return null if no matching injector found"
         Assert.assertEquals("slice-test",injectorNameForRes1)
         Assert.assertEquals("slice-test/subtest",injectorNameForRes2)
         Assert.assertNull(injectorNameForRes3)
@@ -34,7 +34,7 @@ class InjectorsRepositoryServiceTest extends InjectorsBaseTest{
         InjectorWithContext injectorWithContext4 = repositoryService.getInjector("slice-test/subtestx")
         InjectorWithContext injectorWithContext5 = repositoryService.getInjector(null)
 
-        then: "Return non null InjectorWithContext wheever injector with given name exists"
+        then: "return non null InjectorWithContext whenever injector with a given name exists"
         Assert.assertNotNull(injectorWithContext1)
         Assert.assertNotNull(injectorWithContext2)
         Assert.assertNotNull(injectorWithContext3)
