@@ -21,12 +21,12 @@ class SliceModelProviderTest extends BaseSetup {
         }
     }
 
-    def "Created content exists"() {
-        expect:
+    def "Content exists"() {
+        expect:"Created content exists"
         assertPageExists("/content/foo")
     }
 
-    def "Create model based on non-existing content by class and path"() {
+    def "Get model by class and path - non existing content"() {
         def nonExistingPath = "/content/bar"
 
         setup: "Creating model for non-existing path: " << nonExistingPath
@@ -39,7 +39,7 @@ class SliceModelProviderTest extends BaseSetup {
         Assert.assertNull(model.getProp1())
     }
 
-    def "Create model based on non-existing content by key and path"() {
+    def "Get model by key and path - non existing content"() {
         def nonExistingPath = "/content/bar"
 
         setup: "Creating model for non-existing path: " << nonExistingPath
@@ -52,7 +52,7 @@ class SliceModelProviderTest extends BaseSetup {
         Assert.assertNull(model.getProp1())
     }
 
-    def "Create a list of models based on non-existing content by class and path iterator"() {
+    def "Get a list of models by class and path iterator - non existing content"() {
         def nonExistingPath1 = "/content/bar"
         def nonExistingPath2 = "/content/bar/foo"
         def nonExistingPaths = [nonExistingPath1, nonExistingPath2]
@@ -73,10 +73,11 @@ class SliceModelProviderTest extends BaseSetup {
         Assert.assertNull(models[1].getProp1())
     }
 
-    def "Create a list of models based on non-existing content by class and paths"() {
+    def "Get a list of models by class and paths - non existing content"() {
         def nonExistingPath1 = "/content/bar"
         def nonExistingPath2 = "/content/bar/foo"
         def nonExistingPaths = [nonExistingPath1, nonExistingPath2]
+
         setup: "Creating model for paths: " << nonExistingPaths
         def models = modelProvider.getList(SimpleModel.class, nonExistingPaths.toArray(new String[0]))
 
@@ -93,7 +94,7 @@ class SliceModelProviderTest extends BaseSetup {
         Assert.assertNull(models[1].getProp1())
     }
 
-    def "Create a list of models based on non-existing content by class and resources iterator"() {
+    def "Get a list of models by class and resources iterator - non existing (null) resources"() {
         def nonExistingPath1 = "/content/bar"
         def nonExistingPath2 = "/content/bar/foo"
         def nonExistingResources = [resourceResolver.getResource(nonExistingPath1), resourceResolver.getResource(nonExistingPath2)]
@@ -105,7 +106,7 @@ class SliceModelProviderTest extends BaseSetup {
         thrown(ProvisionException)
     }
 
-    def "Get Child Models of non-existing parentPath"() {
+    def "Get Child Models of non-existing parent path"() {
         def nonExistingParentPath = "/content/bar"
 
         setup: "Creating child models for path: " + nonExistingParentPath
@@ -153,7 +154,7 @@ class SliceModelProviderTest extends BaseSetup {
         }
     }
 
-    def "Create model based on non-existing content by a null path"() {
+    def "Get model by a null path"() {
         def nullPath = null
 
         when: "Creating model based on null path"
@@ -163,7 +164,7 @@ class SliceModelProviderTest extends BaseSetup {
         thrown(ProvisionException)
     }
 
-    def "Create model based on non-existing resource by resource"() {
+    def "Get model by a resource - non-existing (null) resource"() {
         def nonExistingPath = "/content/bar"
 
         setup: "Get non-existing resource"
@@ -176,7 +177,7 @@ class SliceModelProviderTest extends BaseSetup {
         thrown(ProvisionException)
     }
 
-    def "Create model based on non-existing resource by key"() {
+    def "Get model resource by key and resource - non-existing (null) resource"() {
         def nonExistingPath = "/content/bar"
 
         setup: "Get non-existing resource"
