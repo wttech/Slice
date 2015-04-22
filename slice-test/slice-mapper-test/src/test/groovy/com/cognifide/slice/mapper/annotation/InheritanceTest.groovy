@@ -12,7 +12,7 @@ class InheritanceTest extends BaseSetup {
         setup:
         pageBuilder.content {
             foo("cq:PageContent") {
-                "jcr:content"("field1": "field1 value", "field2": "field2 value")
+                "jcr:content"("field1": "field1 value", "field2": "field2 value", "field3": "field3 value")
             }
         }
         def contentNode = session.getNode("/content/foo/jcr:content")
@@ -27,6 +27,7 @@ class InheritanceTest extends BaseSetup {
         Assert.assertNotNull(inheritanceModel)
         Assert.assertEquals(inheritanceModel.getField1(), "field1 value")
         Assert.assertEquals(inheritanceModel.getField2(), "field2 value")
+        Assert.assertNull(inheritanceModel.getField3())
     }
 
     def "Inheritance test: Child model with MappingStrategy.ANNOTATED, parent model with MappingStrategy.ALL"() {
@@ -35,6 +36,7 @@ class InheritanceTest extends BaseSetup {
         Assert.assertNotNull(inheritanceModel)
         Assert.assertEquals(inheritanceModel.getField1(), "field1 value")
         Assert.assertEquals(inheritanceModel.getField2(), "field2 value")
+        Assert.assertNull(inheritanceModel.getField3())
     }
 
     def "Inheritance test: Child model with MappingStrategy.ANNOTATED, parent model without MappingStrategy"() {
@@ -43,6 +45,7 @@ class InheritanceTest extends BaseSetup {
         Assert.assertNotNull(inheritanceModel)
         Assert.assertNull(inheritanceModel.getField1())
         Assert.assertEquals(inheritanceModel.getField2(), "field2 value")
+        Assert.assertNull(inheritanceModel.getField3())
     }
 
     def "Inheritance test: Child model with MappingStrategy.ALL, parent model with MappingStrategy.ALL"() {

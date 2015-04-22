@@ -9,8 +9,14 @@ class InheritanceModelAnnotated extends AbstractInheritanceModelAnnotated {
 	@JcrProperty
 	private String field2;
 
+	private String field3;
+
 	public String getField2() {
 		return field2;
+	}
+
+	public String getField3() {
+		return field3;
 	}
 }
 
@@ -20,8 +26,14 @@ class InheritanceModelAnnotatedAll extends AbstractInheritanceModelAll {
 	@JcrProperty
 	private String field2;
 
+	private String field3;
+
 	public String getField2() {
 		return field2;
+	}
+
+	public String getField3() {
+		return field3;
 	}
 }
 
@@ -31,8 +43,14 @@ class InheritanceModelAnnotatedWithout extends AbstractInheritanceModelWithout {
 	@JcrProperty
 	private String field2;
 
+	private String field3;
+
 	public String getField2() {
 		return field2;
+	}
+
+	public String getField3() {
+		return field3;
 	}
 }
 
