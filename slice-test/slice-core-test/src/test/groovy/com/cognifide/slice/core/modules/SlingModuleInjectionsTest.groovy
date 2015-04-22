@@ -1,6 +1,21 @@
 package com.cognifide.slice.core.modules
 
-import com.cognifide.slice.test.setup.BaseSetup
+import com.citytechinc.aem.prosper.specs.ProsperSpec
+import com.cognifide.slice.api.context.ConstantContextProvider
+import com.cognifide.slice.api.context.Context
+import com.cognifide.slice.api.context.ContextFactory
+import com.cognifide.slice.api.context.ContextScope
+import com.cognifide.slice.api.provider.ModelProvider
+import com.cognifide.slice.core.internal.context.SliceContextScope
+import com.cognifide.slice.core.internal.module.JcrModule
+import com.cognifide.slice.core.internal.module.SliceModule
+import com.cognifide.slice.core.internal.module.SliceResourceModule
+import com.cognifide.slice.core.internal.module.SlingModule
+import com.cognifide.slice.mapper.module.MapperModule
+import com.cognifide.slice.test.module.TestModule
+import com.google.inject.Guice
+import com.google.inject.Injector
+import com.google.inject.Module
 import junit.framework.Assert
 import org.apache.sling.api.SlingHttpServletRequest
 import org.apache.sling.api.SlingHttpServletResponse
@@ -9,9 +24,9 @@ import spock.lang.Shared
 
 /**
  * User: krzysztof.ryk@solsoft.pl
- * Date: 4/22/15 9:28 AM
+ * Date: 4/22/15 10:55 AM
  */
-class SlingModuleTest extends BaseSetup {
+class SlingModuleInjectionsTest extends ProsperSpec {
 
     @Shared
     SlingHttpServletRequest request
@@ -19,10 +34,26 @@ class SlingModuleTest extends BaseSetup {
     @Shared
     SlingHttpServletResponse response
 
+    @Shared
+    ModelProvider modelProvider
+
+    @Shared
+    SlingModule slingModule
+
+    @Shared
+    Injector injector
+
     def setupSpec() {
-        nodeBuilder.content {
-            prosper()
-        }
+        ContextScope contextScope = new SliceContextScope()
+        List<Module> modules = new ArrayList<Module>()
+        modules.add(new SliceModule(contextScope, null))
+        modules.add(slingModule = new SlingModule(contextScope))
+        modules.add(new JcrModule())
+        modules.add(new MapperModule())
+        modules.add(new SliceResourceModule())
+        modules.add(new TestModule())
+
+        injector = Guice.createInjector(modules)
 
         request = requestBuilder.build {
             parameters = [path: "/content/prosper"]
@@ -33,6 +64,26 @@ class SlingModuleTest extends BaseSetup {
         }
 
         response = responseBuilder.build()
+
+        ContextFactory factory = injector.getInstance(ContextFactory.class)
+
+        Context context = factory.getServletRequestContext("injector-name", request, response)
+        contextScope.setContextProvider(new ConstantContextProvider(context))
+
+        modelProvider = injector.getInstance(ModelProvider.class)
+    }
+
+
+    def "Get Suffix"() {
+        setup: "Init model"
+        def SlingModuleInjectionsModel model = modelProvider.get(SlingModuleInjectionsModel.class, '/content/foo')
+        def suffix = model.getSuffix()
+
+        expect: "Suffix is not null"
+        Assert.assertNotNull(suffix)
+
+        and: "Suffix is equal to 'suff'"
+        Assert.assertEquals("suff", suffix)
     }
 
     def "Get Sling Http Servlet Request"() {
@@ -95,13 +146,14 @@ class SlingModuleTest extends BaseSetup {
     }
 
     def "Get Extension"() {
-        setup: "Get extension"
-        def extension = slingModule.getExtension(request.getRequestPathInfo())
+        setup: "Init model"
+        def SlingModuleInjectionsModel model = modelProvider.get(SlingModuleInjectionsModel.class, '/content/foo')
+        def extension = model.getExtension()
 
         expect: "Extension is not null"
         Assert.assertNotNull(extension)
 
-        and: "Extension is equal to html"
+        and: "Extension is equal to 'html'"
         Assert.assertEquals("html", extension)
     }
 
@@ -113,17 +165,6 @@ class SlingModuleTest extends BaseSetup {
         thrown(NullPointerException)
     }
 
-    def "Get Suffix"() {
-        setup: "Get Suffix"
-        def suffix = slingModule.getSuffix(request.getRequestPathInfo())
-
-        expect: "Suffix is not null"
-        Assert.assertNotNull(suffix)
-
-        and: "Suffix is equal to 'suff'"
-        Assert.assertEquals("suff", suffix)
-    }
-
     def "Get Suffix by a null Request Path Info"() {
         when: "Get Suffix by a null Request Path Info"
         slingModule.getSuffix(null)
@@ -132,68 +173,6 @@ class SlingModuleTest extends BaseSetup {
         thrown(NullPointerException)
     }
 
-    def "Get Selectors"() {
-        setup: "Get Selectors"
-        def selectors = slingModule.getSelectors(request.getRequestPathInfo())
 
-        expect: "Selectors are not null"
-        Assert.assertNotNull(selectors)
-
-        and: "There are two selectors"
-        Assert.assertEquals(2, selectors.size())
-
-        and: "First selector is equal to 'one'"
-        Assert.assertEquals("one", selectors[0])
-
-        and: "Second selector is equal to 'two'"
-        Assert.assertEquals("two", selectors[1])
-    }
-
-    def "Get Selectors by a null Request Path Info"() {
-        when: "Get Selectors by a null Request Path Info"
-        slingModule.getSelectors(null)
-
-        then: "Null Pointer Exception is thrown"
-        thrown(NullPointerException)
-    }
-
-    def "Get Selectors as List"() {
-        setup: "Get Selectors as List"
-        def selectors = slingModule.getSelectorsAsList(request.getRequestPathInfo())
-
-        expect: "Selectors are not null"
-        Assert.assertNotNull(selectors)
-
-        and: "Selectors are returned as a List"
-        Assert.assertTrue(selectors instanceof List)
-
-        and: "There are two selectors"
-        Assert.assertEquals(2, selectors.size())
-
-        and: "First selector is equal to 'one'"
-        Assert.assertEquals("one", selectors[0])
-
-        and: "Second selector is equal to 'two'"
-        Assert.assertEquals("two", selectors[1])
-    }
-
-    def "Get Selectors as List by a null Request Path Info"() {
-        when: "Get Selectors by a null Request Path Info"
-        slingModule.getSelectorsAsList(null)
-
-        then: "Selectors are not null"
-        thrown(NullPointerException)
-    }
-
-    def "Get Selectors String"() {
-        setup: "Get Selectors String"
-        def selectors = slingModule.getSelectorsString(request.getRequestPathInfo())
-
-        expect: "Selectors string is not null"
-        Assert.assertNotNull(selectors)
-
-        and: "Selectors string is equal to 'one.two'"
-        Assert.assertEquals("one.two", selectors)
-    }
 
 }
