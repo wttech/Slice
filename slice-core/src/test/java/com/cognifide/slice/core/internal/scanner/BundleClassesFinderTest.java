@@ -134,6 +134,6 @@ public class BundleClassesFinderTest {
 		bundleSetup();
 		Collection<Class<?>> classes = classFinder.traverseBundlesForOsgiServices(Lists.newArrayList(bundle));
 		Assert.assertEquals(classes.size(), 1);
-		Assert.assertTrue(new ArrayList<Class<?>>(classes).get(0).getSimpleName().equals("Long"));
+		Assert.assertEquals("Long", new ArrayList<Class<?>>(classes).get(0).getSimpleName());
 	}
 }
