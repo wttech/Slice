@@ -1,4 +1,4 @@
-package com.cognifide.core.provider
+package com.cognifide.slice.core.provider
 
 import com.cognifide.slice.test.module.SimpleModel
 import com.cognifide.slice.test.setup.BaseSetup
