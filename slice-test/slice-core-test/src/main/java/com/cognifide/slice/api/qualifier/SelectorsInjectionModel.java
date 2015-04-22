@@ -19,7 +19,7 @@ public class SelectorsInjectionModel {
     private String selectorsAsString;
 
     @Inject
-    public SelectorsInjectionModel(@Selectors String[] selectors, @Selectors List<String> selectorsAsList, @SelectorString String selectorsAsString) {
+    public SelectorsInjectionModel(@Selectors String[] selectors, @Selectors List<String> selectorsAsList, @SelectorString @Nullable String selectorsAsString) {
         this.selectors = selectors;
         this.selectorsAsList = selectorsAsList;
         this.selectorsAsString = selectorsAsString;

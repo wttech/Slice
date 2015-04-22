@@ -73,19 +73,6 @@ class SlingModuleInjectionsTest extends ProsperSpec {
         modelProvider = injector.getInstance(ModelProvider.class)
     }
 
-
-    def "Get Suffix"() {
-        setup: "Init model"
-        def SlingModuleInjectionsModel model = modelProvider.get(SlingModuleInjectionsModel.class, '/content/foo')
-        def suffix = model.getSuffix()
-
-        expect: "Suffix is not null"
-        Assert.assertNotNull(suffix)
-
-        and: "Suffix is equal to 'suff'"
-        Assert.assertEquals("suff", suffix)
-    }
-
     def "Get Sling Http Servlet Request"() {
         setup: "Create servlet request"
         def slingHttpServletRequest = slingModule.getSlingHttpServletRequest(request)
@@ -140,26 +127,6 @@ class SlingModuleInjectionsTest extends ProsperSpec {
     def "Get Request Path Info by a null request"() {
         when: "Get Request Path Info by a null request"
         slingModule.getRequestPathInfo(null)
-
-        then: "Throw Null Pointer Exception"
-        thrown(NullPointerException)
-    }
-
-    def "Get Extension"() {
-        setup: "Init model"
-        def SlingModuleInjectionsModel model = modelProvider.get(SlingModuleInjectionsModel.class, '/content/foo')
-        def extension = model.getExtension()
-
-        expect: "Extension is not null"
-        Assert.assertNotNull(extension)
-
-        and: "Extension is equal to 'html'"
-        Assert.assertEquals("html", extension)
-    }
-
-    def "Get Extension by a null Request Path Info"() {
-        when: "Get extension from null Request Path Info"
-        slingModule.getExtension(null)
 
         then: "Throw Null Pointer Exception"
         thrown(NullPointerException)
