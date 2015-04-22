@@ -53,8 +53,6 @@ public class ClassURLProducer {
 			rootPath = absolutePath + "/" + moduleName;
 		}
 
-		System.out.println("absolutePath : " + absolutePath);
-
 		Set<URL> urlSet = new LinkedHashSet<URL>();
 		for (String classPath : classPaths) {
 			URL url = null;
