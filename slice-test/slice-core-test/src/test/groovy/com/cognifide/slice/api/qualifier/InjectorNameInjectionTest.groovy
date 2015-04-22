@@ -12,10 +12,7 @@ import spock.lang.Shared
  * Date: 4/22/15 1:58 PM
  */
 class InjectorNameInjectionTest extends InjectorsTestSetup {
-
-    @Shared
-    SliceModule sliceModule
-
+    
     @Shared
     Injector injector
 

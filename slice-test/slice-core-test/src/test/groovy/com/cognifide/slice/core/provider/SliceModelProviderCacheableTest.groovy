@@ -84,6 +84,22 @@ class SliceModelProviderCacheableTest extends BaseSetup {
         Assert.assertTrue(modelA==modelB)
     }
 
+    def "Get cacheable pojo by class for null path"() {
+        def path = "/content/foo/jcr:content"
+
+        setup: "Creating model for path: null"
+
+        SimpleCacheablePojo modelA = modelProvider.get(SimpleCacheablePojo.class, null);
+        SimpleCacheablePojo modelB = modelProvider.get(SimpleCacheablePojo.class, null);
+
+        expect: "Model should not be null"
+        Assert.assertNotNull(modelA)
+        Assert.assertNotNull(modelB)
+
+        and: "Model provider should deliver the same pojo instance on each request"
+        Assert.assertTrue(modelA==modelB)
+    }
+
     def "Get cacheable pojos for different paths"() {
         def path1 = "/content/foo/jcr:content"
         def path2 = "/content/foo2/jcr:content"
