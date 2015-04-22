@@ -1,6 +1,5 @@
 package com.cognifide.slice.api.qualifier
 
-import com.cognifide.slice.core.modules.SlingModuleInjectionsModel
 import junit.framework.Assert
 
 /**

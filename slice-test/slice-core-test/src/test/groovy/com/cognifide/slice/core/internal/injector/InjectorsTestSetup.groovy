@@ -28,10 +28,13 @@ class InjectorsTestSetup extends ProsperSpec{
     @Shared
     InjectorsRepositoryService repositoryService
 
+    @Shared
+    SliceModule sliceModule
+
     def setup() {
         ContextScope contextScope = new SliceContextScope()
         List<Module> modules = new ArrayList<Module>()
-        modules.add(new SliceModule(contextScope, null))
+        modules.add(sliceModule = new SliceModule(contextScope, null))
         modules.add(new SlingModule(contextScope))
         modules.add(new JcrModule())
         modules.add(new MapperModule())
