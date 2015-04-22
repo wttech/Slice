@@ -32,14 +32,29 @@ class BaseSetup extends ProsperSpec {
     @Shared
     protected ModelProvider modelProvider
 
+    @Shared
+    protected SliceModule sliceModule
+
+    @Shared
+    protected SlingModule slingModule
+
+    @Shared
+    protected JcrModule jcrModule
+
+    @Shared
+    protected MapperModule mapperModule
+
+    @Shared
+    protected SliceResourceModule sliceResourceModule
+
     def setup() {
         ContextScope contextScope = new SliceContextScope()
         List<Module> modules = new ArrayList<Module>()
-        modules.add(new SliceModule(contextScope, null))
-        modules.add(new SlingModule(contextScope))
-        modules.add(new JcrModule())
-        modules.add(new MapperModule())
-        modules.add(new SliceResourceModule())
+        modules.add(sliceModule = new SliceModule(contextScope, null))
+        modules.add(slingModule = new SlingModule(contextScope))
+        modules.add(jcrModule = new JcrModule())
+        modules.add(mapperModule = new MapperModule())
+        modules.add(sliceResourceModule = new SliceResourceModule())
         modules.add(new TestModule())
 
         injector = Guice.createInjector(modules)

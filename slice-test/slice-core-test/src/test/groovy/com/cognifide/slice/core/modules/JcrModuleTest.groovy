@@ -1,6 +1,5 @@
 package com.cognifide.slice.core.modules
 
-import com.cognifide.slice.core.internal.module.JcrModule
 import com.cognifide.slice.test.setup.BaseSetup
 import junit.framework.Assert
 
@@ -13,13 +12,11 @@ import javax.jcr.query.QueryManager
 class JcrModuleTest extends BaseSetup {
 
     def "Get Query Manager test"() {
-        setup: "Get JcrModule from injector"
-        def module = injector.getInstance(JcrModule.class)
-        and: "Get Query Manager by a null Resource Resolver"
-        def queryManager = module.getQueryManager(resourceResolver)
+        setup: "Get Query Manager by a null Resource Resolver"
+        def queryManager = jcrModule.getQueryManager(resourceResolver)
 
         expect: "Module is not null"
-        Assert.assertNotNull(module)
+        Assert.assertNotNull(jcrModule)
 
         and: "Query Manager is not null"
         Assert.assertNotNull(queryManager);
@@ -29,11 +26,8 @@ class JcrModuleTest extends BaseSetup {
     }
 
     def "Query Manager Manager by null Resource Resolver"() {
-        setup: "Get JcrModule from injector"
-        def module = injector.getInstance(JcrModule.class)
-
         when: "Get Query Manager by a null Resource Resolver"
-        module.getQueryManager(null)
+        jcrModule.getQueryManager(null)
         then: "Throw NullPointerException"
         thrown(NullPointerException)
     }
