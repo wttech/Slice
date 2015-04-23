@@ -90,7 +90,7 @@ public class BundleClassesFinderTest {
 				"com/cognifide/slice/testhelper/TestBundleClass3",
 				"com/cognifide/slice/testhelper/TestBundleClass4");
 
-		ClassURLProducer classURLProducer = new ClassURLProducer("slice-core", Sets.newHashSet(classList));
+		ClassURLProducer classURLProducer = new ClassURLProducer(Sets.newHashSet(classList));
 		Set<URL> set = classURLProducer.getUrls();
 		Enumeration<URL> classEntries = new Vector(set).elements();
 		when(bundle.findEntries("test", "*.class", true)).thenReturn(classEntries);

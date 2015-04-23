@@ -19,12 +19,6 @@
  */
 package com.cognifide.slice.testhelper;
 
-import com.google.common.base.Joiner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -34,34 +28,19 @@ import java.util.Set;
  */
 public class ClassURLProducer {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ClassURLProducer.class);
-
-	private String moduleName;
-
 	private Set<String> classPaths;
 
-	public ClassURLProducer(String moduleName, Set<String> classPaths) {
-		this.moduleName = moduleName;
+	public ClassURLProducer(Set<String> classPaths) {
 		this.classPaths = classPaths;
 	}
 
 	public Set<URL> getUrls() {
-		String absolutePath = new File("").getAbsolutePath();
-
-		String rootPath = absolutePath;
-		if (!absolutePath.endsWith(moduleName)) {
-			rootPath = absolutePath + "/" + moduleName;
-		}
 
 		Set<URL> urlSet = new LinkedHashSet<URL>();
 		for (String classPath : classPaths) {
-			URL url = null;
-			try {
-				url = new File(Joiner.on("/").join(rootPath, "target/test-classes", classPath) + ".class")
-						.toURI().toURL();
+			URL url = getClass().getClassLoader().getResource(classPath + ".class");
+			if (url != null) {
 				urlSet.add(url);
-			} catch (MalformedURLException e) {
-				LOG.error("Can not read class: " + classPath, e);
 			}
 		}
 		return urlSet;
