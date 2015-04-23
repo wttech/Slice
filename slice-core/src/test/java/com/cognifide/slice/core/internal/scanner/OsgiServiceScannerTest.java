@@ -76,7 +76,7 @@ public class OsgiServiceScannerTest {
 	@Test
 	public void testFindResources() {
 		Collection<Class<?>> classes = osgiServiceScanner.findResources("filterName", "test");
-		Assert.assertEquals(classes.size(), 1);
+		Assert.assertEquals(1, classes.size());
 		Assert.assertEquals("Long", new ArrayList<Class<?>>(classes).get(0).getSimpleName());
 
 	}
