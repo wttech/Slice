@@ -22,7 +22,7 @@ class SliceModelProviderTest extends BaseSetup {
     }
 
     def "Content exists"() {
-        expect:"Created content exists"
+        expect: "Created content exists"
         assertPageExists("/content/foo")
     }
 
@@ -94,6 +94,28 @@ class SliceModelProviderTest extends BaseSetup {
         Assert.assertNull(models[1].getProp1())
     }
 
+    def "Get a list of models by class and paths - null paths"() {
+        setup: "Creating model for paths: " << null
+        def models = modelProvider.getList(SimpleModel.class, (String[]) null)
+
+        expect: "List of models should not be null"
+        Assert.assertNotNull(models)
+
+        and: "List should be empty"
+        Assert.assertEquals(0, models.size())
+    }
+
+  def "Get a list of models by class and paths iterator - null iterator"() {
+        setup: "Creating model for paths: " << null
+        def models = modelProvider.getList(SimpleModel.class, (Iterator<String>) null)
+
+        expect: "List of models should not be null"
+        Assert.assertNotNull(models)
+
+        and: "List should be empty"
+        Assert.assertEquals(0, models.size())
+    }
+
     def "Get a list of models by class and resources iterator - non existing (null) resources"() {
         def nonExistingPath1 = "/content/bar"
         def nonExistingPath2 = "/content/bar/foo"
@@ -104,6 +126,17 @@ class SliceModelProviderTest extends BaseSetup {
 
         then: "Throw ProvisionException - either path or resource should be set"
         thrown(ProvisionException)
+    }
+
+    def "Get a list of models by class and resources iterator - null iterator"() {
+        setup: "Creating model for paths: " << null
+        List<SimpleModel> result = modelProvider.getListFromResources(SimpleModel.class, null)
+
+        expect: "Result should be not null"
+        Assert.assertNotNull(result)
+
+        and: "An empty list should be returned"
+        Assert.assertEquals(0, result.size())
     }
 
     def "Get Child Models of non-existing parent path"() {

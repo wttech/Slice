@@ -64,4 +64,12 @@ class SliceModuleTest extends BaseSetup {
         Assert.assertNull(requestedResourcePath)
     }
 
+    def "Get bundle"() {
+        setup: "Get bundle"
+        def bundle = sliceModule.getBundle()
+
+        and: "Bundle is null"
+        Assert.assertNull(bundle)
+    }
+
 }
