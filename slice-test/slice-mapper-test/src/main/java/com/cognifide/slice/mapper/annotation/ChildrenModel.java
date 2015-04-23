@@ -15,6 +15,10 @@ public class ChildrenModel {
 	@JcrProperty(value = "children")
 	private List<JcrPropertyModel> childrenList;
 
+	@Children(JcrPropertyModel.class)
+	@JcrProperty(value = "children")
+	private JcrPropertyModel[] childrenArray;
+
 	public String getText() {
 		return text;
 	}
@@ -22,4 +26,8 @@ public class ChildrenModel {
 	public List<JcrPropertyModel> getChildrenList() {
 		return childrenList;
 	}
+
+    public JcrPropertyModel[] getChildrenArray() {
+        return childrenArray;
+    }
 }
