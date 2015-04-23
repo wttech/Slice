@@ -1,7 +1,6 @@
 package com.cognifide.slice.api.qualifier
 
 import com.cognifide.slice.core.internal.injector.InjectorsTestSetup
-import com.cognifide.slice.core.internal.module.SliceModule
 import com.google.inject.Injector
 import junit.framework.Assert
 import spock.lang.Shared
