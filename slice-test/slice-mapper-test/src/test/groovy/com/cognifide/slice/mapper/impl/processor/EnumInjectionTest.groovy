@@ -1,5 +1,7 @@
-package com.cognifide.slice.mapper.annotation
+package com.cognifide.slice.mapper.impl.processor
 
+import com.cognifide.slice.mapper.annotation.EnumInjectionModel
+import com.cognifide.slice.mapper.annotation.SimpleEnum
 import com.cognifide.slice.test.setup.BaseSetup
 import junit.framework.Assert
 

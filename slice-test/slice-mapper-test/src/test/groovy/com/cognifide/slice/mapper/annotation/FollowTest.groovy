@@ -37,6 +37,34 @@ class FollowTest extends BaseSetup {
         checkJcrPropertyModel(followModel.getJcrPropertyModel())
     }
 
+    def "Follow test with null value"() {
+        setup: "Create a test content, under path '/content/bar', with property 'jcrPropertyModel' set to null"
+        pageBuilder.content {
+            bar("cq:PageContent") {
+                "jcr:content"("jcrPropertyModel": null)
+            }
+        }
+        when: "Getting Follow model, based on null path"
+        modelProvider.get(FollowModel.class, "/content/bar/jcr:content")
+
+        then: "ProvisionException should be thrown - resource can not be null"
+        thrown(ProvisionException)
+    }
+
+    def "Follow test with non-string value"() {
+        setup: "Create a test content, under path '/content/bar', with property 'jcrPropertyModel' set to null"
+        pageBuilder.content {
+            bar("cq:PageContent") {
+                "jcr:content"("jcrPropertyModel": true)
+            }
+        }
+        when: "Getting Follow model, based on non-string property"
+        modelProvider.get(FollowModel.class, "/content/bar/jcr:content")
+
+        then: "ProvisionException should be thrown - resource can not be null"
+        thrown(ProvisionException)
+    }
+
     @FailsWith(ProvisionException)
     def "Follow test with non-existing follow resource"() {
         setup:

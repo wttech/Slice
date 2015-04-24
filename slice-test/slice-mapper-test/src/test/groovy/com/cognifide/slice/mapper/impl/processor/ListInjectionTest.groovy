@@ -1,5 +1,6 @@
-package com.cognifide.slice.mapper.annotation
+package com.cognifide.slice.mapper.impl.processor
 
+import com.cognifide.slice.mapper.annotation.ListInjectionModel
 import com.cognifide.slice.test.setup.BaseSetup
 import junit.framework.Assert
 
