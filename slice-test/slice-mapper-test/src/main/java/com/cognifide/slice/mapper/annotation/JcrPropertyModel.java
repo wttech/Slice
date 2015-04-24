@@ -16,6 +16,12 @@ public class JcrPropertyModel {
 	@JcrProperty
 	private int size;
 
+	@JcrProperty(value = "size")
+	private final int sizeFinal = 0;
+
+	@JcrProperty(value = "size")
+	private static int sizeStatic = 0;
+
 	public String getText() {
 		return text;
 	}
@@ -26,5 +32,13 @@ public class JcrPropertyModel {
 
 	public int getSize() {
 		return size;
+	}
+
+	public int getSizeFinal() {
+		return sizeFinal;
+	}
+
+	public static int getSizeStatic() {
+		return sizeStatic;
 	}
 }
