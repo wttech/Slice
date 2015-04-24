@@ -71,7 +71,7 @@ class AdapterBaseSetup extends ProsperSpec {
         [sliceAdapterFactory = sliceAdapterFactory, injectorRepositoryAdapterFactory = new InjectorRepositoryAdapterFactory()]
     }
 
-    private void injectPrivateField(Object targetObject, Object objectToInject, String fieldName) {
+    protected void injectPrivateField(Object targetObject, Object objectToInject, String fieldName) {
         if (targetObject != null) {
             Field f = targetObject.getClass().getDeclaredField(fieldName)
             f.setAccessible(true)
@@ -79,7 +79,7 @@ class AdapterBaseSetup extends ProsperSpec {
         }
     }
 
-    private RequestContextProvider createRequestContextProvider() {
+    protected RequestContextProvider createRequestContextProvider() {
         final ContextScope scope = contextScope;
         return new RequestContextProvider() {
             @Override
@@ -119,7 +119,6 @@ class AdapterBaseSetup extends ProsperSpec {
         bindConfigMethod.invoke(injectorHierarchy, config)
 
         injectPrivateField(injectorRepositoryAdapterFactory, repositoryService, "repository")
-        injectPrivateField(injectorRepositoryAdapterFactory, createRequestContextProvider(), "requestContextProvider")
 
         injector = repositoryService.getInjector("slice-test").getInjector()
 

@@ -18,7 +18,7 @@ class SliceAdapterFactoryTest extends AdapterBaseSetup {
         }
     }
 
-    def "resource is adaptable to multiple types"() {
+    def "resource is adaptable to multiple types without RequestContextProvider"() {
         setup:
         def path = "/content/foo/jcr:content"
         def resource = resourceResolver.getResource(path)
@@ -30,4 +30,22 @@ class SliceAdapterFactoryTest extends AdapterBaseSetup {
         and:
         Assert.assertEquals("prop1Value", model.getProp1())
     }
+
+    def "resource is adaptable to multiple types with RequestContextProvider"() {
+        setup:
+        injectPrivateField(injectorRepositoryAdapterFactory, createRequestContextProvider(), "requestContextProvider")
+
+        def path = "/content/foo/jcr:content"
+        def resource = resourceResolver.getResource(path)
+        def SimpleModel model = resource.adaptTo(SimpleModel.class)
+
+        expect:
+        Assert.assertNotNull(model)
+
+        and:
+        Assert.assertEquals("prop1Value", model.getProp1())
+    }
+
+
+
 }
