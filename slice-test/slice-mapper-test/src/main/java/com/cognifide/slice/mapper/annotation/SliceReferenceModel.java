@@ -1,5 +1,7 @@
 package com.cognifide.slice.mapper.annotation;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * @author Mariusz Kubiś Date: 14.04.15
  */
@@ -20,4 +22,27 @@ public class SliceReferenceModel {
 	public JcrPropertyModel getPropertyModel() {
 		return propertyModel;
 	}
+
+}
+
+@SliceResource
+class EmptySliceReferenceModel {
+    @SliceReference(StringUtils.EMPTY)
+    @JcrProperty
+    private JcrPropertyModel propertyModel;
+
+    JcrPropertyModel getPropertyModel() {
+        return propertyModel;
+    }
+}
+
+@SliceResource
+class SliceReferenceRelativePathModel {
+    @SliceReference("propertyModel")
+    @JcrProperty
+    private JcrPropertyModel propertyModel;
+
+    JcrPropertyModel getPropertyModel() {
+        return propertyModel;
+    }
 }

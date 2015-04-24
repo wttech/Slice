@@ -1,6 +1,7 @@
 package com.cognifide.slice.mapper.annotation
 
 import com.cognifide.slice.test.setup.BaseSetup
+import com.google.inject.ProvisionException
 import org.junit.Assert
 
 /**
@@ -53,5 +54,45 @@ class SliceReferenceTest extends BaseSetup {
 
         and: "Referenced Model has a correct value for a property 'size'"
         Assert.assertEquals(propertyModel.getSize(), 5)
+    }
+
+    def "Slice Reference with empty path"() {
+        def path = "/content/foo/jcr:content"
+        when: "Get a model with empty Slice Reference path"
+        modelProvider.get(EmptySliceReferenceModel.class, path)
+
+        then: "Provision Exception is thrown"
+        thrown(ProvisionException)
+    }
+
+    def "Slice Reference with nested path"() {
+        def path = "/content/foo";
+        setup: "Create a content"
+        pageBuilder.content {
+            foo("cq:PageContent") {
+                "jcr:content"() {
+                    "propertyModel"("text": "Test1", "style": "Style", "size": 5)
+                }
+            }
+        }
+        and: "Get a model"
+        SliceReferenceRelativePathModel sliceReferenceModel = modelProvider.get(SliceReferenceRelativePathModel.class, path + "/jcr:content")
+        and: "Get a property model from Slice Reference Model"
+        JcrPropertyModel propertyModel = sliceReferenceModel.getPropertyModel()
+
+        expect: "Model is not null"
+        Assert.assertNotNull(sliceReferenceModel)
+
+        and: "Referenced Model is not null"
+        Assert.assertNotNull(propertyModel)
+
+        and: "Referenced Model has a correct value for a property 'text'"
+        Assert.assertEquals("Test1", propertyModel.getText())
+
+        and: "Referenced Model has a correct value for a property 'secondProperty'"
+        Assert.assertEquals("Style", propertyModel.getSecondProperty())
+
+        and: "Referenced Model has a correct value for a property 'size'"
+        Assert.assertEquals(5, propertyModel.getSize())
     }
 }
