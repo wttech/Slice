@@ -31,3 +31,27 @@ public class ChildrenModel {
         return childrenArray;
     }
 }
+
+@SliceResource
+class ChildrenModelWithInvalidReference {
+
+    @Children(JcrPropertyModel.class)
+    @JcrProperty(value = "/children")
+    private List<JcrPropertyModel> childrenList;
+
+    List<JcrPropertyModel> getChildrenList() {
+        return childrenList;
+    }
+}
+
+@SliceResource
+class ChildrenModelWithInvalidChildrenClass {
+
+    @Children(BooleanInjectionModel.class)
+    @JcrProperty(value = "children")
+    private JcrPropertyModel[] childrenList;
+
+    JcrPropertyModel[] getChildrenList() {
+        return childrenList;
+    }
+}
