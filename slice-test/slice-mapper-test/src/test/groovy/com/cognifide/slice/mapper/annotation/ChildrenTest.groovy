@@ -34,6 +34,32 @@ class ChildrenTest extends BaseSetup {
         checkJcrPropertyModel(item_0, "Test2", "Style2", 2)
     }
 
+    def "Children test (mapping to array)"() {
+        setup:
+        pageBuilder.content {
+            test("cq:PageContent") {
+                "jcr:content"("text": "Test") {
+                    "children"("sling:Folder") {
+                        "item"("text": "Test1", "style": "Style1", "size": 1)
+                        "item_0"("text": "Test2", "style": "Style2", "size": 2)
+                    }
+                }
+            }
+        }
+
+        ChildrenModel childrenModel = modelProvider.get(ChildrenModel.class, "/content/test/jcr:content")
+
+        expect:
+        Assert.assertEquals("Test", childrenModel.getText())
+        Assert.assertEquals(2, childrenModel.getChildrenArray().length)
+
+        JcrPropertyModel item = childrenModel.getChildrenArray()[0]
+        checkJcrPropertyModel(item, "Test1", "Style1", 1)
+
+        JcrPropertyModel item_0 = childrenModel.getChildrenArray()[1]
+        checkJcrPropertyModel(item_0, "Test2", "Style2", 2)
+    }
+
     def "Children test with non-existing children resource"() {
         setup:
         pageBuilder.content {

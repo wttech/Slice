@@ -71,9 +71,11 @@ class SelectorsInjectionTest extends InjectionTestBase {
 
         expect: "Selectors are not null"
         Assert.assertNotNull(selectors)
+        Assert.assertNotNull(selectorsList)
 
         and: "There are no selectors"
         Assert.assertEquals(0, selectors.size())
+        Assert.assertEquals(0, selectorsList.size())
     }
 
     def "Get Selectors as List for empty request"() {

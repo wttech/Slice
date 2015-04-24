@@ -19,9 +19,12 @@
  */
 package com.cognifide.slice.testhelper;
 
+import com.cognifide.slice.mapper.annotation.SliceResource;
+
 /**
  * @author Mariusz Kubiś Date: 22.04.15
  */
+@SliceResource
 public class TestBundleClass2 {
 
 }

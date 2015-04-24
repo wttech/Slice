@@ -7,13 +7,13 @@ import org.junit.Assert
  * @author Mariusz Kubiś
  * Date: 10.04.15
  */
-class JcrPropertyTest extends BaseSetup{
+class JcrPropertyTest extends BaseSetup {
 
     def "Jcr properties test"() {
         setup:
         pageBuilder.content {
             foo("foo") {
-                "jcr:content"("text": "Test", "style": "Style", "size" : 5)
+                "jcr:content"("text": "Test", "style": "Style", "size": 5)
             }
         }
         expect:
@@ -23,5 +23,7 @@ class JcrPropertyTest extends BaseSetup{
         Assert.assertEquals(jcrPropertyModel.getText(), "Test")
         Assert.assertEquals(jcrPropertyModel.getSecondProperty(), "Style")
         Assert.assertEquals(jcrPropertyModel.getSize(), 5)
+        Assert.assertEquals(jcrPropertyModel.getSizeFinal(), 0)
+        Assert.assertEquals(jcrPropertyModel.getSizeStatic(), 0)
     }
 }

@@ -1,5 +1,6 @@
 package com.cognifide.slice.api.qualifier
 
+import com.google.inject.Key
 import junit.framework.Assert
 
 import javax.jcr.query.QueryManager
@@ -11,10 +12,10 @@ import javax.jcr.query.QueryManager
 class QueryManagerInjectionTest extends InjectionTestBase {
 
     def "Get Query Manager"() {
-        setup: "Init model"
+        setup: "Initialize context with a filled request"
         richRequestContext()
-        def model = modelProvider.get(QueryManagerInjectionModel.class, "/content/foo")
-        def queryManager = model.getQueryManager()
+        and: "Get Query Manager from injector"
+        def queryManager = injector.getInstance(Key.get(QueryManager.class))
 
         expect: "Query Manager is not null"
         Assert.assertNotNull(queryManager)
@@ -23,11 +24,11 @@ class QueryManagerInjectionTest extends InjectionTestBase {
         Assert.assertTrue(queryManager instanceof QueryManager)
     }
 
-    def "Get Query Manager with an empty request"() {
-        setup: "Init model"
+    def "Get Query Manager - empty request"() {
+        setup: "Initialize context with an empty request"
         emptyRequestContext()
-        def model = modelProvider.get(QueryManagerInjectionModel.class, "/content/foo")
-        def queryManager = model.getQueryManager()
+        and: "Get Query Manager from injector"
+        def queryManager = injector.getInstance(Key.get(QueryManager.class))
 
         expect: "Query Manager is not null"
         Assert.assertNotNull(queryManager)

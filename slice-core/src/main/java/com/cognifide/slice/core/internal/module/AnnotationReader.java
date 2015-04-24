@@ -58,22 +58,19 @@ public class AnnotationReader extends ClassVisitor {
 	/**
 	 * Verifies if a class contains a specified annotation or not
 	 *
-	 * @param annotation
+	 * @param annotation Annotation class
 	 * @return <code>true</code> if a class is annotated by specified annotation, <code>false</code> otherwise
 	 */
 	public boolean isAnnotationPresent(Class<? extends Annotation> annotation) {
-		boolean result;
-		if (annotations != null) {
-			String name = annotation.getName();
-			result = annotations.contains(name);
-		} else {
-			result = false;
-		}
-		return result;
+		String name = annotation.getName();
+		return annotations.contains(name);
 	}
 
 	private String getAnnotationClassName(String rawName) {
 		return rawName.substring(1, rawName.length() - 1).replace('/', '.');
 	}
 
+	public List<String> getAnnotations() {
+		return annotations;
+	}
 }

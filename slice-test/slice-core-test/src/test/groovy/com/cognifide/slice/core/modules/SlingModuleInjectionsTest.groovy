@@ -22,6 +22,9 @@ import org.apache.sling.api.SlingHttpServletResponse
 import org.apache.sling.api.resource.ResourceResolver
 import spock.lang.Shared
 
+import javax.servlet.ServletRequestWrapper
+import javax.servlet.ServletResponseWrapper
+
 /**
  * User: krzysztof.ryk@solsoft.pl
  * Date: 4/22/15 10:55 AM
@@ -95,6 +98,24 @@ class SlingModuleInjectionsTest extends ProsperSpec {
 
         then: "Throw Illegal State Exception - response has an invalid class"
         thrown(IllegalStateException)
+    }
+
+    def "Get Sling Http Servlet Request from Servlet Request Wrapper"() {
+        setup: "Create servlet request wrapper"
+        ServletRequestWrapper servletRequestWrapper = new ServletRequestWrapper(request)
+        def slingHttpServletRequest = slingModule.getSlingHttpServletRequest(servletRequestWrapper)
+
+        expect: "Request is not null"
+        Assert.assertNotNull(slingHttpServletRequest)
+    }
+
+    def "Get Sling Http Servlet Response from Servlet Response Wrapper"() {
+        setup: "Create servlet response wrapper"
+        ServletResponseWrapper servletResponseWrapper = new ServletResponseWrapper(response)
+        def slingHttpServletResponse = slingModule.getSlingHttpServletResponse(servletResponseWrapper)
+
+        expect: "Response is not null"
+        Assert.assertNotNull(slingHttpServletResponse)
     }
 
     def "Get Resource Resolver"() {

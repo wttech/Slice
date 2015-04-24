@@ -1,5 +1,6 @@
 package com.cognifide.slice.test.module;
 
+import com.cognifide.slice.api.model.InitializableModel;
 import com.cognifide.slice.mapper.annotation.JcrProperty;
 import com.cognifide.slice.mapper.annotation.SliceResource;
 
@@ -8,12 +9,17 @@ import com.cognifide.slice.mapper.annotation.SliceResource;
  * Date: 4/21/15 1:28 PM
  */
 @SliceResource
-public class SimpleModel {
+public class SimpleModel implements InitializableModel {
 
     @JcrProperty
     private String prop1;
 
     public String getProp1() {
         return prop1;
+    }
+
+    @Override
+    public void afterCreated() {
+        // empty implementation
     }
 }
