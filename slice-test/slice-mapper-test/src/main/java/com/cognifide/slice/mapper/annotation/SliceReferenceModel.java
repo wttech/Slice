@@ -26,23 +26,42 @@ public class SliceReferenceModel {
 }
 
 @SliceResource
-class EmptySliceReferenceModel {
-    @SliceReference(StringUtils.EMPTY)
-    @JcrProperty
-    private JcrPropertyModel propertyModel;
+class SliceReferenceModelWithEmptyPlaceholderReference {
 
-    JcrPropertyModel getPropertyModel() {
-        return propertyModel;
-    }
+	@JcrProperty
+	private String text;
+
+	@SliceReference("${a0_}")
+	@JcrProperty
+	private JcrPropertyModel propertyModel;
+
+	public String getText() {
+		return text;
+	}
+
+	public JcrPropertyModel getPropertyModel() {
+		return propertyModel;
+	}
+}
+
+@SliceResource
+class EmptySliceReferenceModel {
+	@SliceReference(StringUtils.EMPTY)
+	@JcrProperty
+	private JcrPropertyModel propertyModel;
+
+	JcrPropertyModel getPropertyModel() {
+		return propertyModel;
+	}
 }
 
 @SliceResource
 class SliceReferenceRelativePathModel {
-    @SliceReference("propertyModel")
-    @JcrProperty
-    private JcrPropertyModel propertyModel;
+	@SliceReference("propertyModel")
+	@JcrProperty
+	private JcrPropertyModel propertyModel;
 
-    JcrPropertyModel getPropertyModel() {
-        return propertyModel;
-    }
+	JcrPropertyModel getPropertyModel() {
+		return propertyModel;
+	}
 }

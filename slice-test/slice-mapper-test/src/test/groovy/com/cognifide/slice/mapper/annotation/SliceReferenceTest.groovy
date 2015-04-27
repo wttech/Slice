@@ -65,6 +65,15 @@ class SliceReferenceTest extends BaseSetup {
         thrown(ProvisionException)
     }
 
+    def "Slice Reference with empty placeholder path"() {
+        def path = "/content/foo/jcr:content"
+        when: "Get a model with empty placeholder reference path"
+        modelProvider.get(SliceReferenceModelWithEmptyPlaceholderReference.class, path)
+
+        then: "Provision Exception is thrown"
+        thrown(ProvisionException)
+    }
+
     def "Slice Reference with nested path"() {
         def path = "/content/foo";
         setup: "Create a content"

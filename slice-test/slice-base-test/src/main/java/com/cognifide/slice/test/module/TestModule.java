@@ -20,6 +20,8 @@ public class TestModule extends AbstractModule {
 	@Provides
 	@ContextScoped
 	public SliceReferencePathResolver getSliceReferencePathResolver(Injector injector) {
-		return new SliceReferencePathResolverImpl(injector);
+		SliceReferencePathResolver sliceReferencePathResolver = new SliceReferencePathResolverImpl(injector);
+		sliceReferencePathResolver.addPlaceholder("a0_", "");
+		return sliceReferencePathResolver;
 	}
 }
