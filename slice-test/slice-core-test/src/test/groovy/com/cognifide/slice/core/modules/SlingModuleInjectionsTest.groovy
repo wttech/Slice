@@ -46,6 +46,9 @@ class SlingModuleInjectionsTest extends ProsperSpec {
     @Shared
     Injector injector
 
+    @Shared
+    ContextFactory factory
+
     def setupSpec() {
         ContextScope contextScope = new SliceContextScope()
         List<Module> modules = new ArrayList<Module>()
@@ -68,7 +71,7 @@ class SlingModuleInjectionsTest extends ProsperSpec {
 
         response = responseBuilder.build()
 
-        ContextFactory factory = injector.getInstance(ContextFactory.class)
+        factory = injector.getInstance(ContextFactory.class)
 
         Context context = factory.getServletRequestContext("injector-name", request, response)
         contextScope.setContextProvider(new ConstantContextProvider(context))
@@ -161,6 +164,12 @@ class SlingModuleInjectionsTest extends ProsperSpec {
         thrown(NullPointerException)
     }
 
+    def "Get Servlet Request Context for null request"() {
+        when: "Get Servlet Request Context for null request"
+        factory.getServletRequestContext(null, response)
 
+        then: "Thrown Illegal Argument Exception"
+        thrown(IllegalArgumentException)
+    }
 
 }
