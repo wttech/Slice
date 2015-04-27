@@ -27,31 +27,41 @@ public class ChildrenModel {
 		return childrenList;
 	}
 
-    public JcrPropertyModel[] getChildrenArray() {
-        return childrenArray;
-    }
+	public JcrPropertyModel[] getChildrenArray() {
+		return childrenArray;
+	}
 }
 
 @SliceResource
 class ChildrenModelWithInvalidReference {
 
-    @Children(JcrPropertyModel.class)
-    @JcrProperty(value = "/children")
-    private List<JcrPropertyModel> childrenList;
-
-    List<JcrPropertyModel> getChildrenList() {
-        return childrenList;
-    }
+	@Children(JcrPropertyModel.class)
+	@JcrProperty(value = "/children")
+	private List<JcrPropertyModel> childrenList;
 }
 
 @SliceResource
 class ChildrenModelWithInvalidChildrenClass {
 
-    @Children(BooleanInjectionModel.class)
-    @JcrProperty(value = "children")
-    private JcrPropertyModel[] childrenList;
+	@Children(BooleanInjectionModel.class)
+	@JcrProperty(value = "children")
+	private JcrPropertyModel[] childrenList;
+}
 
-    JcrPropertyModel[] getChildrenList() {
-        return childrenList;
-    }
+@SliceResource
+class ChildResourceNodeModel {
+
+	@JcrProperty
+	private JcrPropertyModel jcrPropertyModel;
+
+	@JcrProperty
+	private String text;
+
+	public JcrPropertyModel getJcrPropertyModel() {
+		return jcrPropertyModel;
+	}
+
+	public String getText() {
+		return text;
+	}
 }

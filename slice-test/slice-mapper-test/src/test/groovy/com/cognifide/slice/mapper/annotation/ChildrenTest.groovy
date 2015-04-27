@@ -179,6 +179,40 @@ class ChildrenTest extends BaseSetup {
         Assert.assertTrue(childrenFollowModel.getChildrenList().isEmpty())
     }
 
+    def "Get model from child node"() {
+        setup:
+        pageBuilder.content {
+            foo("cq:PageContent") {
+                "jcr:content"("text": "Test1") {
+                    jcrPropertyModel("text": "Test", "style": "Style", "size": 5)
+                }
+            }
+        }
+
+        expect:
+        assertPageExists("/content/foo")
+        ChildResourceNodeModel childResourceNodeModel = modelProvider.get(ChildResourceNodeModel.class, "/content/foo/jcr:content")
+        checkJcrPropertyModel(childResourceNodeModel.getJcrPropertyModel(), "Test", "Style", 5)
+        Assert.assertEquals("Test1", childResourceNodeModel.getText())
+    }
+
+    def "Get model from child node - non-existing child node "() {
+        setup:
+        pageBuilder.content {
+            bar("cq:PageContent") {
+                "jcr:content"("text": "Test1") {
+                }
+            }
+        }
+
+        expect:
+        assertPageExists("/content/bar")
+        ChildResourceNodeModel childResourceNodeModel = modelProvider.get(ChildResourceNodeModel.class, "/content/bar/jcr:content")
+        Assert.assertNull(childResourceNodeModel.getJcrPropertyModel())
+        Assert.assertEquals("Test1", childResourceNodeModel.getText())
+    }
+
+
     private static void checkJcrPropertyModel(JcrPropertyModel model, String text, String secondProperty, int size) {
         Assert.assertNotNull(model)
         Assert.assertEquals(model.getText(), text)
