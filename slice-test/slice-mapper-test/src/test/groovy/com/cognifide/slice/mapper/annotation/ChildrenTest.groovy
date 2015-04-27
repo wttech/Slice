@@ -35,7 +35,7 @@ class ChildrenTest extends BaseSetup {
         checkJcrPropertyModel(item_0, "Test2", "Style2", 2)
     }
 
-     def "Children test with path starting with '/'"() {
+    def "Children test with path starting with '/'"() {
         setup: "Creating initial content"
         pageBuilder.content {
             test("cq:PageContent") {
@@ -161,6 +161,22 @@ class ChildrenTest extends BaseSetup {
 
         JcrPropertyModel item_0 = childrenFollowModel.getChildrenList().get(1)
         checkJcrPropertyModel(item_0, "Test2", "Style2", 2)
+    }
+
+    def "Children and Follow test - null follow resource"() {
+        setup:
+        pageBuilder.content {
+            bar("cq:PageContent") {
+                "jcr:content"("text": "Test", "children": null)
+            }
+        }
+
+        ChildrenFollowModel childrenFollowModel = modelProvider.get(ChildrenFollowModel.class, "/content/bar/jcr:content")
+
+        expect:
+        Assert.assertEquals(childrenFollowModel.getText(), "Test")
+        Assert.assertNotNull(childrenFollowModel.getChildrenList())
+        Assert.assertTrue(childrenFollowModel.getChildrenList().isEmpty())
     }
 
     private static void checkJcrPropertyModel(JcrPropertyModel model, String text, String secondProperty, int size) {
