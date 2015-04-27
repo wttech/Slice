@@ -6,21 +6,26 @@ import org.junit.Assert
 /**
  * Created by T530 on 2015-04-21.
  */
-class InjectorsRepositoryServiceTest extends InjectorsTestSetup{
+class InjectorsRepositoryServiceTest extends InjectorsTestSetup {
 
     def "Find name of proper injector for given resource path"() {
         given: "defined injectors: 'slice-test', 'slice-test2', 'slice-test/subtest'"
+        List<String> injectors = Arrays.asList("slice-test2", "slice-test", "slice-test/subtest")
 
         when:
         String injectorNameForRes1 = repositoryService.getInjectorNameForResource("slice-test/abc/abc")
-        String injectorNameForRes2 = repositoryService.getInjectorNameForResource("slice-test/subtest/abc")
-        String injectorNameForRes3 = repositoryService.getInjectorNameForResource("slice-test3/subtest/abc")
+        String injectorNameForRes2 = repositoryService.getInjectorNameForResource("/apps/slice-test/abc/abc")
+        String injectorNameForRes3 = repositoryService.getInjectorNameForResource("slice-test/subtest/abc")
+        String injectorNameForRes4 = repositoryService.getInjectorNameForResource("slice-test3/subtest/abc")
         String injectorNameForResNull = repositoryService.getInjectorNameForResource(null)
 
         then: "find best matching injector for given resource path or return null if no matching injector found"
-        Assert.assertEquals("slice-test",injectorNameForRes1)
-        Assert.assertEquals("slice-test/subtest",injectorNameForRes2)
-        Assert.assertNull(injectorNameForRes3)
+        Assert.assertTrue(injectors.containsAll(repositoryService.getInjectorNames()) &&
+                repositoryService.getInjectorNames().containsAll(injectors))
+        Assert.assertEquals("slice-test", injectorNameForRes1)
+        Assert.assertEquals("slice-test", injectorNameForRes2)
+        Assert.assertEquals("slice-test/subtest", injectorNameForRes3)
+        Assert.assertNull(injectorNameForRes4)
         Assert.assertNull(injectorNameForResNull)
     }
 

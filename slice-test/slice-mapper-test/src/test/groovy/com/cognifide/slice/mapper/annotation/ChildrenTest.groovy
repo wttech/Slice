@@ -1,6 +1,7 @@
 package com.cognifide.slice.mapper.annotation
 
 import com.cognifide.slice.test.setup.BaseSetup
+import com.google.inject.ProvisionException
 import org.junit.Assert
 
 /**
@@ -32,6 +33,44 @@ class ChildrenTest extends BaseSetup {
 
         JcrPropertyModel item_0 = childrenModel.getChildrenList().get(1)
         checkJcrPropertyModel(item_0, "Test2", "Style2", 2)
+    }
+
+    def "Children test with path starting with '/'"() {
+        setup: "Creating initial content"
+        pageBuilder.content {
+            test("cq:PageContent") {
+                "jcr:content"("text": "Test") {
+                    "children"("sling:Folder") {
+                        "item"("text": "Test1", "style": "Style1", "size": 1)
+                        "item_0"("text": "Test2", "style": "Style2", "size": 2)
+                    }
+                }
+            }
+        }
+        when: "Get a model with invalid annotation value - it starts with '/'"
+        modelProvider.get(ChildrenModelWithInvalidReference.class, "/content/test/jcr:content")
+
+        then: "Throw Provision Exception"
+        thrown(ProvisionException)
+    }
+
+    def "Children test with invalid children type defined in annotation"() {
+        setup: "Creating initial content"
+        pageBuilder.content {
+            test("cq:PageContent") {
+                "jcr:content"("text": "Test") {
+                    "children"("sling:Folder") {
+                        "item"("text": "Test1", "style": "Style1", "size": 1)
+                        "item_0"("text": "Test2", "style": "Style2", "size": 2)
+                    }
+                }
+            }
+        }
+        when: "Get a model with invalid children type defined in annotation"
+        modelProvider.get(ChildrenModelWithInvalidChildrenClass.class, "/content/test/jcr:content")
+
+        then: "Throw Provision Exception"
+        thrown(ProvisionException)
     }
 
     def "Children test (mapping to array)"() {
@@ -122,6 +161,22 @@ class ChildrenTest extends BaseSetup {
 
         JcrPropertyModel item_0 = childrenFollowModel.getChildrenList().get(1)
         checkJcrPropertyModel(item_0, "Test2", "Style2", 2)
+    }
+
+    def "Children and Follow test - null follow resource"() {
+        setup:
+        pageBuilder.content {
+            bar("cq:PageContent") {
+                "jcr:content"("text": "Test", "children": null)
+            }
+        }
+
+        ChildrenFollowModel childrenFollowModel = modelProvider.get(ChildrenFollowModel.class, "/content/bar/jcr:content")
+
+        expect:
+        Assert.assertEquals(childrenFollowModel.getText(), "Test")
+        Assert.assertNotNull(childrenFollowModel.getChildrenList())
+        Assert.assertTrue(childrenFollowModel.getChildrenList().isEmpty())
     }
 
     private static void checkJcrPropertyModel(JcrPropertyModel model, String text, String secondProperty, int size) {
