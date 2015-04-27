@@ -103,16 +103,12 @@ public class SliceClassToKeyMapperTest {
 		testForClassName(ContextFactory.class);
 	}
 
-    @Test
+	@Test
 	public void testGetKeyForNonExistingClass() throws ClassNotFoundException {
-        String className = "NonExistingClass";
-
-        when(classLoader.loadClass(className)).thenThrow(ClassNotFoundException.class);
-
-        Key<?> key = mapper.getKey(className);
-
-        Assert.assertNull(key);
-    }
+		String className = "NonExistingClass";
+		when(classLoader.loadClass(className)).thenThrow(ClassNotFoundException.class);
+		Assert.assertNull(mapper.getKey(className));
+	}
 
 	@Test
 	public void testInternalCaching() throws ClassNotFoundException {
