@@ -10,7 +10,7 @@ import org.junit.Assert
 class ChildrenTest extends BaseSetup {
 
     def "Children test"() {
-        setup:
+        setup: "Creating initial content"
         pageBuilder.content {
             test("cq:PageContent") {
                 "jcr:content"("text": "Test") {
@@ -22,9 +22,10 @@ class ChildrenTest extends BaseSetup {
             }
         }
 
+        when: "Get a model instance by path"
         ChildrenModel childrenModel = modelProvider.get(ChildrenModel.class, "/content/test/jcr:content")
 
-        expect:
+        then: "Model has been property initialized"
         Assert.assertEquals(childrenModel.getText(), "Test")
         Assert.assertEquals(childrenModel.getChildrenList().size(), 2)
 
@@ -74,7 +75,7 @@ class ChildrenTest extends BaseSetup {
     }
 
     def "Children test (mapping to array)"() {
-        setup:
+        setup: "Creating initial content"
         pageBuilder.content {
             test("cq:PageContent") {
                 "jcr:content"("text": "Test") {
@@ -86,9 +87,10 @@ class ChildrenTest extends BaseSetup {
             }
         }
 
+        when: "Get a model instance by path"
         ChildrenModel childrenModel = modelProvider.get(ChildrenModel.class, "/content/test/jcr:content")
 
-        expect:
+        then: "Model has been property initialized"
         Assert.assertEquals("Test", childrenModel.getText())
         Assert.assertEquals(2, childrenModel.getChildrenArray().length)
 
@@ -100,7 +102,7 @@ class ChildrenTest extends BaseSetup {
     }
 
     def "Children test with non-existing children resource"() {
-        setup:
+        setup: "Creating initial content"
         pageBuilder.content {
             test1("cq:PageContent") {
                 "jcr:content"("text": "Test") {
@@ -108,15 +110,16 @@ class ChildrenTest extends BaseSetup {
             }
         }
 
+        when: "Get a model instance by path"
         ChildrenModel childrenModel = modelProvider.get(ChildrenModel.class, "/content/test1/jcr:content")
 
-        expect:
+        then: "Model has been property initialized"
         Assert.assertEquals(childrenModel.getText(), "Test")
         Assert.assertEquals(childrenModel.getChildrenList().size(), 0)
     }
 
     def "Children test with empty children items list"() {
-        setup:
+        setup: "Creating initial content"
         pageBuilder.content {
             test2("cq:PageContent") {
                 "jcr:content"("text": "Test") {
@@ -126,15 +129,16 @@ class ChildrenTest extends BaseSetup {
             }
         }
 
+        when: "Get a model instance by path"
         ChildrenModel childrenModel = modelProvider.get(ChildrenModel.class, "/content/test2/jcr:content")
 
-        expect:
+        then: "Model has been property initialized"
         Assert.assertEquals(childrenModel.getText(), "Test")
         Assert.assertEquals(childrenModel.getChildrenList().size(), 0)
     }
 
     def "Children and Follow test"() {
-        setup:
+        setup: "Creating initial content"
         pageBuilder.content {
             foo("cq:PageContent") {
                 "jcr:content"() {
@@ -150,9 +154,10 @@ class ChildrenTest extends BaseSetup {
             }
         }
 
+        when: "Get a model instance by path"
         ChildrenFollowModel childrenFollowModel = modelProvider.get(ChildrenFollowModel.class, "/content/bar/jcr:content")
 
-        expect:
+        then: "Model has been property initialized"
         Assert.assertEquals(childrenFollowModel.getText(), "Test")
         Assert.assertEquals(childrenFollowModel.getChildrenList().size(), 2)
 
@@ -164,23 +169,24 @@ class ChildrenTest extends BaseSetup {
     }
 
     def "Children and Follow test - null follow resource"() {
-        setup:
+        setup: "Creating initial content"
         pageBuilder.content {
             bar("cq:PageContent") {
                 "jcr:content"("text": "Test", "children": null)
             }
         }
 
+        when: "Get a model instance by path"
         ChildrenFollowModel childrenFollowModel = modelProvider.get(ChildrenFollowModel.class, "/content/bar/jcr:content")
 
-        expect:
+        then: "Model has been property initialized"
         Assert.assertEquals(childrenFollowModel.getText(), "Test")
         Assert.assertNotNull(childrenFollowModel.getChildrenList())
         Assert.assertTrue(childrenFollowModel.getChildrenList().isEmpty())
     }
 
     def "Get model from child node"() {
-        setup:
+        setup: "Creating initial content"
         pageBuilder.content {
             foo("cq:PageContent") {
                 "jcr:content"("text": "Test1") {
@@ -189,15 +195,16 @@ class ChildrenTest extends BaseSetup {
             }
         }
 
-        expect:
-        assertPageExists("/content/foo")
+        when: "Get a model instance by path"
         ChildResourceNodeModel childResourceNodeModel = modelProvider.get(ChildResourceNodeModel.class, "/content/foo/jcr:content")
+
+        then: "Model has been property initialized"
         checkJcrPropertyModel(childResourceNodeModel.getJcrPropertyModel(), "Test", "Style", 5)
         Assert.assertEquals("Test1", childResourceNodeModel.getText())
     }
 
     def "Get model from child node - non-existing child node "() {
-        setup:
+        setup: "Creating initial content"
         pageBuilder.content {
             bar("cq:PageContent") {
                 "jcr:content"("text": "Test1") {
@@ -205,9 +212,10 @@ class ChildrenTest extends BaseSetup {
             }
         }
 
-        expect:
-        assertPageExists("/content/bar")
+        when: "Get a model instance by path"
         ChildResourceNodeModel childResourceNodeModel = modelProvider.get(ChildResourceNodeModel.class, "/content/bar/jcr:content")
+
+        then: "Model has been property initialized"
         Assert.assertNull(childResourceNodeModel.getJcrPropertyModel())
         Assert.assertEquals("Test1", childResourceNodeModel.getText())
     }

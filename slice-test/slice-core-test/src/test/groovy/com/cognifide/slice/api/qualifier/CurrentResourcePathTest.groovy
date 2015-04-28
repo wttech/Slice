@@ -13,23 +13,27 @@ class CurrentResourcePathTest extends BaseSetup {
     private String path = "/content/testPath/jcr:content"
 
     def "Get current resource path model by resource"() {
-        setup:
+        setup: "Initialize context"
         pageBuilder.content {
             testPath("cq:PageContent") {
                 "jcr:content"("text": "Test", "style": "Style")
             }
         }
-        expect:
-        Resource resource = getResource(path);
-        Assert.assertNotNull(resource)
+        when:
+        Resource resource = getResource(path)
         CurrentResourcePathModel currentResourcePathModel = modelProvider.get(CurrentResourcePathModel.class, resource)
+
+        then: "Resource exists and model has been properly initialized"
+        Assert.assertNotNull(resource)
         Assert.assertNotNull(currentResourcePathModel)
         Assert.assertEquals(currentResourcePathModel.getCurrentResourcePath(), path)
     }
 
     def "Get current resource path model by path"() {
-        expect:
+        given: "Example content"
+        when:
         CurrentResourcePathModel currentResourcePathModel = modelProvider.get(CurrentResourcePathModel.class, path)
+        then: "Model has been property initialized"
         Assert.assertNotNull(currentResourcePathModel)
         Assert.assertEquals(currentResourcePathModel.getCurrentResourcePath(), path)
     }

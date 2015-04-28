@@ -91,8 +91,6 @@ class InjectorHierarchyTest extends InjectorsTestSetup{
     def "Collection of names in hierarchy contains only registered injectors"() {
         given: "defined injectors: 'slice-test', 'slice-test2', 'slice-test/subtest'"
 
-        when:
-
         expect: "collection of injector's names contains: 'slice-test', 'slice-test2', 'slice-test/subtest'"
         Assert.assertTrue(injectorHierarchy.getInjectorNames().contains("slice-test"))
         Assert.assertTrue(injectorHierarchy.getInjectorNames().contains("slice-test2"))
