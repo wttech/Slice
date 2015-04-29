@@ -85,7 +85,7 @@ public class SliceResourceScannerTest {
 		SliceResourceScanner sliceResourceScanner = new SliceResourceScanner();
 		Collection<Class<?>> classes = sliceResourceScanner.findSliceResources(bundle, "test");
 		Assert.assertEquals(1, classes.size());
-		Assert.assertEquals("TestBundleTestBundleInnerClass1", new ArrayList<Class<?>>(classes).get(0)
+		Assert.assertEquals("TestBundleInnerClass1", new ArrayList<Class<?>>(classes).get(0)
 				.getSimpleName());
 	}
 }
