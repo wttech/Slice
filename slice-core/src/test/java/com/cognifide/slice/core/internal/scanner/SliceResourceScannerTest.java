@@ -19,11 +19,19 @@
  */
 package com.cognifide.slice.core.internal.scanner;
 
-import com.cognifide.slice.testhelper.ClassURLProducer;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Set;
+import java.util.Vector;
+
 import junit.framework.Assert;
-import org.junit.Before;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -32,11 +40,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 import org.osgi.framework.Bundle;
 
-import java.net.URL;
-import java.util.*;
-
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
+import com.cognifide.slice.testhelper.ClassURLProducer;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SliceResourceScannerTest {
@@ -44,11 +50,8 @@ public class SliceResourceScannerTest {
 	@Mock
 	private Bundle bundle;
 
-	@Before
-	public void setUp() throws ClassNotFoundException {
-		final List<String> classList = Lists.newArrayList("com/cognifide/slice/testhelper/TestBundleClass1",
-				"com/cognifide/slice/testhelper/TestBundleClass2");
-
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private void setUp(List<String> classList) throws ClassNotFoundException {
 		ClassURLProducer classURLProducer = new ClassURLProducer(Sets.newHashSet(classList));
 		Set<URL> set = classURLProducer.getUrls();
 		Enumeration<URL> classEntries = new Vector(set).elements();
@@ -63,10 +66,26 @@ public class SliceResourceScannerTest {
 	}
 
 	@Test
-	public void testFindSliceResources() {
+	public void testFindSliceResources() throws ClassNotFoundException {
+		final List<String> classList = Lists.newArrayList("com/cognifide/slice/testhelper/TestBundleClass1",
+				"com/cognifide/slice/testhelper/TestBundleClass2");
+		setUp(classList);
 		SliceResourceScanner sliceResourceScanner = new SliceResourceScanner();
 		Collection<Class<?>> classes = sliceResourceScanner.findSliceResources(bundle, "test");
-		Assert.assertEquals(classes.size(), 1);
+		Assert.assertEquals(1, classes.size());
 		Assert.assertEquals("TestBundleClass2", new ArrayList<Class<?>>(classes).get(0).getSimpleName());
+	}
+
+	@Test
+	public void testFindSliceInnerClassesResources() throws ClassNotFoundException {
+		final List<String> classList = Lists.newArrayList(
+				"com/cognifide/slice/testhelper/TestBundleInnerClass1",
+				"com/cognifide/slice/testhelper/TestBundleInnerClass2");
+		setUp(classList);
+		SliceResourceScanner sliceResourceScanner = new SliceResourceScanner();
+		Collection<Class<?>> classes = sliceResourceScanner.findSliceResources(bundle, "test");
+		Assert.assertEquals(1, classes.size());
+		Assert.assertEquals("TestBundleTestBundleInnerClass1", new ArrayList<Class<?>>(classes).get(0)
+				.getSimpleName());
 	}
 }
