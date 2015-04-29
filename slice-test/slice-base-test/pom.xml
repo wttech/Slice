@@ -10,5 +10,19 @@
 	</parent>
 	<name>Slice - Tests Base</name>
 	<description>Base for Slice tests</description>
-
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.mycila</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<configuration>
+					<header>${project.parent.parent.basedir}/license-template.txt</header>
+					<headerDefinitions>
+						<header>${project.parent.parent.basedir}/license-header-definition.txt</header>
+					</headerDefinitions>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>
