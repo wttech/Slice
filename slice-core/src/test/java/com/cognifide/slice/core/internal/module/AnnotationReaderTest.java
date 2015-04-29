@@ -34,25 +34,22 @@ public class AnnotationReaderTest {
 	}
 
 	@Test
-	public void testVisit() throws Exception {
-		annotationReader.visit(1, 1, "string1", "string2", "string3", new String[] {});
-		Assert.assertEquals(annotationReader.getAnnotations().size(), 0);
+	public void testVisit() {
+		annotationReader.visit(1, 1, "/com/cognifide/slice/mapper/annotation/JcrProperty/", "string2",
+				"string3", new String[] {});
+		Assert.assertFalse(annotationReader.isAnnotationPresent(JcrProperty.class));
 	}
 
 	@Test
 	public void testVisitAnnotation() throws Exception {
 		annotationReader.visitAnnotation("/com/cognifide/slice/mapper/annotation/JcrProperty/", false);
-		Assert.assertEquals(annotationReader.getAnnotations().size(), 1);
-		Assert.assertEquals(annotationReader.getAnnotations().get(0),
-				"com.cognifide.slice.mapper.annotation.JcrProperty");
+		Assert.assertTrue(annotationReader.isAnnotationPresent(JcrProperty.class));
 	}
 
 	@Test
 	public void testIsAnnotationPresent() throws Exception {
 		Assert.assertFalse(annotationReader.isAnnotationPresent(JcrProperty.class));
-		Assert.assertEquals(annotationReader.getAnnotations().size(), 0);
 		annotationReader.visitAnnotation("/com/cognifide/slice/mapper/annotation/JcrProperty/", false);
-		Assert.assertEquals(annotationReader.getAnnotations().size(), 1);
 		Assert.assertTrue(annotationReader.isAnnotationPresent(JcrProperty.class));
 	}
 }

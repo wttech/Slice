@@ -69,8 +69,4 @@ public class AnnotationReader extends ClassVisitor {
 	private String getAnnotationClassName(String rawName) {
 		return rawName.substring(1, rawName.length() - 1).replace('/', '.');
 	}
-
-	public List<String> getAnnotations() {
-		return annotations;
-	}
 }
