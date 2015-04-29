@@ -28,13 +28,13 @@ import org.junit.Assert
  */
 class BaseSetupTest extends BaseSetup {
 
-    def "model provider is not null"() {
-        expect:
-        Assert.assertNotNull(modelProvider)
-    }
+	def "model provider is not null"() {
+		expect:
+		Assert.assertNotNull(modelProvider)
+	}
 
-    def "context scope is not null"() {
-        expect:
-        Assert.assertNotNull(injector.getInstance(ContextScope.class))
-    }
+	def "context scope is not null"() {
+		expect:
+		Assert.assertNotNull(injector.getInstance(ContextScope.class))
+	}
 }

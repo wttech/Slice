@@ -28,10 +28,9 @@ import org.junit.Assert
  */
 class SliceReferencePathResolverFactoryTest extends BaseSetup {
 
-    def "Create a Slice Reference Path Resolver by Slice Reference Path Resolver Factory"() {
-        SliceReferencePathResolver referencePathResolver = SliceReferencePathResolverFactory.createResolver(injector)
-        expect: "Slice Reference Path Resolver was correctly created"
-        Assert.assertNotNull(referencePathResolver);
-    }
-
+	def "Create a Slice Reference Path Resolver by Slice Reference Path Resolver Factory"() {
+		SliceReferencePathResolver referencePathResolver = SliceReferencePathResolverFactory.createResolver(injector)
+		expect: "Slice Reference Path Resolver was correctly created"
+		Assert.assertNotNull(referencePathResolver);
+	}
 }

@@ -27,24 +27,23 @@ import junit.framework.Assert
  */
 class ExtensionInjectionTest extends InjectionTestBase {
 
-    def "Get Extension"() {
-        setup: "Initialize context with a filled request"
-        richRequestContext()
-        and: "Get extension from injector"
-        def extension = injector.getInstance(Key.get(String.class, Extension.class))
+	def "Get Extension"() {
+		setup: "Initialize context with a filled request"
+		richRequestContext()
+		and: "Get extension from injector"
+		def extension = injector.getInstance(Key.get(String.class, Extension.class))
 
-        expect: "There is a html extension"
-        Assert.assertEquals("html", extension)
-    }
+		expect: "There is a html extension"
+		Assert.assertEquals("html", extension)
+	}
 
-    def "Get Empty Extension"() {
-        setup: "Initialize context with an empty request (no extension)"
-        emptyRequestContext()
-        and: "Get extension from injector"
-        def extension = injector.getInstance(Key.get(String.class, Extension.class))
+	def "Get Empty Extension"() {
+		setup: "Initialize context with an empty request (no extension)"
+		emptyRequestContext()
+		and: "Get extension from injector"
+		def extension = injector.getInstance(Key.get(String.class, Extension.class))
 
-        expect: "Extension is an empty string"
-        Assert.assertEquals("", extension)
-    }
-
+		expect: "Extension is an empty string"
+		Assert.assertEquals("", extension)
+	}
 }

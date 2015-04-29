@@ -56,7 +56,7 @@ import static org.mockito.Mockito.when;
  * Created by Jaromir Celejewski on 2015-04-24.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class InjectorCreationFailTest{
+public class InjectorCreationFailTest {
 
 	protected InjectorHierarchy injectorHierarchy;
 
@@ -91,16 +91,14 @@ public class InjectorCreationFailTest{
 			}
 		});
 
-		//Preparing configurations for injectors
-		final InjectorRunner injectorRunner = new InjectorRunner(bundleContext,
-				"slice-test",
-				"slice-test-app.*",
-				"com.cognifide.example");
+		// Preparing configurations for injectors
+		final InjectorRunner injectorRunner = new InjectorRunner(bundleContext, "slice-test",
+				"slice-test-app.*", "com.cognifide.example");
 
 		injectorRunner.installModules(modules);
 		config = new InjectorConfig(injectorRunner);
 
-		//creation of InjectorsRepositoryService with InjectorHierarchy
+		// creation of InjectorsRepositoryService with InjectorHierarchy
 		repositoryService = new InjectorsRepositoryService();
 		injectorHierarchy = new InjectorHierarchy();
 		try {
@@ -110,7 +108,8 @@ public class InjectorCreationFailTest{
 		}
 
 		try {
-			bindConfigMethod = injectorHierarchy.getClass().getDeclaredMethod("bindConfig", InjectorConfig.class);
+			bindConfigMethod = injectorHierarchy.getClass().getDeclaredMethod("bindConfig",
+					InjectorConfig.class);
 		} catch (NoSuchMethodException e) {
 			//
 		}
@@ -118,8 +117,8 @@ public class InjectorCreationFailTest{
 
 	}
 
-	private void injectHierarchyIntoRepositoryService(InjectorsRepositoryService repositoryService, InjectorHierarchy injectorHierarchy)
-			throws NoSuchFieldException {
+	private void injectHierarchyIntoRepositoryService(InjectorsRepositoryService repositoryService,
+			InjectorHierarchy injectorHierarchy) throws NoSuchFieldException {
 		Field f = repositoryService.getClass().getDeclaredField("injectors");
 		f.setAccessible(true);
 		try {
@@ -132,14 +131,13 @@ public class InjectorCreationFailTest{
 	@Test
 	public void testInjectorCreationFail() throws InvocationTargetException, IllegalAccessException {
 
-		//when
+		// when
 		when(bundleContext.getBundle()).thenReturn(bundle);
 
-		//then invoke injectorHierarchy.bindConfig()
+		// then invoke injectorHierarchy.bindConfig()
 		bindConfigMethod.invoke(injectorHierarchy, config);
 
-		//verify that injector hasn't been registered
+		// verify that injector hasn't been registered
 		Assert.assertNull(repositoryService.getInjector("slice-test"));
 	}
 }
-

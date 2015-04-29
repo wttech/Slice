@@ -30,7 +30,7 @@ public class FollowModel {
 	private JcrPropertyModel jcrPropertyModel;
 
 	@JcrProperty(value = "jcrPropertyModel")
-    private String jcrPropertyModelPath;
+	private String jcrPropertyModelPath;
 
 	public JcrPropertyModel getJcrPropertyModel() {
 		return jcrPropertyModel;

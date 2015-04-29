@@ -44,64 +44,64 @@ import spock.lang.Shared
  */
 class InjectionTestBase extends ProsperSpec {
 
-    @Shared
-    SlingHttpServletRequest request
+	@Shared
+	SlingHttpServletRequest request
 
-    @Shared
-    SlingHttpServletResponse response
+	@Shared
+	SlingHttpServletResponse response
 
-    @Shared
-    ModelProvider modelProvider
+	@Shared
+	ModelProvider modelProvider
 
-    @Shared
-    SlingModule slingModule
+	@Shared
+	SlingModule slingModule
 
-    @Shared
-    Injector injector
+	@Shared
+	Injector injector
 
-    @Shared
-    ContextScope contextScope
+	@Shared
+	ContextScope contextScope
 
-    def setupSpec() {
-        contextScope = new SliceContextScope()
-        List<Module> modules = new ArrayList<Module>()
-        modules.add(new SliceModule(contextScope, null))
-        modules.add(slingModule = new SlingModule(contextScope))
-        modules.add(new JcrModule())
-        modules.add(new MapperModule())
-        modules.add(new SliceResourceModule())
-        modules.add(new TestModule())
+	def setupSpec() {
+		contextScope = new SliceContextScope()
+		List<Module> modules = new ArrayList<Module>()
+		modules.add(new SliceModule(contextScope, null))
+		modules.add(slingModule = new SlingModule(contextScope))
+		modules.add(new JcrModule())
+		modules.add(new MapperModule())
+		modules.add(new SliceResourceModule())
+		modules.add(new TestModule())
 
-        injector = Guice.createInjector(modules)
-    }
+		injector = Guice.createInjector(modules)
+	}
 
-    def richRequestContext() {
-        request = requestBuilder.build {
-            parameters = [path: "/content/prosper"]
-            selectors = ["one", "two"]
-            contentType = "application/json"
-            extension = "html"
-            suffix = "suff"
-        }
+	def richRequestContext() {
+		request = requestBuilder.build {
+			parameters = [path: "/content/prosper"]
+			selectors = ["one", "two"]
+			contentType = "application/json"
+			extension = "html"
+			suffix = "suff"
+		}
 
-        response = responseBuilder.build()
+		response = responseBuilder.build()
 
-        initContext(request, response)
-    }
+		initContext(request, response)
+	}
 
-    def emptyRequestContext() {
-        request = requestBuilder.build()
-        response = responseBuilder.build()
+	def emptyRequestContext() {
+		request = requestBuilder.build()
+		response = responseBuilder.build()
 
-        initContext(request, response)
-    }
+		initContext(request, response)
+	}
 
-    def initContext(request, response) {
-        ContextFactory factory = injector.getInstance(ContextFactory.class)
+	def initContext(request, response) {
+		ContextFactory factory = injector.getInstance(ContextFactory.class)
 
-        Context context = factory.getServletRequestContext("injector-name", request, response)
-        contextScope.setContextProvider(new ConstantContextProvider(context))
+		Context context = factory.getServletRequestContext("injector-name", request, response)
+		contextScope.setContextProvider(new ConstantContextProvider(context))
 
-        modelProvider = injector.getInstance(ModelProvider.class)
-    }
+		modelProvider = injector.getInstance(ModelProvider.class)
+	}
 }

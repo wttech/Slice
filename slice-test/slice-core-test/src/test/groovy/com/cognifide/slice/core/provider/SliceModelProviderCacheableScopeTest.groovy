@@ -46,110 +46,109 @@ import spock.lang.Shared
  */
 class SliceModelProviderCacheableScopeTest extends ProsperSpec{
 
-    @Shared
-    SlingHttpServletRequest request
+	@Shared
+	SlingHttpServletRequest request
 
-    @Shared
-    SlingHttpServletResponse response
+	@Shared
+	SlingHttpServletResponse response
 
-    @Shared
-    ModelProvider modelProvider
+	@Shared
+	ModelProvider modelProvider
 
-    @Shared
-    SlingModule slingModule
+	@Shared
+	SlingModule slingModule
 
-    @Shared
-    Injector injector
+	@Shared
+	Injector injector
 
-    @Shared
-    ContextScope contextScope
+	@Shared
+	ContextScope contextScope
 
-    def setupSpec() {
-        contextScope = new SliceContextScope()
-        List<Module> modules = new ArrayList<Module>()
-        modules.add(new SliceModule(contextScope, null))
-        modules.add(slingModule = new SlingModule(contextScope))
-        modules.add(new JcrModule())
-        modules.add(new MapperModule())
-        modules.add(new SliceResourceModule())
-        modules.add(new TestModule())
+	def setupSpec() {
+		contextScope = new SliceContextScope()
+		List<Module> modules = new ArrayList<Module>()
+		modules.add(new SliceModule(contextScope, null))
+		modules.add(slingModule = new SlingModule(contextScope))
+		modules.add(new JcrModule())
+		modules.add(new MapperModule())
+		modules.add(new SliceResourceModule())
+		modules.add(new TestModule())
 
-        injector = Guice.createInjector(modules)
-    }
+		injector = Guice.createInjector(modules)
+	}
 
-    def firstRequestContext() {
-        request = requestBuilder.build {
-            parameters = [path: "/content/foo/jcr:content"]
-            contentType = "application/json"
-            extension = "html"
-        }
+	def firstRequestContext() {
+		request = requestBuilder.build {
+			parameters = [path: "/content/foo/jcr:content"]
+			contentType = "application/json"
+			extension = "html"
+		}
 
-        response = responseBuilder.build()
+		response = responseBuilder.build()
 
-        initRequestContext(request, response)
-    }
+		initRequestContext(request, response)
+	}
 
-    def secondRequestContext() {
-        request = requestBuilder.build {
-            parameters = [path: "/content/foo/jcr:content2"]
-            contentType = "application/json"
-            extension = "html"
-        }
+	def secondRequestContext() {
+		request = requestBuilder.build {
+			parameters = [path: "/content/foo/jcr:content2"]
+			contentType = "application/json"
+			extension = "html"
+		}
 
-        response = responseBuilder.build()
+		response = responseBuilder.build()
 
-        initRequestContext(request, response)
-    }
+		initRequestContext(request, response)
+	}
 
-    def initRequestContext(request, response) {
-        ContextFactory factory = injector.getInstance(ContextFactory.class)
+	def initRequestContext(request, response) {
+		ContextFactory factory = injector.getInstance(ContextFactory.class)
 
-        Context context = factory.getServletRequestContext("injector-name", request, response)
-        contextScope.setContextProvider(new ConstantContextProvider(context))
+		Context context = factory.getServletRequestContext("injector-name", request, response)
+		contextScope.setContextProvider(new ConstantContextProvider(context))
 
-        modelProvider = injector.getInstance(ModelProvider.class)
-    }
+		modelProvider = injector.getInstance(ModelProvider.class)
+	}
 
-    def initResourceContext()
-    {
-        ContextFactory factory = injector.getInstance(ContextFactory.class)
-        Context context = factory.getResourceResolverContext(resourceResolver)
-        contextScope.setContextProvider(new ConstantContextProvider(context))
+	def initResourceContext() {
+		ContextFactory factory = injector.getInstance(ContextFactory.class)
+		Context context = factory.getResourceResolverContext(resourceResolver)
+		contextScope.setContextProvider(new ConstantContextProvider(context))
 
-        modelProvider = injector.getInstance(ModelProvider.class)
-    }
+		modelProvider = injector.getInstance(ModelProvider.class)
+	}
 
-    def "Get cacheable models within different requests"() {
-        setup: "Init model"
-        firstRequestContext()
-        def SimpleCacheableModel model1 = modelProvider.get(SimpleCacheableModel.class, '/content/foo')
-        secondRequestContext()
-        def SimpleCacheableModel model2 = modelProvider.get(SimpleCacheableModel.class, '/content/foo')
-        secondRequestContext()
-        def SimpleCacheableModel model3 = modelProvider.get(SimpleCacheableModel.class, '/content/foo')
+	def "Get cacheable models within different requests"() {
+		setup: "Init model"
+		firstRequestContext()
+		def SimpleCacheableModel model1 = modelProvider.get(SimpleCacheableModel.class, '/content/foo')
+		secondRequestContext()
+		def SimpleCacheableModel model2 = modelProvider.get(SimpleCacheableModel.class, '/content/foo')
+		secondRequestContext()
+		def SimpleCacheableModel model3 = modelProvider.get(SimpleCacheableModel.class, '/content/foo')
 
-        expect: "Models are not null"
-        Assert.assertNotNull(model1)
-        Assert.assertNotNull(model2)
-        Assert.assertNotNull(model3)
+		expect: "Models are not null"
+		Assert.assertNotNull(model1)
+		Assert.assertNotNull(model2)
+		Assert.assertNotNull(model3)
 
-        and: "References are different"
-        Assert.assertTrue(model1!=model2)
-        Assert.assertTrue(model2!=model3)
-    }
+		and: "References are different"
+		Assert.assertTrue(model1!=model2)
+		Assert.assertTrue(model2!=model3)
+	}
 
-    def "Get cacheable models within different resource resolver scopes"() {
-        setup: "Init model"
-        initResourceContext()
-        def SimpleCacheableModel model1 = modelProvider.get(SimpleCacheableModel.class, '/content/foo')
-        initResourceContext()
-        def SimpleCacheableModel model2 = modelProvider.get(SimpleCacheableModel.class, '/content/foo')
+	def "Get cacheable models within different resource resolver scopes"() {
+		setup: "Init model"
+		initResourceContext()
+		def SimpleCacheableModel model1 = modelProvider.get(SimpleCacheableModel.class, '/content/foo')
+		initResourceContext()
+		def SimpleCacheableModel model2 = modelProvider.get(SimpleCacheableModel.class, '/content/foo')
 
-        expect: "Models are not null"
-        Assert.assertNotNull(model1)
-        Assert.assertNotNull(model2)
+		expect: "Models are not null"
+		Assert.assertNotNull(model1)
+		Assert.assertNotNull(model2)
 
-        and: "References are different"
-        Assert.assertTrue(model1!=model2)
-    }
+		and: "References are different"
+		Assert.assertTrue(model1!=model2)
+	}
 }

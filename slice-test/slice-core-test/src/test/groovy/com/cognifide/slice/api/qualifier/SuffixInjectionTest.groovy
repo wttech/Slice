@@ -27,23 +27,23 @@ import junit.framework.Assert
  */
 class SuffixInjectionTest extends InjectionTestBase {
 
-    def "Get Suffix"() {
-        setup: "Initialize context with a filled request"
-        richRequestContext()
-        and: "Get a suffix from injector"
-        def suffix = injector.getInstance(Key.get(String.class, Suffix.class))
+	def "Get Suffix"() {
+		setup: "Initialize context with a filled request"
+		richRequestContext()
+		and: "Get a suffix from injector"
+		def suffix = injector.getInstance(Key.get(String.class, Suffix.class))
 
-        expect: "Suffix is equal to 'suff' "
-        Assert.assertEquals("suff", suffix)
-    }
+		expect: "Suffix is equal to 'suff' "
+		Assert.assertEquals("suff", suffix)
+	}
 
-    def "Get Suffix - empty request"() {
-        setup: "Initialize context with an empty request"
-        emptyRequestContext()
-        and: "Get a suffix from injector"
-        def suffix = injector.getInstance(Key.get(String.class, Suffix.class))
+	def "Get Suffix - empty request"() {
+		setup: "Initialize context with an empty request"
+		emptyRequestContext()
+		and: "Get a suffix from injector"
+		def suffix = injector.getInstance(Key.get(String.class, Suffix.class))
 
-        expect: "Suffix is equal to 'suff' "
-        Assert.assertEquals("", suffix)
-    }
+		expect: "Suffix is equal to 'suff' "
+		Assert.assertEquals("", suffix)
+	}
 }

@@ -29,31 +29,31 @@ import org.junit.Assert
  */
 class CurrentResourcePathTest extends BaseSetup {
 
-    private String path = "/content/testPath/jcr:content"
+	private String path = "/content/testPath/jcr:content"
 
-    def "Get current resource path model by resource"() {
-        setup: "Initialize context"
-        pageBuilder.content {
-            testPath("cq:PageContent") {
-                "jcr:content"("text": "Test", "style": "Style")
-            }
-        }
-        when:
-        Resource resource = getResource(path)
-        CurrentResourcePathModel currentResourcePathModel = modelProvider.get(CurrentResourcePathModel.class, resource)
+	def "Get current resource path model by resource"() {
+		setup: "Initialize context"
+		pageBuilder.content {
+			testPath("cq:PageContent") {
+				"jcr:content"("text": "Test", "style": "Style")
+			}
+		}
+		when:
+		Resource resource = getResource(path)
+		CurrentResourcePathModel currentResourcePathModel = modelProvider.get(CurrentResourcePathModel.class, resource)
 
-        then: "Resource exists and model has been properly initialized"
-        Assert.assertNotNull(resource)
-        Assert.assertNotNull(currentResourcePathModel)
-        Assert.assertEquals(currentResourcePathModel.getCurrentResourcePath(), path)
-    }
+		then: "Resource exists and model has been properly initialized"
+		Assert.assertNotNull(resource)
+		Assert.assertNotNull(currentResourcePathModel)
+		Assert.assertEquals(currentResourcePathModel.getCurrentResourcePath(), path)
+	}
 
-    def "Get current resource path model by path"() {
-        given: "Example content"
-        when:
-        CurrentResourcePathModel currentResourcePathModel = modelProvider.get(CurrentResourcePathModel.class, path)
-        then: "Model has been property initialized"
-        Assert.assertNotNull(currentResourcePathModel)
-        Assert.assertEquals(currentResourcePathModel.getCurrentResourcePath(), path)
-    }
+	def "Get current resource path model by path"() {
+		given: "Example content"
+		when:
+		CurrentResourcePathModel currentResourcePathModel = modelProvider.get(CurrentResourcePathModel.class, path)
+		then: "Model has been property initialized"
+		Assert.assertNotNull(currentResourcePathModel)
+		Assert.assertEquals(currentResourcePathModel.getCurrentResourcePath(), path)
+	}
 }

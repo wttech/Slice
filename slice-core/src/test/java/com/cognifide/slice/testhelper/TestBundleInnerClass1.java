@@ -29,7 +29,6 @@ public class TestBundleInnerClass1 {
 
 	@SliceResource
 	public class InnerClass {
-		
+
 	}
 }
-

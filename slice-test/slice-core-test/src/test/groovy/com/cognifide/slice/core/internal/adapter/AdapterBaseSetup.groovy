@@ -52,100 +52,100 @@ import java.lang.reflect.Method
  */
 class AdapterBaseSetup extends ProsperSpec {
 
-    @Shared
-    InjectorHierarchy injectorHierarchy
+	@Shared
+	InjectorHierarchy injectorHierarchy
 
-    @Shared
-    InjectorsRepositoryService repositoryService
+	@Shared
+	InjectorsRepositoryService repositoryService
 
-    @Shared
-    SliceAdapterFactory sliceAdapterFactory
+	@Shared
+	SliceAdapterFactory sliceAdapterFactory
 
-    @Shared
-    InjectorRepositoryAdapterFactory injectorRepositoryAdapterFactory
+	@Shared
+	InjectorRepositoryAdapterFactory injectorRepositoryAdapterFactory
 
-    @Shared
-    ModelProvider modelProvider
+	@Shared
+	ModelProvider modelProvider
 
-    @Shared
-    Injector injector
+	@Shared
+	Injector injector
 
-    @Shared
-    ContextScope contextScope
+	@Shared
+	ContextScope contextScope
 
-    @Override
-    Collection<AdapterFactory> addAdapterFactories() {
-        sliceAdapterFactory = new SliceAdapterFactory("slice-test") {
-            @Override
-            def <AdapterType> AdapterType getAdapter(Object adaptable, Class<AdapterType> type) {
-                //A workaround necessary to force code to use Prosper's mock objects instead of real Sling
-                if (ValueMap.class.equals(type))
-                {
-                    return null;
-                }
-                return super.getAdapter(adaptable, type)
-            }
-        }
+	@Override
+	Collection<AdapterFactory> addAdapterFactories() {
+		sliceAdapterFactory = new SliceAdapterFactory("slice-test") {
+					@Override
+					def <AdapterType> AdapterType getAdapter(Object adaptable, Class<AdapterType> type) {
+						//A workaround necessary to force code to use Prosper's mock objects instead of real Sling
+						if (ValueMap.class.equals(type))
+						{
+							return null;
+						}
+						return super.getAdapter(adaptable, type)
+					}
+				}
 
-        [sliceAdapterFactory = sliceAdapterFactory, injectorRepositoryAdapterFactory = new InjectorRepositoryAdapterFactory()]
-    }
+		[sliceAdapterFactory = sliceAdapterFactory, injectorRepositoryAdapterFactory = new InjectorRepositoryAdapterFactory()]
+	}
 
-    protected void injectPrivateField(Object targetObject, Object objectToInject, String fieldName) {
-        if (targetObject != null) {
-            Field f = targetObject.getClass().getDeclaredField(fieldName)
-            f.setAccessible(true)
-            f.set(targetObject, objectToInject)
-        }
-    }
+	protected void injectPrivateField(Object targetObject, Object objectToInject, String fieldName) {
+		if (targetObject != null) {
+			Field f = targetObject.getClass().getDeclaredField(fieldName)
+			f.setAccessible(true)
+			f.set(targetObject, objectToInject)
+		}
+	}
 
-    protected RequestContextProvider createRequestContextProvider() {
-        final ContextScope scope = contextScope;
-        return new RequestContextProvider() {
-            @Override
-            ContextProvider getContextProvider(String injectorName) {
-                scope.getContextProvider()
-            }
-        }
-    }
+	protected RequestContextProvider createRequestContextProvider() {
+		final ContextScope scope = contextScope;
+		return new RequestContextProvider() {
+					@Override
+					ContextProvider getContextProvider(String injectorName) {
+						scope.getContextProvider()
+					}
+				}
+	}
 
-    def setup() {
+	def setup() {
 
-        contextScope = new SliceContextScope()
-        List<Module> modules = new ArrayList<Module>()
-        modules.add(new SliceModule(contextScope, null))
-        modules.add(new SlingModule(contextScope))
-        modules.add(new JcrModule())
-        modules.add(new MapperModule())
-        modules.add(new SliceResourceModule())
+		contextScope = new SliceContextScope()
+		List<Module> modules = new ArrayList<Module>()
+		modules.add(new SliceModule(contextScope, null))
+		modules.add(new SlingModule(contextScope))
+		modules.add(new JcrModule())
+		modules.add(new MapperModule())
+		modules.add(new SliceResourceModule())
 
-        //Preparing injector configuration
-        final InjectorRunner injectorRunner = new InjectorRunner(null,
-                "slice-test",
-                "slice-test-app.*",
-                "com.cognifide.example")
+		//Preparing injector configuration
+		final InjectorRunner injectorRunner = new InjectorRunner(null,
+				"slice-test",
+				"slice-test-app.*",
+				"com.cognifide.example")
 
-        injectorRunner.installModules(modules)
-        InjectorConfig config = new InjectorConfig(injectorRunner)
+		injectorRunner.installModules(modules)
+		InjectorConfig config = new InjectorConfig(injectorRunner)
 
-        //creation of InjectorsRepositoryService with InjectorHierarchy
-        repositoryService = new InjectorsRepositoryService()
-        injectorHierarchy = new InjectorHierarchy()
-        injectPrivateField(repositoryService, injectorHierarchy, "injectors")
+		//creation of InjectorsRepositoryService with InjectorHierarchy
+		repositoryService = new InjectorsRepositoryService()
+		injectorHierarchy = new InjectorHierarchy()
+		injectPrivateField(repositoryService, injectorHierarchy, "injectors")
 
-        //creation and registration of injectors in the hierarchy
-        Method bindConfigMethod = injectorHierarchy.getClass().getDeclaredMethod("bindConfig", InjectorConfig.class)
-        bindConfigMethod.setAccessible(true)
-        bindConfigMethod.invoke(injectorHierarchy, config)
+		//creation and registration of injectors in the hierarchy
+		Method bindConfigMethod = injectorHierarchy.getClass().getDeclaredMethod("bindConfig", InjectorConfig.class)
+		bindConfigMethod.setAccessible(true)
+		bindConfigMethod.invoke(injectorHierarchy, config)
 
-        injectPrivateField(injectorRepositoryAdapterFactory, repositoryService, "repository")
+		injectPrivateField(injectorRepositoryAdapterFactory, repositoryService, "repository")
 
-        injector = repositoryService.getInjector("slice-test").getInjector()
+		injector = repositoryService.getInjector("slice-test").getInjector()
 
-        ContextFactory factory = injector.getInstance(ContextFactory.class)
-        Context context = factory.getResourceResolverContext(resourceResolver)
-        contextScope.setContextProvider(new ConstantContextProvider(context))
+		ContextFactory factory = injector.getInstance(ContextFactory.class)
+		Context context = factory.getResourceResolverContext(resourceResolver)
+		contextScope.setContextProvider(new ConstantContextProvider(context))
 
-        modelProvider = injector.getInstance(ModelProvider.class)
-    }
+		modelProvider = injector.getInstance(ModelProvider.class)
+	}
 
 }
