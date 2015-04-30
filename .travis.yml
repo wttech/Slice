@@ -1,8 +1,11 @@
 language: java
-script: mvn clean package
+script: mvn clean compile
 
 after_success:
-  - mvn test jacoco:report org.eluder.coveralls:coveralls-maven-plugin:report
+  - ant instrument
+  - mvn test
+  - ant report
+  - mvn coveralls:report
 
 env:
   global:
@@ -17,5 +20,5 @@ addons:
       name: "Cognifide/Slice"
       description: "Build submitted via Travis CI"
     notification_email: maciej.majchrzak@cognifide.com
-    build_command: "mvn clean package"
+    build_command: "mvn clean compile"
     branch_pattern: master
