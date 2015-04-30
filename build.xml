@@ -59,6 +59,9 @@
     <target name="instrumentModule">
         <property name="classes.dir" value="target/classes"/>
         <cobertura-instrument ignoreTrivial="true" todir="./${module}/${classes.dir}">
+            <auxClasspath>
+                <path refid="cobertura.auxpath" />
+            </auxClasspath>
             <fileset dir="./${module}/target/classes">
                 <include name="**/*.class"/>
             </fileset>
@@ -74,6 +77,13 @@
             <include name="lib/**/*.jar"/>
         </fileset>
     </path>
+
+    <path id="cobertura.auxpath">
+        <pathelement path="${classpath}"/>
+        <pathelement location="./slice-core-api/target/classes"/>
+        <pathelement location="./slice-mapper-api/target/classes"/>
+    </path>
+
 
     <taskdef classpathref="cobertura.classpath" resource="tasks.properties"/>
 </project>
