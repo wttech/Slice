@@ -1,10 +1,10 @@
 language: java
-script: mvn clean compile
+script: mvn clean package
 
 after_success:
   - ant instrument
   - mvn test
-  - ant report
+  - ant report-xml
   - mvn coveralls:report
 
 env:
@@ -20,5 +20,5 @@ addons:
       name: "Cognifide/Slice"
       description: "Build submitted via Travis CI"
     notification_email: maciej.majchrzak@cognifide.com
-    build_command: "mvn clean compile"
+    build_command: "mvn clean package"
     branch_pattern: master
