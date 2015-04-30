@@ -28,7 +28,10 @@ class IgnorePropertyModelAll {
 	private String text;
 
 	@IgnoreProperty
-	private String style;
+	private String style = "default";
+
+	@IgnoreProperty
+	private String label;
 
 	@IgnoreProperty
 	private int size;
@@ -48,15 +51,22 @@ class IgnorePropertyModelAll {
 	public int getSize() {
 		return size;
 	}
+
+	public String getLabel() {
+		return label;
+	}
 }
 
 @SliceResource(MappingStrategy.ANNOTATED)
 class IgnorePropertyModelAnnotated {
 
 	@JcrProperty
-	private String text;
+	private String text = "defText";
 
-	private String style;
+	private String style = "default";
+
+	@IgnoreProperty
+	private String label;
 
 	private int size;
 
@@ -74,5 +84,9 @@ class IgnorePropertyModelAnnotated {
 
 	public int getSize() {
 		return size;
+	}
+
+	public String getLabel() {
+		return label;
 	}
 }

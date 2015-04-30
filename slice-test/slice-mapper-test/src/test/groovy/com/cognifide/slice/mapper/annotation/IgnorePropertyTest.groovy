@@ -27,31 +27,51 @@ import org.junit.Assert
  */
 class IgnorePropertyTest extends BaseSetup {
 
-	def "Ignore property test"() {
+	def "Ignore property test for mapped All fields"() {
 		setup:
 		pageBuilder.content {
 			foo("cq:PageContent") {
-				"jcr:content"("text": "Test", "style": "Style", "size": 5)
+				"jcr:content"("text": "Test", "style": "Style", "size": 5, "label": "Label")
 			}
 		}
-		def contentNode = session.getNode("/content/foo/jcr:content")
+
+		when: "Mapping all fields"
 		IgnorePropertyModelAll ignorePropertyModelAll = modelProvider.get(IgnorePropertyModelAll.class,
 				"/content/foo/jcr:content")
+
+		then: "model is mapped"
+		Assert.assertNotNull(ignorePropertyModelAll)
+		and: "not annotated field is mapped"
+		Assert.assertEquals("Test", ignorePropertyModelAll.getText())
+		and: "ignored field keeps value set in constructor"
+		Assert.assertEquals(10, ignorePropertyModelAll.getSize())
+		and: "ignored field keeps value set in field"
+		Assert.assertEquals("default", ignorePropertyModelAll.getStyle())
+		and: "ignored field without default value is null"
+		Assert.assertNull(ignorePropertyModelAll.getLabel())
+	}
+
+	def "Ignore property test for mapped Annotated fields"() {
+		setup:
+		pageBuilder.content {
+			foo("cq:PageContent") {
+				"jcr:content"("text": "Test", "style": "Style", "size": 5, "label": "Label")
+			}
+		}
+
+		when: "Mapping annotated field"
 		IgnorePropertyModelAnnotated ignorePropertyModelAnnotated = modelProvider.get(IgnorePropertyModelAnnotated.class,
 				"/content/foo/jcr:content")
 
-		expect:
-		Assert.assertEquals(contentNode.get("style"), "Style")
-		Assert.assertEquals(contentNode.get("size"), 5)
-
-		Assert.assertNotNull(ignorePropertyModelAll)
-		Assert.assertEquals(ignorePropertyModelAll.getText(), "Test")
-		Assert.assertEquals(ignorePropertyModelAll.getSize(), 10)
-		Assert.assertNull(ignorePropertyModelAll.getStyle())
-
+		then: "model is mapped"
 		Assert.assertNotNull(ignorePropertyModelAnnotated)
-		Assert.assertEquals(ignorePropertyModelAnnotated.getText(), "Test")
-		Assert.assertEquals(ignorePropertyModelAnnotated.getSize(), 10)
-		Assert.assertNull(ignorePropertyModelAnnotated.getStyle())
+		and: "annotated field is mapped"
+		Assert.assertEquals("Test", ignorePropertyModelAnnotated.getText())
+		and: "not annotated field keeps its default value"
+		Assert.assertEquals("default", ignorePropertyModelAnnotated.getStyle())
+		and: "not annotated field keeps value set in constructor"
+		Assert.assertEquals(10, ignorePropertyModelAnnotated.getSize())
+		and: "ignored field is null"
+		Assert.assertNull(ignorePropertyModelAnnotated.getLabel())
 	}
 }
