@@ -17,7 +17,7 @@
     <target name="report" depends="merge">
         <property name="src.dir" value="src/main/java/"/>
         <cobertura-report datafile="sum.ser"
-                          format="html"
+                          format="xml"
                           destdir="./target/report">
             <!-- Add all modules that should be included below -->
             <!-- fileset dir="./MODULE_NAME_TO_REPLACE/${src.dir}"/ -->
