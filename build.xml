@@ -32,10 +32,18 @@
         <cobertura-report datafile="sum.ser"
                           format="${report-format}"
                           destdir="./target/report">
-            <fileset dir="./slice-core/${src.dir}"/>
-            <fileset dir="./slice-core-api/${src.dir}"/>
-            <fileset dir="./slice-mapper/${src.dir}"/>
-            <fileset dir="./slice-mapper-api/${src.dir}"/>
+            <fileset dir="./slice-core/${src.dir}">
+                <include name="**/*.java" />
+            </fileset>
+            <fileset dir="./slice-core-api/${src.dir}">
+                <include name="**/*.java" />
+            </fileset>
+            <fileset dir="./slice-mapper/${src.dir}">
+                <include name="**/*.java" />
+            </fileset>
+            <fileset dir="./slice-mapper-api/${src.dir}">
+                <include name="**/*.java" />
+            </fileset>
         </cobertura-report>
     </target>
 
@@ -49,7 +57,7 @@
 
     <target name="instrumentModule">
         <property name="classes.dir" value="target/classes"/>
-        <cobertura-instrument todir="./${module}/${classes.dir}">
+        <cobertura-instrument ignoreTrivial="true" todir="./${module}/${classes.dir}">
             <fileset dir="./${module}/target/classes">
                 <include name="**/*.class"/>
             </fileset>
@@ -62,7 +70,7 @@
     <path id="cobertura.classpath">
         <fileset dir="${cobertura.dir}">
             <include name="cobertura-2.1.1.jar"/>
-            <include name="lib/*.jar"/>
+            <include name="lib/**/*.jar"/>
         </fileset>
     </path>
     <taskdef classpathref="cobertura.classpath" resource="tasks.properties"/>
