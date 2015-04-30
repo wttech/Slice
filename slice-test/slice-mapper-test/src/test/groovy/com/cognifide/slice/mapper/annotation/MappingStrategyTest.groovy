@@ -27,32 +27,29 @@ import org.junit.Assert
  */
 class MappingStrategyTest extends BaseSetup {
 
-	def "Mapping Strategy Test"() {
-		setup:
+	def setup() {
 		pageBuilder.content {
 			foo("cq:PageContent") {
 				"jcr:content"("field1": "field1 value", "field2": "field2 value", "field3": "field3 value")
 			}
 		}
-		expect:
-		assertPageExists("/content/foo")
 	}
 
 	def "Mapping Strategy All Test"() {
 		expect:
 		MappingStrategyAllModel mappingStrategyAllModel = modelProvider.get(MappingStrategyAllModel.class, "/content/foo/jcr:content")
 		Assert.assertNotNull(mappingStrategyAllModel)
-		Assert.assertEquals(mappingStrategyAllModel.getField1(), "field1 value")
-		Assert.assertEquals(mappingStrategyAllModel.getField2(), "field2 value")
-		Assert.assertEquals(mappingStrategyAllModel.getField3(), "field3 value")
+		Assert.assertEquals("field1 value", mappingStrategyAllModel.getField1())
+		Assert.assertEquals("field2 value", mappingStrategyAllModel.getField2())
+		Assert.assertEquals( "field3 value", mappingStrategyAllModel.getField3())
 	}
 
 	def "Mapping Strategy Annotated Test"() {
 		expect:
 		MappingStrategyAnnotatedModel mappingStrategyAnnotatedModel = modelProvider.get(MappingStrategyAnnotatedModel.class, "/content/foo/jcr:content")
 		Assert.assertNotNull(mappingStrategyAnnotatedModel)
-		Assert.assertEquals(mappingStrategyAnnotatedModel.getField1(), "field1 value")
+		Assert.assertEquals("field1 value", mappingStrategyAnnotatedModel.getField1())
 		Assert.assertNull(mappingStrategyAnnotatedModel.getField2())
-		Assert.assertEquals(mappingStrategyAnnotatedModel.getField3(), "field3 value")
+		Assert.assertEquals("field3 value", mappingStrategyAnnotatedModel.getField3())
 	}
 }

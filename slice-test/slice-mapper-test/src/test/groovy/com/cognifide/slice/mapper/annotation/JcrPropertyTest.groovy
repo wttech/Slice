@@ -32,17 +32,25 @@ class JcrPropertyTest extends BaseSetup {
 		setup:
 		pageBuilder.content {
 			foo("foo") {
-				"jcr:content"("text": "Test", "style": "Style", "size": 5)
+				"jcr:content"("text": "Test", "style": "Style", "size": 5, "sizeLong": 123, "sizeDouble": 1.2)
 			}
 		}
 		expect:
 		assertPageExists("/content/foo")
-		JcrPropertyModel jcrPropertyModel = modelProvider.get(JcrPropertyModel.class, "/content/foo/jcr:content")
+		JcrPropertyAdvancedModel jcrPropertyModel = modelProvider.get(JcrPropertyAdvancedModel.class, "/content/foo/jcr:content")
 		Assert.assertNotNull(jcrPropertyModel)
-		Assert.assertEquals(jcrPropertyModel.getText(), "Test")
-		Assert.assertEquals(jcrPropertyModel.getSecondProperty(), "Style")
-		Assert.assertEquals(jcrPropertyModel.getSize(), 5)
-		Assert.assertEquals(jcrPropertyModel.getSizeFinal(), 0)
-		Assert.assertEquals(jcrPropertyModel.getSizeStatic(), 0)
+		Assert.assertEquals("Test", jcrPropertyModel.getText())
+		Assert.assertEquals("Style",jcrPropertyModel.getSecondProperty())
+		Assert.assertEquals(5, jcrPropertyModel.getSize())
+		Assert.assertEquals(2, jcrPropertyModel.getSizeFinal())
+		Assert.assertEquals(4, jcrPropertyModel.getSizeStatic())
+		Assert.assertEquals(123, jcrPropertyModel.getSizeLong())
+		Assert.assertEquals(1.2, jcrPropertyModel.getSizeDouble(), 2)
+		Assert.assertEquals(1.2, jcrPropertyModel.getSizeFloat(), 2)
+		Assert.assertEquals(1.2, jcrPropertyModel.getSizeShort(), 2)
+		Assert.assertEquals(123, jcrPropertyModel.getSizeLongObject())
+		Assert.assertEquals(1.2, jcrPropertyModel.getSizeDoubleObject(), 2)
+		Assert.assertEquals(1.2, jcrPropertyModel.getSizeFloatObject(), 2)
+		Assert.assertEquals(1.2, jcrPropertyModel.getSizeShortObject(), 2)
 	}
 }

@@ -63,7 +63,7 @@ class FollowTest extends BaseSetup {
 		modelProvider.get(FollowModel.class, "/content/bar/jcr:content")
 
 		then: "ProvisionException should be thrown - resource can not be null"
-		thrown(ProvisionException)
+		thrown(ProvisionException) //FIXME this is not correct behaviour
 	}
 
 	def "Follow test with non-string value"() {

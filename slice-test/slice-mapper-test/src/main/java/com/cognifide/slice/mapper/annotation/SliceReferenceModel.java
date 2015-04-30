@@ -45,6 +45,26 @@ public class SliceReferenceModel {
 }
 
 @SliceResource
+class SliceReferenceWithNoReferencedResource {
+
+	@JcrProperty
+	private String text;
+
+	@SliceReference("/content/notexisting/jcr:content")
+	@JcrProperty
+	private JcrPropertyModel propertyModel;
+
+	public String getText() {
+		return text;
+	}
+
+	public JcrPropertyModel getPropertyModel() {
+		return propertyModel;
+	}
+
+}
+
+@SliceResource
 class SliceReferenceModelWithEmptyPlaceholderReference {
 
 	@JcrProperty

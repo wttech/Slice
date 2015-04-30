@@ -24,7 +24,7 @@ package com.cognifide.slice.mapper.annotation;
  */
 
 @SliceResource
-public class JcrPropertyModel {
+public class JcrPropertyAdvancedModel {
 
 	@JcrProperty
 	private String text;
@@ -40,6 +40,30 @@ public class JcrPropertyModel {
 
 	@JcrProperty(value = "size")
 	private static int sizeStatic = 4;
+
+	@JcrProperty
+	private long sizeLong; //FIXME this is not working properly for not exisitng properties
+
+	@JcrProperty
+	private double sizeDouble;
+
+	@JcrProperty("sizeDouble")
+	private float sizeFloat;
+
+	@JcrProperty("sizeDouble")
+	private short sizeShort;
+
+	@JcrProperty("sizeLong")
+	private Long sizeLongObject;
+
+	@JcrProperty("sizeDouble")
+	private Double sizeDoubleObject;
+
+	@JcrProperty("sizeDouble")
+	private Float sizeFloatObject;
+
+	@JcrProperty("sizeDouble")
+	private Short sizeShortObject;
 
 	public String getText() {
 		return text;
@@ -59,5 +83,37 @@ public class JcrPropertyModel {
 
 	public static int getSizeStatic() {
 		return sizeStatic;
+	}
+
+	public long getSizeLong() {
+		return sizeLong;
+	}
+
+	public double getSizeDouble() {
+		return sizeDouble;
+	}
+
+	public Long getSizeLongObject() {
+		return sizeLongObject;
+	}
+
+	public Double getSizeDoubleObject() {
+		return sizeDoubleObject;
+	}
+
+	public Float getSizeFloatObject() {
+		return sizeFloatObject;
+	}
+
+	public Short getSizeShortObject() {
+		return sizeShortObject;
+	}
+
+	public float getSizeFloat() {
+		return sizeFloat;
+	}
+
+	public short getSizeShort() {
+		return sizeShort;
 	}
 }

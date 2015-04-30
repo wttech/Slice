@@ -41,36 +41,54 @@ class SliceReferenceTest extends BaseSetup {
 		}
 	}
 
-	def "Created content exists"() {
-		expect: "Created content exists"
-		assertPageExists("/content/bar")
-		assertPageExists("/content/foo")
-	}
-
 	def "Slice Reference test"() {
-		def path = "/content/bar";
-		setup: "Get a model"
-		SliceReferenceModel sliceReferenceModel = modelProvider.get(SliceReferenceModel.class, path + "/jcr:content")
+		when: "Get a model"
+		SliceReferenceModel sliceReferenceModel = modelProvider.get(SliceReferenceModel.class, "/content/bar/jcr:content")
 		and: "Get a property model from Slice Reference Model"
 		JcrPropertyModel propertyModel = sliceReferenceModel.getPropertyModel()
 
-		expect: "Model is not null"
+		then: "Model is not null"
 		Assert.assertNotNull(sliceReferenceModel)
 
 		and: "Referenced Model is not null"
 		Assert.assertNotNull(propertyModel)
 
 		and: "Model has a correct value for property 'text'"
-		Assert.assertEquals(sliceReferenceModel.getText(), "Test")
+		Assert.assertEquals("Test", sliceReferenceModel.getText())
 
 		and: "Referenced Model has a correct value for a property 'text'"
-		Assert.assertEquals(propertyModel.getText(), "Test1")
+		Assert.assertEquals("Test1", propertyModel.getText())
 
 		and: "Referenced Model has a correct value for a property 'secondProperty'"
-		Assert.assertEquals(propertyModel.getSecondProperty(), "Style")
+		Assert.assertEquals("Style", propertyModel.getSecondProperty())
 
 		and: "Referenced Model has a correct value for a property 'size'"
-		Assert.assertEquals(propertyModel.getSize(), 5)
+		Assert.assertEquals(5, propertyModel.getSize())
+	}
+
+	def "Slice Reference test for missing referenced resource"() {
+		when: "Get a model"
+		SliceReferenceWithNoReferencedResource sliceModel = modelProvider.get(SliceReferenceWithNoReferencedResource.class, "/content/bar/jcr:content")
+		and: "Get a property model from Slice Reference Model"
+		JcrPropertyModel referencedModel = sliceModel.getPropertyModel()
+
+		then: "Model is not null"
+		Assert.assertNotNull(sliceModel)
+
+		and: "Referenced Model is null"
+		Assert.assertNotNull(referencedModel)
+		
+		and: "Referenced Model has a correct value for a property 'text'"
+		Assert.assertNull(referencedModel.getText())
+
+		and: "Referenced Model has a correct value for a property 'secondProperty'"
+		Assert.assertNull(referencedModel.getSecondProperty())
+
+		and: "Referenced Model has a correct value for a property 'size'"
+		Assert.assertEquals(0, referencedModel.getSize())
+
+		and: "Model has a correct value for property 'text'"
+		Assert.assertEquals("Test", sliceModel.getText())
 	}
 
 	def "Slice Reference with empty path"() {

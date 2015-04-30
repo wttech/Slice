@@ -49,9 +49,9 @@ class UnescapedTest extends BaseSetup {
 		Assert.assertNotNull(unescapedModel)
 
 		and: "Field1 was not escaped"
-		Assert.assertEquals(unescapedModel.getField1(), "&\"'<>")
+		Assert.assertEquals("&\"'<>", unescapedModel.getField1())
 
 		and: "Field2 was escaped"
-		Assert.assertEquals(unescapedModel.getField2(), "&amp;&quot;&#39;&lt;&gt;")
+		Assert.assertEquals("&amp;&quot;&#39;&lt;&gt;", unescapedModel.getField2())
 	}
 }
