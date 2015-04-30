@@ -30,7 +30,7 @@ import junit.framework.Assert
  */
 class EnumInjectionTest extends BaseSetup {
 
-	def "Get a model with a Enum mapped from String (existing Enum value)"() {
+	def "Get a model with a Enum mapped from String - existing Enum value"() {
 		setup: "Create a content with String value (existing Enum value)"
 		def path = "/content/foo/jcr:content"
 		pageBuilder.content {
@@ -46,8 +46,24 @@ class EnumInjectionTest extends BaseSetup {
 		Assert.assertEquals(SimpleEnum.VALUE1, model.getEnumeration())
 	}
 
+	def "Get a model with a Enum mapped from String - incorrect letter cases"() {
+		setup: "Create a content with String value (existing Enum value)"
+		def path = "/content/foo/jcr:content"
+		pageBuilder.content {
+			foo("foo") { "jcr:content"("enumeration": "value1") }
+		}
+		and: "Get a model"
+		def model = modelProvider.get(EnumInjectionModel.class, path)
 
-	def "Get a model with a Enum mapped from String (non-existing Enum value)"() {
+		expect: "Model is not null"
+		Assert.assertNotNull(model)
+
+		and: "Enum property was correctly mapped from String"
+		Assert.assertEquals(null, model.getEnumeration())
+	}
+
+
+	def "Get a model with a Enum mapped from String - non-existing Enum value"() {
 		setup: "Create a content with String value (existing Enum value)"
 		def path = "/content/foo/jcr:content"
 		pageBuilder.content {
