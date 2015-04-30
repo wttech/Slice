@@ -27,35 +27,32 @@ import org.junit.Assert
  */
 class InheritanceTest extends BaseSetup {
 
-	def "Inheritance test: Setup test content"() {
-		setup:
+	def setupSpec() {
 		pageBuilder.content {
 			foo("cq:PageContent") {
 				"jcr:content"("field1": "field1 value", "field2": "field2 value", "field3": "field3 value")
 			}
 		}
-		def contentNode = session.getNode("/content/foo/jcr:content")
-		expect:
-		Assert.assertEquals(contentNode.get("field1"), "field1 value")
-		Assert.assertEquals(contentNode.get("field2"), "field2 value")
 	}
 
 	def "Inheritance test: Child model with MappingStrategy.ANNOTATED, parent model with MappingStrategy.ANNOTATED"() {
 		expect:
 		InheritanceModelAnnotated inheritanceModel = modelProvider.get(InheritanceModelAnnotated.class, "/content/foo/jcr:content")
 		Assert.assertNotNull(inheritanceModel)
-		Assert.assertEquals(inheritanceModel.getField1(), "field1 value")
-		Assert.assertEquals(inheritanceModel.getField2(), "field2 value")
+		Assert.assertEquals("field1 value", inheritanceModel.getField1())
+		Assert.assertEquals("field2 value", inheritanceModel.getField2())
 		Assert.assertNull(inheritanceModel.getField3())
+		Assert.assertNull(inheritanceModel.getNotAnnotated())
 	}
 
 	def "Inheritance test: Child model with MappingStrategy.ANNOTATED, parent model with MappingStrategy.ALL"() {
 		expect:
 		InheritanceModelAnnotatedAll inheritanceModel = modelProvider.get(InheritanceModelAnnotatedAll.class, "/content/foo/jcr:content")
 		Assert.assertNotNull(inheritanceModel)
-		Assert.assertEquals(inheritanceModel.getField1(), "field1 value")
-		Assert.assertEquals(inheritanceModel.getField2(), "field2 value")
+		Assert.assertEquals("field1 value", inheritanceModel.getField1())
+		Assert.assertEquals("field2 value", inheritanceModel.getField2())
 		Assert.assertNull(inheritanceModel.getField3())
+		Assert.assertNull(inheritanceModel.getIgnored())
 	}
 
 	def "Inheritance test: Child model with MappingStrategy.ANNOTATED, parent model without MappingStrategy"() {
@@ -63,7 +60,7 @@ class InheritanceTest extends BaseSetup {
 		InheritanceModelAnnotatedWithout inheritanceModel = modelProvider.get(InheritanceModelAnnotatedWithout.class, "/content/foo/jcr:content")
 		Assert.assertNotNull(inheritanceModel)
 		Assert.assertNull(inheritanceModel.getField1())
-		Assert.assertEquals(inheritanceModel.getField2(), "field2 value")
+		Assert.assertEquals("field2 value", inheritanceModel.getField2())
 		Assert.assertNull(inheritanceModel.getField3())
 	}
 
@@ -71,16 +68,18 @@ class InheritanceTest extends BaseSetup {
 		expect:
 		InheritanceModelAll inheritanceModel = modelProvider.get(InheritanceModelAll.class, "/content/foo/jcr:content")
 		Assert.assertNotNull(inheritanceModel)
-		Assert.assertEquals(inheritanceModel.getField1(), "field1 value")
-		Assert.assertEquals(inheritanceModel.getField2(), "field2 value")
+		Assert.assertEquals("field1 value", inheritanceModel.getField1())
+		Assert.assertEquals("field2 value", inheritanceModel.getField2())
+		Assert.assertNull(inheritanceModel.getIgnored())
 	}
 
 	def "Inheritance test: Child model with MappingStrategy.ALL, parent model with MappingStrategy.ANNOTATED"() {
 		expect:
 		InheritanceModelAllAnnotated inheritanceModel = modelProvider.get(InheritanceModelAllAnnotated.class, "/content/foo/jcr:content")
 		Assert.assertNotNull(inheritanceModel)
-		Assert.assertEquals(inheritanceModel.getField1(), "field1 value")
-		Assert.assertEquals(inheritanceModel.getField2(), "field2 value")
+		Assert.assertEquals("field1 value",inheritanceModel.getField1())
+		Assert.assertEquals("field2 value",inheritanceModel.getField2())
+		Assert.assertNull(inheritanceModel.getNotAnnotated())
 	}
 
 	def "Inheritance test: Child model with MappingStrategy.ALL, parent model without MappingStrategy"() {
@@ -88,7 +87,7 @@ class InheritanceTest extends BaseSetup {
 		InheritanceModelAllWithout inheritanceModel = modelProvider.get(InheritanceModelAllWithout.class, "/content/foo/jcr:content")
 		Assert.assertNotNull(inheritanceModel)
 		Assert.assertNull(inheritanceModel.getField1())
-		Assert.assertEquals(inheritanceModel.getField2(), "field2 value")
+		Assert.assertEquals("field2 value", inheritanceModel.getField2())
 	}
 
 	def "Inheritance test: Child model without MappingStrategy, parent model with MappingStrategy.ALL"() {
@@ -97,6 +96,7 @@ class InheritanceTest extends BaseSetup {
 		Assert.assertNotNull(inheritanceModel)
 		Assert.assertNull(inheritanceModel.getField1())
 		Assert.assertNull(inheritanceModel.getField2())
+		Assert.assertNull(inheritanceModel.getIgnored())
 	}
 
 	def "Inheritance test: Child model without MappingStrategy, parent model with MappingStrategy.ANNOTATED"() {
@@ -105,5 +105,6 @@ class InheritanceTest extends BaseSetup {
 		Assert.assertNotNull(inheritanceModel)
 		Assert.assertNull(inheritanceModel.getField1())
 		Assert.assertNull(inheritanceModel.getField2())
+		Assert.assertNull(inheritanceModel.getNotAnnotated())
 	}
 }

@@ -27,9 +27,15 @@ class AbstractInheritanceModelAnnotated {
 
 	@JcrProperty
 	private String field1;
+	
+	private String notAnnotated;
 
 	public String getField1() {
 		return field1;
+	}
+
+	public String getNotAnnotated() {
+		return notAnnotated;
 	}
 }
 
@@ -37,9 +43,16 @@ class AbstractInheritanceModelAnnotated {
 class AbstractInheritanceModelAll {
 
 	private String field1;
+	
+	@IgnoreProperty
+	private String ignored;
 
 	public String getField1() {
 		return field1;
+	}
+
+	public String getIgnored() {
+		return ignored;
 	}
 }
 
