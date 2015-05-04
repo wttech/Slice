@@ -1,0 +1,40 @@
+/*-
+ * #%L
+ * Slice - Tests Base
+ * %%
+ * Copyright (C) 2012 Cognifide Limited
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+package com.cognifide.slice.test.module;
+
+import com.cognifide.slice.api.scope.Cacheable;
+import com.cognifide.slice.mapper.annotation.JcrProperty;
+import com.cognifide.slice.mapper.annotation.SliceResource;
+
+/**
+ * Created by Jaromir Celejewski on 2015-04-21.
+ */
+
+@Cacheable
+@SliceResource
+public class SimpleCacheableModel {
+
+	@JcrProperty
+	private String prop1;
+
+	public String getProp1() {
+		return prop1;
+	}
+}

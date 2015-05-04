@@ -37,7 +37,11 @@
 
 			<!-- All, but self -->
 			<excludes>
-				<exclude>com.cognifide:slice-assembly</exclude>
+				<exclude>com.cognifide.slice:slice-assembly</exclude>
+				<exclude>com.cognifide.slice:slice-test</exclude>
+				<exclude>com.cognifide.slice:slice-base-test</exclude>
+				<exclude>com.cognifide.slice:slice-core-test</exclude>
+				<exclude>com.cognifide.slice:slice-mapper-test</exclude>
 			</excludes>
 			
 			<!-- items from source folder -->
@@ -64,34 +68,6 @@
 				<unpack>false</unpack>
 			</binaries>
 			
-		</moduleSet>
-
-		<!-- this one packages only webbapp foundation -->
-		<moduleSet>
-			<!-- Enable access to all projects in the current multimodule build! -->
-			<useAllReactorProjects>true</useAllReactorProjects>
-			<!-- Now, select which projects to include in this module-set. -->
-		
-			<sources>
-				<includeModuleDirectory>false</includeModuleDirectory>
-				
-				<fileSets>
-					<fileSet>
-						<directory>src/main/cq/jcr_root</directory>
-						<outputDirectory>/jcr_root</outputDirectory>
-						<excludes>
-							<exclude>**/.vlt</exclude>
-							<exclude>/libs/**</exclude>
-							<exclude>/WEB-INF/**</exclude>
-						</excludes>
-					</fileSet>
-				</fileSets>
-			</sources>
-			
-			<binaries>
-				<outputDirectory>/jcr_root/apps/slice/install</outputDirectory>
-				<unpack>false</unpack>
-			</binaries>
 		</moduleSet>
 	</moduleSets>
 	
