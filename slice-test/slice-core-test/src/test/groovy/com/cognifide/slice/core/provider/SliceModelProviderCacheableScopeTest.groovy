@@ -41,9 +41,6 @@ import org.apache.sling.api.SlingHttpServletRequest
 import org.apache.sling.api.SlingHttpServletResponse
 import spock.lang.Shared
 
-/**
- * Created by T530 on 2015-04-22.
- */
 class SliceModelProviderCacheableScopeTest extends ProsperSpec{
 
 	@Shared
@@ -118,7 +115,7 @@ class SliceModelProviderCacheableScopeTest extends ProsperSpec{
 		modelProvider = injector.getInstance(ModelProvider.class)
 	}
 
-	def "Get cacheable models within different requests"() {
+	def "Get cacheable models within different requests/contexts"() {
 		setup: "Init model"
 		firstRequestContext()
 		def SimpleCacheableModel model1 = modelProvider.get(SimpleCacheableModel.class, '/content/foo')
@@ -133,8 +130,8 @@ class SliceModelProviderCacheableScopeTest extends ProsperSpec{
 		Assert.assertNotNull(model3)
 
 		and: "References are different"
-		Assert.assertTrue(model1!=model2)
-		Assert.assertTrue(model2!=model3)
+		Assert.assertFalse(model1 == model2)
+		Assert.assertFalse(model2 == model3)
 	}
 
 	def "Get cacheable models within different resource resolver scopes"() {
@@ -148,7 +145,7 @@ class SliceModelProviderCacheableScopeTest extends ProsperSpec{
 		Assert.assertNotNull(model1)
 		Assert.assertNotNull(model2)
 
-		and: "References are different"
-		Assert.assertTrue(model1!=model2)
+		and: "Models are different"
+		Assert.assertFalse(model1 == model2)
 	}
 }

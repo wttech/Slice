@@ -42,7 +42,7 @@ import spock.lang.Shared
 /**
  * Created by Jaromir Celejewski on 2015-04-22.
  */
-class InjectionTestBase extends ProsperSpec {
+class SlingUrlTestBase extends ProsperSpec {
 
 	@Shared
 	SlingHttpServletRequest request
@@ -83,16 +83,22 @@ class InjectionTestBase extends ProsperSpec {
 			extension = "html"
 			suffix = "suff"
 		}
-
 		response = responseBuilder.build()
+		initContext(request, response)
+	}
 
+	def simpleRequestContext() {
+		request = requestBuilder.build {
+			parameters = [path: "/content/prosper"]
+			contentType = "application/json"
+		}
+		response = responseBuilder.build()
 		initContext(request, response)
 	}
 
 	def emptyRequestContext() {
 		request = requestBuilder.build()
 		response = responseBuilder.build()
-
 		initContext(request, response)
 	}
 

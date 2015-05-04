@@ -25,7 +25,7 @@ import junit.framework.Assert
  * User: krzysztof.ryk@solsoft.pl
  * Date: 4/22/15 11:30 AM
  */
-class SelectorsInjectionTest extends InjectionTestBase {
+class SelectorsInjectionTest extends SlingUrlTestBase {
 
 	def "Get Selectors"() {
 		setup: "Init model"
@@ -121,5 +121,21 @@ class SelectorsInjectionTest extends InjectionTestBase {
 
 		expect: "Selectors string is null"
 		Assert.assertNull(selectors)
+	}
+
+	def "Get Selectors for simple request"() {
+		setup: "Init model"
+		simpleRequestContext()
+		def SelectorsInjectionModel model = modelProvider.get(SelectorsInjectionModel.class, '/content/foo')
+		def selectors = model.getSelectors()
+		def selectorsList = model.getSelectorsAsList()
+
+		expect: "Selectors are not null"
+		Assert.assertNotNull(selectors)
+		Assert.assertNotNull(selectorsList)
+
+		and: "There are no selectors"
+		Assert.assertEquals(0, selectors.size())
+		Assert.assertEquals(0, selectorsList.size())
 	}
 }

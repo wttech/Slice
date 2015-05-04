@@ -31,7 +31,7 @@ class InjectorHierarchyTest extends InjectorsTestSetup{
 	def "Find injector by name"() {
 		given: "defined injectors: 'slice-test', 'slice-test2', 'slice-test/subtest'"
 
-		when:
+		when: "fetching different injectors"
 		Injector injector = injectorHierarchy.getInjectorByName("slice-test")
 		Injector injector2 = injectorHierarchy.getInjectorByName("slice-test2")
 		Injector injector3 = injectorHierarchy.getInjectorByName("slice-test/subtest")
@@ -45,17 +45,17 @@ class InjectorHierarchyTest extends InjectorsTestSetup{
 	def "Can't find injector by name if it is not created"() {
 		given: "defined injectors: 'slice-test', 'slice-test2', 'slice-test/subtest'"
 
-		when:
+		when: "fetching non-exisitng injector"
 		Injector injectorNonExistent = injectorHierarchy.getInjectorByName("slice-test3")
 
-		then: "'slice-test3' does not exist in hierarchy"
+		then: "injector does not exist in hierarchy"
 		Assert.assertNull(injectorNonExistent)
 	}
 
 	def "Can't find injector by null name"() {
 		given: "defined injectors: 'slice-test', 'slice-test2', 'slice-test/subtest'"
 
-		when:
+		when: "fetching null injector"
 		Injector injectorNonExistent = injectorHierarchy.getInjectorByName(null)
 
 		then: "injector with null name does not exist in hierarchy"
@@ -65,12 +65,12 @@ class InjectorHierarchyTest extends InjectorsTestSetup{
 	def "Find injector by application path"() {
 		given: "defined injectors: 'slice-test', 'slice-test2', 'slice-test/subtest'"
 
-		when:
+		when: "fetching names by application path"
 		String injector1name = injectorHierarchy.getInjectorNameByApplicationPath("/apps/slice-test")
 		String injector2name = injectorHierarchy.getInjectorNameByApplicationPath("/apps/slice-test2")
 		String injector3name = injectorHierarchy.getInjectorNameByApplicationPath("/apps/slice-test/subtest")
 
-		then: "'slice-test', 'slice-test2', 'slice-test/subtest' can be found by path in injector's hierarchy"
+		then: "appropriate injector names can be found in injector's hierarchy"
 		Assert.assertEquals("slice-test", injector1name)
 		Assert.assertEquals("slice-test2", injector2name)
 		Assert.assertEquals("slice-test/subtest", injector3name)
@@ -79,12 +79,12 @@ class InjectorHierarchyTest extends InjectorsTestSetup{
 	def "Can't find injector by application path if it is not registered"() {
 		given: "defined injectors: 'slice-test', 'slice-test2', 'slice-test/subtest'"
 
-		when:
+		when: "fetching injector for apps which are not registered"
 		String injector1name = injectorHierarchy.getInjectorNameByApplicationPath("/apps/slice-test3")
 		String injector2name = injectorHierarchy.getInjectorNameByApplicationPath("/apps/slice-test/subtest2")
 		String injectorForNullName = injectorHierarchy.getInjectorNameByApplicationPath(null)
 
-		then: "'slice-test3', 'slice-test/subtest2' and null name cannot be found by path in injector's hierarchy"
+		then: "injectors cannot be found in injector's hierarchy"
 		Assert.assertNull(injector1name)
 		Assert.assertNull(injector2name)
 		Assert.assertNull(injectorForNullName)

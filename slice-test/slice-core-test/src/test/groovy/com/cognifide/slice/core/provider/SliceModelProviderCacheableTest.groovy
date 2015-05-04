@@ -27,9 +27,6 @@ import com.cognifide.slice.test.module.SimplePojo
 import com.cognifide.slice.test.setup.BaseSetup
 import org.junit.Assert
 
-/**
- * Created by T530 on 2015-04-21.
- */
 class SliceModelProviderCacheableTest extends BaseSetup {
 
 	def setupSpec() {
@@ -51,7 +48,7 @@ class SliceModelProviderCacheableTest extends BaseSetup {
 		Assert.assertNotNull(modelB)
 
 		and: "Model provider should deliver new model instance on each request"
-		Assert.assertTrue(modelA!=modelB)
+		Assert.assertFalse(modelA == modelB)
 	}
 
 	def "Get cacheable model by class and path"() {
@@ -67,7 +64,7 @@ class SliceModelProviderCacheableTest extends BaseSetup {
 		Assert.assertNotNull(modelB)
 
 		and: "Model provider should deliver the same model instance on each request"
-		Assert.assertTrue(modelA==modelB)
+		Assert.assertTrue(modelA == modelB)
 	}
 
 	def "Get non cacheable pojo by class and path"() {
@@ -82,7 +79,7 @@ class SliceModelProviderCacheableTest extends BaseSetup {
 		Assert.assertNotNull(modelB)
 
 		and: "Model provider should deliver new pojo instance on each request"
-		Assert.assertTrue(modelA!=modelB)
+		Assert.assertFalse(modelA == modelB)
 	}
 
 	def "Get cacheable pojo by class and path"() {
@@ -98,7 +95,7 @@ class SliceModelProviderCacheableTest extends BaseSetup {
 		Assert.assertNotNull(modelB)
 
 		and: "Model provider should deliver the same pojo instance on each request"
-		Assert.assertTrue(modelA==modelB)
+		Assert.assertTrue(modelA == modelB)
 	}
 
 	def "Get cacheable pojo by class for null path"() {
@@ -114,7 +111,7 @@ class SliceModelProviderCacheableTest extends BaseSetup {
 		Assert.assertNotNull(modelB)
 
 		and: "Model provider should deliver the same pojo instance on each request"
-		Assert.assertTrue(modelA==modelB)
+		Assert.assertTrue(modelA == modelB)
 	}
 
 	def "Get cacheable pojos for different paths"() {
@@ -133,9 +130,9 @@ class SliceModelProviderCacheableTest extends BaseSetup {
 		Assert.assertNotNull(modelC)
 
 		and: "Model provider should deliver different pojo instance on each request"
-		Assert.assertTrue(modelA!=modelB)
-		Assert.assertTrue(modelB!=modelC)
-		Assert.assertTrue(modelC!=modelA)
+		Assert.assertFalse(modelA == modelB)
+		Assert.assertFalse(modelB == modelC)
+		Assert.assertFalse(modelC == modelA)
 	}
 
 	def "Get cacheable classes of inheriting types for the same path"() {
@@ -151,6 +148,6 @@ class SliceModelProviderCacheableTest extends BaseSetup {
 		Assert.assertNotNull(modelB)
 
 		and: "Model provider should deliver different instances"
-		Assert.assertTrue(modelA!=modelB)
+		Assert.assertFalse(modelA == modelB)
 	}
 }

@@ -28,7 +28,7 @@ import javax.jcr.query.QueryManager
  * User: krzysztof.ryk@solsoft.pl
  * Date: 4/22/15 3:39 PM
  */
-class QueryManagerInjectionTest extends InjectionTestBase {
+class QueryManagerInjectionTest extends SlingUrlTestBase {
 
 	def "Get Query Manager"() {
 		setup: "Initialize context with a filled request"

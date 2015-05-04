@@ -22,25 +22,22 @@ package com.cognifide.slice.core.internal.injector
 import com.cognifide.slice.api.injector.InjectorWithContext
 import org.junit.Assert
 
-/**
- * Created by T530 on 2015-04-21.
- */
 class InjectorsRepositoryServiceTest extends InjectorsTestSetup {
 
 	def "Find name of proper injector for given resource path"() {
 		given: "defined injectors: 'slice-test', 'slice-test2', 'slice-test/subtest'"
 		List<String> injectors = Arrays.asList("slice-test2", "slice-test", "slice-test/subtest")
 
-		when:
+		when: "fetching injector names for given resources"
 		String injectorNameForRes1 = repositoryService.getInjectorNameForResource("slice-test/abc/abc")
 		String injectorNameForRes2 = repositoryService.getInjectorNameForResource("/apps/slice-test/abc/abc")
 		String injectorNameForRes3 = repositoryService.getInjectorNameForResource("slice-test/subtest/abc")
 		String injectorNameForRes4 = repositoryService.getInjectorNameForResource("slice-test3/subtest/abc")
 		String injectorNameForResNull = repositoryService.getInjectorNameForResource(null)
 
-		then: "find best matching injector for given resource path or return null if no matching injector found"
-		Assert.assertTrue(injectors.containsAll(repositoryService.getInjectorNames()) &&
-				repositoryService.getInjectorNames().containsAll(injectors))
+		then: "all injectors are registered"
+		Assert.assertTrue(injectors.containsAll(repositoryService.getInjectorNames()))
+		and: "injectors are correctly matched for given resource path or return null if no matching injector found"
 		Assert.assertEquals("slice-test", injectorNameForRes1)
 		Assert.assertEquals("slice-test", injectorNameForRes2)
 		Assert.assertEquals("slice-test/subtest", injectorNameForRes3)
@@ -58,7 +55,7 @@ class InjectorsRepositoryServiceTest extends InjectorsTestSetup {
 		InjectorWithContext injectorWithContext4 = repositoryService.getInjector("slice-test/subtestx")
 		InjectorWithContext injectorWithContext5 = repositoryService.getInjector(null)
 
-		then: "return non null InjectorWithContext whenever injector with a given name exists"
+		then: "non null InjectorWithContext whenever injector with a given name exists"
 		Assert.assertNotNull(injectorWithContext1)
 		Assert.assertNotNull(injectorWithContext2)
 		Assert.assertNotNull(injectorWithContext3)

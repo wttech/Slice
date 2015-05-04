@@ -79,8 +79,7 @@ class AdapterBaseSetup extends ProsperSpec {
 					@Override
 					def <AdapterType> AdapterType getAdapter(Object adaptable, Class<AdapterType> type) {
 						//A workaround necessary to force code to use Prosper's mock objects instead of real Sling
-						if (ValueMap.class.equals(type))
-						{
+						if (ValueMap.class.equals(type)) {
 							return null;
 						}
 						return super.getAdapter(adaptable, type)

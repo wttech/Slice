@@ -36,9 +36,6 @@ import spock.lang.Shared
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 
-/**
- * Created by T530 on 2015-04-21.
- */
 class InjectorsTestSetup extends ProsperSpec{
 
 	@Shared
@@ -61,31 +58,9 @@ class InjectorsTestSetup extends ProsperSpec{
 		modules.add(new TestModule())
 
 		//Preparing configurations for injectors
-		final InjectorRunner injectorRunner1 = new InjectorRunner(null,
-				"slice-test",
-				"slice-test-app.*",
-				"com.cognifide.example")
-
-		injectorRunner1.installModules(modules)
-		InjectorConfig config = new InjectorConfig(injectorRunner1)
-
-		final InjectorRunner injectorRunner2 = new InjectorRunner(null,
-				"slice-test2",
-				"slice-test-app2.*",
-				"com.cognifide.example2")
-
-		injectorRunner2.installModules(modules)
-		injectorRunner2.setParentInjectorName("slice-test")
-		InjectorConfig config2 = new InjectorConfig(injectorRunner2)
-
-		final InjectorRunner injectorRunner3 = new InjectorRunner(null,
-				"slice-test/subtest",
-				"slice-test-app3.*",
-				"com.cognifide.example3")
-
-		injectorRunner3.installModules(modules)
-		injectorRunner3.setParentInjectorName("slice-test")
-		InjectorConfig config3 = new InjectorConfig(injectorRunner3)
+		InjectorConfig config1 = getConfig1(modules)
+		InjectorConfig config2 = getConfig2(modules)
+		InjectorConfig config3 = getConfig3(modules)
 
 		//creation of InjectorsRepositoryService with InjectorHierarchy
 		repositoryService = new InjectorsRepositoryService()
@@ -95,10 +70,42 @@ class InjectorsTestSetup extends ProsperSpec{
 		//creation and registration of injectors in the hierarchy
 		Method bindConfigMethod = injectorHierarchy.getClass().getDeclaredMethod("bindConfig", InjectorConfig.class)
 		bindConfigMethod.setAccessible(true)
-		bindConfigMethod.invoke(injectorHierarchy, config)
+		bindConfigMethod.invoke(injectorHierarchy, config1)
 		bindConfigMethod.invoke(injectorHierarchy, config2)
 		bindConfigMethod.invoke(injectorHierarchy, config3)
 
+	}
+	
+	private InjectorConfig getConfig1(List modules) {
+		final InjectorRunner injectorRunner1 = new InjectorRunner(null,
+				"slice-test",
+				"slice-test-app.*",
+				"com.cognifide.example")
+		injectorRunner1.installModules(modules)
+		InjectorConfig config1 = new InjectorConfig(injectorRunner1)
+		return config1
+	}
+	
+	private InjectorConfig getConfig2(List modules) {
+		final InjectorRunner injectorRunner2 = new InjectorRunner(null,
+				"slice-test2",
+				"slice-test-app2.*",
+				"com.cognifide.example2")
+		injectorRunner2.installModules(modules)
+		injectorRunner2.setParentInjectorName("slice-test")
+		InjectorConfig config2 = new InjectorConfig(injectorRunner2)
+		return config2
+	}
+
+	private InjectorConfig getConfig3(List modules) {
+		final InjectorRunner injectorRunner3 = new InjectorRunner(null,
+				"slice-test/subtest",
+				"slice-test-app3.*",
+				"com.cognifide.example3")
+		injectorRunner3.installModules(modules)
+		injectorRunner3.setParentInjectorName("slice-test")
+		InjectorConfig config3 = new InjectorConfig(injectorRunner3)
+		return config3
 	}
 
 	private void injectHierarchyIntoRepositoryService(InjectorsRepositoryService repositoryService, InjectorHierarchy injectorHierarchy) {
