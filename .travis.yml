@@ -2,7 +2,10 @@ language: java
 script: mvn clean package
 
 after_success:
-  - mvn test jacoco:report org.eluder.coveralls:coveralls-maven-plugin:report
+  - ant instrument
+  - mvn test
+  - ant report-xml
+  - mvn coveralls:report
 
 env:
   global:

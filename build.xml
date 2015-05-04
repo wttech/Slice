@@ -1,0 +1,89 @@
+<project>
+    <property name="report-format" value="xml"/>
+
+    <target name="instrument">
+        <antcall target="instrumentModule">
+            <param name="module" value="slice-core-api"/>
+        </antcall>
+        <antcall target="instrumentModule">
+            <param name="module" value="slice-mapper-api"/>
+        </antcall>
+        <antcall target="instrumentModule">
+            <param name="module" value="slice-core"/>
+        </antcall>
+        <antcall target="instrumentModule">
+            <param name="module" value="slice-mapper"/>
+        </antcall>
+    </target>
+
+    <target name="report-xml">
+        <antcall target="report">
+            <param name="report-format" value="xml"/>
+        </antcall>
+    </target>
+
+    <target name="report-html">
+        <antcall target="report">
+            <param name="report-format" value="html"/>
+        </antcall>
+    </target>
+
+    <target name="report" depends="merge">
+        <property name="src.dir" value="src/main/java/"/>
+        <cobertura-report datafile="sum.ser"
+                          format="${report-format}"
+                          destdir="./target/report">
+            <fileset dir="./slice-core-api/${src.dir}">
+                <include name="**/*.java" />
+            </fileset>
+            <fileset dir="./slice-mapper-api/${src.dir}">
+                <include name="**/*.java" />
+            </fileset>
+            <fileset dir="./slice-core/${src.dir}">
+                <include name="**/*.java" />
+            </fileset>
+            <fileset dir="./slice-mapper/${src.dir}">
+                <include name="**/*.java" />
+            </fileset>
+        </cobertura-report>
+    </target>
+
+    <target name="merge">
+        <cobertura-merge datafile="sum.ser">
+            <fileset dir=".">
+                <include name="**/cobertura.ser"/>
+            </fileset>
+        </cobertura-merge>
+    </target>
+
+    <target name="instrumentModule">
+        <property name="classes.dir" value="target/classes"/>
+        <cobertura-instrument ignoreTrivial="true" todir="./${module}/${classes.dir}">
+            <auxClasspath>
+                <path refid="cobertura.auxpath" />
+            </auxClasspath>
+            <fileset dir="./${module}/target/classes">
+                <include name="**/*.class"/>
+            </fileset>
+        </cobertura-instrument>
+    </target>
+
+    <property environment="env"/>
+    <property name="cobertura.dir" value="slice-test/lib"/>
+
+    <path id="cobertura.classpath">
+        <fileset dir="${cobertura.dir}">
+            <include name="cobertura-2.1.1.jar"/>
+            <include name="lib/**/*.jar"/>
+        </fileset>
+    </path>
+
+    <path id="cobertura.auxpath">
+        <pathelement path="${classpath}"/>
+        <pathelement location="./slice-core-api/target/classes"/>
+        <pathelement location="./slice-mapper-api/target/classes"/>
+    </path>
+
+
+    <taskdef classpathref="cobertura.classpath" resource="tasks.properties"/>
+</project>

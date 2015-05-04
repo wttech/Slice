@@ -19,9 +19,11 @@
  */
 package com.cognifide.slice.core.internal.provider;
 
+import junit.framework.Assert;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -99,6 +101,13 @@ public class SliceClassToKeyMapperTest {
 	public void testGetKeyForKnownBinding() {
 		// use interface bound in a module - but with a simple constructor so it passes mocks
 		testForClassName(ContextFactory.class);
+	}
+
+	@Test
+	public void testGetKeyForNonExistingClass() throws ClassNotFoundException {
+		String className = "NonExistingClass";
+		when(classLoader.loadClass(className)).thenThrow(ClassNotFoundException.class);
+		Assert.assertNull(mapper.getKey(className));
 	}
 
 	@Test

@@ -76,10 +76,6 @@ public class SliceReferenceFieldProcessor implements FieldProcessor {
 	}
 
 	private String getResolvedPath(final String initialPath) {
-		if (StringUtils.isBlank(initialPath)) {
-			return StringUtils.EMPTY;
-		}
-
 		// lazy loading of SliceReferencePathResolver - preventing errors in case one doesn't use
 		// SliceReference at all
 		final SliceReferencePathResolver sliceReferencePathResolver = injector
