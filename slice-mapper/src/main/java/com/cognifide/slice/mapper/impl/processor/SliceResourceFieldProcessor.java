@@ -79,7 +79,11 @@ public class SliceResourceFieldProcessor implements FieldProcessor {
 		final Class<?> fieldType = field.getType();
 		Resource followUpResource = FollowUpProcessorUtil.getFollowUpResource(resource, valueMap, field,
 				propertyName);
-		return modelProvider.get(fieldType, followUpResource);
+		if (followUpResource != null) {
+			return modelProvider.get(fieldType, followUpResource);
+		} else {
+			return null;
+		}
 	}
 
 }
