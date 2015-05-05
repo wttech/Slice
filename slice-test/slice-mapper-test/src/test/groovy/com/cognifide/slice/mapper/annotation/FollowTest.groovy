@@ -60,10 +60,11 @@ class FollowTest extends BaseSetup {
 			bar("cq:PageContent") { "jcr:content"("jcrPropertyModel": null) }
 		}
 		when: "Getting Follow model, based on null path"
-		modelProvider.get(FollowModel.class, "/content/bar/jcr:content")
+		FollowModel followModel = modelProvider.get(FollowModel.class, "/content/bar/jcr:content")
 
-		then: "ProvisionException should be thrown - resource can not be null"
-		thrown(ProvisionException) //FIXME this is not correct behaviour
+		then: "All fields in follow model are null"
+		Assert.assertNull(followModel.getJcrPropertyModel())
+		Assert.assertNull(followModel.getJcrPropertyModelPath())
 	}
 
 	def "Follow test with non-string value"() {
@@ -72,13 +73,14 @@ class FollowTest extends BaseSetup {
 			bar("cq:PageContent") { "jcr:content"("jcrPropertyModel": true) }
 		}
 		when: "Getting Follow model, based on non-string property"
-		modelProvider.get(FollowModel.class, "/content/bar/jcr:content")
+		FollowModel followModel = modelProvider.get(FollowModel.class, "/content/bar/jcr:content")
 
-		then: "ProvisionException should be thrown - resource can not be null"
-		thrown(ProvisionException)
+		then: "Field with @Follow annotation is null"
+		Assert.assertNull(followModel.getJcrPropertyModel())
+		Assert.assertEquals("true", followModel.getJcrPropertyModelPath())
+
 	}
 
-	@FailsWith(ProvisionException)
 	def "Follow test with non-existing follow resource"() {
 		setup:
 		pageBuilder.content {
@@ -93,7 +95,9 @@ class FollowTest extends BaseSetup {
 		Assert.assertEquals(jcrPropertyModel.getSize(), 0)
 
 		assertPageExists("/content/non_existingResource")
-		modelProvider.get(FollowModel.class, "/content/non_existingResource/jcr:content")
+		FollowModel followModel = modelProvider.get(FollowModel.class, "/content/non_existingResource/jcr:content")
+		Assert.assertNull(followModel.getJcrPropertyModel())
+		Assert.assertEquals("/content/test1/jcr:content", followModel.getJcrPropertyModelPath())
 	}
 
 	@FailsWith(ProvisionException)
