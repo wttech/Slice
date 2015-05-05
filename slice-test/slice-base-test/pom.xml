@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>slice-test</artifactId>
 		<groupId>com.cognifide.slice</groupId>
-		<version>4.2.1-SNAPSHOT</version>
+		<version>4.3.0-SNAPSHOT</version>
 	</parent>
 	<name>Slice - Tests Base</name>
 	<description>Base for Slice tests</description>

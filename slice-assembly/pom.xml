@@ -2,11 +2,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.cognifide.slice</groupId>
 	<artifactId>slice-assembly</artifactId>
-	<version>4.2.1-SNAPSHOT</version>
+	<version>4.3.0-SNAPSHOT</version>
 	<parent>
 		<groupId>com.cognifide.slice</groupId>
 		<artifactId>slice-parent</artifactId>
-		<version>4.2.1-SNAPSHOT</version>
+		<version>4.3.0-SNAPSHOT</version>
 	</parent>
 	<name>Slice - Assembly</name>
 	<description>Slice assembly</description>
