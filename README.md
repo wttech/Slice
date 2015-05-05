@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/Cognifide/Slice.svg)](https://travis-ci.org/Cognifide/Slice)
 [![Coverage Status](https://scan.coverity.com/projects/4863/badge.svg)](https://scan.coverity.com/projects/4863)
 [![Coverage Status](https://coveralls.io/repos/Cognifide/Slice/badge.svg?branch=master)](https://coveralls.io/r/Cognifide/Slice?branch=master)
+[![Lateste release](https://maven-badges.herokuapp.com/maven-central/com.cognifide.slice/slice-assembly/badge.svg)](http://mvnrepository.com/artifact/com.cognifide.slice/slice-assembly)
 # About Slice
 
 ## Purpose
