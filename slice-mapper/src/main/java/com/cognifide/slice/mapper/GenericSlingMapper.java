@@ -148,7 +148,9 @@ public class GenericSlingMapper implements Mapper {
 						.getDeclaringClass());
 				if (shouldFieldBeMapped(field, mapperStrategy)) {
 					Object value = mapResourceToField(resource, valueMap, field);
-					FieldUtils.writeField(field, object, value, ReflectionHelper.FORCE_ACCESS);
+					if (value != null) {
+						FieldUtils.writeField(field, object, value, ReflectionHelper.FORCE_ACCESS);
+					}
 				}
 			}
 			return object;
