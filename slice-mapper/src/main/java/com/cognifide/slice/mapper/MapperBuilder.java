@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,7 +17,6 @@
  * limitations under the License.
  * #L%
  */
-
 package com.cognifide.slice.mapper;
 
 import com.cognifide.slice.mapper.api.Mapper;
@@ -37,9 +36,9 @@ import java.util.Deque;
 import java.util.LinkedList;
 
 /**
- * MapperBuilder replaced previous MapperFactory. It allows to set Field Processors and Post Processors and
- * then build instance of {@link Mapper}
- * 
+ * MapperBuilder replaced previous MapperFactory. It allows to set Field Processors and Post Processors and then build
+ * instance of {@link Mapper}
+ *
  * @author maciej.matuszewski
  */
 public final class MapperBuilder {
@@ -53,14 +52,14 @@ public final class MapperBuilder {
 
 	@Inject
 	private SliceReferenceFieldProcessor sliceReferenceFieldProcessor;
-	
+
 	@Inject
 	private ChildrenFieldProcessor childrenFieldProcessor;
 
 	/**
-	 * This method creates new instance of {@link GenericSlingMapper}. Field processors should be added before
-	 * this method.
-	 * 
+	 * This method creates new instance of {@link GenericSlingMapper}. Field processors should be added before this
+	 * method.
+	 *
 	 * @return
 	 */
 	public Mapper build() {
@@ -69,7 +68,7 @@ public final class MapperBuilder {
 
 	/**
 	 * Adds {@link FieldProcessor} at the beginning of processors list.
-	 * 
+	 *
 	 * @param fieldProcessor
 	 * @return
 	 */
@@ -79,19 +78,33 @@ public final class MapperBuilder {
 	}
 
 	/**
+	 * @deprecated Please use
+	 * {@link com.cognifide.slice.mapper.MapperBuilder#addFieldPostProcessorAsFirst(com.cognifide.slice.mapper.api.processor.FieldPostProcessor)}
+	 * instead
+	 *
 	 * Adds {@link FieldPostProcessor} at the beginning of postProcessors list.
-	 * 
+	 *
 	 * @param fieldPostProcessor
 	 * @return
 	 */
+	@Deprecated
 	public MapperBuilder addFieldPostProcessor(FieldPostProcessor fieldPostProcessor) {
+		return addFieldPostProcessorAsFirst(fieldPostProcessor);
+	}
+
+	public MapperBuilder addFieldPostProcessorAsFirst(FieldPostProcessor fieldPostProcessor) {
 		postProcessors.addFirst(fieldPostProcessor);
+		return this;
+	}
+
+	public MapperBuilder addFieldPostProcessorAsLast(FieldPostProcessor fieldPostProcessor) {
+		postProcessors.addLast(fieldPostProcessor);
 		return this;
 	}
 
 	/**
 	 * Adds default processors and post processors
-	 * 
+	 *
 	 * @return
 	 */
 	public MapperBuilder addDefaultSliceProcessors() {
@@ -102,7 +115,7 @@ public final class MapperBuilder {
 
 	/**
 	 * Adds default processors
-	 * 
+	 *
 	 * @return
 	 */
 	public MapperBuilder addSliceProcessors() {
@@ -118,7 +131,7 @@ public final class MapperBuilder {
 
 	/**
 	 * Adds default post-processors
-	 * 
+	 *
 	 * @return
 	 */
 	public MapperBuilder addSlicePostProcessors() {
