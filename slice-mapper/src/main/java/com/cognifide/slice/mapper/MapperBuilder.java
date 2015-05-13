@@ -79,7 +79,7 @@ public final class MapperBuilder {
 
 	/**
 	 * @deprecated Please use
-	 * {@link com.cognifide.slice.mapper.MapperBuilder#addFieldPostProcessorAsFirst(com.cognifide.slice.mapper.api.processor.FieldPostProcessor)}
+	 * {@link MapperBuilder#addFieldPostProcessorAsFirst(com.cognifide.slice.mapper.api.processor.FieldPostProcessor)}
 	 * instead
 	 *
 	 * Adds {@link FieldPostProcessor} at the beginning of postProcessors list.
@@ -92,11 +92,23 @@ public final class MapperBuilder {
 		return addFieldPostProcessorAsFirst(fieldPostProcessor);
 	}
 
+	/**
+	 * Adds {@link FieldPostProcessor} at the beginning of postProcessors list.
+	 *
+	 * @param fieldPostProcessor
+	 * @return
+	 */
 	public MapperBuilder addFieldPostProcessorAsFirst(FieldPostProcessor fieldPostProcessor) {
 		postProcessors.addFirst(fieldPostProcessor);
 		return this;
 	}
 
+	/**
+	 * Adds {@link FieldPostProcessor} at the end of postProcessors list.
+	 *
+	 * @param fieldPostProcessor
+	 * @return
+	 */
 	public MapperBuilder addFieldPostProcessorAsLast(FieldPostProcessor fieldPostProcessor) {
 		postProcessors.addLast(fieldPostProcessor);
 		return this;
