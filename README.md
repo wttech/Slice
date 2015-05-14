@@ -1,6 +1,6 @@
 ![Cognifide logo](http://cognifide.github.io/Carty/assets/media/cognifide_logo.png)
 
-[![Build Status](https://travis-ci.org/Cognifide/Slice.svg)](https://travis-ci.org/Cognifide/Slice)
+[![Build Status](https://travis-ci.org/Cognifide/Slice.svg?branch=master)](https://travis-ci.org/Cognifide/Slice)
 [![Coverity Status](https://scan.coverity.com/projects/4863/badge.svg)](https://scan.coverity.com/projects/4863)
 [![Coverage Status](https://coveralls.io/repos/Cognifide/Slice/badge.svg)](https://coveralls.io/r/Cognifide/Slice)
 [![Latest release](https://maven-badges.herokuapp.com/maven-central/com.cognifide.slice/slice-assembly/badge.svg)](http://mvnrepository.com/artifact/com.cognifide.slice/slice-assembly)
