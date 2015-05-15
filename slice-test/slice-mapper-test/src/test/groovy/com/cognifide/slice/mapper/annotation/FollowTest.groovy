@@ -19,10 +19,9 @@
  */
 package com.cognifide.slice.mapper.annotation
 
-import com.cognifide.slice.test.setup.BaseSetup
-import com.google.inject.ProvisionException
 import org.junit.Assert
-import spock.lang.FailsWith
+
+import com.cognifide.slice.test.setup.BaseSetup
 
 /**
  * @author Mariusz Kubiś
@@ -78,7 +77,6 @@ class FollowTest extends BaseSetup {
 		then: "Field with @Follow annotation is null"
 		Assert.assertNull(followModel.getJcrPropertyModel())
 		Assert.assertEquals("true", followModel.getJcrPropertyModelPath())
-
 	}
 
 	def "Follow test with non-existing follow resource"() {
@@ -100,20 +98,26 @@ class FollowTest extends BaseSetup {
 		Assert.assertEquals("/content/test1/jcr:content", followModel.getJcrPropertyModelPath())
 	}
 
-	@FailsWith(ProvisionException)
-	def "Follow test with empty follow resource"() {
-		setup:
-		pageBuilder.content {
-			emptyResource("cq:PageContent") { "jcr:content"() }
-		}
+	def "Follow test with empty followed resource"() {
+		given: "Followed property points a non-exisitng resource"
 		pageBuilder.content {
 			test("cq:PageContent") { "jcr:content"("jcrPropertyModel": "/content/emptyResource/jcr:content") }
 		}
-
-		expect:
+		pageBuilder.content {
+			emptyResource("cq:PageContent") { "jcr:content"() }
+		}
 		assertPageExists("/content/emptyResource")
 		assertPageExists("/content/test")
-		modelProvider.get(FollowModel.class, "/content/test/jcr:content")
+
+		when: "Getting model"
+		FollowModel model = modelProvider.get(FollowModel.class, "/content/test/jcr:content")
+		then: "Model is mapped"
+		Assert.assertNotNull(model)
+		and: "Followed model is not null"
+		Assert.assertNotNull(model.getJcrPropertyModel())
+		and: "And its properties are not set"
+		Assert.assertNull(model.getJcrPropertyModel().getText())
+		Assert.assertEquals(0, model.getJcrPropertyModel().getSize())
 	}
 
 	private static void checkJcrPropertyModel(JcrPropertyModel model) {

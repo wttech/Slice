@@ -144,12 +144,7 @@ public class GenericSlingMapper implements Mapper {
 			Class<?> type = object.getClass();
 			Field[] fields = ReflectionHelper.readAllDeclaredFields(type);
 			for (Field field : fields) {
-				MapperStrategy mapperStrategy = mapperStrategyFactory.getMapperStrategy(field
-						.getDeclaringClass());
-				if (shouldFieldBeMapped(field, mapperStrategy)) {
-					Object value = mapResourceToField(resource, valueMap, field);
-					FieldUtils.writeField(field, object, value, ReflectionHelper.FORCE_ACCESS);
-				}
+				mapResourceToField(resource, object, valueMap, field);
 			}
 			return object;
 		} catch (Exception e) {
@@ -158,6 +153,19 @@ public class GenericSlingMapper implements Mapper {
 			String message = MessageFormat.format(format, path, e.getMessage());
 			logger.warn(message);
 			throw new MapperException("mapResourceToObject failed", e);
+		}
+	}
+
+	private <T> void mapResourceToField(final Resource resource, final T object, ValueMap valueMap,
+			Field field) throws IllegalAccessException {
+		MapperStrategy mapperStrategy = mapperStrategyFactory.getMapperStrategy(field.getDeclaringClass());
+		if (shouldFieldBeMapped(field, mapperStrategy)) {
+			Object value = getValueForField(resource, valueMap, field);
+			if (value == null && field.getType().isPrimitive()) {
+				// don't write null values to primitive
+				return;
+			}
+			FieldUtils.writeField(field, object, value, ReflectionHelper.FORCE_ACCESS);
 		}
 	}
 
@@ -192,7 +200,7 @@ public class GenericSlingMapper implements Mapper {
 	 * @return an object that can be assigned to a given field
 	 * @throws RuntimeException if given resource was null or empty
 	 */
-	private Object mapResourceToField(Resource resource, ValueMap valueMap, Field field) {
+	private Object getValueForField(Resource resource, ValueMap valueMap, Field field) {
 		Object value = null;
 		String propertyName = getPropertyName(field);
 		for (FieldProcessor fieldProcessor : processors) {
