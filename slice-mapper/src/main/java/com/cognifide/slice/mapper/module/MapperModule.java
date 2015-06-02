@@ -46,7 +46,8 @@ public class MapperModule extends AbstractModule {
 	@Provides
 	@ContextScoped
 	public Mapper getMapper(MapperBuilder mapperBuilder) {
-		return mapperBuilder.addDefaultSliceProcessors().build();
+		return mapperBuilder.addDefaultSliceProcessors().addCustomProcessors().addCustomPostProcessors()
+				.build();
 	}
 
 }

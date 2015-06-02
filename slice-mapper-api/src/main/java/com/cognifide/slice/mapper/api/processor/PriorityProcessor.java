@@ -1,6 +1,6 @@
 /*-
  * #%L
- * Slice - Mapper
+ * Slice - Mapper API
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -17,8 +17,8 @@
  * limitations under the License.
  * #L%
  */
-@Version("4.3.0")
-package com.cognifide.slice.mapper;
+package com.cognifide.slice.mapper.api.processor;
 
-import aQute.bnd.annotation.Version;
-
+public interface PriorityProcessor {
+	int getPriority();
+}

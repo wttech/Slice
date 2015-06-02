@@ -387,6 +387,14 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
+
+			<!-- Guice multibinding -->
+			<dependency>
+				<groupId>com.google.inject.extensions</groupId>
+				<artifactId>guice-multibindings</artifactId>
+				<version>3.0</version>
+			</dependency>
+
 			<dependency>
 				<groupId>org.ops4j</groupId>
 				<artifactId>peaberry</artifactId>

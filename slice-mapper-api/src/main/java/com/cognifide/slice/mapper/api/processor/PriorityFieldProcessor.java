@@ -1,6 +1,6 @@
 /*-
  * #%L
- * Slice - Mapper
+ * Slice - Mapper API
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -17,8 +17,14 @@
  * limitations under the License.
  * #L%
  */
-@Version("4.3.0")
-package com.cognifide.slice.mapper;
+package com.cognifide.slice.mapper.api.processor;
 
-import aQute.bnd.annotation.Version;
+/**
+ * Its purpose is to add a possibility to register custom processors with defined priority. Objects of this
+ * class should be registered with Guice's multibindings.
+ * 
+ * @author maciej.dybek
+ */
+public interface PriorityFieldProcessor extends FieldProcessor, PriorityProcessor {
 
+}
