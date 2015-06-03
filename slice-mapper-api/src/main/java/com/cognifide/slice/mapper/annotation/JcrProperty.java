@@ -27,22 +27,29 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Allows mapper a resource stored under given jcr property. The path to a resource is the one indicated by
- * the name of the field or {@link JcrProperty}. Field with this annotation will be mapped by
- * {@link com.cognifide.slice.mapper.api.Mapper} using dedicated {@link MappingStrategy}. By default
- * {@link MappingStrategy#ANNOTATED} strategy is used.
+ * Indicates that a given field should be mapped from a resource/property stored under specified path. The
+ * path to a resource/property is indicated by the name of the field or value of {@link JcrProperty} (if
+ * specified). A field with this annotation will be mapped by {@link com.cognifide.slice.mapper.api.Mapper}
+ * using dedicated {@link MappingStrategy}. By default {@link MappingStrategy#ANNOTATED} strategy is used.
+ * Example:
  *
  * <pre>
  * {@literal @}SliceResource
  * public class ExampleModel {
- *
- *   {@literal @}JcrProperty
- *   private String pagePath;
  * 
- *   {@literal @}JcrProperty("description")
- *   private String pageDescription;
+ *   {@literal @}JcrProperty
+ *   private String simpleProperty;
+ * 
+ *   {@literal @}JcrProperty("jcr:title")
+ *   private String pageTitle;
  * }
  * </pre>
+ * 
+ * In above example the field called {{simpleProperty}} will be mapped from a corresponding property called
+ * {{simpleProperty}}, however {{pageTitle}} field will be mapped from {{jcr:title}} property of a resource.<br>
+ * <br>
+ * 
+ * Please note that using of relative paths is allowed, e.g. "../parentNode/sibling2", "./child/grandChild"
  */
 @Documented
 @Target(ElementType.FIELD)
@@ -50,7 +57,7 @@ import java.lang.annotation.Target;
 public @interface JcrProperty {
 
 	/**
-	 * Custom property name. If empty, property name is read from field's name.
+	 * Custom property name. If empty, property name is read from field's name. Relative paths are allowed
 	 * 
 	 * @return
 	 */
