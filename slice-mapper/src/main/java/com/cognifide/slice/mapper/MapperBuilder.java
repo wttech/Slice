@@ -28,6 +28,7 @@ import com.cognifide.slice.mapper.api.processor.FieldPostProcessor;
 import com.cognifide.slice.mapper.api.processor.FieldProcessor;
 import com.cognifide.slice.mapper.api.processor.PriorityFieldPostProcessor;
 import com.cognifide.slice.mapper.api.processor.PriorityFieldProcessor;
+import com.cognifide.slice.mapper.impl.CustomProcessorsCollector;
 import com.cognifide.slice.mapper.impl.postprocessor.EscapeValuePostProcessor;
 import com.cognifide.slice.mapper.impl.processor.BooleanFieldProcessor;
 import com.cognifide.slice.mapper.impl.processor.ChildrenFieldProcessor;
@@ -143,14 +144,14 @@ public final class MapperBuilder {
 	 * <pre>
 	 * protected void configure() {
 	 * 	Multibinder&lt;FieldProcessor&gt; multibinder = Multibinder.newSetBinder(binder(), FieldProcessor.class);
-	 * 	multibinder.addBinding().to(MyCustomFieldProcessor.class).in(ContextScoped.class);
+	 * 	multibinder.addBinding().to(MyCustomFieldProcessor.class);
 	 * }
 	 * </pre>
 	 * 
-	 * All registered processors will be added at the begining of the processors list. If you want to ensure
+	 * All registered processors will be added at the beginning of the processors list. If you want to ensure
 	 * the order of processors use in your binding {@link PriorityFieldProcessor} instead of
 	 * {@link FieldProcessor} . The priority parameter is used to sort processors. Processors with higher
-	 * priority will be placed at the begining of processors list. Notice that all custom processors
+	 * priority will be placed at the beginning of processors list. Notice that all custom processors
 	 * registered with multibindings always take precedence over those added with
 	 * {@link #addSliceProcessors()}) and {@link #addFieldProcessor(FieldProcessor)}.
 	 * 
@@ -168,14 +169,14 @@ public final class MapperBuilder {
 	 * <pre>
 	 * protected void configure() {
 	 * 	Multibinder&lt;FieldProcessor&gt; multibinder = Multibinder.newSetBinder(binder(), FieldPostProcessor.class);
-	 * 	multibinder.addBinding().to(MyCustomFieldPostProcessor.class).in(ContextScoped.class);
+	 * 	multibinder.addBinding().to(MyCustomFieldPostProcessor.class);
 	 * }
 	 * </pre>
 	 * 
-	 * All registered post-processors will be added at the begining of post-processors list. If you want to
+	 * All registered post-processors will be added at the beginning of post-processors list. If you want to
 	 * ensure the order of post-processors use in your binding {@link PriorityFieldPostProcessor} instead of
 	 * {@link FieldPostProcessor}. Post-processors with priority greater or equal to 0 will be added at the
-	 * begining of post-processors list. All post-processors added with the order lower than 0 will be added
+	 * beginning of post-processors list. All post-processors added with the priority lower than 0 will be added
 	 * at the end of post-processors-list. Notice that all custom post-processors registered with
 	 * multibindings are always added before or after those added with {@link #addSliceProcessors()}) and
 	 * {@link #addFieldPostProcessor(FieldPostProcessor)}.

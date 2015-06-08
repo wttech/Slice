@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package com.cognifide.slice.mapper;
+package com.cognifide.slice.mapper.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,7 +39,7 @@ import com.google.inject.Inject;
  * 
  * @author maciej.dybek
  */
-class CustomProcessorsCollector {
+public class CustomProcessorsCollector {
 
 	@Inject(optional = true)
 	private Set<FieldProcessor> customFieldProcessors;
