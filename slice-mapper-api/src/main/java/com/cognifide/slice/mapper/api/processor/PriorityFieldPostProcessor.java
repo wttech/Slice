@@ -17,8 +17,17 @@
  * limitations under the License.
  * #L%
  */
-@Version("4.3.0")
 package com.cognifide.slice.mapper.api.processor;
 
-import aQute.bnd.annotation.Version;
+/**
+ * Its purpose is to add a possibility to register custom post-processors with defined priority. Objects of
+ * this class should be registered with Guice's multibindings.<br/>
+ * The priority parameter is used to sort processors. Priority post-processors with priority greater or equal
+ * to 0 will take precedence over any other {@link FieldPostProcessor}s. Any {@link FieldPostProcessor}s will
+ * take precedence over priority post-processors added with the priority lower than 0.
+ * 
+ * @author maciej.dybek
+ */
+public interface PriorityFieldPostProcessor extends FieldPostProcessor, PriorityProcessor {
 
+}

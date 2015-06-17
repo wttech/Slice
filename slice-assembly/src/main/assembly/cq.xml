@@ -81,6 +81,7 @@
 				<include>javax.inject</include>
 				<include>org.aopalliance</include>
 				<include>com.google.inject</include>
+				<include>com.google.inject.extensions</include>
 				<include>org.ops4j</include>
 			</includes>
 		</dependencySet>

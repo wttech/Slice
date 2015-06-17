@@ -1,6 +1,6 @@
 /*-
  * #%L
- * Slice - Mapper
+ * Slice - Mapper API
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -17,8 +17,17 @@
  * limitations under the License.
  * #L%
  */
-@Version("4.3.0")
-package com.cognifide.slice.mapper;
+package com.cognifide.slice.mapper.api.processor;
 
-import aQute.bnd.annotation.Version;
-
+/**
+ * Interface intended to be implemented by {@link PriorityFieldProcessor} and
+ * {@link PriorityFieldPostProcessor}. Priority processors can be registered with Guice's multibindings and
+ * allows one to extend list of custom processors. The general rule for priority is: the higher the priority the
+ * sooner given processor will be used. For details on how to use priority see {@link PriorityFieldProcessor}
+ * and {@link PriorityFieldPostProcessor}.
+ * 
+ * @author maciej.dybek
+ */
+public interface PriorityProcessor {
+	int getPriority();
+}
