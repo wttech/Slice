@@ -22,10 +22,32 @@ package com.cognifide.slice.persistence.api;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 
+/**
+ * Serializes an object into resource. Unlike the {@link FieldSerializer} it doesn't have access to the field
+ * information.
+ * 
+ * @author Tomasz Rękawek
+ *
+ */
 public interface ObjectSerializer extends Serializer {
 
+	/**
+	 * Serializer will return {@code true} if it's able to handle such class
+	 * 
+	 * @param objectClass
+	 * @return
+	 */
 	boolean accepts(Class<?> objectClass);
 
+	/**
+	 * Serializes an object into repository
+	 * 
+	 * @param propertyName Name of the property
+	 * @param fieldValue Value to serialize
+	 * @param parent Resource to save the field
+	 * @param ctx Serialization context
+	 * @throws PersistenceException
+	 */
 	void serialize(String propertyName, Object object, Resource parent, SerializerContext ctx)
 			throws PersistenceException;
 

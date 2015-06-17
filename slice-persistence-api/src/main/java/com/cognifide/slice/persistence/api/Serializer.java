@@ -19,6 +19,13 @@
  */
 package com.cognifide.slice.persistence.api;
 
-public interface Serializer {
+/**
+ * An abstract serializer. This type shouldn't be implemented directly - use either {@link FieldSerializer} or
+ * {@link ObjectSerializer}.
+ * 
+ * @author Tomasz Rękawek
+ *
+ */
+public abstract interface Serializer {
 	int getRank();
 }

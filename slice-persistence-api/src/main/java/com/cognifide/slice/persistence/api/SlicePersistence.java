@@ -22,8 +22,23 @@ package com.cognifide.slice.persistence.api;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 
+/**
+ * An entrypoint to the Slice persistence service.
+ * 
+ * @author Tomasz Rękawek
+ *
+ */
 public interface SlicePersistence {
+	/**
+	 * Persist an object into a resource.
+	 */
 	void persist(Object object, Resource destinationResource) throws PersistenceException;
 
+	/**
+	 * Create a new resource called
+	 * 
+	 * @param childName and serialize
+	 * @param object into it.
+	 */
 	void persist(Object object, String childName, Resource parent) throws PersistenceException;
 }
