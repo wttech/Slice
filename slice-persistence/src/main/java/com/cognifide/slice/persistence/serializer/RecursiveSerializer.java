@@ -66,7 +66,7 @@ public class RecursiveSerializer implements ObjectSerializer {
 				throw new PersistenceException("Can't get field", e);
 			}
 			if (fieldValue != null) {
-				ctx.getFacade().serializeField(field, propertyName, fieldValue, child, ctx);
+				ctx.getFacade().serialize(field, propertyName, fieldValue, child, ctx);
 			}
 		}
 	}

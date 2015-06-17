@@ -46,8 +46,8 @@ public class ChildrenArraySerializer implements FieldSerializer {
 		}
 		final int arrayLength = Array.getLength(fieldValue);
 		for (int i = 0; i < arrayLength; i++) {
-			ctx.getFacade().serializeObject(String.format("%s_%d", childName, i + 1),
-					Array.get(fieldValue, i), child, ctx);
+			ctx.getFacade().serialize(String.format("%s_%d", childName, i + 1), Array.get(fieldValue, i),
+					child, ctx);
 		}
 	}
 

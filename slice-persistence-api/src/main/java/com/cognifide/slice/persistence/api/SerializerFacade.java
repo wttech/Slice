@@ -24,11 +24,23 @@ import java.lang.reflect.Field;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 
+/**
+ * A service providing access to all registered serializers.
+ * 
+ * @author Tomasz Rękawek
+ *
+ */
 public interface SerializerFacade {
-	void serializeObject(String objectName, Object object, Resource parent, SerializerContext ctx)
+
+	/**
+	 * See {@link ObjectSerializer#serialize(String, Object, Resource, SerializerContext)}.
+	 */
+	void serialize(String propertyName, Object object, Resource parent, SerializerContext ctx)
 			throws PersistenceException;
 
-	void serializeField(Field field, String propertyName, Object fieldValue, Resource parent,
-			SerializerContext ctx) throws PersistenceException;
-
+	/**
+	 * See {@link FieldSerializer#serialize(Field, String, Object, Resource, SerializerContext)}.
+	 */
+	void serialize(Field field, String propertyName, Object fieldValue, Resource parent, SerializerContext ctx)
+			throws PersistenceException;
 }

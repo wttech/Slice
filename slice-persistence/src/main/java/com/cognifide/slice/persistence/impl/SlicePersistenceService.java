@@ -40,6 +40,6 @@ public class SlicePersistenceService {
 
 	public void persist(Object object, String childName, Resource parent) throws PersistenceException {
 		final SerializerContext ctx = new SerializerContext(facade);
-		facade.serializeObject(childName, object, parent, ctx);
+		facade.serialize(childName, object, parent, ctx);
 	}
 }

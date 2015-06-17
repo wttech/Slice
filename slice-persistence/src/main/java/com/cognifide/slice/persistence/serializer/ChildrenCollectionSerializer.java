@@ -47,7 +47,7 @@ public class ChildrenCollectionSerializer implements FieldSerializer {
 		}
 		int i = 1;
 		for (Object o : (Collection<?>) fieldValue) {
-			ctx.getFacade().serializeObject(String.format("%s_%d", childName, i++), o, child, ctx);
+			ctx.getFacade().serialize(String.format("%s_%d", childName, i++), o, child, ctx);
 		}
 	}
 

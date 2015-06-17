@@ -75,14 +75,14 @@ public class MultibindingSerializerFacade implements SerializerFacade {
 	}
 
 	@Override
-	public void serializeObject(String objectName, Object object, Resource parent, SerializerContext ctx)
+	public void serialize(String objectName, Object object, Resource parent, SerializerContext ctx)
 			throws PersistenceException {
 		final ObjectSerializer serializer = findObjectSerializer(object.getClass());
 		serializer.serialize(objectName, object, parent, ctx);
 	}
 
 	@Override
-	public void serializeField(Field field, String propertyName, Object fieldValue, Resource parent,
+	public void serialize(Field field, String propertyName, Object fieldValue, Resource parent,
 			SerializerContext ctx) throws PersistenceException {
 		final FieldSerializer serializer = findFieldSerializer(field);
 		serializer.serialize(field, propertyName, fieldValue, parent, ctx);
