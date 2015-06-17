@@ -25,12 +25,15 @@ import java.util.Map;
 
 import org.apache.jackrabbit.JcrConstants;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Serialization context, provides a state to the serialization process.
  * 
  * @author Tomasz Rękawek
  *
  */
+@ProviderType
 public class SerializerContext {
 
 	private final Map<Object, Object> alreadySerialized;

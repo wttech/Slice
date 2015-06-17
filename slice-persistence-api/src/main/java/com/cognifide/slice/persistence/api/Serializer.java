@@ -19,6 +19,8 @@
  */
 package com.cognifide.slice.persistence.api;
 
+import aQute.bnd.annotation.ConsumerType;
+
 /**
  * An abstract serializer. This type shouldn't be implemented directly - use either {@link FieldSerializer} or
  * {@link ObjectSerializer}.
@@ -26,6 +28,7 @@ package com.cognifide.slice.persistence.api;
  * @author Tomasz Rękawek
  *
  */
+@ConsumerType
 public abstract interface Serializer {
 	int getRank();
 }

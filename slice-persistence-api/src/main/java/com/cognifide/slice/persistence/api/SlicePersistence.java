@@ -22,12 +22,15 @@ package com.cognifide.slice.persistence.api;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * An entrypoint to the Slice persistence service.
  * 
  * @author Tomasz Rękawek
  *
  */
+@ProviderType
 public interface SlicePersistence {
 	/**
 	 * Persist an object into a resource.

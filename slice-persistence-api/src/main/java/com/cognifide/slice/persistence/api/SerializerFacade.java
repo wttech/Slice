@@ -24,12 +24,15 @@ import java.lang.reflect.Field;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * A service providing access to all registered serializers.
  * 
  * @author Tomasz Rękawek
  *
  */
+@ProviderType
 public interface SerializerFacade {
 
 	/**
