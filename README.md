@@ -243,7 +243,7 @@ Add dependencies to your POM file:
 Last thing you need to do is preparing Injector of your application in BundleActivator. Read more on how to do this on our [Wiki](https://cognifide.atlassian.net/wiki/display/SLICE/Setting+up+-+4.2)
 
 Since Slice 3.1 the AEM/CQ related modules have been extracted to separate projects:
-* Slice AEM v6.0 Addon: https://github.com/Cognifide/Slice-AEM60
+* Slice AEM v6.0 and 6.1 Addon: https://github.com/Cognifide/Slice-AEM60
 * Slice CQ v5.6 Addon: https://github.com/Cognifide/Slice-CQ56/
 * Slice CQ v5.5 Addon: https://github.com/Cognifide/Slice-CQ55/
 
