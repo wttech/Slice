@@ -194,6 +194,9 @@ public class InjectorHierarchy {
 			current = parent;
 		} while (current != null);
 		try {
+			for (InjectorLifecycleListener listener : listeners) {
+				listener.injectorCreating(modules, config);
+			}
 			Injector injector = Guice.createInjector(modules);
 			for (InjectorLifecycleListener listener : listeners) {
 				listener.injectorCreated(injector, config);

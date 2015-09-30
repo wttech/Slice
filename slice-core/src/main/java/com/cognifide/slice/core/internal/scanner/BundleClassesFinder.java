@@ -32,12 +32,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.objectweb.asm.ClassReader;
+import org.ops4j.peaberry.internal.FrameworkUtil;
 import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.InvalidSyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.cognifide.slice.api.annotation.OsgiService;
 
 public class BundleClassesFinder {
 
@@ -111,12 +113,21 @@ public class BundleClassesFinder {
 		return osgiClasses;
 	}
 
+	private boolean isOsgiService(Class<?> clazz){
+		final BundleContext bundleContext = FrameworkUtil.getBundle(getClass()).getBundleContext();
+		try {
+			return ArrayUtils.isNotEmpty(bundleContext.getServiceReferences(clazz.getName(), null));
+		} catch (InvalidSyntaxException e) {
+			return false;
+		}
+	}
+
 	Set<Class<?>> readOsgiServicesForClass(Class<?> clazz) {
 		Set<Class<?>> osgiClasses = new HashSet<Class<?>>();
 		Field[] fields = clazz.getDeclaredFields();
 		for (Field field : fields) {
-			if (field.isAnnotationPresent(OsgiService.class)) {
-				Class<?> fieldClass = field.getType();
+			Class<?> fieldClass = field.getType();
+			if (isOsgiService(fieldClass)) {
 				osgiClasses.add(fieldClass);
 			}
 		}
@@ -132,8 +143,9 @@ public class BundleClassesFinder {
 			 */
 			for (int i = (parameterTypes.length - annotations.length); i < parameterTypes.length; i++) {
 				for (Annotation annotation : annotations[j]) {
-					if (annotation.annotationType().equals(OsgiService.class)) {
-						osgiClasses.add(parameterTypes[i]);
+					final Class<?> parameterType = parameterTypes[i];
+					if (isOsgiService(parameterType)) {
+						osgiClasses.add(parameterType);
 						break;
 					}
 				}

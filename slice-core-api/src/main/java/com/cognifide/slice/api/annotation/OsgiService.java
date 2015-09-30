@@ -53,5 +53,6 @@ import com.google.inject.Key;
 
 @Target({ ElementType.FIELD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
+@Deprecated
 public @interface OsgiService {
 }

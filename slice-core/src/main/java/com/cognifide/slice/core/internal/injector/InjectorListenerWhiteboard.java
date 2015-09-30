@@ -22,6 +22,7 @@ package com.cognifide.slice.core.internal.injector;
 
 import java.util.Hashtable;
 import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.felix.scr.annotations.Component;
@@ -34,6 +35,7 @@ import org.osgi.framework.ServiceRegistration;
 import com.cognifide.slice.api.injector.InjectorConfig;
 import com.cognifide.slice.api.injector.InjectorListener;
 import com.google.inject.Injector;
+import com.google.inject.Module;
 
 /**
  * This component bridges each registered InjectorListener with a newly created
@@ -78,6 +80,11 @@ public class InjectorListenerWhiteboard {
 
 		private InjectorListenerBridge(InjectorListener listener) {
 			this.listener = listener;
+		}
+
+		@Override
+		public void injectorCreating(List<Module> injector, InjectorConfig config) {
+			// do nothing
 		}
 
 		@Override
