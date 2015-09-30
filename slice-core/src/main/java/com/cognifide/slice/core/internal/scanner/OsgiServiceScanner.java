@@ -57,7 +57,8 @@ public class OsgiServiceScanner {
 		});
 		LOG.info("Searching for @OsgiServices, packages:{}, bundles:{}" + basePackage, bundleNameFilter);
 
-		Collection<Class<?>> classes = classFinder.traverseBundlesForOsgiServices(bundleFinder.findBundles());
+		Collection<Class<?>> classes = classFinder.traverseBundlesForOsgiServices(bundleContext,
+				bundleFinder.findBundles());
 
 		LOG.info("Found {} OsgiService classes. Switch to debug logging level to see them all.",
 				classes.size());

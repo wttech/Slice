@@ -34,7 +34,6 @@ import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.objectweb.asm.ClassReader;
-import org.ops4j.peaberry.internal.FrameworkUtil;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
@@ -103,18 +102,17 @@ public class BundleClassesFinder {
 		this.filters.add(classFilter);
 	}
 
-	public Collection<Class<?>> traverseBundlesForOsgiServices(final Collection<Bundle> bundles) {
+	public Collection<Class<?>> traverseBundlesForOsgiServices(BundleContext bundleContext, final Collection<Bundle> bundles) {
 		Collection<Class<?>> allClasses = getClasses(bundles);
 		Set<Class<?>> osgiClasses = new HashSet<Class<?>>();
 		for (Class<?> clazz : allClasses) {
-			Set<Class<?>> osgiServicesForClass = readOsgiServicesForClass(clazz);
+			Set<Class<?>> osgiServicesForClass = readOsgiServicesForClass(bundleContext, clazz);
 			osgiClasses.addAll(osgiServicesForClass);
 		}
 		return osgiClasses;
 	}
 
-	private boolean isOsgiService(Class<?> clazz){
-		final BundleContext bundleContext = FrameworkUtil.getBundle(getClass()).getBundleContext();
+	private boolean isOsgiService(BundleContext bundleContext, Class<?> clazz){
 		try {
 			return ArrayUtils.isNotEmpty(bundleContext.getServiceReferences(clazz.getName(), null));
 		} catch (InvalidSyntaxException e) {
@@ -122,12 +120,12 @@ public class BundleClassesFinder {
 		}
 	}
 
-	Set<Class<?>> readOsgiServicesForClass(Class<?> clazz) {
+	Set<Class<?>> readOsgiServicesForClass(BundleContext bundleContext, Class<?> clazz) {
 		Set<Class<?>> osgiClasses = new HashSet<Class<?>>();
 		Field[] fields = clazz.getDeclaredFields();
 		for (Field field : fields) {
 			Class<?> fieldClass = field.getType();
-			if (isOsgiService(fieldClass)) {
+			if (isOsgiService(bundleContext, fieldClass)) {
 				osgiClasses.add(fieldClass);
 			}
 		}
@@ -144,7 +142,7 @@ public class BundleClassesFinder {
 			for (int i = (parameterTypes.length - annotations.length); i < parameterTypes.length; i++) {
 				for (Annotation annotation : annotations[j]) {
 					final Class<?> parameterType = parameterTypes[i];
-					if (isOsgiService(parameterType)) {
+					if (isOsgiService(bundleContext, parameterType)) {
 						osgiClasses.add(parameterType);
 						break;
 					}

@@ -39,12 +39,16 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 import org.objectweb.asm.ClassReader;
 import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BundleClassesFinderTest {
 
 	@Mock
 	private Bundle bundle;
+
+	@Mock
+	private BundleContext bundleContext; // TODO mock getServiceReferences()
 
 	private BundleClassesFinder classFinder;
 
@@ -56,20 +60,21 @@ public class BundleClassesFinderTest {
 	@Test
 	public void testReadOsgiServicesForClassInnerClass() {
 		Collection<Class<?>> classes = classFinder
-				.readOsgiServicesForClass(InnerClassTestService.InnerClass.class);
+				.readOsgiServicesForClass(bundleContext, InnerClassTestService.InnerClass.class);
 		Assert.assertEquals(1, classes.size());
 		Assert.assertTrue(classes.contains(Integer.class));
 	}
 
 	@Test
 	public void testReadOsgiServicesForClassWithInnerClass() {
-		Collection<Class<?>> classes = classFinder.readOsgiServicesForClass(InnerClassTestService.class);
+		Collection<Class<?>> classes = classFinder.readOsgiServicesForClass(bundleContext,
+				InnerClassTestService.class);
 		Assert.assertEquals(0, classes.size());
 	}
 
 	@Test
 	public void testReadOsgiServicesForClass() {
-		Collection<Class<?>> classes = classFinder.readOsgiServicesForClass(ClassTestService.class);
+		Collection<Class<?>> classes = classFinder.readOsgiServicesForClass(bundleContext, ClassTestService.class);
 		Assert.assertEquals(2, classes.size());
 		Assert.assertTrue(classes.contains(String.class));
 		Assert.assertTrue(classes.contains(Long.class));
@@ -78,7 +83,7 @@ public class BundleClassesFinderTest {
 	@Test
 	public void testReadOsgiServicesForClassWithConstructorServices() {
 		Collection<Class<?>> classes = classFinder
-				.readOsgiServicesForClass(ClassTestConstructorService.class);
+				.readOsgiServicesForClass(bundleContext, ClassTestConstructorService.class);
 		Assert.assertEquals(2, classes.size());
 		Assert.assertTrue(classes.contains(Double.class));
 		Assert.assertTrue(classes.contains(Long.class));
@@ -132,7 +137,8 @@ public class BundleClassesFinderTest {
 	@Test
 	public void testTraverseBundlesForOsgiServices() throws ClassNotFoundException {
 		bundleSetup();
-		Collection<Class<?>> classes = classFinder.traverseBundlesForOsgiServices(Lists.newArrayList(bundle));
+		Collection<Class<?>> classes = classFinder.traverseBundlesForOsgiServices(bundleContext,
+				Lists.newArrayList(bundle));
 		Assert.assertEquals(classes.size(), 1);
 		Assert.assertEquals("Long", new ArrayList<Class<?>>(classes).get(0).getSimpleName());
 	}

@@ -44,18 +44,14 @@ public class OsgiToGuiceAutoBindService implements InjectorLifecycleListener {
 
 	private BundleContext bundleContext;
 
-	protected String basePackage = "com.example.com"; // TODO to be configurable
-
-	protected String bundleFilter = "example-app-.*"; // TODO to be configurable
-
-	protected void activate(ComponentContext ctx) {
-		this.bundleContext = ctx.getBundleContext();
+	protected void activate(ComponentContext componentContext) {
+		this.bundleContext = componentContext.getBundleContext();
 	}
 
 	@Override
 	public void injectorCreating(List<Module> modules, InjectorConfig config) {
 		final OsgiToGuiceAutoBindModule osgiModule = new OsgiToGuiceAutoBindModule(bundleContext,
-				bundleFilter, basePackage);
+				config.getBundleNameFilter(), config.getBasePackage());
 		for (Module module : modules) {
 			Modules.override(module, osgiModule);
 		}
