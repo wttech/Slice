@@ -23,6 +23,7 @@ package com.cognifide.slice.core.internal.injector;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -46,6 +47,7 @@ import com.google.inject.CreationException;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
+import com.google.inject.util.Modules;
 
 /**
  * This class stores injector configuration tree and creates injectors associated with these configurations.
@@ -57,6 +59,8 @@ import com.google.inject.Module;
 public class InjectorHierarchy {
 
 	private static final Logger LOG = LoggerFactory.getLogger(InjectorHierarchy.class);
+
+	private static final String MODULE_OVERRIDE_CLASS_SUFFIX = "Override";
 
 	@Reference(cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, referenceInterface = InjectorConfig.class, policy = ReferencePolicy.DYNAMIC, bind = "bindConfig", unbind = "unbindConfig")
 	private final Map<String, InjectorConfig> configByName = new HashMap<String, InjectorConfig>();
@@ -195,12 +199,10 @@ public class InjectorHierarchy {
 			current = parent;
 		} while (current != null);
 		try {
-			modules = filterDeprecatedModuleUsage(modules);
-
 			for (InjectorLifecycleListener listener : listeners) {
 				listener.injectorCreating(modules, config);
 			}
-			Injector injector = Guice.createInjector(modules);
+			Injector injector = Guice.createInjector(handleModuleOverrides(modules));
 			for (InjectorLifecycleListener listener : listeners) {
 				listener.injectorCreated(injector, config);
 			}
@@ -212,15 +214,40 @@ public class InjectorHierarchy {
 		}
 	}
 
-	private List<Module> filterDeprecatedModuleUsage(List<Module> modules) {
-		List<Module> result = new ArrayList<Module>();
+	private List<Module> handleModuleOverrides(List<Module> modules) {
+		List<Module> regulars = new ArrayList<Module>();
+		List<Module> overrides = new ArrayList<Module>();
+
 		for (Module module : modules) {
-			if (!(module instanceof OsgiToGuiceAutoBindModule)) {
-				result.add(module);
+			if (isModuleOverride(module)) {
+				overrides.add(module);
+			} else {
+				regulars.add(module);
 			}
 		}
 
+		List<Module> result = modules;
+		if (!overrides.isEmpty()) {
+			Collections.reverse(overrides);
+
+			Module overridden = null;
+			for (Module module : overrides) {
+				if (overridden == null) {
+					overridden = Modules.override(regulars).with(module);
+				} else {
+					overridden = Modules.override(overridden).with(module);
+				}
+			}
+
+			result = Collections.singletonList(overridden);
+		}
+
 		return result;
+	}
+
+	private boolean isModuleOverride(Module module) {
+		return module instanceof OsgiToGuiceAutoBindModule
+				|| module.getClass().getName().endsWith(MODULE_OVERRIDE_CLASS_SUFFIX);
 	}
 
 	private Collection<InjectorConfig> getChildren(InjectorConfig parent) {
