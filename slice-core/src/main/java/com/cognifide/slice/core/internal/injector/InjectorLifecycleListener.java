@@ -38,9 +38,10 @@ import com.google.inject.Module;
  */
 @ConsumerType
 public interface InjectorLifecycleListener {
+
 	/**
 	 * Called when Slice injector is being created.
-	 *  @param modules Modules to be used by injector
+	 * @param modules Modules to be used by injector
 	 * @param config Configuration of the injector to be created
 	 */
 	void injectorCreating(List<Module> modules, InjectorConfig config);
