@@ -41,6 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.cognifide.slice.api.injector.InjectorConfig;
+import com.cognifide.slice.core.internal.module.OsgiToGuiceAutoBindModule;
 import com.google.inject.CreationException;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -194,6 +195,8 @@ public class InjectorHierarchy {
 			current = parent;
 		} while (current != null);
 		try {
+			modules = filterDeprecatedModuleUsage(modules);
+
 			for (InjectorLifecycleListener listener : listeners) {
 				listener.injectorCreating(modules, config);
 			}
@@ -207,6 +210,17 @@ public class InjectorHierarchy {
 			config.getListener().creationFailed();
 			return null;
 		}
+	}
+
+	private List<Module> filterDeprecatedModuleUsage(List<Module> modules) {
+		List<Module> result = new ArrayList<Module>();
+		for (Module module : modules) {
+			if (!(module instanceof OsgiToGuiceAutoBindModule)) {
+				result.add(module);
+			}
+		}
+
+		return result;
 	}
 
 	private Collection<InjectorConfig> getChildren(InjectorConfig parent) {

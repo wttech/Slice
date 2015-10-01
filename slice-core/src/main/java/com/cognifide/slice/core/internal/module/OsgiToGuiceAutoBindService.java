@@ -52,9 +52,10 @@ public class OsgiToGuiceAutoBindService implements InjectorLifecycleListener {
 	public void injectorCreating(List<Module> modules, InjectorConfig config) {
 		final OsgiToGuiceAutoBindModule osgiModule = new OsgiToGuiceAutoBindModule(bundleContext,
 				config.getBundleNameFilter(), config.getBasePackage());
-		for (Module module : modules) {
-			Modules.override(module, osgiModule);
-		}
+		final Module overrideModule = Modules.override(modules).with(osgiModule);
+
+		modules.clear();
+		modules.add(overrideModule);
 	}
 
 	@Override

@@ -33,10 +33,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ClassUtils;
 import org.objectweb.asm.ClassReader;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -112,12 +114,19 @@ public class BundleClassesFinder {
 		return osgiClasses;
 	}
 
-	private boolean isOsgiService(BundleContext bundleContext, Class<?> clazz){
-		try {
-			return ArrayUtils.isNotEmpty(bundleContext.getServiceReferences(clazz.getName(), null));
-		} catch (InvalidSyntaxException e) {
-			return false;
+	private boolean isOsgiService(BundleContext bundleContext, Class<?> clazz) {
+		boolean result = false;
+		if (!ClassUtils.isPrimitiveOrWrapper(clazz)) {
+			try {
+				final ServiceReference[] serviceReferences = bundleContext
+						.getServiceReferences(clazz.getName(), null);
+				result = ArrayUtils.isNotEmpty(serviceReferences);
+			} catch (InvalidSyntaxException e) {
+				result = false;
+			}
 		}
+
+		return result;
 	}
 
 	Set<Class<?>> readOsgiServicesForClass(BundleContext bundleContext, Class<?> clazz) {
