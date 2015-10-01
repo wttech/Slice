@@ -116,7 +116,7 @@ public class BundleClassesFinder {
 
 	private boolean isOsgiService(BundleContext bundleContext, Class<?> clazz) {
 		boolean result = false;
-		if (!ClassUtils.isPrimitiveOrWrapper(clazz)) {
+		if (!Object.class.equals(clazz) && !ClassUtils.isPrimitiveOrWrapper(clazz)) {
 			try {
 				final ServiceReference[] serviceReferences = bundleContext
 						.getServiceReferences(clazz.getName(), null);
