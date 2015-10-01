@@ -142,21 +142,12 @@ public class BundleClassesFinder {
 		Constructor<?>[] constructors = clazz.getConstructors();
 		for (Constructor<?> constructor : constructors) {
 			Class<?>[] parameterTypes = constructor.getParameterTypes();
-			Annotation[][] annotations = constructor.getParameterAnnotations();
-			int j = 0;
-			/**
-			 * parameterTypes of constructor of inner classes contain types of parent classes in front of
-			 * the array.
-			 */
-			for (int i = (parameterTypes.length - annotations.length); i < parameterTypes.length; i++) {
-				for (Annotation annotation : annotations[j]) {
-					final Class<?> parameterType = parameterTypes[i];
-					if (isOsgiService(bundleContext, parameterType)) {
-						osgiClasses.add(parameterType);
-						break;
-					}
+
+			for (final Class<?> parameterType : parameterTypes) {
+				if (isOsgiService(bundleContext, parameterType)) {
+					osgiClasses.add(parameterType);
+					break;
 				}
-				j++;
 			}
 		}
 		return osgiClasses;

@@ -19,14 +19,12 @@
  */
 package com.cognifide.slice.testhelper;
 
-import com.cognifide.slice.api.annotation.OsgiService;
-
 /**
  * @author Mariusz Kubiś Date: 22.04.15
  */
 public class TestBundleClass1 {
 
-	public TestBundleClass1(@OsgiService Long serviceLong) {
+	public TestBundleClass1(TestOsgiService1 service) {
 	}
 
 	public TestBundleClass1() {

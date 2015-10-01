@@ -19,15 +19,14 @@
  */
 package com.cognifide.slice.core.internal.scanner;
 
-import com.cognifide.slice.api.annotation.OsgiService;
+import com.cognifide.slice.testhelper.TestOsgiService1;
+import com.cognifide.slice.testhelper.TestOsgiService2;
 
 public class ClassTestService {
 
-	@OsgiService
-	private String service;
+	private TestOsgiService1 service;
 
-	@OsgiService
-	private Long serviceLong;
+	private TestOsgiService2 serviceLong;
 
 	public String getValue() {
 		return null;

@@ -20,6 +20,7 @@
 package com.cognifide.slice.core.internal.scanner;
 
 import com.cognifide.slice.testhelper.ClassURLProducer;
+import com.cognifide.slice.testhelper.TestServiceReference;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import junit.framework.Assert;
@@ -32,6 +33,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceReference;
 
 import java.net.URL;
 import java.util.*;
@@ -51,7 +54,7 @@ public class OsgiServiceScannerTest {
 	private OsgiServiceScanner osgiServiceScanner;
 
 	@Before
-	public void setUp() throws ClassNotFoundException {
+	public void setUp() throws ClassNotFoundException, InvalidSyntaxException {
 		final List<String> classList = Lists.newArrayList("com/cognifide/slice/testhelper/TestBundleClass1",
 				"com/cognifide/slice/testhelper/TestBundleClass2",
 				"com/cognifide/slice/testhelper/TestBundleClass3",
@@ -69,6 +72,9 @@ public class OsgiServiceScannerTest {
 			}
 		});
 		when(bundleContext.getBundles()).thenReturn(new Bundle[] { bundle });
+		when(bundleContext.getServiceReferences(anyString(), anyString()))
+				.thenReturn(new ServiceReference[] { new TestServiceReference() });
+
 		when(bundle.getSymbolicName()).thenReturn("filterName");
 		osgiServiceScanner = new OsgiServiceScanner(bundleContext);
 	}
@@ -77,7 +83,7 @@ public class OsgiServiceScannerTest {
 	public void testFindResources() {
 		Collection<Class<?>> classes = osgiServiceScanner.findResources("filterName", "test");
 		Assert.assertEquals(1, classes.size());
-		Assert.assertEquals("Long", new ArrayList<Class<?>>(classes).get(0).getSimpleName());
+		Assert.assertEquals("TestOsgiService1", new ArrayList<Class<?>>(classes).get(0).getSimpleName());
 
 	}
 }

@@ -19,17 +19,17 @@
  */
 package com.cognifide.slice.core.internal.scanner;
 
-import com.cognifide.slice.api.annotation.OsgiService;
 import com.cognifide.slice.mapper.annotation.JcrProperty;
+import com.cognifide.slice.testhelper.TestOsgiService1;
+import com.cognifide.slice.testhelper.TestOsgiService2;
 
 public class ClassTestConstructorService {
 
-	@OsgiService
-	private Double service;
+	private TestOsgiService1 service;
 
 	@JcrProperty
-	private String anotherProperty;
+	private TestOsgiService2 anotherProperty;
 
-	public ClassTestConstructorService(@OsgiService Long serviceLong) {
+	public ClassTestConstructorService(TestOsgiService1 service) {
 	}
 }
