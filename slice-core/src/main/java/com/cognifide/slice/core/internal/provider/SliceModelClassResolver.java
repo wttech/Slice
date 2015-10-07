@@ -81,7 +81,7 @@ public class SliceModelClassResolver implements ModelClassResolver {
 			final Resource componentDefinition = resolver.getResource(resourceType);
 			if (componentDefinition != null) {
 				Map<String, Object> values = componentDefinition.adaptTo(ValueMap.class);
-				if (values!=null) {
+				if (values != null) {
 					return new HashMap<String, Object>(values);
 				}
 			}
