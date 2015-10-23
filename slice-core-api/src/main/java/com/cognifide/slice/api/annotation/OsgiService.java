@@ -29,12 +29,12 @@ import com.google.inject.Key;
 
 /**
  * @author Jaromir Celejewski
- * 
+ *
  * This annotation when used on fields or in constructors, informs Slice about OSGi services which should be
  * bound automatically to a Peaberry provider and therefore make them injectable. Please note that this is NOT
  * a {@link BindingAnnotation} there must not be used as a part of Guice's {@link Key}. It is supposed to be
  * used in conjunction with @Inject annotation, e.g:
- * 
+ *
  * <pre>
  * class SomeClass {
  *   &#064;Inject
@@ -43,12 +43,14 @@ import com.google.inject.Key;
  *   ...
  * }
  * </pre>
- * 
+ *
  * In above example, Slice automatically creates and binds (while creating application injector) a Peaberry
  * provider for the AnyOsgiService class. Therefore the AnyOsgiService can be injected in any class.
- * 
+ *
  * This functionality requires {@link com.cognifide.slice.core.internal.module.OsgiToGuiceAutoBindModule} to
  * be installed in injector.
+ *
+ * @deprecated All referenced OSGi services are recognized automatically.
  */
 
 @Target({ ElementType.FIELD, ElementType.PARAMETER })
