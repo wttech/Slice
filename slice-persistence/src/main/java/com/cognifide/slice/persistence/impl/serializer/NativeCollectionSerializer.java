@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package com.cognifide.slice.persistence.serializer;
+package com.cognifide.slice.persistence.impl.serializer;
 
 import java.io.InputStream;
 import java.lang.reflect.Array;
@@ -27,14 +27,24 @@ import java.lang.reflect.Type;
 import java.util.Calendar;
 import java.util.Collection;
 
+import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 
-import com.cognifide.slice.persistence.api.FieldSerializer;
 import com.cognifide.slice.persistence.api.SerializerContext;
+import com.cognifide.slice.persistence.api.FieldSerializer;
+import com.cognifide.slice.persistence.api.Serializer;
 
+@Component(immediate = true)
+@Service(Serializer.class)
 public class NativeCollectionSerializer implements FieldSerializer {
+
+	@Override
+	public int getPriority() {
+		return 100;
+	}
 
 	@Override
 	public boolean accepts(Field field) {
@@ -50,6 +60,20 @@ public class NativeCollectionSerializer implements FieldSerializer {
 	@Override
 	public void serialize(Field field, String propertyName, Object fieldValue, Resource parent,
 			SerializerContext ctx) throws PersistenceException {
+
+		if (fieldValue == null) {
+			removeProperty(parent, propertyName);
+		} else {
+			serializeNativeCollection(parent, propertyName, fieldValue);
+		}
+	}
+
+	private void removeProperty(Resource parent, String propertyName) {
+		final ModifiableValueMap map = parent.adaptTo(ModifiableValueMap.class);
+		map.remove(propertyName);
+	}
+
+	private void serializeNativeCollection(Resource parent, String propertyName, Object fieldValue) {
 		final ModifiableValueMap map = parent.adaptTo(ModifiableValueMap.class);
 		final Collection<?> collection = (Collection<?>) fieldValue;
 		if (collection.isEmpty()) {
@@ -90,11 +114,6 @@ public class NativeCollectionSerializer implements FieldSerializer {
 			return null;
 		}
 		return array;
-	}
-
-	@Override
-	public int getRank() {
-		return 0;
 	}
 
 }

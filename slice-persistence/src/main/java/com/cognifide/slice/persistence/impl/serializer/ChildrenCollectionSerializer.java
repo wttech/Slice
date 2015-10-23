@@ -17,43 +17,47 @@
  * limitations under the License.
  * #L%
  */
-package com.cognifide.slice.persistence.serializer;
+package com.cognifide.slice.persistence.impl.serializer;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
 
+import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Reference;
+import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 
 import com.cognifide.slice.mapper.annotation.Children;
 import com.cognifide.slice.persistence.api.FieldSerializer;
+import com.cognifide.slice.persistence.api.Serializer;
 import com.cognifide.slice.persistence.api.SerializerContext;
+import com.cognifide.slice.persistence.api.SerializerFacade;
 
-public class ChildrenCollectionSerializer implements FieldSerializer {
+@Component(immediate = true)
+@Service(Serializer.class)
+public class ChildrenCollectionSerializer extends ChildrenSerializer implements FieldSerializer {
+
+	@Reference
+	private SerializerFacade facade;
+
+	@Override
+	public int getPriority() {
+		return 100;
+	}
 
 	@Override
 	public boolean accepts(Field field) {
-		return field.isAnnotationPresent(Children.class)
-				&& Collection.class.isAssignableFrom(field.getType());
+		return field.isAnnotationPresent(Children.class) && Collection.class
+				.isAssignableFrom(field.getType());
 	}
 
 	@Override
-	public void serialize(Field field, String childName, Object fieldValue, Resource parent,
-			SerializerContext ctx) throws PersistenceException {
-		Resource child = parent.getChild(childName);
-		if (child == null) {
-			child = parent.getResourceResolver().create(parent, childName,
-					SerializerContext.getInitialProperties());
-		}
+	protected void createChildren(String childName, Object fieldValue, SerializerContext ctx, Resource child)
+			throws PersistenceException {
 		int i = 1;
-		for (Object o : (Collection<?>) fieldValue) {
-			ctx.getFacade().serialize(String.format("%s_%d", childName, i++), o, child, ctx);
+		for (Object o : (Collection) fieldValue) {
+			facade.serializeObject(generateChildName(childName, i++), o, child, ctx);
 		}
 	}
-
-	@Override
-	public int getRank() {
-		return 0;
-	}
-
 }

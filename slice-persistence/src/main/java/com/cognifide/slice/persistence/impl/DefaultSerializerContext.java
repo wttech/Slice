@@ -17,32 +17,32 @@
  * limitations under the License.
  * #L%
  */
-package com.cognifide.slice.persistence.serializer;
 
-import org.apache.sling.api.resource.ModifiableValueMap;
-import org.apache.sling.api.resource.PersistenceException;
-import org.apache.sling.api.resource.Resource;
+package com.cognifide.slice.persistence.impl;
 
-import com.cognifide.slice.persistence.api.ObjectSerializer;
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.Map;
+
+import org.apache.jackrabbit.JcrConstants;
+
 import com.cognifide.slice.persistence.api.SerializerContext;
 
-public class EnumPropertySerializer implements ObjectSerializer {
+public class DefaultSerializerContext implements SerializerContext {
 
-	@Override
-	public boolean accepts(Class<?> clazz) {
-		return clazz.isEnum();
+	private final Map<Object, Object> alreadySerialized;
+
+	public DefaultSerializerContext() {
+		this.alreadySerialized = new IdentityHashMap<Object, Object>();
 	}
 
 	@Override
-	public void serialize(String propertyName, Object object, Resource parent, SerializerContext ctx)
-			throws PersistenceException {
-		final ModifiableValueMap map = parent.adaptTo(ModifiableValueMap.class);
-		final Enum<?> e = (Enum<?>) object;
-		map.put(propertyName, e.name());
+	public boolean alreadySerialized(Object object) {
+		return Boolean.TRUE.equals(alreadySerialized.put(object, Boolean.TRUE));
 	}
 
 	@Override
-	public int getRank() {
-		return 0;
+	public Map<String, Object> getInitialProperties() {
+		return Collections.singletonMap(JcrConstants.JCR_PRIMARYTYPE, (Object) JcrConstants.NT_UNSTRUCTURED);
 	}
 }

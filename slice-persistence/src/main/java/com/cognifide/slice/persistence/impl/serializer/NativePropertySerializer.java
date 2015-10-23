@@ -17,35 +17,57 @@
  * limitations under the License.
  * #L%
  */
-package com.cognifide.slice.persistence.serializer;
+package com.cognifide.slice.persistence.impl.serializer;
 
+import java.io.InputStream;
+import java.util.Calendar;
+
+import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 
 import com.cognifide.slice.persistence.api.ObjectSerializer;
+import com.cognifide.slice.persistence.api.Serializer;
 import com.cognifide.slice.persistence.api.SerializerContext;
 
-public class NativeArraySerializer implements ObjectSerializer {
+@Component(immediate = true)
+@Service(Serializer.class)
+public class NativePropertySerializer implements ObjectSerializer {
+
+	private static final Class<?>[] SUPPORTED_CLASSES = new Class<?>[] { int.class, Integer.class,
+			long.class, Long.class, Calendar.class, double.class, Double.class, boolean.class, Boolean.class,
+			String.class, InputStream.class };
+
+	@Override
+	public int getPriority() {
+		return 100;
+	}
 
 	@Override
 	public boolean accepts(Class<?> clazz) {
-		if (!clazz.isArray()) {
-			return false;
+		return isNativeJcrClass(clazz);
+	}
+
+	static boolean isNativeJcrClass(Class<?> clazz) {
+		for (Class<?> supportedClass : SUPPORTED_CLASSES) {
+			if (supportedClass.isAssignableFrom(clazz)) {
+				return true;
+			}
 		}
-		final Class<?> arrayType = clazz.getComponentType();
-		return NativePropertySerializer.isNativeJcrClass(arrayType);
+		return false;
 	}
 
 	@Override
 	public void serialize(String propertyName, Object object, Resource parent, SerializerContext ctx)
 			throws PersistenceException {
 		final ModifiableValueMap map = parent.adaptTo(ModifiableValueMap.class);
-		map.put(propertyName, object);
-	}
 
-	@Override
-	public int getRank() {
-		return 0;
+		if (object == null) {
+			map.remove(propertyName);
+		} else {
+			map.put(propertyName, object);
+		}
 	}
 }

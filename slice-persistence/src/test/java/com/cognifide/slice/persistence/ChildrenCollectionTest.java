@@ -19,20 +19,23 @@
  */
 package com.cognifide.slice.persistence;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.cognifide.slice.mapper.annotation.Children;
 import com.cognifide.slice.mapper.annotation.JcrProperty;
 import com.cognifide.slice.mapper.annotation.SliceResource;
+import com.google.common.collect.Lists;
 
 public class ChildrenCollectionTest extends BaseTest {
 
@@ -55,6 +58,14 @@ public class ChildrenCollectionTest extends BaseTest {
 				testArray[i] = new SubClass("arr value no " + i);
 			}
 		}
+
+		public void removeFromList(int count) {
+			this.testList = testList.subList(0, testList.size() - count);
+		}
+
+		public void removeFromArray(int count) {
+			this.testArray = Arrays.copyOfRange(testArray, 0, testArray.length - count);
+		}
 	}
 
 	@SliceResource
@@ -69,28 +80,100 @@ public class ChildrenCollectionTest extends BaseTest {
 
 	}
 
-	private ValueMap map;
+	@Test
+	public void testList() throws PersistenceException {
+		final TestClass test = new TestClass();
 
-	@Before
-	public void beforeTest() throws LoginException, PersistenceException, IllegalAccessException {
-		persistence.persist(new TestClass(), "childrenColl", resolver.getResource("/"));
+		// Check saving elements
+		modelPersister.persist(test, "childrenColl", resolver.getResource("/"));
 		resolver.commit();
+
 		final Resource resource = resolver.getResource("/childrenColl");
-		map = resource.adaptTo(ValueMap.class);
-	}
+		final ValueMap map = resource.adaptTo(ValueMap.class);
 
-	@Test
-	public void testList() {
+		assertNotNull(map);
+
 		for (int i = 0; i < 10; i++) {
-			Assert.assertEquals("value no " + i, map.get("testList/testList_" + (i + 1) + "/prop"));
+			assertEquals("value no " + i, map.get("testList/testList_" + (i + 1) + "/prop"));
 		}
 	}
 
 	@Test
-	public void testArray() {
+	public void testListOverwrite() throws PersistenceException {
+		final TestClass test = new TestClass();
+		modelPersister.persist(test, "childrenColl", resolver.getResource("/"));
+		resolver.commit();
+
+		// removes last 3 elements from list
+		test.removeFromList(3);
+		modelPersister.persist(test, "childrenColl", resolver.getResource("/"));
+		resolver.commit();
+
+		final ArrayList<Resource> subClasses = Lists
+				.newArrayList(resolver.getResource("/childrenColl/testList").listChildren());
+		assertEquals(7, subClasses.size());
+	}
+
+	@Test
+	public void testListOverwriteByNull() throws PersistenceException {
+		final TestClass test = new TestClass();
+		modelPersister.persist(test, "childrenColl", resolver.getResource("/"));
+		resolver.commit();
+
+		test.testList = null;
+		modelPersister.persist(test, "childrenColl", resolver.getResource("/"));
+		resolver.commit();
+
+		final Resource resource = resolver.getResource("/childrenColl");
+		assertNull("testList property should be null", resource.getChild("testList"));
+	}
+
+	@Test
+	public void testArray() throws PersistenceException {
+		final TestClass test = new TestClass();
+
+		// Check saving elements
+		modelPersister.persist(test, "childrenColl", resolver.getResource("/"));
+		resolver.commit();
+
+		final Resource resource = resolver.getResource("/childrenColl");
+		final ValueMap map = resource.adaptTo(ValueMap.class);
+
+		assertNotNull(map);
+
 		for (int i = 0; i < 10; i++) {
-			Assert.assertEquals("arr value no " + i, map.get("testArray/testArray_" + (i + 1) + "/prop"));
+			assertEquals("arr value no " + i, map.get("testArray/testArray_" + (i + 1) + "/prop"));
 		}
+	}
+
+	@Test
+	public void testArrayOverwrite() throws PersistenceException {
+		final TestClass test = new TestClass();
+		modelPersister.persist(test, "childrenColl", resolver.getResource("/"));
+		resolver.commit();
+
+		// removes last 5 elements from list
+		test.removeFromArray(5);
+		modelPersister.persist(test, "childrenColl", resolver.getResource("/"));
+		resolver.commit();
+
+		final ArrayList<Resource> subClasses = Lists
+				.newArrayList(resolver.getResource("/childrenColl/testArray").listChildren());
+		assertEquals(5, subClasses.size());
+	}
+
+	@Test
+	public void testArrayOverwriteByNull() throws PersistenceException {
+		final TestClass test = new TestClass();
+		modelPersister.persist(test, "childrenColl", resolver.getResource("/"));
+		resolver.commit();
+
+		test.testArray = null;
+		modelPersister.persist(test, "childrenColl", resolver.getResource("/"));
+		resolver.commit();
+
+		Resource resource = resolver.getResource("/childrenColl");
+		assertNull("testArray property should be null", resource.getChild("testArray"));
 	}
 
 }

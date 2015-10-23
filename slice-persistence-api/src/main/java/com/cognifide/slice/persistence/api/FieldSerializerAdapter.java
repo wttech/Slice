@@ -19,29 +19,33 @@
  */
 package com.cognifide.slice.persistence.api;
 
+import java.lang.reflect.Field;
+
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 
-import aQute.bnd.annotation.ProviderType;
+public class FieldSerializerAdapter implements FieldSerializer {
 
-/**
- * An entrypoint to the Slice persistence service.
- * 
- * @author Tomasz Rękawek
- *
- */
-@ProviderType
-public interface SlicePersistence {
-	/**
-	 * Persist an object into a resource.
-	 */
-	void persist(Object object, Resource destinationResource) throws PersistenceException;
+	private final ObjectSerializer objectSerializer;
 
-	/**
-	 * Create a new resource called
-	 * 
-	 * @param childName and serialize
-	 * @param object into it.
-	 */
-	void persist(Object object, String childName, Resource parent) throws PersistenceException;
+	public FieldSerializerAdapter(ObjectSerializer fieldSerializer) {
+		this.objectSerializer = fieldSerializer;
+	}
+
+	@Override
+	public int getPriority() {
+		return objectSerializer.getPriority();
+	}
+
+	@Override
+	public boolean accepts(Field field) {
+		return objectSerializer.accepts(field.getType());
+	}
+
+	@Override
+	public void serialize(Field field, String propertyName, Object fieldValue, Resource parent,
+			SerializerContext ctx) throws PersistenceException {
+		objectSerializer.serialize(propertyName, fieldValue, parent, ctx);
+	}
+
 }

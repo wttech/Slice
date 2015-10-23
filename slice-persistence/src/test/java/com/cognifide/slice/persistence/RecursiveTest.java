@@ -69,9 +69,9 @@ public class RecursiveTest extends BaseTest {
 
 	@Before
 	public void beforeTest() throws LoginException, PersistenceException, IllegalAccessException {
-		persistence.persist(new TestClass(), "enumTest", resolver.getResource("/"));
+		modelPersister.persist(new TestClass(), "recursiveTest", resolver.getResource("/"));
 		resolver.commit();
-		resource = resolver.getResource("/enumTest");
+		resource = resolver.getResource("/recursiveTest");
 		map = resource.adaptTo(ValueMap.class);
 	}
 
@@ -99,5 +99,59 @@ public class RecursiveTest extends BaseTest {
 	@Test
 	public void testAlreadyVisited() {
 		Assert.assertNull(resource.getChild("testClass"));
+	}
+
+	@Test
+	public void testOverwrittenProperty() throws PersistenceException {
+		TestClass anotherTestClass = new TestClass();
+		anotherTestClass.subClass = new SubClass();
+		anotherTestClass.someName = "qwe";
+
+		modelPersister.persist(anotherTestClass, "recursiveTest", resolver.getResource("/"));
+		resolver.commit();
+		Resource overwrittenResource = resolver.getResource("/recursiveTest");
+		ValueMap overwrittenMap = overwrittenResource.adaptTo(ValueMap.class);
+
+		Assert.assertEquals("qwe", overwrittenMap.get("differentName"));
+	}
+
+	@Test
+	public void testOverwrittenSubClassProperty() throws PersistenceException {
+		TestClass anotherTestClass = new TestClass();
+		anotherTestClass.subClass = new SubClass();
+		anotherTestClass.subClass.prop = "456";
+
+		modelPersister.persist(anotherTestClass, "recursiveTest", resolver.getResource("/"));
+		resolver.commit();
+		Resource overwrittenResource = resolver.getResource("/recursiveTest");
+		ValueMap overwrittenMap = overwrittenResource.adaptTo(ValueMap.class);
+
+		Assert.assertEquals("456", overwrittenMap.get("subClass/prop"));
+	}
+
+	@Test
+	public void testNullSubClass() throws PersistenceException {
+		TestClass anotherTestClass = new TestClass();
+		anotherTestClass.subClass = null;
+
+		modelPersister.persist(anotherTestClass, "recursiveTest", resolver.getResource("/"));
+		resolver.commit();
+		Resource overwrittenResource = resolver.getResource("/recursiveTest");
+		ValueMap overwrittenMap = overwrittenResource.adaptTo(ValueMap.class);
+
+		Assert.assertFalse(overwrittenMap.containsKey("subClass"));
+	}
+
+	@Test
+	public void testOverwriteWithDifferentClass() throws PersistenceException {
+		SubClass anotherTestClass = new SubClass();
+		modelPersister.persist(anotherTestClass, "recursiveTest", resolver.getResource("/"));
+		resolver.commit();
+
+		Resource overwrittenResource = resolver.getResource("/recursiveTest");
+		ValueMap overwrittenMap = overwrittenResource.adaptTo(ValueMap.class);
+
+		Assert.assertFalse("should NOT have old property", overwrittenMap.containsKey("fieldWithoutAnnotation"));
+		Assert.assertEquals("should have new class property", "123", map.get("prop"));
 	}
 }

@@ -28,9 +28,8 @@ import aQute.bnd.annotation.ProviderType;
 
 /**
  * A service providing access to all registered serializers.
- * 
- * @author Tomasz Rękawek
  *
+ * @author Tomasz Rękawek
  */
 @ProviderType
 public interface SerializerFacade {
@@ -38,12 +37,13 @@ public interface SerializerFacade {
 	/**
 	 * See {@link ObjectSerializer#serialize(String, Object, Resource, SerializerContext)}.
 	 */
-	void serialize(String propertyName, Object object, Resource parent, SerializerContext ctx)
+	void serializeObject(String objectName, Object object, Resource parent, SerializerContext ctx)
 			throws PersistenceException;
 
 	/**
 	 * See {@link FieldSerializer#serialize(Field, String, Object, Resource, SerializerContext)}.
 	 */
-	void serialize(Field field, String propertyName, Object fieldValue, Resource parent, SerializerContext ctx)
-			throws PersistenceException;
+	void serializeField(Field field, String propertyName, Object fieldValue, Resource parent,
+			SerializerContext ctx) throws PersistenceException;
+
 }

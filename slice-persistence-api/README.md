@@ -57,13 +57,13 @@ Consider following model:
 Model can be persisted as follows:
 
     @Inject
-    private SlicePersistence persistence;
+    private ModelPersister modelPersister;
     
     //...
     
     SampleModel model = resource.adaptTo(SampleModel.class); // inject SampleModel with Slice
     model.setPageLimit(123);
-    persistence.persist(model, resource);
+    modelPersister.persist(model, resource);
     resource.getResourceResolver().commit();
 
 # Commercial Support

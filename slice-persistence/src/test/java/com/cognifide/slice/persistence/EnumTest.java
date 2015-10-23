@@ -21,6 +21,7 @@ package com.cognifide.slice.persistence;
 
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.junit.Assert;
 import org.junit.Before;
@@ -31,7 +32,7 @@ import com.cognifide.slice.mapper.annotation.SliceResource;
 
 public class EnumTest extends BaseTest {
 
-	private static enum TestEnum {
+	private enum TestEnum {
 
 		E1, E2;
 
@@ -53,7 +54,7 @@ public class EnumTest extends BaseTest {
 
 	@Before
 	public void beforeTest() throws LoginException, PersistenceException, IllegalAccessException {
-		persistence.persist(new TestClass(), "enumTest", resolver.getResource("/"));
+		modelPersister.persist(new TestClass(), "enumTest", resolver.getResource("/"));
 		resolver.commit();
 		map = resolver.getResource("/enumTest").adaptTo(ValueMap.class);
 	}
@@ -63,5 +64,30 @@ public class EnumTest extends BaseTest {
 		Assert.assertEquals("E1", map.get("myEnum"));
 	}
 
+	@Test
+	public void enumOverwriteTest() throws PersistenceException {
+		TestClass anothertestClass = new TestClass();
+		anothertestClass.myEnum = TestEnum.E2;
+
+		modelPersister.persist(anothertestClass, "enumTest", resolver.getResource("/"));
+		resolver.commit();
+		Resource anotherResource = resolver.getResource("/enumTest");
+		ValueMap anotherMap = anotherResource.adaptTo(ValueMap.class);
+
+		Assert.assertEquals("E2", anotherMap.get("myEnum"));
+	}
+
+	@Test
+	public void enumOverwriteByNullTest() throws PersistenceException {
+		TestClass anothertestClass = new TestClass();
+		anothertestClass.myEnum = null;
+
+		modelPersister.persist(anothertestClass, "enumTest", resolver.getResource("/"));
+		resolver.commit();
+		Resource anotherResource = resolver.getResource("/enumTest");
+		ValueMap anotherMap = anotherResource.adaptTo(ValueMap.class);
+
+		Assert.assertFalse(anotherMap.containsKey("myEnum"));
+	}
 
 }

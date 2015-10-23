@@ -32,7 +32,6 @@ import com.cognifide.slice.core.internal.module.JcrModule;
 import com.cognifide.slice.core.internal.module.SliceModule;
 import com.cognifide.slice.core.internal.module.SliceResourceModule;
 import com.cognifide.slice.core.internal.module.SlingModule;
-import com.cognifide.slice.persistence.module.PersistenceModule;
 import com.google.inject.Module;
 
 /**
@@ -68,7 +67,6 @@ public class SliceModulesFactory {
 		modules.add(new SlingModule(contextScope));
 		modules.add(new JcrModule());
 		modules.add(new SliceResourceModule());
-		modules.add(new PersistenceModule());
 		return modules;
 	}
 }

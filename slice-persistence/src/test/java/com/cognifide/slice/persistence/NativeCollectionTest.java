@@ -24,11 +24,13 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.tools.ant.filters.StringInputStream;
 import org.junit.Assert;
@@ -74,7 +76,7 @@ public class NativeCollectionTest extends BaseTest {
 
 	@Before
 	public void beforeTest() throws LoginException, PersistenceException, IllegalAccessException {
-		persistence.persist(new TestClass(), "nativeCollectionTest", resolver.getResource("/"));
+		modelPersister.persist(new TestClass(), "nativeCollectionTest", resolver.getResource("/"));
 		resolver.commit();
 		map = resolver.getResource("/nativeCollectionTest").adaptTo(ValueMap.class);
 	}
@@ -118,4 +120,29 @@ public class NativeCollectionTest extends BaseTest {
 		Assert.assertArrayEquals(new Double[] { 1.0, 2.0, 3.0 }, (Double[]) map.get("doubleList"));
 	}
 
+	@Test
+	public void doubleCollectionOverwriteTest() throws PersistenceException {
+		TestClass anotherTestClass = new TestClass();
+		anotherTestClass.doubleList = Collections.singletonList(3.14159);
+
+		modelPersister.persist(anotherTestClass, "nativeCollectionTest", resolver.getResource("/"));
+		resolver.commit();
+		Resource overwrittenResource = resolver.getResource("/nativeCollectionTest");
+		ValueMap overwrittenMap = overwrittenResource.adaptTo(ValueMap.class);
+
+		Assert.assertArrayEquals(new Double[] { 3.14159 }, (Double[]) overwrittenMap.get("doubleList"));
+	}
+
+	@Test
+	public void doubleCollectionOverwriteByNullTest() throws PersistenceException {
+		TestClass anotherTestClass = new TestClass();
+		anotherTestClass.doubleList = null;
+
+		modelPersister.persist(anotherTestClass, "nativeCollectionTest", resolver.getResource("/"));
+		resolver.commit();
+		Resource overwrittenResource = resolver.getResource("/nativeCollectionTest");
+		ValueMap overwrittenMap = overwrittenResource.adaptTo(ValueMap.class);
+
+		Assert.assertFalse(overwrittenMap.containsKey("doubleList"));
+	}
 }

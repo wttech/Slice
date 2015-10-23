@@ -26,6 +26,7 @@ import java.util.Calendar;
 import org.apache.commons.io.IOUtils;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.tools.ant.filters.StringInputStream;
 import org.junit.Assert;
@@ -71,13 +72,24 @@ public class NativePropertyTest extends BaseTest {
 
 		@JcrProperty
 		private InputStream binary = new StringInputStream("asd");
+
+		@JcrProperty
+		private Object nullable = null;
+	}
+
+	@SliceResource
+	private static class AnotherTestClass {
+
+		@JcrProperty
+		private String prop = "asd";
+
 	}
 
 	private ValueMap map;
 
 	@Before
 	public void beforeTest() throws LoginException, PersistenceException, IllegalAccessException {
-		persistence.persist(new TestClass(), "nativePropertyTest", resolver.getResource("/"));
+		modelPersister.persist(new TestClass(), "nativePropertyTest", resolver.getResource("/"));
 		resolver.commit();
 		map = resolver.getResource("/nativePropertyTest").adaptTo(ValueMap.class);
 	}
@@ -114,5 +126,51 @@ public class NativePropertyTest extends BaseTest {
 	@Test
 	public void binaryTest() throws IOException {
 		Assert.assertEquals("asd", IOUtils.toString((InputStream) map.get("binary")));
+	}
+
+	@Test
+	public void nullableTest() {
+		Assert.assertNull(map.get("nullable"));
+	}
+
+	@Test
+	public void testPropertyOverwritten() throws PersistenceException {
+		TestClass anotherTestClass = new TestClass();
+		anotherTestClass.intObject = 7777777;
+
+		modelPersister.persist(anotherTestClass, "nativePropertyTest", resolver.getResource("/"));
+		resolver.commit();
+		Resource overwrittenResource = resolver.getResource("/nativePropertyTest");
+		ValueMap overwrittenMap = overwrittenResource.adaptTo(ValueMap.class);
+
+		Assert.assertEquals(7777777L, overwrittenMap.get("intObject")); // integer are transformed into longs
+	}
+
+	@Test
+	public void testPropertyOverwrittenByNull() throws PersistenceException {
+		TestClass anotherTestClass = new TestClass();
+		anotherTestClass.intObject = null;
+
+		modelPersister.persist(anotherTestClass, "nativePropertyTest", resolver.getResource("/"));
+		resolver.commit();
+		Resource overwrittenResource = resolver.getResource("/nativePropertyTest");
+		ValueMap overwrittenMap = overwrittenResource.adaptTo(ValueMap.class);
+
+		Assert.assertFalse(overwrittenMap.containsKey("intObject"));
+	}
+
+	@Test
+	public void testOverwriteWithDifferentClass() throws PersistenceException {
+		AnotherTestClass anotherTestClass = new AnotherTestClass();
+
+		modelPersister.persist(anotherTestClass, "nativePropertyTest", resolver.getResource("/"));
+		resolver.commit();
+
+		Resource overwrittenResource = resolver.getResource("/nativePropertyTest");
+		ValueMap overwrittenMap = overwrittenResource.adaptTo(ValueMap.class);
+
+		// TODO Saving different class at same path does not clear old properties
+		//Assert.assertFalse("should NOT have old property", overwrittenMap.containsKey("intObject"));
+		Assert.assertEquals("should have new property", "asd", overwrittenMap.get("prop"));
 	}
 }

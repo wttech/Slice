@@ -24,23 +24,38 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 
+import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Reference;
+import org.apache.felix.scr.annotations.ReferenceCardinality;
+import org.apache.felix.scr.annotations.ReferencePolicy;
+import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 
-import com.cognifide.slice.persistence.api.ObjectSerializer;
 import com.cognifide.slice.persistence.api.FieldSerializer;
+import com.cognifide.slice.persistence.api.FieldSerializerAdapter;
+import com.cognifide.slice.persistence.api.ObjectSerializer;
 import com.cognifide.slice.persistence.api.Serializer;
 import com.cognifide.slice.persistence.api.SerializerContext;
 import com.cognifide.slice.persistence.api.SerializerFacade;
-import com.google.inject.Inject;
 
-public class MultibindingSerializerFacade implements SerializerFacade {
+@Component(immediate = true)
+@Service(SerializerFacade.class)
+public class SerializerFacadeService implements SerializerFacade {
 
-	private final List<Serializer> serializers;
+	@Reference(referenceInterface = Serializer.class,
+			policy = ReferencePolicy.DYNAMIC,
+			cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE)
+	private List<Serializer> serializers = new ArrayList<Serializer>();
 
 	private static final ObjectSerializer EMPTY_OBJECT_SERIALIZER = new ObjectSerializer() {
+
+		@Override
+		public int getPriority() {
+			return 0;
+		}
+
 		@Override
 		public boolean accepts(Class<?> objectClass) {
 			return false;
@@ -51,45 +66,43 @@ public class MultibindingSerializerFacade implements SerializerFacade {
 				throws PersistenceException {
 			// do nothing
 		}
-
-		@Override
-		public int getRank() {
-			return 0;
-		}
 	};
 
 	private static final FieldSerializer EMPTY_FIELD_SERIALIZER = new FieldSerializerAdapter(
 			EMPTY_OBJECT_SERIALIZER);
 
-	private static final Comparator<Serializer> SERIALIZER_COMPARATOR = new Comparator<Serializer>() {
+	private static final Comparator<Serializer> PRIORITY_SERIALIZER_COMPARATOR = new Comparator<Serializer>() {
 		@Override
-		public int compare(Serializer o1, Serializer o2) {
-			return Integer.valueOf(o1.getRank()).compareTo(o2.getRank());
+		public int compare(Serializer s1, Serializer s2) {
+			return Integer.valueOf(s2.getPriority()).compareTo(s1.getPriority());
 		}
 	};
 
-	@Inject
-	public MultibindingSerializerFacade(Set<Serializer> serializers) {
-		this.serializers = new ArrayList<Serializer>(serializers);
-		Collections.sort(this.serializers, SERIALIZER_COMPARATOR);
-	}
-
 	@Override
-	public void serialize(String objectName, Object object, Resource parent, SerializerContext ctx)
+	public void serializeObject(String objectName, Object object, Resource parent, SerializerContext ctx)
 			throws PersistenceException {
 		final ObjectSerializer serializer = findObjectSerializer(object.getClass());
 		serializer.serialize(objectName, object, parent, ctx);
 	}
 
 	@Override
-	public void serialize(Field field, String propertyName, Object fieldValue, Resource parent,
+	public void serializeField(Field field, String propertyName, Object fieldValue, Resource parent,
 			SerializerContext ctx) throws PersistenceException {
 		final FieldSerializer serializer = findFieldSerializer(field);
 		serializer.serialize(field, propertyName, fieldValue, parent, ctx);
 	}
 
+	protected void bindSerializers(Serializer serializer) {
+		serializers.add(serializer);
+		Collections.sort(serializers, PRIORITY_SERIALIZER_COMPARATOR);
+	}
+
+	protected void unbindSerializers(Serializer serializer) {
+		serializers.remove(serializer);
+	}
+
 	private FieldSerializer findFieldSerializer(Field field) {
-		for (Serializer o : serializers) {
+		for (Object o : serializers) {
 			final FieldSerializer s;
 			if (o instanceof FieldSerializer) {
 				s = (FieldSerializer) o;
@@ -106,7 +119,7 @@ public class MultibindingSerializerFacade implements SerializerFacade {
 	}
 
 	private ObjectSerializer findObjectSerializer(Class<?> clazz) {
-		for (Serializer o : serializers) {
+		for (Object o : serializers) {
 			if (!(o instanceof ObjectSerializer)) {
 				continue;
 			}

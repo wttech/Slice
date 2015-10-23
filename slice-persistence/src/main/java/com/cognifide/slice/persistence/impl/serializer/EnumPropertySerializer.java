@@ -17,39 +17,43 @@
  * limitations under the License.
  * #L%
  */
-package com.cognifide.slice.persistence.impl;
+package com.cognifide.slice.persistence.impl.serializer;
 
-import java.lang.reflect.Field;
-
+import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Service;
+import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 
-import com.cognifide.slice.persistence.api.FieldSerializer;
 import com.cognifide.slice.persistence.api.ObjectSerializer;
+import com.cognifide.slice.persistence.api.Serializer;
 import com.cognifide.slice.persistence.api.SerializerContext;
 
-public class FieldSerializerAdapter implements FieldSerializer {
+@Component(immediate = true)
+@Service(Serializer.class)
+public class EnumPropertySerializer implements ObjectSerializer {
 
-	private final ObjectSerializer objectSerializer;
-
-	public FieldSerializerAdapter(ObjectSerializer fieldSerializer) {
-		this.objectSerializer = fieldSerializer;
+	@Override
+	public int getPriority() {
+		return 100;
 	}
 
 	@Override
-	public boolean accepts(Field field) {
-		return objectSerializer.accepts(field.getType());
+	public boolean accepts(Class<?> clazz) {
+		return clazz.isEnum();
 	}
 
 	@Override
-	public void serialize(Field field, String propertyName, Object fieldValue, Resource parent,
-			SerializerContext ctx) throws PersistenceException {
-		objectSerializer.serialize(propertyName, fieldValue, parent, ctx);
-	}
+	public void serialize(String propertyName, Object object, Resource parent, SerializerContext ctx)
+			throws PersistenceException {
+		final ModifiableValueMap map = parent.adaptTo(ModifiableValueMap.class);
 
-	@Override
-	public int getRank() {
-		return objectSerializer.getRank();
-	}
+		if (object == null) {
+			map.remove(propertyName);
+		} else {
+			final Enum<?> e = (Enum<?>) object;
+			map.put(propertyName, e.name());
+		}
 
+	}
 }

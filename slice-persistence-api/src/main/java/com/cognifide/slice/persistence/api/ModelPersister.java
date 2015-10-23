@@ -19,26 +19,29 @@
  */
 package com.cognifide.slice.persistence.api;
 
-import java.util.Map;
+import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.api.resource.Resource;
+
+import aQute.bnd.annotation.ProviderType;
 
 /**
- * Serialization context, provides a state to the serialization process.
+ * An entrypoint to the Slice persistence service.
  *
  * @author Tomasz Rękawek
  */
-public interface SerializerContext {
+@ProviderType
+public interface ModelPersister {
 
 	/**
-	 * Add the object to the list of already serialized entities. Return true if the objects was already
-	 * included in the list.
+	 * Persist an object into a resource.
+	 */
+	void persist(Object object, Resource destinationResource) throws PersistenceException;
+
+	/**
+	 * Create a new resource called
 	 *
-	 * @param object
-	 * @return true if the object was already serialized
+	 * @param childName and serialize
+	 * @param object    into it.
 	 */
-	boolean alreadySerialized(Object object);
-
-	/**
-	 * A map of properties used to create a new resource.
-	 */
-	Map<String, Object> getInitialProperties();
+	void persist(Object object, String childName, Resource parent) throws PersistenceException;
 }

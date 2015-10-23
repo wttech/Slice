@@ -21,6 +21,7 @@ package com.cognifide.slice.persistence;
 
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.junit.Assert;
 import org.junit.Before;
@@ -45,7 +46,7 @@ public class NativeArrayTest extends BaseTest {
 
 	@Before
 	public void beforeTest() throws LoginException, PersistenceException, IllegalAccessException {
-		persistence.persist(new TestClass(), "nativeArray", resolver.getResource("/"));
+		modelPersister.persist(new TestClass(), "nativeArray", resolver.getResource("/"));
 		resolver.commit();
 		map = resolver.getResource("/nativeArray").adaptTo(ValueMap.class);
 	}
@@ -58,6 +59,36 @@ public class NativeArrayTest extends BaseTest {
 	@Test
 	public void objectArrayTest() {
 		Assert.assertArrayEquals(new Long[] { 1l, 2l, 3l }, (Long[]) map.get("longObjectArray"));
+	}
+
+	@Test
+	public void overwriteTest() throws PersistenceException {
+		TestClass anotherTestClass = new TestClass();
+		anotherTestClass.longArray = new long[] { -4444 };
+		anotherTestClass.longObjectArray = new Long[] { -55555L };
+
+		modelPersister.persist(anotherTestClass, "nativeArray", resolver.getResource("/"));
+		resolver.commit();
+		Resource anotherResource = resolver.getResource("/nativeArray");
+		ValueMap anotherMap = anotherResource.adaptTo(ValueMap.class);
+
+		Assert.assertArrayEquals(new Long[] { -4444L }, (Long[]) anotherMap.get("longArray"));
+		Assert.assertArrayEquals(new Long[] { -55555L }, (Long[]) anotherMap.get("longObjectArray"));
+	}
+
+	@Test
+	public void overwriteByNullTest() throws PersistenceException {
+		TestClass anotherTestClass = new TestClass();
+		anotherTestClass.longArray = null;
+		anotherTestClass.longObjectArray = null;
+
+		modelPersister.persist(anotherTestClass, "nativeArray", resolver.getResource("/"));
+		resolver.commit();
+		Resource anotherResource = resolver.getResource("/nativeArray");
+		ValueMap anotherMap = anotherResource.adaptTo(ValueMap.class);
+
+		Assert.assertFalse(anotherMap.containsKey("longArray"));
+		Assert.assertFalse(anotherMap.containsKey("longObjectArray"));
 	}
 
 }

@@ -17,20 +17,40 @@
  * limitations under the License.
  * #L%
  */
-package com.cognifide.slice.persistence.serializer;
+package com.cognifide.slice.persistence.impl.serializer;
 
 import java.lang.reflect.Field;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Properties;
+import org.apache.felix.scr.annotations.Property;
+import org.apache.felix.scr.annotations.Reference;
+import org.apache.felix.scr.annotations.Service;
+import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
+import org.osgi.framework.Constants;
 
 import com.cognifide.slice.mapper.annotation.JcrProperty;
 import com.cognifide.slice.mapper.annotation.SliceResource;
 import com.cognifide.slice.persistence.api.ObjectSerializer;
+import com.cognifide.slice.persistence.api.Serializer;
 import com.cognifide.slice.persistence.api.SerializerContext;
+import com.cognifide.slice.persistence.api.SerializerFacade;
 
+@Component(immediate = true)
+@Service(Serializer.class)
+@Properties({ @Property(name = Constants.SERVICE_RANKING) })
 public class RecursiveSerializer implements ObjectSerializer {
+
+	@Reference
+	private SerializerFacade facade;
+
+	@Override
+	public int getPriority() {
+		return Integer.MAX_VALUE;
+	}
 
 	@Override
 	public boolean accepts(Class<?> clazz) {
@@ -44,20 +64,33 @@ public class RecursiveSerializer implements ObjectSerializer {
 			return;
 		}
 
+		if (object == null) {
+			removeProperty(parent, childName);
+		} else {
+			serializeObject(parent, childName, object, ctx);
+		}
+	}
+
+	private void removeProperty(Resource parent, String childName) {
+		final ModifiableValueMap map = parent.adaptTo(ModifiableValueMap.class);
+		if (map.containsKey(childName)) {
+			map.remove(childName);
+		}
+	}
+
+	private void serializeObject(Resource parent, String childName, Object object, SerializerContext ctx)
+			throws PersistenceException {
 		Resource child = parent.getChild(childName);
 		if (child == null) {
-			child = parent.getResourceResolver().create(parent, childName,
-					SerializerContext.getInitialProperties());
+			child = parent.getResourceResolver()
+					.create(parent, childName, ctx.getInitialProperties());
 		}
 		for (final Field field : object.getClass().getDeclaredFields()) {
 			if (!field.isAnnotationPresent(JcrProperty.class)) {
 				continue;
 			}
 
-			final JcrProperty jcrPropAnnotation = field.getAnnotation(JcrProperty.class);
-			final String overridingPropertyName = jcrPropAnnotation.value();
-			final String fieldName = field.getName();
-			final String propertyName = StringUtils.defaultIfEmpty(overridingPropertyName, fieldName);
+			final String propertyName = retrievePropertyName(field);
 			field.setAccessible(true);
 			Object fieldValue;
 			try {
@@ -65,15 +98,16 @@ public class RecursiveSerializer implements ObjectSerializer {
 			} catch (IllegalAccessException e) {
 				throw new PersistenceException("Can't get field", e);
 			}
-			if (fieldValue != null) {
-				ctx.getFacade().serialize(field, propertyName, fieldValue, child, ctx);
-			}
+
+			facade.serializeField(field, propertyName, fieldValue, child, ctx);
 		}
 	}
 
-	@Override
-	public int getRank() {
-		return Integer.MAX_VALUE;
-	}
+	private String retrievePropertyName(Field field) {
+		final JcrProperty jcrPropAnnotation = field.getAnnotation(JcrProperty.class);
+		final String overridingPropertyName = jcrPropAnnotation.value();
+		final String fieldName = field.getName();
 
+		return StringUtils.defaultIfEmpty(overridingPropertyName, fieldName);
+	}
 }
