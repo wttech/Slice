@@ -19,6 +19,8 @@
  */
 package com.cognifide.slice.persistence;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.util.Dictionary;
 
 import org.apache.sling.api.resource.LoginException;
@@ -28,9 +30,11 @@ import org.apache.sling.testing.mock.sling.MockSling;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.junit.Before;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 
 import com.cognifide.slice.persistence.api.ModelPersister;
 import com.cognifide.slice.persistence.api.Serializer;
+import com.cognifide.slice.persistence.api.SerializerFacade;
 import com.cognifide.slice.persistence.impl.ModelPersisterService;
 import com.cognifide.slice.persistence.impl.SerializerFacadeService;
 import com.cognifide.slice.persistence.impl.serializer.ChildrenArraySerializer;
@@ -40,9 +44,10 @@ import com.cognifide.slice.persistence.impl.serializer.NativeArraySerializer;
 import com.cognifide.slice.persistence.impl.serializer.NativeCollectionSerializer;
 import com.cognifide.slice.persistence.impl.serializer.NativePropertySerializer;
 import com.cognifide.slice.persistence.impl.serializer.RecursiveSerializer;
-import com.cognifide.slice.persistence.api.SerializerFacade;
 
 public abstract class BaseTest {
+
+	protected BundleContext bundleContext;
 
 	protected ResourceResolver resolver;
 
@@ -51,28 +56,36 @@ public abstract class BaseTest {
 	@SuppressWarnings("deprecation")
 	@Before
 	public void setup() throws LoginException {
-		BundleContext ctx = MockOsgi.newBundleContext();
+		bundleContext = MockOsgi.newBundleContext();
+		assertNotNull(bundleContext);
 
-		register(ctx, SerializerFacade.class, new SerializerFacadeService());
+		register(bundleContext, SerializerFacade.class, new SerializerFacadeService());
 
-		register(ctx, Serializer.class, new ChildrenArraySerializer());
-		register(ctx, Serializer.class, new ChildrenCollectionSerializer());
-		register(ctx, Serializer.class, new EnumPropertySerializer());
-		register(ctx, Serializer.class, new NativeArraySerializer());
-		register(ctx, Serializer.class, new NativeCollectionSerializer());
-		register(ctx, Serializer.class, new NativePropertySerializer());
-		register(ctx, Serializer.class, new RecursiveSerializer());
+		register(bundleContext, Serializer.class, new ChildrenArraySerializer());
+		register(bundleContext, Serializer.class, new ChildrenCollectionSerializer());
+		register(bundleContext, Serializer.class, new EnumPropertySerializer());
+		register(bundleContext, Serializer.class, new NativeArraySerializer());
+		register(bundleContext, Serializer.class, new NativeCollectionSerializer());
+		register(bundleContext, Serializer.class, new NativePropertySerializer());
+		register(bundleContext, Serializer.class, new RecursiveSerializer());
 
-		register(ctx, ModelPersister.class, new ModelPersisterService());
+		register(bundleContext, ModelPersister.class, new ModelPersisterService());
 
-		resolver = MockSling.newResourceResolverFactory(ResourceResolverType.JCR_MOCK, ctx)
+		resolver = MockSling.newResourceResolverFactory(ResourceResolverType.JCR_MOCK, bundleContext)
 				.getAdministrativeResourceResolver(null);
-		modelPersister = (ModelPersister) ctx.getService(ctx.getServiceReference(ModelPersister.class.getName()));
+		assertNotNull(resolver);
+
+		ServiceReference modelPersisterReference = bundleContext
+				.getServiceReference(ModelPersister.class.getName());
+		assertNotNull(modelPersisterReference);
+
+		modelPersister = (ModelPersister) bundleContext.getService(modelPersisterReference);
+		assertNotNull(modelPersister);
 	}
 
-	private void register(BundleContext ctx, Class<?> clazz, Object service) {
-		MockOsgi.injectServices(service, ctx);
-		MockOsgi.activate(service, ctx, (Dictionary<String, Object>) null);
-		ctx.registerService(clazz.getName(), service, null);
+	private void register(BundleContext bundleContext, Class<?> clazz, Object service) {
+		MockOsgi.injectServices(service, bundleContext);
+		MockOsgi.activate(service, bundleContext, (Dictionary<String, Object>) null);
+		bundleContext.registerService(clazz.getName(), service, null);
 	}
 }
