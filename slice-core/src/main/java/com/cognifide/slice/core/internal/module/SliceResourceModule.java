@@ -20,13 +20,20 @@
 
 package com.cognifide.slice.core.internal.module;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.sling.api.resource.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.cognifide.slice.api.model.InitializableModel;
 import com.cognifide.slice.core.internal.provider.CurrentResourceProvider;
+import com.cognifide.slice.mapper.annotation.PostMapping;
+import com.cognifide.slice.mapper.annotation.PreMapping;
 import com.cognifide.slice.mapper.annotation.SliceResource;
 import com.cognifide.slice.mapper.api.Mapper;
 import com.google.inject.AbstractModule;
@@ -47,6 +54,7 @@ import com.google.inject.spi.TypeListener;
 public class SliceResourceModule extends AbstractModule {
 
 	private final SliceResourceAnnotationCache annotationCache = new SliceResourceAnnotationCache();
+	private static final Logger LOG = LoggerFactory.getLogger(SliceResourceModule.class);
 
 	@Override
 	protected void configure() {
@@ -88,11 +96,43 @@ public class SliceResourceModule extends AbstractModule {
 			if (resource == null) {
 				return;
 			}
+
+			invokeMethod(injectee, PreMapping.class);
 			Mapper mapper = mapperProvider.get();
+			invokeMethod(injectee, PostMapping.class);
+
 			mapper.get(resource, injectee);
 			if (injectee instanceof InitializableModel) {
 				((InitializableModel) injectee).afterCreated();
 			}
+		}
+
+		private void invokeMethod(final Object injectee, final Class<? extends Annotation> annotationClass) {
+			Method method = findMethod(injectee, annotationClass);
+			if (method != null) {
+				try {
+					method.setAccessible(true);
+					method.invoke(injectee, null);
+					LOG.debug("Method " + injectee.getClass().getCanonicalName() + "." + method.getName() +
+							"() annotated by " + annotationClass.getCanonicalName() +
+							" has been invoked properly.");
+				} catch (IllegalAccessException e) {
+					LOG.error("Exception while invoking " + injectee.getClass().getCanonicalName() + "." +
+							method.getName() + "() : " + e.getMessage(), e);
+				} catch (InvocationTargetException e) {
+					LOG.error("Exception while invoking " + injectee.getClass().getCanonicalName() + "." +
+							method.getName() + "() : " + e.getMessage(), e);
+				}
+			}
+		}
+
+		private Method findMethod(final Object injectee, final Class<? extends Annotation> annotationClass) {
+			for (Method method : injectee.getClass().getDeclaredMethods()) {
+				if (method.isAnnotationPresent(annotationClass)) {
+					return method;
+				}
+			}
+			return null;
 		}
 	}
 
