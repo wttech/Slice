@@ -19,7 +19,9 @@
  */
 package com.cognifide.slice.mapper.annotation;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Mariusz Kubiś Date: 14.04.15
@@ -49,6 +51,31 @@ public class ChildrenModel {
 	public JcrPropertyModel[] getChildrenArray() {
 		return childrenArray;
 	}
+}
+
+@SliceResource
+class ChildrenModelWithSet extends ChildrenModel {
+
+	@Children(JcrPropertyModel.class)
+	@JcrProperty(value = "children")
+	private Set<JcrPropertyModel> childrenSet;
+
+	public Set<JcrPropertyModel> getChildrenSet() {
+		return childrenSet;
+	}
+}
+
+@SliceResource
+class ChildrenModelWithCollection extends ChildrenModel {
+
+	@Children(JcrPropertyModel.class)
+	@JcrProperty(value = "children")
+	private Collection<JcrPropertyModel> childrenCollection;
+
+	public Collection<JcrPropertyModel> getChildrenCollection() {
+		return childrenCollection;
+	}
+
 }
 
 @SliceResource

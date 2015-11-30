@@ -23,8 +23,12 @@ package com.cognifide.slice.mapper.impl.processor;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.text.MessageFormat;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
@@ -39,6 +43,16 @@ import com.google.inject.Provider;
 
 public class ChildrenFieldProcessor implements FieldProcessor {
 
+	private static final Set<Class> ASSIGNABLE_FIELD_TYPES;
+
+	static {
+		Set<Class> types = new HashSet<Class>();
+		types.add(Set.class);
+		types.add(List.class);
+		types.add(Collection.class);
+		ASSIGNABLE_FIELD_TYPES = Collections.unmodifiableSet(types);
+	}
+
 	private final Provider<ModelProvider> modelProvider;
 
 	@Inject
@@ -52,7 +66,7 @@ public class ChildrenFieldProcessor implements FieldProcessor {
 			return false;
 		}
 		Class<?> fieldType = field.getType();
-		return List.class.isAssignableFrom(fieldType) || fieldType.isArray();
+		return ASSIGNABLE_FIELD_TYPES.contains(fieldType) || fieldType.isArray();
 	}
 
 	@Override
@@ -67,9 +81,8 @@ public class ChildrenFieldProcessor implements FieldProcessor {
 		final Class<?> fieldType = field.getType();
 		if (fieldType.isArray()) {
 			return getArrayFromList(fieldType.getComponentType(), mappedModels);
-		} else {
-			return mappedModels;
 		}
+		return Set.class.isAssignableFrom(fieldType) ? new LinkedHashSet(mappedModels) : mappedModels;
 	}
 
 	private List<?> getChildrenList(Resource resource, Field field, String propertyName) {

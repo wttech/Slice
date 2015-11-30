@@ -93,6 +93,55 @@ class ChildrenTest extends BaseSetup {
 		thrown(ProvisionException)
 	}
 
+	def "Children test (mapping to Collection)"() {
+		setup: "Creating initial content"
+		pageBuilder.content {
+			test("cq:PageContent") {
+				"jcr:content"("text": "Test") {
+					"children"("sling:Folder") {
+						"item"("text": "Test1", "style": "Style1", "size": 1)
+						"item_0"("text": "Test2", "style": "Style2", "size": 2)
+					}
+				}
+			}
+		}
+
+		when: "Get a model instance by path"
+		ChildrenModelWithCollection childrenModelWithCollection = modelProvider.get(ChildrenModelWithCollection.class, "/content/test/jcr:content")
+
+		then: "Model has been property initialized"
+		Assert.assertEquals("Test", childrenModelWithCollection.getText())
+		Assert.assertEquals(2, childrenModelWithCollection.getChildrenCollection().size())
+
+		childrenModelWithCollection.getChildrenCollection().eachWithIndex { child, idx ->
+			checkJcrPropertyModel(child, "Test${idx + 1}", "Style${idx + 1}", idx + 1)
+		}
+	}
+
+	def "Children test (mapping to Set)"() {
+		setup: "Creating initial content"
+		pageBuilder.content {
+			test("cq:PageContent") {
+				"jcr:content"("text": "Test") {
+					"children"("sling:Folder") {
+						"item"("text": "Test1", "style": "Style1", "size": 1)
+						"item_0"("text": "Test2", "style": "Style2", "size": 2)
+					}
+				}
+			}
+		}
+
+		when: "Get a model instance by path"
+		ChildrenModelWithSet childrenModelWithSet = modelProvider.get(ChildrenModelWithSet.class, "/content/test/jcr:content")
+
+		then: "Model has been property initialized"
+		Assert.assertEquals("Test", childrenModelWithSet.getText())
+		Assert.assertEquals(2, childrenModelWithSet.getChildrenSet().size())
+
+		childrenModelWithSet.getChildrenSet().eachWithIndex { child, idx ->
+			checkJcrPropertyModel(child, "Test${idx + 1}", "Style${idx + 1}", idx + 1)
+		}
+	}
 	def "Children test (mapping to array)"() {
 		setup: "Creating initial content"
 		pageBuilder.content {
