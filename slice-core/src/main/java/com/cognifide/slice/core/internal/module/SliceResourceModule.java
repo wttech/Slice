@@ -23,8 +23,11 @@ package com.cognifide.slice.core.internal.module;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.sling.api.resource.Resource;
 import org.slf4j.Logger;
@@ -79,6 +82,20 @@ public class SliceResourceModule extends AbstractModule {
 	}
 
 	private static class SliceResourceTypeListener implements InjectionListener<Object> {
+		private static final Map<Class<? extends Annotation>, Map<Class<?>, Method>> ANNOTATED_METHODS_CACHE;
+		private static final Map<Class<? extends Annotation>, Set<Class<?>>> MISSING_ANNOTATED_METHODS_CACHE;
+
+		static {
+			ANNOTATED_METHODS_CACHE = new HashMap<Class<? extends Annotation>, Map<Class<?>, Method>>();
+			ANNOTATED_METHODS_CACHE.put(PreMapping.class, new ConcurrentHashMap<Class<?>, Method>());
+			ANNOTATED_METHODS_CACHE.put(PostMapping.class, new ConcurrentHashMap<Class<?>, Method>());
+
+			MISSING_ANNOTATED_METHODS_CACHE = new HashMap<Class<? extends Annotation>, Set<Class<?>>>();
+			MISSING_ANNOTATED_METHODS_CACHE.put(PreMapping.class,
+					Collections.newSetFromMap(new ConcurrentHashMap<Class<?>, Boolean>()));
+			MISSING_ANNOTATED_METHODS_CACHE.put(PostMapping.class,
+					Collections.newSetFromMap(new ConcurrentHashMap<Class<?>, Boolean>()));
+		}
 
 		private final Provider<CurrentResourceProvider> currentResourceProvider;
 
@@ -97,9 +114,9 @@ public class SliceResourceModule extends AbstractModule {
 				return;
 			}
 
-			invokeMethod(injectee, PreMapping.class);
+			invokeAnnotatedMethod(PreMapping.class, injectee);
 			Mapper mapper = mapperProvider.get();
-			invokeMethod(injectee, PostMapping.class);
+			invokeAnnotatedMethod(PostMapping.class, injectee);
 
 			mapper.get(resource, injectee);
 			if (injectee instanceof InitializableModel) {
@@ -107,22 +124,41 @@ public class SliceResourceModule extends AbstractModule {
 			}
 		}
 
-		private void invokeMethod(final Object injectee, final Class<? extends Annotation> annotationClass) {
-			Method method = findMethod(injectee, annotationClass);
-			if (method != null) {
-				try {
-					method.setAccessible(true);
-					method.invoke(injectee, null);
-					LOG.debug("Method " + injectee.getClass().getCanonicalName() + "." + method.getName() +
-							"() annotated by " + annotationClass.getCanonicalName() +
-							" has been invoked properly.");
-				} catch (IllegalAccessException e) {
-					LOG.error("Exception while invoking " + injectee.getClass().getCanonicalName() + "." +
-							method.getName() + "() : " + e.getMessage(), e);
-				} catch (InvocationTargetException e) {
-					LOG.error("Exception while invoking " + injectee.getClass().getCanonicalName() + "." +
-							method.getName() + "() : " + e.getMessage(), e);
+		private void invokeAnnotatedMethod(final Class<? extends Annotation> annotationClass, final Object injectee) {
+			final Map<Class<?>, Method> methodCache = ANNOTATED_METHODS_CACHE.get(annotationClass);
+			final Set<Class<?>> missingMethodCache = MISSING_ANNOTATED_METHODS_CACHE.get(annotationClass);
+
+			final Class<?> injecteeClass = injectee.getClass();
+
+			Method method = null;
+			if (methodCache.containsKey(injecteeClass)) {
+				method = methodCache.get(injecteeClass);
+			} else if (!missingMethodCache.contains(injecteeClass)) {
+				method = findMethod(injectee, annotationClass);
+				if (method == null) {
+					missingMethodCache.add(injecteeClass);
+				} else {
+					methodCache.put(injecteeClass, method);
 				}
+			}
+
+			if (method != null) {
+				invokeMethod(injectee, method);
+			}
+		}
+
+		private void invokeMethod(final Object injectee, Method method) {
+			try {
+				method.setAccessible(true);
+				method.invoke(injectee, null);
+				LOG.debug("Method " + injectee.getClass().getCanonicalName() + "." + method.getName() +
+						"() has been invoked properly.");
+			} catch (IllegalAccessException e) {
+				LOG.error("Exception while invoking " + injectee.getClass().getCanonicalName() + "." +
+						method.getName() + "() : " + e.getMessage(), e);
+			} catch (InvocationTargetException e) {
+				LOG.error("Exception while invoking " + injectee.getClass().getCanonicalName() + "." +
+						method.getName() + "() : " + e.getMessage(), e);
 			}
 		}
 

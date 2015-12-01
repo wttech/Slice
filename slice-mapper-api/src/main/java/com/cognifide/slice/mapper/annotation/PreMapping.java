@@ -27,8 +27,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Method annotated by PostMapping is triggered after resource mapping.
- * If there is more than one such method, only the first one will be invoked.
+ * Method annotated by PostMapping is triggered before resource mapping.
+ * If there is more than one such method in class, only the first returned by {@link java.lang.Class#getDeclaredMethods()} will be invoked.
  *
  * @author Krzysztof Watral
  */
