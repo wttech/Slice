@@ -47,10 +47,10 @@ public class CurrentResourceProvider implements Provider<Resource> {
 		final ExecutionContext executionItem = currentExecutionContext.peek();
 		if (executionItem.getResource() != null) {
 			return executionItem.getResource();
-		} else {
+		} else if (executionItem.getPath() != null){
 			final Resource resource = resourceResolver.getResource(executionItem.getPath());
 			return ResourceUtil.getValidResourceOrNull(resource);
 		}
+		return null;
 	}
-
 }

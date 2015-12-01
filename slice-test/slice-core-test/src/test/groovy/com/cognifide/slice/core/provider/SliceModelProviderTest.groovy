@@ -57,6 +57,17 @@ class SliceModelProviderTest extends BaseSetup {
 		Assert.assertNull(model.getProp1())
 	}
 
+	def "Get model by class and nullable path"() {
+		setup: "Creating model for nullable path "
+		SimpleModel model = modelProvider.get(SimpleModel.class, null);
+
+		expect: "Model should not be null"
+		Assert.assertNotNull(model)
+
+		and: "Model should have a null value for property 'prop1' set"
+		Assert.assertNull(model.getProp1())
+	}
+
 	def "Get model by key and path - non existing content"() {
 		def nonExistingPath = "/content/nonexisting"
 
