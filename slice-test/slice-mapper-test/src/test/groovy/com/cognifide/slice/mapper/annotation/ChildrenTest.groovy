@@ -142,6 +142,33 @@ class ChildrenTest extends BaseSetup {
 			checkJcrPropertyModel(child, "Test${idx + 1}", "Style${idx + 1}", idx + 1)
 		}
 	}
+
+	def "Children test (mapping to SortedSet)"() {
+		setup: "Creating initial content"
+		pageBuilder.content {
+			test("cq:PageContent") {
+				"jcr:content"("text": "Test") {
+					"children"("sling:Folder") {
+						"item"("text": "Test1", "style": "Style1", "size": 1)
+						"item_0"("text": "Test2", "style": "Style2", "size": 2)
+					}
+				}
+			}
+		}
+
+		when: "Get a model instance by path"
+		ChildrenModelWithSortedSet childrenModelWithSortedSet = modelProvider.get(ChildrenModelWithSortedSet.class, "/content/test/jcr:content")
+
+		then: "Model has been property initialized"
+		def size = childrenModelWithSortedSet.getChildrenSortedSet().size()
+		Assert.assertEquals("Test", childrenModelWithSortedSet.getText())
+		Assert.assertEquals(2, size)
+
+		childrenModelWithSortedSet.getChildrenSortedSet().eachWithIndex { child, idx ->
+			checkJcrPropertyModel(child, "Test${size - idx}", "Style${size - idx}", size - idx)
+		}
+	}
+
 	def "Children test (mapping to array)"() {
 		setup: "Creating initial content"
 		pageBuilder.content {

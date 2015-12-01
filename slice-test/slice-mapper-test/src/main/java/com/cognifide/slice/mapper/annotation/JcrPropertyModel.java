@@ -61,3 +61,13 @@ public class JcrPropertyModel {
 		return sizeStatic;
 	}
 }
+
+@SliceResource
+class JcrPropertyModelComparable extends JcrPropertyModel implements Comparable<JcrPropertyModel> {
+
+	// descending sort by size property
+	@Override
+	public int compareTo(JcrPropertyModel that) {
+		return Integer.valueOf(that.getSize()).compareTo(this.getSize());
+	}
+}

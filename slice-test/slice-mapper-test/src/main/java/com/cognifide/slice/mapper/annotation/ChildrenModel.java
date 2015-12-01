@@ -22,6 +22,7 @@ package com.cognifide.slice.mapper.annotation;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 
 /**
  * @author Mariusz Kubiś Date: 14.04.15
@@ -62,6 +63,18 @@ class ChildrenModelWithSet extends ChildrenModel {
 
 	public Set<JcrPropertyModel> getChildrenSet() {
 		return childrenSet;
+	}
+}
+
+@SliceResource
+class ChildrenModelWithSortedSet extends ChildrenModel {
+
+	@Children(JcrPropertyModelComparable.class)
+	@JcrProperty(value = "children")
+	private SortedSet<JcrPropertyModelComparable> childrenSortedSet;
+
+	public SortedSet<JcrPropertyModelComparable> getChildrenSortedSet() {
+		return childrenSortedSet;
 	}
 }
 
