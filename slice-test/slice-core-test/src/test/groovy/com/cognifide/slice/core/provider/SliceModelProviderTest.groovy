@@ -57,17 +57,6 @@ class SliceModelProviderTest extends BaseSetup {
 		Assert.assertNull(model.getProp1())
 	}
 
-	def "Get model by class and nullable path"() {
-		setup: "Creating model for nullable path "
-		SimpleModel model = modelProvider.get(SimpleModel.class, null);
-
-		expect: "Model should not be null"
-		Assert.assertNotNull(model)
-
-		and: "Model should have a null value for property 'prop1' set"
-		Assert.assertNull(model.getProp1())
-	}
-
 	def "Get model by key and path - non existing content"() {
 		def nonExistingPath = "/content/nonexisting"
 
@@ -164,10 +153,20 @@ class SliceModelProviderTest extends BaseSetup {
 		def nonExistingPath2 = "/content/nonexisting/foo"
 		def nonExistingResources = [resourceResolver.getResource(nonExistingPath1), resourceResolver.getResource(nonExistingPath2)]
 
-		when: "Creating model for paths: " << nonExistingPath1 << nonExistingPath2
-		modelProvider.getListFromResources(SimpleModel.class, nonExistingResources.iterator())
-		then: "Throw ProvisionException - either path or resource should be set"
-		thrown(ProvisionException)  //FIXME we should not expect ProvisionException here
+		setup: "Creating model for paths: " << nonExistingPath1 << nonExistingPath2
+		List<SimpleModel> models = modelProvider.getListFromResources(SimpleModel.class, nonExistingResources.iterator())
+
+		expect: "List of models should not be null"
+		Assert.assertNotNull(models)
+
+		and: "List should have exactly 2 elements"
+		Assert.assertEquals(2, models.size())
+
+		and: "First Model should have a null value for property 'prop1' set"
+		Assert.assertNull(models[0].getProp1())
+
+		and: "Second Model should have a null value for property 'prop1' set"
+		Assert.assertNull(models[1].getProp1())
 	}
 
 	def "Get a list of models by class and resources iterator - null iterator"() {
@@ -221,38 +220,42 @@ class SliceModelProviderTest extends BaseSetup {
 	}
 
 	def "Get model by a null path"() {
-		def nullPath = null
+		String nullPath = null
+		setup: "Creating model for null path"
+		SimpleModel model = modelProvider.get(SimpleModel.class, nullPath);
 
-		when: "Creating model based on null path"
-		modelProvider.get(SimpleModel.class, nullPath)
+		expect: "Model should not be null"
+		Assert.assertNotNull(model)
 
-		then: "Throw ProvisionException - either path or resource should be set"
-		thrown(ProvisionException) //FIXME we should not expect ProvisionException here
+		and: "Model should have a null value for property 'prop1' set"
+		Assert.assertNull(model.getProp1())
 	}
 
 	def "Get model by a resource - non-existing (null) resource"() {
 		def nonExistingPath = "/content/nonexisting"
 
-		setup: "Get non-existing resource"
+		setup: "Creating model for path: " + nonExistingPath
 		def resource = resourceResolver.getResource(nonExistingPath)
+		def model = modelProvider.get(SimpleModel.class, resource)
 
-		when: "Creating model for non-existing (null) resource"
-		modelProvider.get(SimpleModel.class, resource);
+		expect: "Model should not be null"
+		Assert.assertNotNull(model)
 
-		then: "Throw ProvisionException - either path or resource should be set"
-		thrown(ProvisionException)
+		and: "Model should have a null value for property 'prop1' set"
+		Assert.assertNull(model.getProp1())
 	}
 
 	def "Get model resource by key and resource - non-existing (null) resource"() {
 		def nonExistingPath = "/content/nonexisting"
 
-		setup: "Get non-existing resource"
+		setup: "Creating model for path: " + nonExistingPath
 		def resource = resourceResolver.getResource(nonExistingPath)
+		def model = modelProvider.get(Key.get(SimpleModel.class), resource);
 
-		when: "Creating model for non-existing (null) resource"
-		modelProvider.get(Key.get(SimpleModel.class), resource);
+		expect: "Model should not be null"
+		Assert.assertNotNull(model)
 
-		then: "Throw ProvisionException - either path or resource should be set"
-		thrown(ProvisionException)  //FIXME we should not expect ProvisionException here
+		and: "Model should have a null value for property 'prop1' set"
+		Assert.assertNull(model.getProp1())
 	}
 }
