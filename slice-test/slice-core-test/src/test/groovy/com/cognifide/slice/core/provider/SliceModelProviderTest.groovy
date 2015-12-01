@@ -22,7 +22,6 @@ package com.cognifide.slice.core.provider
 import com.cognifide.slice.test.module.SimpleModel
 import com.cognifide.slice.test.setup.BaseSetup
 import com.google.inject.Key
-import com.google.inject.ProvisionException
 import org.junit.Assert
 
 /**
