@@ -34,6 +34,13 @@ public abstract class BaseMappingModel {
 	protected String postfix;
 
 	public String getField() {
-		return (upperCase ? field.toUpperCase() : field) + StringUtils.defaultString(postfix);
+		String value;
+		if (upperCase) {
+			value = this.field.toUpperCase();
+		} else {
+			value = this.field;
+		}
+
+		return value + StringUtils.defaultString(postfix);
 	}
 }
