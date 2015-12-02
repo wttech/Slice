@@ -23,13 +23,8 @@ package com.cognifide.slice.mapper.impl.processor;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.text.MessageFormat;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
@@ -39,6 +34,8 @@ import com.cognifide.slice.mapper.annotation.Children;
 import com.cognifide.slice.mapper.annotation.Follow;
 import com.cognifide.slice.mapper.api.processor.FieldProcessor;
 import com.cognifide.slice.mapper.exception.MapperException;
+import com.cognifide.slice.mapper.impl.processor.adapter.AssignableFieldType;
+import com.cognifide.slice.mapper.impl.processor.adapter.MappedListAdapterFactory;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -57,7 +54,7 @@ public class ChildrenFieldProcessor implements FieldProcessor {
 			return false;
 		}
 		Class<?> fieldType = field.getType();
-		return fieldType.isArray() || AssignableFieldTypes.contain(fieldType);
+		return fieldType.isArray() || AssignableFieldType.contains(fieldType);
 	}
 
 	@Override
@@ -73,20 +70,7 @@ public class ChildrenFieldProcessor implements FieldProcessor {
 		if (fieldType.isArray()) {
 			return getArrayFromList(fieldType.getComponentType(), mappedModels);
 		}
-		return getMappedModelsCollection(mappedModels, fieldType);
-	}
-
-	private Collection getMappedModelsCollection(List<?> mappedModels, Class<?> fieldType) {
-		AssignableFieldTypes assignableFieldType = AssignableFieldTypes.byClass(fieldType);
-		if (assignableFieldType != null) {
-			switch (assignableFieldType) {
-				case SET:
-					return new LinkedHashSet(mappedModels);
-				case SORTED_SET:
-					return new TreeSet(mappedModels);
-			}
-		}
-		return mappedModels;
+		return MappedListAdapterFactory.create(fieldType).adapt(mappedModels);
 	}
 
 	private List<?> getChildrenList(Resource resource, Field field, String propertyName) {
@@ -133,32 +117,6 @@ public class ChildrenFieldProcessor implements FieldProcessor {
 		}
 
 		return getChildrenList(followUpResource, field);
-	}
-
-	private enum AssignableFieldTypes {
-		LIST(List.class),
-		SET(Set.class),
-		SORTED_SET(SortedSet.class),
-		COLLECTION(Collection.class);
-
-		private final Class<?> clazz;
-
-		AssignableFieldTypes(Class<?> clazz) {
-			this.clazz = clazz;
-		}
-
-		static AssignableFieldTypes byClass(Class<?> clazz) {
-			for (AssignableFieldTypes type : values()) {
-				if (type.clazz.equals(clazz)) {
-					return type;
-				}
-			}
-			return null;
-		}
-
-		static boolean contain(Class<?> clazz) {
-			return byClass(clazz) != null;
-		}
 	}
 
 }
