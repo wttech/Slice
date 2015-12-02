@@ -27,7 +27,7 @@ import org.junit.Assert
  */
 class PostMappingTest extends BaseSetup {
 
-    def "PreMapping Annotation Test"() {
+    def "PostMapping Annotation Test"() {
         setup: "Creating initial content"
         pageBuilder.content {
             test("cq:PageContent") {
