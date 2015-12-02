@@ -82,20 +82,6 @@ public class SliceResourceModule extends AbstractModule {
 	}
 
 	private static class SliceResourceTypeListener implements InjectionListener<Object> {
-		private static final Map<Class<? extends Annotation>, Map<Class<?>, Method>> ANNOTATED_METHODS_CACHE;
-		private static final Map<Class<? extends Annotation>, Set<Class<?>>> MISSING_ANNOTATED_METHODS_CACHE;
-
-		static {
-			ANNOTATED_METHODS_CACHE = new HashMap<Class<? extends Annotation>, Map<Class<?>, Method>>();
-			ANNOTATED_METHODS_CACHE.put(PreMapping.class, new ConcurrentHashMap<Class<?>, Method>());
-			ANNOTATED_METHODS_CACHE.put(PostMapping.class, new ConcurrentHashMap<Class<?>, Method>());
-
-			MISSING_ANNOTATED_METHODS_CACHE = new HashMap<Class<? extends Annotation>, Set<Class<?>>>();
-			MISSING_ANNOTATED_METHODS_CACHE.put(PreMapping.class,
-					Collections.newSetFromMap(new ConcurrentHashMap<Class<?>, Boolean>()));
-			MISSING_ANNOTATED_METHODS_CACHE.put(PostMapping.class,
-					Collections.newSetFromMap(new ConcurrentHashMap<Class<?>, Boolean>()));
-		}
 
 		private final Provider<CurrentResourceProvider> currentResourceProvider;
 
@@ -114,17 +100,46 @@ public class SliceResourceModule extends AbstractModule {
 				return;
 			}
 
-			invokeAnnotatedMethod(PreMapping.class, injectee);
+			SliceResourceMethodLauncher.invokeMethodFor(PreMapping.class, injectee);
 			Mapper mapper = mapperProvider.get();
-			invokeAnnotatedMethod(PostMapping.class, injectee);
+			SliceResourceMethodLauncher.invokeMethodFor(PostMapping.class, injectee);
 
 			mapper.get(resource, injectee);
 			if (injectee instanceof InitializableModel) {
 				((InitializableModel) injectee).afterCreated();
 			}
 		}
+	}
 
-		private void invokeAnnotatedMethod(final Class<? extends Annotation> annotationClass, final Object injectee) {
+	private static class SliceResourceAnnotationCache {
+		private Map<Class<?>, Boolean> cache = new HashMap<Class<?>, Boolean>();
+
+		public boolean annotationPresent(Class<?> clazz) {
+			if (!cache.containsKey(clazz)) {
+				cache.put(clazz, clazz.isAnnotationPresent(SliceResource.class));
+			}
+			return cache.get(clazz);
+		}
+	}
+
+	private static class SliceResourceMethodLauncher {
+		private static final Map<Class<? extends Annotation>, Map<Class<?>, Method>> ANNOTATED_METHODS_CACHE;
+		private static final Map<Class<? extends Annotation>, Set<Class<?>>> MISSING_ANNOTATED_METHODS_CACHE;
+
+		static {
+			ANNOTATED_METHODS_CACHE = new HashMap<Class<? extends Annotation>, Map<Class<?>, Method>>();
+			ANNOTATED_METHODS_CACHE.put(PreMapping.class, new ConcurrentHashMap<Class<?>, Method>());
+			ANNOTATED_METHODS_CACHE.put(PostMapping.class, new ConcurrentHashMap<Class<?>, Method>());
+
+			MISSING_ANNOTATED_METHODS_CACHE = new HashMap<Class<? extends Annotation>, Set<Class<?>>>();
+			MISSING_ANNOTATED_METHODS_CACHE.put(PreMapping.class,
+					Collections.newSetFromMap(new ConcurrentHashMap<Class<?>, Boolean>()));
+			MISSING_ANNOTATED_METHODS_CACHE.put(PostMapping.class,
+					Collections.newSetFromMap(new ConcurrentHashMap<Class<?>, Boolean>()));
+		}
+
+		public static void invokeMethodFor(final Class<? extends Annotation> annotationClass,
+				final Object injectee) {
 			final Map<Class<?>, Method> methodCache = ANNOTATED_METHODS_CACHE.get(annotationClass);
 			final Set<Class<?>> missingMethodCache = MISSING_ANNOTATED_METHODS_CACHE.get(annotationClass);
 
@@ -143,11 +158,11 @@ public class SliceResourceModule extends AbstractModule {
 			}
 
 			if (method != null) {
-				invokeMethod(injectee, method);
+				invoke(method, injectee);
 			}
 		}
 
-		private void invokeMethod(final Object injectee, Method method) {
+		private static void invoke(final Method method, final Object injectee) {
 			try {
 				method.setAccessible(true);
 				method.invoke(injectee, null);
@@ -162,24 +177,13 @@ public class SliceResourceModule extends AbstractModule {
 			}
 		}
 
-		private Method findMethod(final Object injectee, final Class<? extends Annotation> annotationClass) {
+		private static Method findMethod(final Object injectee, final Class<? extends Annotation> annotationClass) {
 			for (Method method : injectee.getClass().getDeclaredMethods()) {
 				if (method.isAnnotationPresent(annotationClass)) {
 					return method;
 				}
 			}
 			return null;
-		}
-	}
-
-	private static class SliceResourceAnnotationCache {
-		private Map<Class<?>, Boolean> cache = new HashMap<Class<?>, Boolean>();
-
-		public boolean annotationPresent(Class<?> clazz) {
-			if (!cache.containsKey(clazz)) {
-				cache.put(clazz, clazz.isAnnotationPresent(SliceResource.class));
-			}
-			return cache.get(clazz);
 		}
 	}
 }

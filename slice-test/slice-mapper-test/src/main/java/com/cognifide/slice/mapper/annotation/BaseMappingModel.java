@@ -35,10 +35,6 @@ public abstract class BaseMappingModel {
 
 	protected boolean modelSet;
 
-	public boolean wasModelSet() {
-		return modelSet;
-	}
-
 	public String getField() {
 		return (upperCase ? field.toUpperCase() : field) + StringUtils.defaultString(postfix);
 	}

@@ -40,7 +40,6 @@ class PreMappingTest extends BaseSetup {
 
         then: "Model has been property initialized"
         Assert.assertNotNull(preMappingModel)
-        Assert.assertFalse(preMappingModel.wasModelSet());
         Assert.assertEquals("SOME VALUE", preMappingModel.getField())
     }
 }
