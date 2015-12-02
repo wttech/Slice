@@ -20,18 +20,10 @@
 
 package com.cognifide.slice.core.internal.module;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.sling.api.resource.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.cognifide.slice.api.model.InitializableModel;
 import com.cognifide.slice.core.internal.provider.CurrentResourceProvider;
@@ -57,7 +49,6 @@ import com.google.inject.spi.TypeListener;
 public class SliceResourceModule extends AbstractModule {
 
 	private final SliceResourceAnnotationCache annotationCache = new SliceResourceAnnotationCache();
-	private static final Logger LOG = LoggerFactory.getLogger(SliceResourceModule.class);
 
 	@Override
 	protected void configure() {
@@ -120,71 +111,6 @@ public class SliceResourceModule extends AbstractModule {
 				cache.put(clazz, clazz.isAnnotationPresent(SliceResource.class));
 			}
 			return cache.get(clazz);
-		}
-	}
-
-	private static class SliceResourceMethodLauncher {
-		private static final Map<Class<? extends Annotation>, Map<Class<?>, Method>> ANNOTATED_METHODS_CACHE;
-		private static final Map<Class<? extends Annotation>, Set<Class<?>>> MISSING_ANNOTATED_METHODS_CACHE;
-
-		static {
-			ANNOTATED_METHODS_CACHE = new HashMap<Class<? extends Annotation>, Map<Class<?>, Method>>();
-			ANNOTATED_METHODS_CACHE.put(PreMapping.class, new ConcurrentHashMap<Class<?>, Method>());
-			ANNOTATED_METHODS_CACHE.put(PostMapping.class, new ConcurrentHashMap<Class<?>, Method>());
-
-			MISSING_ANNOTATED_METHODS_CACHE = new HashMap<Class<? extends Annotation>, Set<Class<?>>>();
-			MISSING_ANNOTATED_METHODS_CACHE.put(PreMapping.class,
-					Collections.newSetFromMap(new ConcurrentHashMap<Class<?>, Boolean>()));
-			MISSING_ANNOTATED_METHODS_CACHE.put(PostMapping.class,
-					Collections.newSetFromMap(new ConcurrentHashMap<Class<?>, Boolean>()));
-		}
-
-		public static void invokeMethodFor(final Class<? extends Annotation> annotationClass,
-				final Object injectee) {
-			final Map<Class<?>, Method> methodCache = ANNOTATED_METHODS_CACHE.get(annotationClass);
-			final Set<Class<?>> missingMethodCache = MISSING_ANNOTATED_METHODS_CACHE.get(annotationClass);
-
-			final Class<?> injecteeClass = injectee.getClass();
-
-			Method method = null;
-			if (methodCache.containsKey(injecteeClass)) {
-				method = methodCache.get(injecteeClass);
-			} else if (!missingMethodCache.contains(injecteeClass)) {
-				method = findMethod(injectee, annotationClass);
-				if (method == null) {
-					missingMethodCache.add(injecteeClass);
-				} else {
-					methodCache.put(injecteeClass, method);
-				}
-			}
-
-			if (method != null) {
-				invoke(method, injectee);
-			}
-		}
-
-		private static void invoke(final Method method, final Object injectee) {
-			try {
-				method.setAccessible(true);
-				method.invoke(injectee, null);
-				LOG.debug("Method " + injectee.getClass().getCanonicalName() + "." + method.getName() +
-						"() has been invoked properly.");
-			} catch (IllegalAccessException e) {
-				LOG.error("Exception while invoking " + injectee.getClass().getCanonicalName() + "." +
-						method.getName() + "() : " + e.getMessage(), e);
-			} catch (InvocationTargetException e) {
-				LOG.error("Exception while invoking " + injectee.getClass().getCanonicalName() + "." +
-						method.getName() + "() : " + e.getMessage(), e);
-			}
-		}
-
-		private static Method findMethod(final Object injectee, final Class<? extends Annotation> annotationClass) {
-			for (Method method : injectee.getClass().getDeclaredMethods()) {
-				if (method.isAnnotationPresent(annotationClass)) {
-					return method;
-				}
-			}
-			return null;
 		}
 	}
 }
