@@ -27,7 +27,6 @@ public class PostMappingModel extends BaseMappingModel {
 
 	@PostMapping
 	void postMapping() {
-		modelSet = field != null;
-		postfix = "_TEST";
+		postfix = field != null ? "_TEST" : null;
 	}
 }

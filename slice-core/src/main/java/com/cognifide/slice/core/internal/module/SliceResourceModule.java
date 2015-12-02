@@ -100,11 +100,12 @@ public class SliceResourceModule extends AbstractModule {
 				return;
 			}
 
-			SliceResourceMethodLauncher.invokeMethodFor(PreMapping.class, injectee);
 			Mapper mapper = mapperProvider.get();
+
+			SliceResourceMethodLauncher.invokeMethodFor(PreMapping.class, injectee);
+			mapper.get(resource, injectee);
 			SliceResourceMethodLauncher.invokeMethodFor(PostMapping.class, injectee);
 
-			mapper.get(resource, injectee);
 			if (injectee instanceof InitializableModel) {
 				((InitializableModel) injectee).afterCreated();
 			}
