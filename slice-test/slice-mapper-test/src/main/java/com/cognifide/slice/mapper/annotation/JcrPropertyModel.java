@@ -60,14 +60,42 @@ public class JcrPropertyModel {
 	public static int getSizeStatic() {
 		return sizeStatic;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof JcrPropertyModel)) {
+			return false;
+		}
+
+		JcrPropertyModel that = (JcrPropertyModel) o;
+
+		if (size != that.size) {
+			return false;
+		}
+		if (text != null ? !text.equals(that.text) : that.text != null) {
+			return false;
+		}
+		return !(secondProperty != null ? !secondProperty.equals(that.secondProperty) : that.secondProperty != null);
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result = text != null ? text.hashCode() : 0;
+		result = 31 * result + (secondProperty != null ? secondProperty.hashCode() : 0);
+		result = 31 * result + size;
+		return result;
+	}
 }
 
 @SliceResource
 class JcrPropertyModelComparable extends JcrPropertyModel implements Comparable<JcrPropertyModel> {
 
-	// descending sort by size property
 	@Override
 	public int compareTo(JcrPropertyModel that) {
-		return Integer.valueOf(that.getSize()).compareTo(this.getSize());
+		return Integer.valueOf(this.getSize()).compareTo(that.getSize());
 	}
 }
