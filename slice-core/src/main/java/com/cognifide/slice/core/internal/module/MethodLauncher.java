@@ -36,31 +36,28 @@ import com.cognifide.slice.mapper.annotation.PreMapping;
  *
  * @author Krzysztof Watral
  */
-final class SliceResourceMethodLauncher {
+enum MethodLauncher {
+	INSTANCE;
 
-	private static final Logger LOG = LoggerFactory.getLogger(SliceResourceMethodLauncher.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MethodLauncher.class);
 
-	private static final Map<Key, MethodWrapper> ANNOTATED_METHODS_CACHE = new ConcurrentHashMap<Key, MethodWrapper>();
+	private Map<MethodLauncherCacheKey, MethodWrapper> annotatedMethodsCache = new ConcurrentHashMap<MethodLauncherCacheKey, MethodWrapper>();
 
-	private SliceResourceMethodLauncher() {
-		// utility class
-	}
+	void invokeMethodFor(final Class<? extends Annotation> annotationClass, final Object injectee) {
+		Class<?> injecteeClass = injectee.getClass();
+		MethodLauncherCacheKey key = new MethodLauncherCacheKey(annotationClass, injecteeClass);
 
-	public static void invokeMethodFor(final Class<? extends Annotation> annotationClass, final Object injectee) {
-
-		Key key = new Key(annotationClass, injectee.getClass());
-
-		if (!ANNOTATED_METHODS_CACHE.containsKey(key)) {
-			ANNOTATED_METHODS_CACHE.put(key, findMethod(injectee, annotationClass));
+		if (!annotatedMethodsCache.containsKey(key)) {
+			annotatedMethodsCache.put(key, findMethod(injecteeClass, annotationClass));
 		}
-		MethodWrapper method = ANNOTATED_METHODS_CACHE.get(key);
+		MethodWrapper method = annotatedMethodsCache.get(key);
 
 		if (method.isPresent()) {
 			invoke(method.get(), injectee);
 		}
 	}
 
-	private static void invoke(final Method method, final Object injectee) {
+	private void invoke(final Method method, final Object injectee) {
 		try {
 			method.setAccessible(true);
 			method.invoke(injectee, (Object[]) null);
@@ -75,8 +72,8 @@ final class SliceResourceMethodLauncher {
 		}
 	}
 
-	private static MethodWrapper findMethod(final Object injectee, final Class<? extends Annotation> annotationClass) {
-		for (Method method : injectee.getClass().getDeclaredMethods()) {
+	private MethodWrapper findMethod(final Class<?> injecteeClass, final Class<? extends Annotation> annotationClass) {
+		for (Method method : injecteeClass.getDeclaredMethods()) {
 			if (method.isAnnotationPresent(annotationClass)) {
 				return new MethodWrapper(method);
 			}
@@ -84,52 +81,4 @@ final class SliceResourceMethodLauncher {
 		return MethodWrapper.EMPTY;
 	}
 
-	private static class Key {
-
-		private final Class<? extends Annotation> annotation;
-
-		private final Class<?> injectee;
-
-		public Key(Class<? extends Annotation> annotation, Class<?> injectee) {
-			this.annotation = annotation;
-			this.injectee = injectee;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) {
-				return true;
-			}
-			if (o == null || getClass() != o.getClass()) {
-				return false;
-			}
-			Key key = (Key) o;
-			return annotation.equals(key.annotation) && injectee.equals(key.injectee);
-		}
-
-		@Override
-		public int hashCode() {
-			int result = annotation.hashCode();
-			return 31 * result + injectee.hashCode();
-		}
-	}
-
-	private static class MethodWrapper {
-
-		private final Method method;
-
-		private MethodWrapper(Method method) {
-			this.method = method;
-		}
-
-		private Method get() {
-			return method;
-		}
-
-		private boolean isPresent() {
-			return method != null;
-		}
-
-		private static final MethodWrapper EMPTY = new MethodWrapper(null);
-	}
 }
