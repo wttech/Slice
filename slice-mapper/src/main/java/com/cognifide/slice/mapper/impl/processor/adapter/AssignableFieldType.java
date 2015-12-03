@@ -27,8 +27,8 @@ import java.util.SortedSet;
 public enum AssignableFieldType {
 	COLLECTION(Collection.class, new ListAdapter()),
 	LIST(List.class, new ListAdapter()),
-	SET(Set.class, new SetAdapter()),
-	SORTED_SET(SortedSet.class, new SortedSetAdapter());
+	SET(Set.class, new ListToSetAdapter()),
+	SORTED_SET(SortedSet.class, new ListToSortedSetAdapter());
 
 	private final Class<?> clazz;
 

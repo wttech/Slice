@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-public class SetAdapter implements MappedListAdapter {
+public class ListToSetAdapter implements MappedListAdapter {
 
 	@Override
 	public Collection<?> adapt(List<?> mappedModels) {
