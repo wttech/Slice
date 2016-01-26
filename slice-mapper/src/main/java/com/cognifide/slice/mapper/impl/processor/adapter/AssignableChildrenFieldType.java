@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 
-public enum AssignableFieldType {
+public enum AssignableChildrenFieldType {
 	COLLECTION(Collection.class, new ListAdapter()),
 	LIST(List.class, new ListAdapter()),
 	SET(Set.class, new ListToSetAdapter()),
@@ -34,13 +34,13 @@ public enum AssignableFieldType {
 
 	private final MappedListAdapter adapter;
 
-	AssignableFieldType(Class<?> clazz, MappedListAdapter adapter) {
+	AssignableChildrenFieldType(Class<?> clazz, MappedListAdapter adapter) {
 		this.clazz = clazz;
 		this.adapter = adapter;
 	}
 
-	public static AssignableFieldType byClass(Class<?> clazz) {
-		for (AssignableFieldType type : values()) {
+	public static AssignableChildrenFieldType byClass(Class<?> clazz) {
+		for (AssignableChildrenFieldType type : values()) {
 			if (type.clazz.equals(clazz)) {
 				return type;
 			}
@@ -49,7 +49,7 @@ public enum AssignableFieldType {
 	}
 
 	public static boolean contains(Class<?> clazz) {
-		for (AssignableFieldType type : values()) {
+		for (AssignableChildrenFieldType type : values()) {
 			if (type.clazz.equals(clazz)) {
 				return true;
 			}

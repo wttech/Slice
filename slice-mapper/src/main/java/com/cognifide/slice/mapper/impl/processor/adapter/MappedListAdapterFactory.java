@@ -26,6 +26,6 @@ public final class MappedListAdapterFactory {
 	}
 
 	public static MappedListAdapter create(Class<?> fieldType) {
-		return AssignableFieldType.byClass(fieldType).getAdapter();
+		return AssignableChildrenFieldType.byClass(fieldType).getAdapter();
 	}
 }
