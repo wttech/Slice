@@ -1,10 +1,6 @@
-package com.cognifide.slice.mapper.impl.processor;
-
 /*-
  * #%L
  * Slice - Mapper
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,6 +18,7 @@ package com.cognifide.slice.mapper.impl.processor;
  * #L%
  */
 
+package com.cognifide.slice.mapper.impl.processor;
 
 import java.lang.reflect.Field;
 
@@ -47,7 +44,9 @@ public class SliceReferenceFieldProcessor implements FieldProcessor {
 
 	@Override
 	public boolean accepts(final Resource resource, final Field field) {
-		return field.isAnnotationPresent(SliceReference.class);
+		Class<?> type = field.getType();
+		// additional checks of type for performance sake
+		return type != String.class && !type.isPrimitive() && field.isAnnotationPresent(SliceReference.class);
 	}
 
 	@Override
@@ -77,10 +76,6 @@ public class SliceReferenceFieldProcessor implements FieldProcessor {
 	}
 
 	private String getResolvedPath(final String initialPath) {
-		if (StringUtils.isBlank(initialPath)) {
-			return StringUtils.EMPTY;
-		}
-
 		// lazy loading of SliceReferencePathResolver - preventing errors in case one doesn't use
 		// SliceReference at all
 		final SliceReferencePathResolver sliceReferencePathResolver = injector

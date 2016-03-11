@@ -1,10 +1,6 @@
-package com.cognifide.slice.mapper.api.processor;
-
-/*
+/*-
  * #%L
  * Slice - Mapper API
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,16 +18,24 @@ package com.cognifide.slice.mapper.api.processor;
  * #L%
  */
 
+package com.cognifide.slice.mapper.api.processor;
 
 import java.lang.reflect.Field;
 
+import org.apache.sling.api.resource.NonExistingResource;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.SyntheticResource;
 import org.apache.sling.api.resource.ValueMap;
 
+import aQute.bnd.annotation.ConsumerType;
+
 /**
- * Defines if a field can be mapped to a specified field and performs actual mapping.
+ * Defines if a field can be mapped to a specified field and performs actual mapping. Class which implements
+ * this interface should be added to list of processors in
+ * {@link com.cognifide.slice.mapper.MapperBuilder#addFieldProcessor(FieldProcessor fieldProcessor)}
  * 
  */
+@ConsumerType
 public interface FieldProcessor {
 
 	/**
@@ -49,7 +53,8 @@ public interface FieldProcessor {
 	 * valueMap using specified propertyName
 	 * 
 	 * @param resource
-	 * @param valueMap
+	 * @param valueMap obtained from resource - may be null, if resource is a {@link SyntheticResource} or
+	 * {@link NonExistingResource}
 	 * @param field
 	 * @param propertyName
 	 * @return

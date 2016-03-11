@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.cognifide.slice</groupId>
 		<artifactId>slice-parent</artifactId>
-		<version>3.3.0-SNAPSHOT</version>
+		<version>4.3.0-SNAPSHOT</version>
 	</parent>
 	<name>Slice - Core</name>
 	<description>Slice core</description>
@@ -29,35 +29,65 @@
 				<configuration>
 					<instructions>
 						<Export-Package>
-							com.cognifide.slice.commons*;version="${project.version}",
-							com.cognifide.slice.core*;version="${project.version}",
+							com.cognifide.slice.commons*,
+							com.cognifide.slice.core*,
 						</Export-Package>
 						<Embed-Dependency>asm</Embed-Dependency>
+						<Sling-Nodetypes>SLING-INF/nodetypes/nodetypes.cnd</Sling-Nodetypes>
 					</instructions>
+				</configuration>
+				<executions>
+					<execution>
+						<id>baseline</id>
+						<goals>
+							<goal>baseline</goal>
+						</goals>
+						<configuration>
+							<filters>
+								<filter>com.cognifide.slice.commons*</filter>
+							</filters>
+						</configuration>
+						<phase>package</phase>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.mycila</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<configuration>
+					<header>${project.parent.basedir}/license-template.txt</header>
+					<headerDefinitions>
+						<header>${project.parent.basedir}/license-header-definition.txt</header>
+					</headerDefinitions>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
-
+	
 	<dependencies>
 		<!-- Slice -->	
 		<dependency>
 			<groupId>com.cognifide.slice</groupId>
 			<artifactId>slice-core-api</artifactId>
-			<version>3.3.0-SNAPSHOT</version>
+			<version>4.3.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.cognifide.slice</groupId>
 			<artifactId>slice-mapper-api</artifactId>
-			<version>3.3.0-SNAPSHOT</version>
+			<version>4.3.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.cognifide.slice</groupId>
+			<artifactId>slice-mapper</artifactId>
+			<version>4.3.0-SNAPSHOT</version>
+			<scope>test</scope>
 		</dependency>
 
-		<!-- Asm -->	
+		<!-- Asm -->
 		<dependency>
-			<groupId>asm</groupId>
+			<groupId>org.ow2.asm</groupId>
 			<artifactId>asm</artifactId>
-			<version>3.3.1</version>
-			<scope>provided</scope>
+			<version>5.0.3</version>
 		</dependency>
 
 		<!-- Guice -->
@@ -102,6 +132,23 @@
 		<dependency>
 			<groupId>org.apache.felix</groupId>
 			<artifactId>org.apache.felix.scr.annotations</artifactId>
+		</dependency>
+
+		<!-- Sling -->
+		<dependency>
+			<groupId>org.apache.sling</groupId>
+			<artifactId>org.apache.sling.commons.classloader</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.sling</groupId>
+			<artifactId>org.apache.sling.scripting.api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>18.0</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 

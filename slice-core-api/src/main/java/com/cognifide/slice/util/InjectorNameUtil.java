@@ -1,19 +1,15 @@
-package com.cognifide.slice.util;
-
-/*
+/*-
  * #%L
  * Slice - Core API
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,27 +17,26 @@ package com.cognifide.slice.util;
  * limitations under the License.
  * #L%
  */
+package com.cognifide.slice.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
-import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ValueMap;
 
+import com.cognifide.slice.api.injector.InjectorRunner;
+import com.cognifide.slice.api.injector.InjectorsRepository;
 
 /**
  * Util for getting injector name required for given request.
  * 
  * @author rafal.malinowski
  * @author Jan Kuźniak
+ * @deprecated since 4.1. User {@link InjectorsRepository} instead
  */
+@Deprecated
 public final class InjectorNameUtil {
-
-	private static final String JCR_CONTENT_NODE_NAME = "jcr:content";
-
-	private static final String INJECTOR_NAME_PROPERTY = "injectorName";
 
 	private static final Pattern RESOURCE_TYPE_PATTERN = Pattern.compile("(/[^/]+/)?([^/]+)(/.*)?");
 
@@ -50,65 +45,33 @@ public final class InjectorNameUtil {
 	}
 
 	/**
-	 * Gets injector name for given request. First a CRX tree is searched from current resource to top one.
-	 * First found injectorName is returned. For each resource subresource jcr:content is also checked.
+	 * Gets injector name for resource from specified request . It is name of path item directly after apps.
+	 * For /apps/slice/... it will return slice.
 	 * 
-	 * If no injectorName property is found then name is fetched from current resource type. It is name of
-	 * path item directly after apps. For /apps/slice/... it will return slice.
-	 * 
-	 * @deprecated use {@link com.cognifide.slice.api.injector.InjectorsRepository#getInjectorForResource(Resource)} instead
+	 * @deprecated use {@link InjectorsRepository#getInjectorNameForResource(String)} instead
 	 */
 	@Deprecated
 	public static String getFromRequest(final SlingHttpServletRequest request) {
 		if (null != request.getResource()) {
 			return getFromResourceType(request.getResource().getResourceType());
 		}
-
 		return StringUtils.EMPTY;
 	}
 
-	public static String getForResource(Resource resource) {
-		String injectorName = null;
-		if (resource != null) {
-			injectorName = getFromContentTree(resource);
-			if (injectorName == null) {
-				injectorName = getFromResourceType(resource.getResourceType());
-			}
-		}
-		return injectorName;
-	}
-
-	public static String getFromContentTree(Resource resource) {
-		String injectorName = null;
-		Resource currentResource = resource;
-		while ((null == injectorName) && (null != currentResource)) {
-			injectorName = getFromContentNode(currentResource);
-			currentResource = currentResource.getParent();
-		}
-		return injectorName;
-	}
-
-	private static String getFromContentNode(Resource resource) {
-		String injectorName;
-		injectorName = getInjectorNameProperty(resource);
-		if (null == injectorName) {
-			Resource contentResource = resource.getChild(JCR_CONTENT_NODE_NAME);
-			if (null != contentResource) {
-				injectorName = getInjectorNameProperty(contentResource);
-			}
-		}
-		return injectorName;
-	}
-
-	public static String getInjectorNameProperty(Resource resource) {
-		String injectorName = null;
-		final ValueMap properties = resource.adaptTo(ValueMap.class);
-		if (null != properties) {
-			injectorName = properties.get(INJECTOR_NAME_PROPERTY, String.class);
-		}
-		return injectorName;
-	}
-
+	/**
+	 * This util provides injector name for a given resource. The name is read from second part of the
+	 * resource type, i.e. part after /apps/. For instance, for /apps/myapp/someresource, it will return
+	 * <code>myapp</code> <br>
+	 * <br>
+	 * Please note that this method is deprecated and it doesn't support injectors registered for a given path
+	 * (with use of {@link InjectorRunner#setInjectorPath(String)})
+	 * 
+	 * @deprecated use {@link InjectorsRepository#getInjectorNameForResource(String)} instead
+	 * 
+	 * @param resourceType resource type to take the injector name from
+	 * @return injector name, always second part of the resource type
+	 */
+	@Deprecated
 	public static String getFromResourceType(String resourceType) {
 		String injectorName = null;
 		if (StringUtils.isNotEmpty(resourceType)) {

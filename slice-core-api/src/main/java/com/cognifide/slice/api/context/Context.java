@@ -1,10 +1,6 @@
-package com.cognifide.slice.api.context;
-
-/*
+/*-
  * #%L
  * Slice - Core API
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,18 +18,21 @@ package com.cognifide.slice.api.context;
  * #L%
  */
 
+package com.cognifide.slice.api.context;
 
+import aQute.bnd.annotation.ConsumerType;
+
+import com.cognifide.slice.api.scope.ContextScoped;
 import com.google.inject.Key;
 
 /**
  * @author Rafał Malinowski
  * 
- * Context for ContextScoped objects and Injectors.
- * 
- * This class is stores objects mapped by Key class. Null values can be stored. Use contains() to check if
- * given Key is available in Context. Calling get() and checking for null is not enough, because Context can
- * store null values as well.
+ * Stores objects which are scoped with {@link ContextScoped}. Objects are identified by {@link Key}. Null
+ * values can be stored. Use contains() to check if given Key is available in Context. Calling get() and
+ * checking for null is not enough, because Context can store null values as well.
  */
+@ConsumerType
 public interface Context {
 
 	/**

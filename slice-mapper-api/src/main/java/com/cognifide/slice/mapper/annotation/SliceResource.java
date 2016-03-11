@@ -1,10 +1,6 @@
-package com.cognifide.slice.mapper.annotation;
-
-/*
+/*-
  * #%L
  * Slice - Mapper API
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,6 +18,7 @@ package com.cognifide.slice.mapper.annotation;
  * #L%
  */
 
+package com.cognifide.slice.mapper.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -29,10 +26,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-
 /**
- * Marks class as a Slice resource which means that fields of this class will be mapped by {@link Mapper}
- * using dedicated {@link MappingStrategy}. By default {@link MappingStrategy#ANNOTATED} strategy is used.
+ * Objects marked with this annotation can be adapted from Resource.
+ * Marks class as a Slice resource which means that fields of this class will be mapped by
+ * {@link com.cognifide.slice.mapper.api.Mapper} using dedicated {@link MappingStrategy}. By default
+ * {@link MappingStrategy#ANNOTATED} strategy is used.
  * 
  * @author maciej.majchrzak
  * 

@@ -1,10 +1,6 @@
-package com.cognifide.slice.api.qualifier;
-
-/*
+/*-
  * #%L
  * Slice - Core API
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,6 +18,7 @@ package com.cognifide.slice.api.qualifier;
  * #L%
  */
 
+package com.cognifide.slice.api.qualifier;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
@@ -34,7 +31,24 @@ import java.lang.annotation.Target;
 import com.google.inject.BindingAnnotation;
 
 /**
- * @see org.apache.sling.api.request.RequestPathInfo#getSuffix()
+ * Get URL suffix as string or <code>null</code> if the request URL does not contain a suffix.
+ *
+ * <pre>
+ * {@literal @}SliceResource
+ * public class ExampleModel {
+ *
+ *   private String suffix;
+ *
+ *   {@literal @}Inject
+ *   public ExampleModel({@literal @}Nullable {@literal @}Suffix String suffix) {
+ *     this.suffix = suffix;
+ *   }
+ * }
+ * </pre>
+ *
+ * @see <a
+ * href="https://sling.apache.org/apidocs/sling5/org/apache/sling/api/request/RequestPathInfo.html#getSuffix%28%29">
+ * org.apache.sling.api.request.RequestPathInfo#getSuffix()</a>
  */
 @BindingAnnotation
 @Target({ FIELD, PARAMETER, METHOD })

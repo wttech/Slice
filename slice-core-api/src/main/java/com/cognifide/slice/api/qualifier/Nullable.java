@@ -1,10 +1,6 @@
-package com.cognifide.slice.api.qualifier;
-
-/*
+/*-
  * #%L
  * Slice - Core API
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,6 +18,7 @@ package com.cognifide.slice.api.qualifier;
  * #L%
  */
 
+package com.cognifide.slice.api.qualifier;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
@@ -30,6 +27,23 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+
+/**
+ * Allows for inject <code>null</code>.
+ *
+ * <pre>
+ * {@literal @}SliceResource
+ * public class ExampleModel {
+ *
+ *   private String suffix;
+ *
+ *   {@literal @}Inject
+ *   public ExampleModel({@literal @}Nullable {@literal @}Suffix String suffix) {
+ *     this.suffix = suffix;
+ *   }
+ * }
+ * </pre>
+ */
 
 @Target({ FIELD, PARAMETER, METHOD })
 @Retention(RUNTIME)

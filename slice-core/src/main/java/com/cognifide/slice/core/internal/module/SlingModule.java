@@ -1,10 +1,6 @@
-package com.cognifide.slice.core.internal.module;
-
-/*
+/*-
  * #%L
  * Slice - Core
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,6 +18,7 @@ package com.cognifide.slice.core.internal.module;
  * #L%
  */
 
+package com.cognifide.slice.core.internal.module;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,6 +31,8 @@ import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.request.RequestPathInfo;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.commons.classloader.DynamicClassLoaderManager;
+import org.ops4j.peaberry.Peaberry;
 
 import com.cognifide.slice.api.context.ContextScope;
 import com.cognifide.slice.api.qualifier.Extension;
@@ -58,6 +57,7 @@ public final class SlingModule extends ContextScopeModule {
 		bindToContextScope(Key.get(ServletRequest.class));
 		bindToContextScope(Key.get(ServletResponse.class));
 		bind(Resource.class).toProvider(CurrentResourceProvider.class);
+		bind(DynamicClassLoaderManager.class).toProvider(Peaberry.service(DynamicClassLoaderManager.class).single().direct());
 	}
 
 	@Provides

@@ -1,24 +1,24 @@
 <!--
-  #%L
-  Slice - Assembly
-  $Id:$
-  $HeadURL:$
-  %%
-  Copyright (C) 2012 Cognifide Limited
-  %%
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-  
-       http://www.apache.org/licenses/LICENSE-2.0
-  
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-  #L%
-  -->
+
+    #%L
+    Slice - Assembly
+    %%
+    Copyright (C) 2012 Cognifide Limited
+    %%
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+    #L%
+
+-->
 <assembly
 	xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.2.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -37,7 +37,11 @@
 
 			<!-- All, but self -->
 			<excludes>
-				<exclude>com.cognifide:slice-assembly</exclude>
+				<exclude>com.cognifide.slice:slice-assembly</exclude>
+				<exclude>com.cognifide.slice:slice-test</exclude>
+				<exclude>com.cognifide.slice:slice-base-test</exclude>
+				<exclude>com.cognifide.slice:slice-core-test</exclude>
+				<exclude>com.cognifide.slice:slice-mapper-test</exclude>
 			</excludes>
 			
 			<!-- items from source folder -->
@@ -60,38 +64,10 @@
 			
 			<!-- compiled java classes - jars -->
 			<binaries>
-				<outputDirectory>/jcr_root/apps/slice/install</outputDirectory>
+				<outputDirectory>/jcr_root/apps/slice/install/20</outputDirectory>
 				<unpack>false</unpack>
 			</binaries>
 			
-		</moduleSet>
-
-		<!-- this one packages only webbapp foundation -->
-		<moduleSet>
-			<!-- Enable access to all projects in the current multimodule build! -->
-			<useAllReactorProjects>true</useAllReactorProjects>
-			<!-- Now, select which projects to include in this module-set. -->
-		
-			<sources>
-				<includeModuleDirectory>false</includeModuleDirectory>
-				
-				<fileSets>
-					<fileSet>
-						<directory>src/main/cq/jcr_root</directory>
-						<outputDirectory>/jcr_root</outputDirectory>
-						<excludes>
-							<exclude>**/.vlt</exclude>
-							<exclude>/libs/**</exclude>
-							<exclude>/WEB-INF/**</exclude>
-						</excludes>
-					</fileSet>
-				</fileSets>
-			</sources>
-			
-			<binaries>
-				<outputDirectory>/jcr_root/apps/slice/install</outputDirectory>
-				<unpack>false</unpack>
-			</binaries>
 		</moduleSet>
 	</moduleSets>
 	
@@ -100,12 +76,20 @@
 		<dependencySet>
 			<unpack>false</unpack>
 			<scope>runtime</scope>
-			<outputDirectory>/jcr_root/apps/slice/install</outputDirectory>
+			<outputDirectory>/jcr_root/apps/slice/install/20</outputDirectory>
 			<includes>
-				<include>javax.inject</include>
 				<include>org.aopalliance</include>
 				<include>com.google.inject</include>
+				<include>com.google.inject.extensions</include>
 				<include>org.ops4j</include>
+			</includes>
+		</dependencySet>
+		<dependencySet>
+			<unpack>false</unpack>
+			<scope>runtime</scope>
+			<outputDirectory>/jcr_root/apps/slice/install/19</outputDirectory>
+			<includes>
+				<include>javax.inject</include>
 			</includes>
 		</dependencySet>
 	</dependencySets>

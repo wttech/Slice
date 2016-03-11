@@ -1,10 +1,6 @@
-package com.cognifide.slice.mapper.api;
-
 /*-
  * #%L
- * Slice - Mapper
- * $Id:$
- * $HeadURL:$
+ * Slice - Mapper API
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,7 +18,11 @@ package com.cognifide.slice.mapper.api;
  * #L%
  */
 
+package com.cognifide.slice.mapper.api;
+
 import java.lang.annotation.Annotation;
+
+import aQute.bnd.annotation.ConsumerType;
 
 import com.cognifide.slice.mapper.annotation.SliceReference;
 
@@ -33,6 +33,7 @@ import com.cognifide.slice.mapper.annotation.SliceReference;
  * @author maciej.majchrzak
  * 
  */
+@ConsumerType
 public interface SliceReferencePathResolver {
 
 	/**

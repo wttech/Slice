@@ -1,10 +1,6 @@
-package com.cognifide.slice.mapper.module;
-
-/*
+/*-
  * #%L
  * Slice - Mapper
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,9 +18,11 @@ package com.cognifide.slice.mapper.module;
  * #L%
  */
 
+package com.cognifide.slice.mapper.module;
 
 import com.cognifide.slice.api.scope.ContextScoped;
-import com.cognifide.slice.mapper.SlingMapperFactory;
+import com.cognifide.slice.mapper.MapperBuilder;
+import com.cognifide.slice.mapper.annotation.SliceResource;
 import com.cognifide.slice.mapper.api.Mapper;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -43,14 +41,13 @@ public class MapperModule extends AbstractModule {
 	/**
 	 * Builds and provides {@link Mapper}
 	 * 
-	 * @param sliceResourceFieldProcessor
-	 * @param sliceReferenceFieldProcessor
-	 * @return
+	 * @return Sling mapper object
 	 */
 	@Provides
 	@ContextScoped
-	public Mapper getMapper(final SlingMapperFactory slingMapperFactory) {
-		return slingMapperFactory.getMapper();
+	public Mapper getMapper(MapperBuilder mapperBuilder) {
+		return mapperBuilder.addDefaultSliceProcessors().addCustomProcessors().addCustomPostProcessors()
+				.build();
 	}
 
 }

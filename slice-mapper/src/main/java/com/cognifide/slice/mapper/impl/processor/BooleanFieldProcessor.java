@@ -1,10 +1,6 @@
-package com.cognifide.slice.mapper.impl.processor;
-
 /*-
  * #%L
  * Slice - Mapper
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -21,6 +17,8 @@ package com.cognifide.slice.mapper.impl.processor;
  * limitations under the License.
  * #L%
  */
+
+package com.cognifide.slice.mapper.impl.processor;
 
 import java.lang.reflect.Field;
 
@@ -41,6 +39,9 @@ public class BooleanFieldProcessor implements FieldProcessor {
 	@Override
 	public Object mapResourceToField(Resource resource, ValueMap valueMap, Field field, String propertyName) {
 		Boolean result = null;
+		if (field.getType().isPrimitive()) {
+			result = Boolean.FALSE;
+		}
 		if (valueMap != null) {
 			Object value = valueMap.get(propertyName);
 			if (value instanceof Boolean) {

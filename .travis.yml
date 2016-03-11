@@ -1,0 +1,24 @@
+language: java
+script: mvn clean package
+
+after_success:
+  - ant instrument
+  - mvn test
+  - ant report-xml
+  - mvn coveralls:report
+
+env:
+  global:
+   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+   #   via the "travis encrypt" command using the project repo's public key
+   - secure: "KXNj6LOOn8P243UYqFjY+ZPvrI1lGNyqZXSKFRONS+tQ5nvgjX1QdSNUqnCrZPR3wAAtodV2w1j6j4Fg49kQCpA8cZrpC+zSwwUotLymWTUm+YusH5OcH/IFNiHbS3wtZaLcFmzQ6zU3+Y1T7WSOqGKHbdOsFwyrfyYqy0SksQk="
+
+
+addons:
+  coverity_scan:
+    project:
+      name: "Cognifide/Slice"
+      description: "Build submitted via Travis CI"
+    notification_email: maciej.majchrzak@cognifide.com
+    build_command: "mvn clean package"
+    branch_pattern: master

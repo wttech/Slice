@@ -1,10 +1,6 @@
-package com.cognifide.slice.api.provider;
-
-/*
+/*-
  * #%L
  * Slice - Core API
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,20 +18,40 @@ package com.cognifide.slice.api.provider;
  * #L%
  */
 
+package com.cognifide.slice.api.provider;
 
 import java.util.List;
 
 import org.apache.sling.api.resource.Resource;
 
+import aQute.bnd.annotation.ProviderType;
+
+/**
+ * @deprecated See {@link com.cognifide.slice.api.provider.ModelProvider} and one of its methods:
+ * <ul>
+ * <li>{@link com.cognifide.slice.api.provider.ModelProvider#getChildModels(Class, String)}</li>
+ * <li>{@link com.cognifide.slice.api.provider.ModelProvider#getChildModels(Class, Resource)}</li>
+ * <li>{@link com.cognifide.slice.api.provider.ModelProvider#getList(Class, java.util.Iterator)}</li>
+ * </ul>
+ */
+@Deprecated
+@ProviderType
 public interface ChildrenProvider {
 
 	/**
-	 * Returns paths of child resources of a resource under specified path. If a resource under specified path doesn't
-	 * exist, empty list is returned. The method is not recursive - it reads only direct children.
+	 * Returns paths of child resources of a resource under specified path. If a resource under specified path
+	 * doesn't exist, empty list is returned. The method is not recursive - it reads only direct children.
+	 * 
 	 * 
 	 * @param path resource path
+	 * 
 	 * @return list of paths of child resources or empty list if resource doesn't exist
+	 * 
+	 * @deprecated The method introduces a bad design in the code. If you are using this try replacing it by
+	 * one of {@link com.cognifide.slice.api.provider.ModelProvider}'s methods. However, if you still need
+	 * children of a resource, then use simply {@link org.apache.sling.api.resource.Resource#listChildren()}
 	 */
+	@Deprecated
 	List<String> getChildren(final String path);
 
 	/**
@@ -44,7 +60,12 @@ public interface ChildrenProvider {
 	 * 
 	 * @param path resource path
 	 * @return list of child resources or empty list if resource doesn't exist
+	 * 
+	 * @deprecated The method introduces a bad design in the code. If you are using this try replacing it by
+	 * one of {@link com.cognifide.slice.api.provider.ModelProvider}'s methods. However, if you still need
+	 * children of a resource, then use simply {@link org.apache.sling.api.resource.Resource#listChildren()}
 	 */
+	@Deprecated
 	List<Resource> getChildResources(final String path);
 
 }

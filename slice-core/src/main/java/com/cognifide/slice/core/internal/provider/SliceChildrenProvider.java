@@ -1,10 +1,6 @@
-package com.cognifide.slice.core.internal.provider;
-
-/*
+/*-
  * #%L
  * Slice - Core
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,6 +18,7 @@ package com.cognifide.slice.core.internal.provider;
  * #L%
  */
 
+package com.cognifide.slice.core.internal.provider;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -36,6 +33,13 @@ import com.cognifide.slice.api.provider.ChildrenProvider;
 import com.cognifide.slice.api.scope.ContextScoped;
 import com.google.inject.Inject;
 
+/**
+ * @deprecated See {@link com.cognifide.slice.api.provider.ModelProvider} and one of its methods: <li>
+ * {@link com.cognifide.slice.api.provider.ModelProvider#getChildModels(Class, String)} <li>
+ * {@link com.cognifide.slice.api.provider.ModelProvider#getChildModels(Class, Resource)} <li>
+ * {@link com.cognifide.slice.api.provider.ModelProvider#getList(Class, java.util.Iterator)}
+ */
+@Deprecated
 @ContextScoped
 public class SliceChildrenProvider implements ChildrenProvider {
 

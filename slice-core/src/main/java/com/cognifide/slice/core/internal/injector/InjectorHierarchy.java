@@ -1,8 +1,6 @@
 /*-
  * #%L
- * Slice - Core API
- * $Id:$
- * $HeadURL:$
+ * Slice - Core
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -19,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package com.cognifide.slice.core.internal.injector;
 
 import java.util.ArrayDeque;
@@ -26,10 +25,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
+import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Deactivate;
+import org.apache.felix.scr.annotations.Reference;
+import org.apache.felix.scr.annotations.ReferenceCardinality;
+import org.apache.felix.scr.annotations.ReferencePolicy;
+import org.apache.felix.scr.annotations.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,17 +50,33 @@ import com.google.inject.Module;
  * This class stores injector configuration tree and creates injectors associated with these configurations.
  * 
  * @author Tomasz Rekawek
- * 
  */
+@Component
+@Service(value = InjectorHierarchy.class)
 public class InjectorHierarchy {
 
 	private static final Logger LOG = LoggerFactory.getLogger(InjectorHierarchy.class);
 
-	private Map<String, Injector> injectorByName = new HashMap<String, Injector>();
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, referenceInterface = InjectorConfig.class, policy = ReferencePolicy.DYNAMIC, bind = "bindConfig", unbind = "unbindConfig")
+	private final Map<String, InjectorConfig> configByName = new HashMap<String, InjectorConfig>();
 
-	private Map<String, InjectorConfig> configByName = new HashMap<String, InjectorConfig>();
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, referenceInterface = InjectorLifecycleListener.class, policy = ReferencePolicy.DYNAMIC)
+	private final Set<InjectorLifecycleListener> listeners = new HashSet<InjectorLifecycleListener>();
+
+	private final Map<String, Injector> injectorByName = new HashMap<String, Injector>();
+
+	private volatile Map<String, String> namesByPath = new HashMap<String, String>();
 
 	private volatile Map<Injector, String> nameLookupMap = new HashMap<Injector, String>();
+
+	@Deactivate
+	public void deactivate() {
+		configByName.clear();
+		injectorByName.clear();
+		nameLookupMap.clear();
+		listeners.clear();
+		namesByPath.clear();
+	}
 
 	/**
 	 * Register new injector configuration. If all ancestors of the new config are already registered, method
@@ -62,12 +85,13 @@ public class InjectorHierarchy {
 	 * 
 	 * @param config Injector configuration
 	 */
-	public synchronized void registerInjector(InjectorConfig config) {
+	private synchronized void registerInjector(InjectorConfig config) {
 		configByName.put(config.getName(), config);
 
 		List<InjectorConfig> injectorsToRefresh = getSubtree(config);
 		refreshInjectors(injectorsToRefresh);
 		refreshNameLookupMap();
+		refreshNamesByPathMap();
 	}
 
 	/**
@@ -75,13 +99,17 @@ public class InjectorHierarchy {
 	 * 
 	 * @param config
 	 */
-	public synchronized void unregisterInjector(InjectorConfig config) {
+	private synchronized void unregisterInjector(InjectorConfig config) {
 		List<InjectorConfig> injectorsToRemove = getSubtree(config);
 		for (InjectorConfig c : injectorsToRemove) {
-			injectorByName.remove(c.getName());
+			Injector injector = injectorByName.remove(c.getName());
+			for (InjectorLifecycleListener listener : listeners) {
+				listener.injectorDestroyed(injector, c);
+			}
 		}
 		configByName.remove(config.getName());
 		refreshNameLookupMap();
+		refreshNamesByPathMap();
 	}
 
 	/**
@@ -92,6 +120,16 @@ public class InjectorHierarchy {
 	 */
 	public synchronized Injector getInjectorByName(String injectorName) {
 		return injectorByName.get(injectorName);
+	}
+
+	/**
+	 * Return name of injector with given path
+	 * 
+	 * @param applicationPath Injector path
+	 * @return Injector name or null if there is no such injector
+	 */
+	public synchronized String getInjectorNameByApplicationPath(String applicationPath) {
+		return namesByPath.get(applicationPath);
 	}
 
 	/**
@@ -156,9 +194,14 @@ public class InjectorHierarchy {
 			current = parent;
 		} while (current != null);
 		try {
-			return Guice.createInjector(modules);
+			Injector injector = Guice.createInjector(modules);
+			for (InjectorLifecycleListener listener : listeners) {
+				listener.injectorCreated(injector, config);
+			}
+			return injector;
 		} catch (CreationException e) {
 			LOG.error("Can't create injector " + config.getName(), e);
+			config.getListener().creationFailed();
 			return null;
 		}
 	}
@@ -180,5 +223,34 @@ public class InjectorHierarchy {
 			map.put(entry.getValue(), entry.getKey());
 		}
 		nameLookupMap = map;
+	}
+
+	private void refreshNamesByPathMap() {
+		Map<String, String> map = new HashMap<String, String>();
+		for (Entry<String, InjectorConfig> entry : configByName.entrySet()) {
+			map.put(entry.getValue().getApplicationPath(), entry.getKey());
+		}
+		namesByPath = map;
+	}
+
+	protected void bindConfig(final InjectorConfig config) {
+		registerInjector(config);
+	}
+
+	protected void unbindConfig(final InjectorConfig config) {
+		unregisterInjector(config);
+	}
+
+	protected void bindListeners(final InjectorLifecycleListener listener) {
+		for (Entry<String, Injector> entry : injectorByName.entrySet()) {
+			String name = entry.getKey();
+			InjectorConfig config = configByName.get(name);
+			listener.injectorCreated(entry.getValue(), config);
+		}
+		listeners.add(listener);
+	}
+
+	protected void unbindListeners(final InjectorLifecycleListener listener) {
+		listeners.remove(listener);
 	}
 }

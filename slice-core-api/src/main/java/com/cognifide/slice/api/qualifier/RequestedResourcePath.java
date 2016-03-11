@@ -1,10 +1,6 @@
-package com.cognifide.slice.api.qualifier;
-
-/*
+/*-
  * #%L
  * Slice - Core API
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,6 +18,7 @@ package com.cognifide.slice.api.qualifier;
  * #L%
  */
 
+package com.cognifide.slice.api.qualifier;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
@@ -34,8 +31,22 @@ import java.lang.annotation.Target;
 import com.google.inject.BindingAnnotation;
 
 /**
+ * Get path of resource requested by end user. Works as {@link RequestedResource}.
+ * 
+ * <pre>
+ * {@literal @}SliceResource
+ * public class ExampleModel {
+ * 
+ *   private String resourcePath;
+ * 
+ *   {@literal @}Inject
+ *   public ExampleModel({@literal @}RequestedResourcePath String resourcePath) {
+ *      this.resourcePath = resourcePath;
+ *   }
+ * }
+ * </pre>
+ *
  * @author Rafał Malinowski
- * @short Get path of resource requested by end user. 
  */
 @BindingAnnotation
 @Target({ FIELD, PARAMETER, METHOD })

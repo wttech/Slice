@@ -1,10 +1,6 @@
-package com.cognifide.slice.mapper.exception;
-
-/*
+/*-
  * #%L
  * Slice - Mapper
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,6 +18,7 @@ package com.cognifide.slice.mapper.exception;
  * #L%
  */
 
+package com.cognifide.slice.mapper.exception;
 
 public class MapperException extends RuntimeException {
 
@@ -29,6 +26,10 @@ public class MapperException extends RuntimeException {
 
 	public MapperException(final String message, final Throwable cause) {
 		super(message, cause);
+	}
+
+	public MapperException(final String message) {
+		super(message);
 	}
 
 }

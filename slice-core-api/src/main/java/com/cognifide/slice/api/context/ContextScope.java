@@ -1,10 +1,6 @@
-package com.cognifide.slice.api.context;
-
-/*
+/*-
  * #%L
  * Slice - Core API
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,20 +18,26 @@ package com.cognifide.slice.api.context;
  * #L%
  */
 
+package com.cognifide.slice.api.context;
 
+import aQute.bnd.annotation.ProviderType;
+
+import com.cognifide.slice.api.scope.ContextScoped;
 import com.google.inject.Scope;
 
 /**
  * @author Rafał Malinowski
  * 
- * This Guice Scope stored all data in Context objects that are provided by ContextProvider instances.
- * ContextProvider object are stored per-thread basis, so each thread can have its own Context (it is possible
- * to create ContextProvider that shared data between thread, so this is not a requirement).
+ * This Guice {@link Scope} stores all objects in Context object which is provided by specified
+ * {@link ContextProvider}. ContextProvider object is stored on per-thread basis, so each thread can have its
+ * own Context (it is also possible to create ContextProvider that shares data between threads).
  * 
- * ContextProvider objects can be changed at any time and also Context objects that there providers are
- * providing can change. Thanks to that objects that are ContextScoped can be stored per-thread, per-request
- * or even per-second. It only requires good implementation of ContextProvider and Context interfaces.
+ * ContextProvider object can be changed at any time and Context object returning by this provider can change
+ * too. Thanks to that objects that are scoped in context ({@link ContextScoped} can be stored per-thread,
+ * per-request or even per-second. It only requires an appropriate implementation of ContextProvider and
+ * Context interfaces.
  */
+@ProviderType
 public interface ContextScope extends Scope {
 
 	/**

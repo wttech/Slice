@@ -1,10 +1,6 @@
-package com.cognifide.slice.api.tag;
-
 /*-
  * #%L
  * Slice - Core API
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,6 +18,8 @@ package com.cognifide.slice.api.tag;
  * #L%
  */
 
+package com.cognifide.slice.api.tag;
+
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.PageContext;
 
@@ -37,7 +35,6 @@ import com.cognifide.slice.api.context.RequestContextProvider;
 import com.cognifide.slice.api.injector.InjectorWithContext;
 import com.cognifide.slice.api.injector.InjectorsRepository;
 import com.cognifide.slice.api.provider.ModelProvider;
-import com.cognifide.slice.util.InjectorNameUtil;
 
 public final class SliceTagUtils {
 
@@ -45,10 +42,27 @@ public final class SliceTagUtils {
 		// hidden constructor
 	}
 
+	/**
+	 * A helper method that returns a model of a page
+	 *
+	 * @param pageContext allows to access resource path, request context and injector instance
+	 * @param type of model that should be created
+	 * @param <T>
+	 * @return a model of type T of the page indicated by pageContext
+	 */
 	public static <T> T getFromCurrentPath(final PageContext pageContext, final Class<T> type) {
 		return getFromCurrentPath(pageContext, type, null);
 	}
 
+	/**
+	 * A helper method that returns a model of a page
+	 *
+	 * @param pageContext allows to access resource path, request context and injector instance
+	 * @param type of model that should be created
+	 * @param appName - name of application needed to find a proper injector in multi-app environment
+	 * @param <T>
+	 * @return a model of type T of the page indicated by pageContext
+	 */
 	public static <T> T getFromCurrentPath(final PageContext pageContext, final Class<T> type,
 			final String appName) {
 		final SlingHttpServletRequest request = SliceTagUtils.slingRequestFrom(pageContext);
@@ -59,6 +73,16 @@ public final class SliceTagUtils {
 		return getFromCurrentPath(request, injectorsRepository, requestContextProvider, type, appName);
 	}
 
+	/**
+	 * A helper method that returns a model of the Sling resource related to given request
+	 *
+	 * @param request
+	 * @param injectorsRepository
+	 * @param requestContextProvider
+	 * @param type
+	 * @param <T>
+	 * @return a model of type T
+	 */
 	public static <T> T getFromCurrentPath(final SlingHttpServletRequest request,
 			final InjectorsRepository injectorsRepository,
 			final RequestContextProvider requestContextProvider, final Class<T> type) {
@@ -68,7 +92,7 @@ public final class SliceTagUtils {
 	public static <T> T getFromCurrentPath(final SlingHttpServletRequest request,
 			final InjectorsRepository injectorsRepository,
 			final RequestContextProvider requestContextProvider, final Class<T> type, final String appName) {
-		final String injectorName = getInjectorName(request, appName);
+		final String injectorName = getInjectorName(request, appName, injectorsRepository);
 		return getFromCurrentPath(request, injectorsRepository,
 				requestContextProvider.getContextProvider(injectorName), type, injectorName);
 	}
@@ -97,18 +121,27 @@ public final class SliceTagUtils {
 		return bindings.getSling();
 	}
 
-	@SuppressWarnings("deprecation")
-	private static String getInjectorName(final SlingHttpServletRequest request, final String appName) {
+	private static String getInjectorName(final SlingHttpServletRequest request, final String appName,
+			final InjectorsRepository injectorsRepository) {
 		String injectorName;
 		if (StringUtils.isNotBlank(appName)) {
 			injectorName = appName;
 		} else {
-			injectorName = InjectorNameUtil.getFromRequest(request);
+			injectorName = getFromRequest(request, injectorsRepository);
 		}
 		if (StringUtils.isBlank(injectorName)) {
 			throw new IllegalStateException("Guice injector name not available");
 		}
 		return injectorName;
+	}
+
+	private static String getFromRequest(final SlingHttpServletRequest request,
+			InjectorsRepository injectorsRepository) {
+		if (request.getResource() != null) {
+			String resourceType = request.getResource().getResourceType();
+			return injectorsRepository.getInjectorNameForResource(resourceType);
+		}
+		return StringUtils.EMPTY;
 	}
 
 	/**
@@ -130,7 +163,7 @@ public final class SliceTagUtils {
 	public static <T> T getFromCurrentPath(final SlingHttpServletRequest request,
 			final InjectorsRepository injectorsRepository, final ContextProvider contextProvider,
 			final Class<T> type, final String appName) {
-		final String injectorName = getInjectorName(request, appName);
+		final String injectorName = getInjectorName(request, appName, injectorsRepository);
 
 		if (null == contextProvider) {
 			throw new IllegalStateException("ContextProvider is not available");

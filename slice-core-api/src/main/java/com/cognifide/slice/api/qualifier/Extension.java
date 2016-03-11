@@ -1,10 +1,6 @@
-package com.cognifide.slice.api.qualifier;
-
-/*
+/*-
  * #%L
  * Slice - Core API
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,6 +18,7 @@ package com.cognifide.slice.api.qualifier;
  * #L%
  */
 
+package com.cognifide.slice.api.qualifier;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
@@ -34,7 +31,25 @@ import java.lang.annotation.Target;
 import com.google.inject.BindingAnnotation;
 
 /**
- * @see org.apache.sling.api.request.RequestPathInfo#getExtension()
+ * Returns the extension from the URL or <code>null</code> if the request URL does not contain an extension.
+ * 
+ * <pre>
+ * {@literal @}SliceResource
+ * public class ExampleModel {
+ *
+ *   private String extension;
+ *
+ *   {@literal @}Inject
+ *   public ExampleModel({@literal @}Nullable{@literal @}Extension String extension) {
+ *      this.extension = extension;
+ *   }
+ * }
+ * </pre>
+ *
+ * @see <a
+ * href="https://sling.apache.org/apidocs/sling5/org/apache/sling/api/request/RequestPathInfo.html#getExtension%28%29">
+ * org.apache.sling.api.request.RequestPathInfo#getExtension()</a>
+ *
  */
 @BindingAnnotation
 @Target({ FIELD, PARAMETER, METHOD })

@@ -1,10 +1,6 @@
-package com.cognifide.slice.api.injector;
-
 /*-
  * #%L
  * Slice - Core API
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,43 +18,21 @@ package com.cognifide.slice.api.injector;
  * #L%
  */
 
+package com.cognifide.slice.api.injector;
+
 import java.io.Closeable;
+
+import aQute.bnd.annotation.ProviderType;
 
 import com.cognifide.slice.api.context.ContextProvider;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 
 /**
- * @author Rafał Malinowski
- * @class InjectorWithContext
- * 
- * Decoration for Guice Injector class with simple access to modyfing and restoring ContextProvider. For use
- * in Servlets or Services use following code:
- * 
- * <pre>
- * {@code
- * @Reference
- * private InjectorsRepository injectorsRepository;
- * 
- * final InjectorWithContext injector = injectorsRepository.getInjector(APP_NAME);
- * final ContextProviderFactory contextProviderFactory = injector.getInstance(ContextProviderFactory.class);
- * final SimpleContextProvider simpleContextProvider = contextProviderFactory.getSimpleContextProvider();
- * final ContextFactory contextFactory = injector.getInstance(ContextFactory.class);
- * simpleContextProvider.setContext(contextFactory.getServletRequestContext(request, response));
- * 
- * injector.pushContextProvider(simpleContextProvider);
- * try {
- *   ...
- * } finally {
- *   injector.popContextProvider();
- * }
- * }
- * </pre>
- * 
- * to ensure that injector is left in a state that is was before.
- * 
- * This decoration has two delegate getInstance() methods added for convenience.
+ * Decoration for Guice Injector class with simple access to modyfing and restoring ContextProvider. This
+ * decoration has three delegate getInstance() methods added for convenience.
  */
+@ProviderType
 public interface InjectorWithContext extends Closeable {
 
 	/**

@@ -1,10 +1,6 @@
-package com.cognifide.slice.api.qualifier;
-
-/*
+/*-
  * #%L
  * Slice - Core API
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,6 +18,7 @@ package com.cognifide.slice.api.qualifier;
  * #L%
  */
 
+package com.cognifide.slice.api.qualifier;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
@@ -34,8 +31,24 @@ import java.lang.annotation.Target;
 import com.google.inject.BindingAnnotation;
 
 /**
+ * Get resource requested by end user. This is a resource request by initial call to Sling instance. Please
+ * note a difference between requested and current resource. Current resource can be chagned by calling
+ * ModelProvider methods, requested resource is always constant within single request processing
+ * 
+ * <pre>
+ * {@literal @}SliceResource
+ * public class ExampleModel {
+ * 
+ *   private Resource resource;
+ * 
+ *   {@literal @}Inject
+ *   public ExampleModel({@literal @}RequestedResource Resource resource) {
+ *      this.resource = resource;
+ *   }
+ * }
+ * </pre>
+ * 
  * @author Rafał Malinowski
- * @short Get resource requested by end user. 
  */
 @BindingAnnotation
 @Target({ FIELD, PARAMETER, METHOD })

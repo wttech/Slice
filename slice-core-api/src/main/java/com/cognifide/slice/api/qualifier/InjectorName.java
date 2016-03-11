@@ -1,10 +1,6 @@
-package com.cognifide.slice.api.qualifier;
-
-/*
+/*-
  * #%L
  * Slice - Core API
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,6 +18,7 @@ package com.cognifide.slice.api.qualifier;
  * #L%
  */
 
+package com.cognifide.slice.api.qualifier;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
@@ -34,8 +31,22 @@ import java.lang.annotation.Target;
 import com.google.inject.BindingAnnotation;
 
 /**
+ * Get name of current Injector.
+ *
+ * <pre>
+ * {@literal @}SliceResource
+ * public class ExampleModel {
+ *
+ *   private String injectorName;
+ *
+ *   {@literal @}Inject
+ *   public ExampleModel({@literal @}InjectorName String injectorName) {
+ *      this.injectorName = injectorName;
+ *    }
+ * }
+ * </pre>
+ *
  * @author Rafał Malinowski
- * @short Get name of current Injector. 
  */
 @BindingAnnotation
 @Target({ FIELD, PARAMETER, METHOD })

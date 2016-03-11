@@ -1,10 +1,6 @@
-package com.cognifide.slice.mapper.api.processor;
-
-/*
+/*-
  * #%L
  * Slice - Mapper API
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,15 +18,20 @@ package com.cognifide.slice.mapper.api.processor;
  * #L%
  */
 
+package com.cognifide.slice.mapper.api.processor;
 
 import java.lang.reflect.Field;
 
 import org.apache.sling.api.resource.Resource;
 
+import aQute.bnd.annotation.ConsumerType;
+
 /**
- * Defines if a value can be processed and performs actual processing.
- * 
+ * Defines if a value can be processed and performs actual processing. Class which implements
+ * this interface should be added to list of post processors in
+ * {@link com.cognifide.slice.mapper.MapperBuilder#addFieldPostProcessor(FieldPostProcessor fieldPostProcessor)}
  */
+@ConsumerType
 public interface FieldPostProcessor {
 
 	/**

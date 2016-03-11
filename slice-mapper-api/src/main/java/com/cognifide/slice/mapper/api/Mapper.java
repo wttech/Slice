@@ -1,10 +1,6 @@
-package com.cognifide.slice.mapper.api;
-
-/*
+/*-
  * #%L
  * Slice - Mapper API
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -22,11 +18,11 @@ package com.cognifide.slice.mapper.api;
  * #L%
  */
 
+package com.cognifide.slice.mapper.api;
 
 import org.apache.sling.api.resource.Resource;
 
-import com.cognifide.slice.mapper.api.processor.FieldPostProcessor;
-import com.cognifide.slice.mapper.api.processor.FieldProcessor;
+import aQute.bnd.annotation.ProviderType;
 
 /**
  * Mapper is an object that provides an abstract interface to content repository, providing some specific
@@ -35,6 +31,7 @@ import com.cognifide.slice.mapper.api.processor.FieldProcessor;
  * terms of domain-specific objects and data types (the public interface of the Mapper), and how these can be
  * satisfied with a repository (the implementation of the Mapper).
  */
+@ProviderType
 public interface Mapper {
 
 	/**
@@ -45,13 +42,5 @@ public interface Mapper {
 	 * @return specified object with appropriate fields mapped from specified resource
 	 */
 	<T> T get(Resource resource, T object);
-
-	void registerFieldProcessor(FieldProcessor fieldProcessor);
-
-	void unregisterFieldProcessor(FieldProcessor fieldProcessor);
-
-	void registerFieldPostProcessor(FieldPostProcessor fieldPostProcessor);
-
-	void unregisterFieldPostProcessor(FieldPostProcessor fieldPostProcessor);
 
 }

@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.cognifide.slice</groupId>
 		<artifactId>slice-parent</artifactId>
-		<version>3.3.0-SNAPSHOT</version>
+		<version>4.3.0-SNAPSHOT</version>
 	</parent>
 	<name>Slice - Core API</name>
 	<description>Slice Core API</description>
@@ -29,10 +29,20 @@
 				<configuration>
 					<instructions>
 						<Export-Package>
-							com.cognifide.slice.api*;version="${project.version}",
-							com.cognifide.slice.util*;version="${project.version}",
+							com.cognifide.slice.api*,
+							com.cognifide.slice.util*,
 						</Export-Package>
 					</instructions>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.mycila</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<configuration>
+					<header>${project.parent.basedir}/license-template.txt</header>
+					<headerDefinitions>
+						<header>${project.parent.basedir}/license-header-definition.txt</header>
+					</headerDefinitions>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -43,15 +53,7 @@
 		<dependency>
 			<groupId>com.cognifide.slice</groupId>
 			<artifactId>slice-mapper-api</artifactId>
-			<version>3.3.0-SNAPSHOT</version>
-		</dependency>
-
-		<!-- Asm -->	
-		<dependency>
-			<groupId>asm</groupId>
-			<artifactId>asm</artifactId>
-			<version>3.3.1</version>
-			<scope>provided</scope>
+			<version>4.3.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Guice -->

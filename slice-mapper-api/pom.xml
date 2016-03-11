@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.cognifide.slice</groupId>
 		<artifactId>slice-parent</artifactId>
-		<version>3.3.0-SNAPSHOT</version>
+		<version>4.3.0-SNAPSHOT</version>
 	</parent>
 	<name>Slice - Mapper API</name>
 	<description>Slice - Mapper API</description>
@@ -24,10 +24,20 @@
 				<configuration>
 					<instructions>
 						<Export-Package>
-							com.cognifide.slice.mapper.api*;version="${project.version}",
-							com.cognifide.slice.mapper.annotation*;version="${project.version}",
+							com.cognifide.slice.mapper.api*,
+							com.cognifide.slice.mapper.annotation*,
 						</Export-Package>
 					</instructions>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.mycila</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<configuration>
+					<header>${project.parent.basedir}/license-template.txt</header>
+					<headerDefinitions>
+						<header>${project.parent.basedir}/license-header-definition.txt</header>
+					</headerDefinitions>
 				</configuration>
 			</plugin>
 		</plugins>

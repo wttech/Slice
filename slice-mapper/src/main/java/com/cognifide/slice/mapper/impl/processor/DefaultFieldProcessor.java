@@ -1,10 +1,6 @@
-package com.cognifide.slice.mapper.impl.processor;
-
 /*-
  * #%L
  * Slice - Mapper
- * $Id:$
- * $HeadURL:$
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -21,6 +17,8 @@ package com.cognifide.slice.mapper.impl.processor;
  * limitations under the License.
  * #L%
  */
+
+package com.cognifide.slice.mapper.impl.processor;
 
 import java.lang.reflect.Field;
 
@@ -42,8 +40,8 @@ public class DefaultFieldProcessor implements FieldProcessor {
 		if (valueMap == null) {
 			return null;
 		}
-		Class<?> propertyType = ReflectionHelper.getFieldType(field);
+		Class<?> propertyType  = ReflectionHelper.getFieldType(field);
+		
 		return valueMap.get(propertyName, propertyType);
 	}
-
 }
