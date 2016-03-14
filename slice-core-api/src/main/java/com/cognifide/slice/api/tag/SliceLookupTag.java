@@ -43,11 +43,12 @@ public class SliceLookupTag extends SimpleTagSupport {
 
 	@Override
 	public void doTag() throws JspException {
-		final PageContext pageContext = (PageContext) getJspContext();
 		try {
 			if (StringUtils.isBlank(var) || (type == null)) {
 				throw new JspTagException("Var and Type must be set " + appName);
 			}
+
+			final PageContext pageContext = (PageContext) getJspContext();
 			final Object model = SliceTagUtils.getFromCurrentPath(pageContext, type, appName);
 			pageContext.setAttribute(var, model, PageContext.PAGE_SCOPE);
 		} finally {
