@@ -27,19 +27,18 @@ import org.junit.Assert
  */
 class PreMappingTest extends BaseSetup {
 
-    def "PreMapping Annotation Test"() {
-        setup: "Creating initial content"
-        pageBuilder.content {
-            test("cq:PageContent") {
-                "jcr:content"("field": "some value")
-            }
-        }
+	def "PreMapping Annotation Test"() {
+		setup: "Creating initial content"
+		pageBuilder.content {
+			test("cq:PageContent") { "jcr:content"("field": "some value") }
+		}
 
-        when: "Get a model instance by path"
-        PreMappingModel preMappingModel = modelProvider.get(PreMappingModel.class, "/content/test/jcr:content")
+		when: "Get a model instance by path"
+		PreMappingModel preMappingModel = modelProvider.get(PreMappingModel.class, "/content/test/jcr:content")
 
-        then: "Model has been property initialized"
-        Assert.assertNotNull(preMappingModel)
-        Assert.assertEquals("SOME VALUE", preMappingModel.getField())
-    }
+		then: "Model has been property initialized"
+		Assert.assertNotNull(preMappingModel)
+		Assert.assertEquals("Pre-mapping annotation did not change object's state",
+				"SOME VALUE", preMappingModel.getField())
+	}
 }

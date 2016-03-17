@@ -19,14 +19,25 @@
  */
 package com.cognifide.slice.mapper.annotation;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * @author Krzysztof Watral
  */
 @SliceResource
-public class PostMappingModel extends BaseMappingModel {
+public class PostMappingModel {
+
+	@JcrProperty
+	protected String field;
+
+	protected String postfix;
 
 	@PostMapping
 	void postMapping() {
-		postfix = field != null ? "_TEST" : null;
+		postfix = "_TEST";
+	}
+
+	public String getField() {
+		return field + postfix;
 	}
 }

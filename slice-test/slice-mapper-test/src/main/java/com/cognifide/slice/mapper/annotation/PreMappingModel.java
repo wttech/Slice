@@ -19,14 +19,30 @@
  */
 package com.cognifide.slice.mapper.annotation;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * @author Krzysztof Watral
  */
 @SliceResource
-public class PreMappingModel extends BaseMappingModel {
+public class PreMappingModel {
+
+	@JcrProperty
+	protected String field;
+
+	protected boolean upperCase = false;
 
 	@PreMapping
 	void preMapping() {
-		upperCase = field == null;
+		upperCase = true;
+	}
+
+	public String getField() {
+		if (upperCase) {
+			// ignoring NPE check - it should fail the test anyway
+			return field.toUpperCase();
+		} else {
+			return field;
+		}
 	}
 }

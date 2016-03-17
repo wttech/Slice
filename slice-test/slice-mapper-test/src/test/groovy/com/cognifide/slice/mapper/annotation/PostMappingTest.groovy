@@ -26,20 +26,18 @@ import org.junit.Assert
  * @author Krzysztof Watral
  */
 class PostMappingTest extends BaseSetup {
+	def "PostMapping Annotation Test"() {
+		setup: "Creating initial content"
+		pageBuilder.content {
+			test("cq:PageContent") { "jcr:content"("field": "some value") }
+		}
 
-    def "PostMapping Annotation Test"() {
-        setup: "Creating initial content"
-        pageBuilder.content {
-            test("cq:PageContent") {
-                "jcr:content"("field": "some value")
-            }
-        }
+		when: "Get a model instance by path"
+		PostMappingModel postMappingModel = modelProvider.get(PostMappingModel.class, "/content/test/jcr:content")
 
-        when: "Get a model instance by path"
-        PostMappingModel postMappingModel = modelProvider.get(PostMappingModel.class, "/content/test/jcr:content")
-
-        then: "Model has been property initialized"
-        Assert.assertNotNull(postMappingModel)
-        Assert.assertEquals("some value_TEST", postMappingModel.getField())
-    }
+		then: "Model has been property initialized"
+		Assert.assertNotNull(postMappingModel)
+		Assert.assertEquals("Post-mapping annotation did not change object's state",
+				"some value_TEST", postMappingModel.getField())
+	}
 }
