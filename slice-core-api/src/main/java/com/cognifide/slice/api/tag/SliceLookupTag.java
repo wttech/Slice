@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,25 +21,12 @@
 package com.cognifide.slice.api.tag;
 
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 import org.apache.commons.lang.StringUtils;
 
-/**
- * Implementation of the tag which allows to bind given model instance to a jsp variable.
- *
- * Example jsp code:
- *
- * <code>
- * <%@taglib prefix="slice" uri="http://cognifide.com/jsp/slice" %>
- * ...
- * <slice:lookup var="model" type="<%=com.cognifide.example.core.components.basicjsp.BasicJspModel.class%>"/>
- * ...
- * h1>${model.text}</h1>
- * ...
- * </code>
- */
 public class SliceLookupTag extends SimpleTagSupport {
 
 	private String var;
@@ -58,7 +45,7 @@ public class SliceLookupTag extends SimpleTagSupport {
 	public void doTag() throws JspException {
 		try {
 			if (StringUtils.isBlank(var) || (type == null)) {
-				return;
+				throw new JspTagException("Var and Type must be set " + appName);
 			}
 
 			final PageContext pageContext = (PageContext) getJspContext();
@@ -80,5 +67,4 @@ public class SliceLookupTag extends SimpleTagSupport {
 	public void setAppName(String appName) {
 		this.appName = appName;
 	}
-
 }

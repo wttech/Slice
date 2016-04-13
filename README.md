@@ -1,4 +1,4 @@
-![Cognifide logo](http://cognifide.github.io/Carty/assets/media/cognifide_logo.png)
+![Cognifide logo](http://cognifide.github.io/images/cognifide-logo.png)
 
 [![Build Status](https://travis-ci.org/Cognifide/Slice.svg?branch=master)](https://travis-ci.org/Cognifide/Slice)
 [![Coverity Status](https://scan.coverity.com/projects/4863/badge.svg)](https://scan.coverity.com/projects/4863)
@@ -250,7 +250,7 @@ Since Slice 3.1 the AEM/CQ related modules have been extracted to separate proje
 
 # Commercial Support
 
-Technical support can be made available if needed. Please [contact us](mailto:slice-support@cognifide.com) for more details.
+Technical support can be made available if needed. Please [contact us](mailto:labs-support@cognifide.com) for more details.
 
 We can:
 

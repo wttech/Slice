@@ -26,9 +26,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Allows mapper to map all child resources of a parent resource into array or list. The parent resource is
- * the one indicated by the name of the field or {@link JcrProperty}. If the child resource doesn't exist,
- * then the list will be empty, but never <code>null</code>.
+ * Allows mapper to map all child resources of a parent resource into array, <tt>List</tt>, <tt>Set</tt>,
+ * <tt>SortedSet</tt> or <tt>Collection</tt>. When mapping to <tt>SortedSet</tt> child model must implement
+ * the <tt>Comparable</tt> interface.<br/>
+ * The parent resource is the one indicated by the name of the field or {@link JcrProperty}.
+ * If the child resource doesn't exist, then the collection will be empty, but never <code>null</code>.
  *
  * <pre>
  * {@literal @}SliceResource

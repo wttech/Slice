@@ -1,6 +1,6 @@
 /*-
  * #%L
- * Slice - Core API
+ * Slice - Mapper
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -17,8 +17,15 @@
  * limitations under the License.
  * #L%
  */
-@Version("4.3.0")
-package com.cognifide.slice.api.tag;
+package com.cognifide.slice.mapper.impl.processor.adapter;
 
-import aQute.bnd.annotation.Version;
+import java.util.Collection;
+import java.util.List;
 
+public class ListAdapter implements MappedListAdapter {
+
+	@Override
+	public Collection<?> adapt(List<?> mappedModels) {
+		return mappedModels;
+	}
+}
