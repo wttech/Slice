@@ -1,4 +1,4 @@
-![Cognifide logo](http://cognifide.github.io/Carty/assets/media/cognifide_logo.png)
+![Cognifide logo](http://cognifide.github.io/images/cognifide-logo.png)
 
 [![Build Status](https://travis-ci.org/Cognifide/Slice.svg?branch=master)](https://travis-ci.org/Cognifide/Slice)
 [![Coverity Status](https://scan.coverity.com/projects/4863/badge.svg)](https://scan.coverity.com/projects/4863)
@@ -243,14 +243,14 @@ Add dependencies to your POM file:
 Last thing you need to do is preparing Injector of your application in BundleActivator. Read more on how to do this on our [Wiki](https://cognifide.atlassian.net/wiki/display/SLICE/Setting+up+-+4.2)
 
 Since Slice 3.1 the AEM/CQ related modules have been extracted to separate projects:
-* Slice AEM v6.0 Addon: https://github.com/Cognifide/Slice-AEM60
+* Slice AEM v6.0 and 6.1 Addon: https://github.com/Cognifide/Slice-AEM60
 * Slice CQ v5.6 Addon: https://github.com/Cognifide/Slice-CQ56/
 * Slice CQ v5.5 Addon: https://github.com/Cognifide/Slice-CQ55/
 
 
 # Commercial Support
 
-Technical support can be made available if needed. Please [contact us](mailto:slice-support@cognifide.com) for more details.
+Technical support can be made available if needed. Please [contact us](mailto:labs-support@cognifide.com) for more details.
 
 We can:
 

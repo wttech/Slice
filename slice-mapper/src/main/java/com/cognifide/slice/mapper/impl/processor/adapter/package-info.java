@@ -1,6 +1,6 @@
 /*-
  * #%L
- * Slice - Core API
+ * Slice - Mapper
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -18,7 +18,6 @@
  * #L%
  */
 @Version("4.3.0")
-package com.cognifide.slice.api.tag;
+package com.cognifide.slice.mapper.impl.processor.adapter;
 
 import aQute.bnd.annotation.Version;
-
