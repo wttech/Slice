@@ -34,6 +34,8 @@ import com.cognifide.slice.mapper.annotation.Children;
 import com.cognifide.slice.mapper.annotation.Follow;
 import com.cognifide.slice.mapper.api.processor.FieldProcessor;
 import com.cognifide.slice.mapper.exception.MapperException;
+import com.cognifide.slice.mapper.impl.processor.adapter.AssignableChildrenFieldType;
+import com.cognifide.slice.mapper.impl.processor.adapter.MappedListAdapterFactory;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -52,7 +54,7 @@ public class ChildrenFieldProcessor implements FieldProcessor {
 			return false;
 		}
 		Class<?> fieldType = field.getType();
-		return List.class.isAssignableFrom(fieldType) || fieldType.isArray();
+		return fieldType.isArray() || AssignableChildrenFieldType.contains(fieldType);
 	}
 
 	@Override
@@ -67,9 +69,8 @@ public class ChildrenFieldProcessor implements FieldProcessor {
 		final Class<?> fieldType = field.getType();
 		if (fieldType.isArray()) {
 			return getArrayFromList(fieldType.getComponentType(), mappedModels);
-		} else {
-			return mappedModels;
 		}
+		return MappedListAdapterFactory.create(fieldType).adapt(mappedModels);
 	}
 
 	private List<?> getChildrenList(Resource resource, Field field, String propertyName) {
@@ -79,6 +80,18 @@ public class ChildrenFieldProcessor implements FieldProcessor {
 		}
 		Resource parentResource = resource.getChild(propertyName);
 		return getChildrenList(parentResource, field);
+	}
+
+	private List<?> getRemoteChildrenList(Resource resource, ValueMap valueMap, Field field,
+			String propertyName) {
+		Resource followUpResource = FollowUpProcessorUtil.getFollowUpResource(resource, valueMap, field,
+				propertyName);
+
+		if (followUpResource == null) {
+			return Collections.EMPTY_LIST;
+		}
+
+		return getChildrenList(followUpResource, field);
 	}
 
 	private List<?> getChildrenList(Resource parentResource, Field field) {
@@ -104,18 +117,6 @@ public class ChildrenFieldProcessor implements FieldProcessor {
 			Array.set(array, index++, child);
 		}
 		return array;
-	}
-
-	private List<?> getRemoteChildrenList(Resource resource, ValueMap valueMap, Field field,
-			String propertyName) {
-		Resource followUpResource = FollowUpProcessorUtil.getFollowUpResource(resource, valueMap, field,
-				propertyName);
-
-		if (followUpResource == null) {
-			return Collections.EMPTY_LIST;
-		}
-
-		return getChildrenList(followUpResource, field);
 	}
 
 }
