@@ -80,7 +80,10 @@ public class SliceModelClassResolver implements ModelClassResolver {
 			resolver = resourceResolverFactory.getAdministrativeResourceResolver(null);
 			final Resource componentDefinition = resolver.getResource(resourceType);
 			if (componentDefinition != null) {
-				return new HashMap<String, Object>(componentDefinition.adaptTo(ValueMap.class));
+				Map<String, Object> values = componentDefinition.adaptTo(ValueMap.class);
+				if (values != null) {
+					return new HashMap<String, Object>(values);
+				}
 			}
 			return null;
 		} catch (LoginException e) {

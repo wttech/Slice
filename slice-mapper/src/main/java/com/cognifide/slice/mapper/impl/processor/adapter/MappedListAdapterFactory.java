@@ -1,6 +1,6 @@
 /*-
  * #%L
- * Slice - Core API
+ * Slice - Mapper
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -17,8 +17,15 @@
  * limitations under the License.
  * #L%
  */
-@Version("4.3.0")
-package com.cognifide.slice.api.tag;
+package com.cognifide.slice.mapper.impl.processor.adapter;
 
-import aQute.bnd.annotation.Version;
+public final class MappedListAdapterFactory {
 
+	private MappedListAdapterFactory() {
+		// utility class
+	}
+
+	public static MappedListAdapter create(Class<?> fieldType) {
+		return AssignableChildrenFieldType.byClass(fieldType).getAdapter();
+	}
+}
