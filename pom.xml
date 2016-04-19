@@ -414,6 +414,13 @@
 				<version>1.0.0</version>
 			</dependency>
 
+			<!-- Adobe AEM 6 -->
+			<dependency>
+				<groupId>com.adobe.aem</groupId>
+				<artifactId>aem-api</artifactId>
+				<version>6.0.0.1</version>
+			</dependency>
+
 			<!-- OSGi -->
 			<dependency>
 				<groupId>org.osgi</groupId>

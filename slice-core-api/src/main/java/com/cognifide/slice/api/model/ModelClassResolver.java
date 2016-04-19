@@ -32,16 +32,6 @@ import aQute.bnd.annotation.ProviderType;
  */
 @ProviderType
 public interface ModelClassResolver {
-
-	/**
-	 * Get model class from a given resource type.
-	 *
-	 * @param resourceType Sling resource type String
-	 * @return model class defined in the slice:model property or null if there is no such property
-	 * @throws ClassNotFoundException if the defined class can't be found
-	 */
-	Class<?> getModelClass(String resourceType) throws ClassNotFoundException;
-
 	/**
 	 * Get model class from a given resource.
 	 *
