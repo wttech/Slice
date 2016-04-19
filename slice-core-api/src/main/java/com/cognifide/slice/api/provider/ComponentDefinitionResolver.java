@@ -22,6 +22,8 @@ package com.cognifide.slice.api.provider;
 
 import java.util.Map;
 
+import org.apache.sling.api.resource.Resource;
+
 import aQute.bnd.annotation.ConsumerType;
 
 /**
@@ -43,6 +45,16 @@ public interface ComponentDefinitionResolver {
 	 * @return Map of resource properties or null if there's no resource under path specified in resourceType
 	 * parameter.
 	 */
+	@Deprecated
 	Map<String, Object> getComponentDefinition(String resourceType);
+
+	/**
+	 * Returns a definition of a component defined by specified resource in form of its properties map.
+	 *
+	 * @param resource resource type of a component
+	 * @return Map of resource properties or null if there's no resource under path specified in resource
+	 * parameter.
+	 */
+	Map<String, Object> getComponentDefinition(Resource resource);
 
 }

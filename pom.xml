@@ -414,13 +414,6 @@
 				<version>1.0.0</version>
 			</dependency>
 
-			<!-- Adobe AEM 6 -->
-			<dependency>
-				<groupId>com.adobe.aem</groupId>
-				<artifactId>aem-api</artifactId>
-				<version>6.0.0.1</version>
-			</dependency>
-
 			<!-- OSGi -->
 			<dependency>
 				<groupId>org.osgi</groupId>
@@ -615,11 +608,6 @@
 			<id>com.springsource.repository.bundles.external</id>
 			<name>SpringSource Enterprise Bundle Repository - SpringSource Bundle Releases</name>
 			<url>http://repository.springsource.com/maven/bundles/external/</url>
-		</repository>
-		<repository>
-			<id>adobe-public-releases</id>
-			<name>Adobe Public Repository</name>
-			<url>http://repo.adobe.com/nexus/content/groups/public</url>
 		</repository>
 	</repositories>
 

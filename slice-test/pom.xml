@@ -46,13 +46,6 @@
 			<groupId>org.apache.sling</groupId>
 			<artifactId>org.apache.sling.scripting.api</artifactId>
 		</dependency>
-
-		<!-- Adobe AEM 6 -->
-		<dependency>
-			<groupId>com.adobe.aem</groupId>
-			<artifactId>aem-api</artifactId>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 	
 	<build>

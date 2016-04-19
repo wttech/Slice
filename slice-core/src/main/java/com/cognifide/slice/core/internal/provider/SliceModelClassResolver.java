@@ -28,7 +28,10 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.ReferenceCardinality;
 import org.apache.felix.scr.annotations.Service;
+import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.commons.classloader.DynamicClassLoaderManager;
 
@@ -43,7 +46,23 @@ public class SliceModelClassResolver implements ModelClassResolver {
 	private ComponentDefinitionResolver componentDefinitionResolver;
 
 	@Reference
+	private ResourceResolverFactory resourceResolverFactory;
+
+	@Reference
 	private DynamicClassLoaderManager dynamicClassLoaderManager;
+
+	public Class<?> getModelClass(String resourceType) throws ClassNotFoundException {
+		final Map<String, Object> definition = getDefinition(resourceType);
+		if (definition != null) { // definition may not be available for types like cq:Page
+			final String className = (String) definition.get("slice:model");
+			if (StringUtils.isBlank(className)) {
+				return null;
+			} else {
+				return dynamicClassLoaderManager.getDynamicClassLoader().loadClass(className);
+			}
+		}
+		return null;
+	}
 
 	@Override
 	public Class<?> getModelClass(Resource resource) throws ClassNotFoundException {
@@ -59,25 +78,44 @@ public class SliceModelClassResolver implements ModelClassResolver {
 		return null;
 	}
 
-	private Map<String, Object> getDefinition(Resource resource) throws ClassNotFoundException {
+	private Map<String, Object> getDefinition(String resourceType) throws ClassNotFoundException {
 		final Map<String, Object> definition;
 		if (componentDefinitionResolver == null) {
-			definition = getDefinitionWithResolver(resource);
+			definition = getDefinitionWithResolver(resourceType);
 		} else {
-			definition = componentDefinitionResolver.getComponentDefinition(resource.getResourceType());
+			definition = componentDefinitionResolver.getComponentDefinition(resourceType);
 		}
 		return definition;
 	}
 
-	private Map<String, Object> getDefinitionWithResolver(Resource resource) {
-		com.day.cq.wcm.api.components.Component component = resource
-				.adaptTo(com.day.cq.wcm.api.components.Component.class);
-		if (component != null) {
-			Map<String, Object> values = component.adaptTo(ValueMap.class);
-			if (values != null) {
-				return new HashMap<String, Object>(values);
+	private Map<String, Object> getDefinition(Resource resource) throws ClassNotFoundException {
+		final Map<String, Object> definition;
+		if (componentDefinitionResolver == null) {
+			definition = getDefinitionWithResolver(resource.getResourceType());
+		} else {
+			definition = componentDefinitionResolver.getComponentDefinition(resource);
+		}
+		return definition;
+	}
+
+	private Map<String, Object> getDefinitionWithResolver(String resourceType) {
+		ResourceResolver resolver = null;
+		try {
+			resolver = resourceResolverFactory.getAdministrativeResourceResolver(null);
+			final Resource componentDefinition = resolver.getResource(resourceType);
+			if (componentDefinition != null) {
+				Map<String, Object> values = componentDefinition.adaptTo(ValueMap.class);
+				if (values != null) {
+					return new HashMap<String, Object>(values);
+				}
+			}
+			return null;
+		} catch (LoginException e) {
+			return null;
+		} finally {
+			if (resolver != null) {
+				resolver.close();
 			}
 		}
-		return null;
 	}
 }
