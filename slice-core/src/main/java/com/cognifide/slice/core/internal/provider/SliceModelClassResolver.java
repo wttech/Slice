@@ -94,4 +94,39 @@ public class SliceModelClassResolver implements ModelClassResolver {
 			}
 		}
 	}
+	@Override
+	public Class<?> getModelClass(Resource resource) throws ClassNotFoundException {
+		final Map<String, Object> definition = getDefinition(resource);
+		if (definition != null) { // definition may not be available for types like cq:Page
+			final String className = (String) definition.get("slice:model");
+			if (StringUtils.isBlank(className)) {
+				return null;
+			} else {
+				return dynamicClassLoaderManager.getDynamicClassLoader().loadClass(className);
+			}
+		}
+		return null;
+	}
+
+	private Map<String, Object> getDefinition(Resource resource) throws ClassNotFoundException {
+		final Map<String, Object> definition;
+		if (componentDefinitionResolver == null) {
+			definition = getDefinitionWithResolver(resource);
+		} else {
+			definition = componentDefinitionResolver.getComponentDefinition(resource.getResourceType());
+		}
+		return definition;
+	}
+
+	private Map<String, Object> getDefinitionWithResolver(Resource resource) {
+		com.day.cq.wcm.api.components.Component component = resource
+				.adaptTo(com.day.cq.wcm.api.components.Component.class);
+		if (component != null) {
+			Map<String, Object> values = component.adaptTo(ValueMap.class);
+			if (values != null) {
+				return new HashMap<String, Object>(values);
+			}
+		}
+		return null;
+	}
 }

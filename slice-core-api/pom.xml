@@ -99,6 +99,14 @@
 			<groupId>org.apache.felix</groupId>
 			<artifactId>org.apache.felix.scr.annotations</artifactId>
 		</dependency>
+
+		<!-- Adobe AEM 6 -->
+		<dependency>
+			<groupId>com.adobe.aem</groupId>
+			<artifactId>aem-api</artifactId>
+			<version>6.0.0.1</version>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 
 </project>
