@@ -22,6 +22,9 @@ package com.cognifide.slice.api.provider;
 
 import java.util.Map;
 
+import org.apache.sling.api.resource.NonExistingResource;
+import org.apache.sling.api.resource.Resource;
+
 import aQute.bnd.annotation.ConsumerType;
 
 /**
@@ -30,20 +33,18 @@ import aQute.bnd.annotation.ConsumerType;
  * used as a bridge between already existing component definition provider (eg. ComponentManager in AEM) and
  * Slice.
  * 
- * @author Tomasz Rękawek
- * @deprecated Please use {@link ComponentDefinitionProvider}
+ * @since 4.3
  */
 @ConsumerType
-@Deprecated
-public interface ComponentDefinitionResolver {
+public interface ComponentDefinitionProvider {
 
 	/**
 	 * Returns a definition of a component defined by specified resourceType in form of its properties map.
 	 * 
-	 * @param resourceType resource type of a component
-	 * @return Map of resource properties or null if there's no resource under path specified in resourceType
-	 * parameter.
+	 * @param resource resource of a component
+	 * @return Map of resource properties or <code>null</code> if resource does not exist (is
+	 * <code>null</code> or {@link NonExistingResource}) parameter.
 	 */
-	Map<String, Object> getComponentDefinition(String resourceType);
+	Map<String, Object> getComponentDefinition(Resource resource);
 
 }

@@ -244,4 +244,17 @@ class SliceModelProviderTest extends BaseSetup {
 		then: "Throw ProvisionException - either path or resource should be set"
 		thrown(ProvisionException)  //FIXME we should not expect ProvisionException here
 	}
+	
+	def "Get model by resource - non-existing (null) resource"() {
+		def nonExistingPath = "/content/nonexisting"
+
+		setup: "Get non-existing resource"
+		def resource = resourceResolver.getResource(nonExistingPath)
+
+		when: "Creating model for non-existing (null) resource"
+		def model = modelProvider.get(resource);
+
+		then: "Model is not created"
+		Assert.assertNull(model)
+	}
 }
