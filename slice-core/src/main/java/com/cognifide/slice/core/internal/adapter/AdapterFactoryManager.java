@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -49,6 +50,7 @@ import com.cognifide.slice.core.internal.scanner.BundleInfo;
 import com.cognifide.slice.core.internal.scanner.BundleMatcher;
 import com.cognifide.slice.core.internal.scanner.SliceResourceScanner;
 import com.google.inject.Injector;
+import com.google.inject.Module;
 
 /**
  * This component is responsible for creation and destruction of the AdapterFactory services. Every time a
@@ -92,6 +94,11 @@ public class AdapterFactoryManager implements InjectorLifecycleListener, BundleL
 
 		registry.clearAll();
 		matchersByInjector.clear();
+	}
+
+	@Override
+	public void injectorCreating(List<Module> injector, InjectorConfig config) {
+		// nothing to do
 	}
 
 	@Override

@@ -39,6 +39,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 import org.objectweb.asm.ClassReader;
 import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceReference;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BundleClassesFinderTest {
@@ -46,42 +49,53 @@ public class BundleClassesFinderTest {
 	@Mock
 	private Bundle bundle;
 
+	@Mock
+	private BundleContext bundleContext; // TODO mock getServiceReferences()
+
 	private BundleClassesFinder classFinder;
 
 	@Before
-	public void setUp() {
+	public void setUp() throws InvalidSyntaxException {
 		classFinder = new BundleClassesFinder("test");
+
+		when(bundleContext
+				.getServiceReferences("com.cognifide.slice.testhelper.TestOsgiService1", null))
+				.thenReturn(new ServiceReference[] { new TestServiceReference() });
+		when(bundleContext
+				.getServiceReferences("com.cognifide.slice.testhelper.TestOsgiService2", null))
+				.thenReturn(new ServiceReference[] { new TestServiceReference() });
 	}
 
 	@Test
 	public void testReadOsgiServicesForClassInnerClass() {
 		Collection<Class<?>> classes = classFinder
-				.readOsgiServicesForClass(InnerClassTestService.InnerClass.class);
+				.readOsgiServicesForClass(bundleContext, InnerClassTestService.InnerClass.class);
 		Assert.assertEquals(1, classes.size());
-		Assert.assertTrue(classes.contains(Integer.class));
+		Assert.assertTrue(classes.contains(TestOsgiService1.class));
 	}
 
 	@Test
 	public void testReadOsgiServicesForClassWithInnerClass() {
-		Collection<Class<?>> classes = classFinder.readOsgiServicesForClass(InnerClassTestService.class);
+		Collection<Class<?>> classes = classFinder.readOsgiServicesForClass(bundleContext,
+				InnerClassTestService.class);
 		Assert.assertEquals(0, classes.size());
 	}
 
 	@Test
 	public void testReadOsgiServicesForClass() {
-		Collection<Class<?>> classes = classFinder.readOsgiServicesForClass(ClassTestService.class);
+		Collection<Class<?>> classes = classFinder.readOsgiServicesForClass(bundleContext, ClassTestService.class);
 		Assert.assertEquals(2, classes.size());
-		Assert.assertTrue(classes.contains(String.class));
-		Assert.assertTrue(classes.contains(Long.class));
+		Assert.assertTrue(classes.contains(TestOsgiService1.class));
+		Assert.assertTrue(classes.contains(TestOsgiService2.class));
 	}
 
 	@Test
 	public void testReadOsgiServicesForClassWithConstructorServices() {
 		Collection<Class<?>> classes = classFinder
-				.readOsgiServicesForClass(ClassTestConstructorService.class);
+				.readOsgiServicesForClass(bundleContext, ClassTestConstructorService.class);
 		Assert.assertEquals(2, classes.size());
-		Assert.assertTrue(classes.contains(Double.class));
-		Assert.assertTrue(classes.contains(Long.class));
+		Assert.assertTrue(classes.contains(TestOsgiService1.class));
+		Assert.assertTrue(classes.contains(TestOsgiService2.class));
 	}
 
 	private void bundleSetup() throws ClassNotFoundException {
@@ -123,7 +137,7 @@ public class BundleClassesFinderTest {
 	public void testGetClasses() throws ClassNotFoundException {
 		bundleSetup();
 		Collection<Class<?>> classes = classFinder.getClasses(Lists.newArrayList(bundle));
-		Assert.assertEquals(classes.size(), 3);
+		Assert.assertEquals(3, classes.size());
 		for (Class clazz : classes) {
 			Assert.assertFalse(clazz.getSimpleName().equals("TestBundleClass4"));
 		}
@@ -132,8 +146,9 @@ public class BundleClassesFinderTest {
 	@Test
 	public void testTraverseBundlesForOsgiServices() throws ClassNotFoundException {
 		bundleSetup();
-		Collection<Class<?>> classes = classFinder.traverseBundlesForOsgiServices(Lists.newArrayList(bundle));
-		Assert.assertEquals(classes.size(), 1);
-		Assert.assertEquals("Long", new ArrayList<Class<?>>(classes).get(0).getSimpleName());
+		Collection<Class<?>> classes = classFinder.traverseBundlesForOsgiServices(bundleContext,
+				Lists.newArrayList(bundle));
+		Assert.assertEquals(1, classes.size());
+		Assert.assertEquals("TestOsgiService1", new ArrayList<Class<?>>(classes).get(0).getSimpleName());
 	}
 }

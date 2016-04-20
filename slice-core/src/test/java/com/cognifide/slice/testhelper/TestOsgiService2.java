@@ -17,19 +17,10 @@
  * limitations under the License.
  * #L%
  */
-package com.cognifide.slice.core.internal.scanner;
+package com.cognifide.slice.testhelper;
 
-import com.cognifide.slice.api.qualifier.Nullable;
-import com.cognifide.slice.testhelper.TestOsgiService1;
+import org.apache.felix.scr.annotations.Service;
 
-public class InnerClassTestService {
-
-	public String getValue() {
-		return null;
-	}
-
-	public class InnerClass {
-		public InnerClass(@Nullable String parameter, @Nullable TestOsgiService1 parameter2) {
-		}
-	}
+@Service
+public class TestOsgiService2 {
 }

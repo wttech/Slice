@@ -20,10 +20,13 @@
 
 package com.cognifide.slice.core.internal.injector;
 
+import java.util.List;
+
 import aQute.bnd.annotation.ConsumerType;
 
 import com.cognifide.slice.api.injector.InjectorConfig;
 import com.google.inject.Injector;
+import com.google.inject.Module;
 
 /**
  * OSGi services implementing this interface will be informed about events related to the Slice injector
@@ -35,9 +38,17 @@ import com.google.inject.Injector;
  */
 @ConsumerType
 public interface InjectorLifecycleListener {
+
+	/**
+	 * Called when Slice injector is being created.
+	 * @param modules Modules to be used by injector
+	 * @param config Configuration of the injector to be created
+	 */
+	void injectorCreating(List<Module> modules, InjectorConfig config);
+
 	/**
 	 * Called when Slice injector is successfully created.
-	 * 
+	 *
 	 * @param injector Created injector
 	 * @param config Configuration of the created injector
 	 */
@@ -45,7 +56,7 @@ public interface InjectorLifecycleListener {
 
 	/**
 	 * Called when Slice injector is destroyed.
-	 * 
+	 *
 	 * @param injector Destroyed injector
 	 * @param config Configuration of the destroyed injector
 	 */

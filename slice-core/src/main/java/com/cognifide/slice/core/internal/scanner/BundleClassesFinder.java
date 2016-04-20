@@ -32,12 +32,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ClassUtils;
 import org.objectweb.asm.ClassReader;
 import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.cognifide.slice.api.annotation.OsgiService;
 
 public class BundleClassesFinder {
 
@@ -101,22 +104,37 @@ public class BundleClassesFinder {
 		this.filters.add(classFilter);
 	}
 
-	public Collection<Class<?>> traverseBundlesForOsgiServices(final Collection<Bundle> bundles) {
+	public Collection<Class<?>> traverseBundlesForOsgiServices(BundleContext bundleContext, final Collection<Bundle> bundles) {
 		Collection<Class<?>> allClasses = getClasses(bundles);
 		Set<Class<?>> osgiClasses = new HashSet<Class<?>>();
 		for (Class<?> clazz : allClasses) {
-			Set<Class<?>> osgiServicesForClass = readOsgiServicesForClass(clazz);
+			Set<Class<?>> osgiServicesForClass = readOsgiServicesForClass(bundleContext, clazz);
 			osgiClasses.addAll(osgiServicesForClass);
 		}
 		return osgiClasses;
 	}
 
-	Set<Class<?>> readOsgiServicesForClass(Class<?> clazz) {
+	private boolean isOsgiService(BundleContext bundleContext, Class<?> clazz) {
+		boolean result = false;
+		if (!Object.class.equals(clazz) && !ClassUtils.isPrimitiveOrWrapper(clazz)) {
+			try {
+				final ServiceReference[] serviceReferences = bundleContext
+						.getServiceReferences(clazz.getName(), null);
+				result = ArrayUtils.isNotEmpty(serviceReferences);
+			} catch (InvalidSyntaxException e) {
+				result = false;
+			}
+		}
+
+		return result;
+	}
+
+	Set<Class<?>> readOsgiServicesForClass(BundleContext bundleContext, Class<?> clazz) {
 		Set<Class<?>> osgiClasses = new HashSet<Class<?>>();
 		Field[] fields = clazz.getDeclaredFields();
 		for (Field field : fields) {
-			if (field.isAnnotationPresent(OsgiService.class)) {
-				Class<?> fieldClass = field.getType();
+			Class<?> fieldClass = field.getType();
+			if (isOsgiService(bundleContext, fieldClass)) {
 				osgiClasses.add(fieldClass);
 			}
 		}
@@ -124,20 +142,12 @@ public class BundleClassesFinder {
 		Constructor<?>[] constructors = clazz.getConstructors();
 		for (Constructor<?> constructor : constructors) {
 			Class<?>[] parameterTypes = constructor.getParameterTypes();
-			Annotation[][] annotations = constructor.getParameterAnnotations();
-			int j = 0;
-			/**
-			 * parameterTypes of constructor of inner classes contain types of parent classes in front of
-			 * the array.
-			 */
-			for (int i = (parameterTypes.length - annotations.length); i < parameterTypes.length; i++) {
-				for (Annotation annotation : annotations[j]) {
-					if (annotation.annotationType().equals(OsgiService.class)) {
-						osgiClasses.add(parameterTypes[i]);
-						break;
-					}
+
+			for (final Class<?> parameterType : parameterTypes) {
+				if (isOsgiService(bundleContext, parameterType)) {
+					osgiClasses.add(parameterType);
+					break;
 				}
-				j++;
 			}
 		}
 		return osgiClasses;

@@ -17,19 +17,39 @@
  * limitations under the License.
  * #L%
  */
-package com.cognifide.slice.core.internal.scanner;
+package com.cognifide.slice.testhelper;
 
-import com.cognifide.slice.api.qualifier.Nullable;
-import com.cognifide.slice.testhelper.TestOsgiService1;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.ServiceReference;
 
-public class InnerClassTestService {
-
-	public String getValue() {
+public class TestServiceReference implements ServiceReference {
+	@Override
+	public Object getProperty(String key) {
 		return null;
 	}
 
-	public class InnerClass {
-		public InnerClass(@Nullable String parameter, @Nullable TestOsgiService1 parameter2) {
-		}
+	@Override
+	public String[] getPropertyKeys() {
+		return new String[0];
+	}
+
+	@Override
+	public Bundle getBundle() {
+		return null;
+	}
+
+	@Override
+	public Bundle[] getUsingBundles() {
+		return new Bundle[0];
+	}
+
+	@Override
+	public boolean isAssignableTo(Bundle bundle, String className) {
+		return false;
+	}
+
+	@Override
+	public int compareTo(Object reference) {
+		return 0;
 	}
 }
