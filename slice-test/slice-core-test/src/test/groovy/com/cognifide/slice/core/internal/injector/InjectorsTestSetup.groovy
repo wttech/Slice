@@ -30,6 +30,7 @@ import com.cognifide.slice.core.internal.module.SliceResourceModule
 import com.cognifide.slice.core.internal.module.SlingModule
 import com.cognifide.slice.mapper.module.MapperModule
 import com.cognifide.slice.test.module.TestModule
+import com.cognifide.slice.test.module.TestModuleOverride
 import com.google.inject.Module
 import spock.lang.Shared
 
@@ -56,6 +57,7 @@ class InjectorsTestSetup extends ProsperSpec{
 		modules.add(new MapperModule())
 		modules.add(new SliceResourceModule())
 		modules.add(new TestModule())
+		modules.add(new TestModuleOverride())
 
 		//Preparing configurations for injectors
 		InjectorConfig config1 = getConfig1(modules)
