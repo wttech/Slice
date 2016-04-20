@@ -29,6 +29,7 @@ import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.ReferenceCardinality;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.resource.LoginException;
+import org.apache.sling.api.resource.NonExistingResource;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
@@ -36,6 +37,7 @@ import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.commons.classloader.DynamicClassLoaderManager;
 
 import com.cognifide.slice.api.model.ModelClassResolver;
+import com.cognifide.slice.api.provider.ComponentDefinitionProvider;
 import com.cognifide.slice.api.provider.ComponentDefinitionResolver;
 
 @Component
@@ -45,28 +47,31 @@ public class SliceModelClassResolver implements ModelClassResolver {
 	@Reference(cardinality = ReferenceCardinality.OPTIONAL_UNARY)
 	private ComponentDefinitionResolver componentDefinitionResolver;
 
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL_UNARY)
+	private ComponentDefinitionProvider componentDefinitionProvider;
+
 	@Reference
 	private ResourceResolverFactory resourceResolverFactory;
 
 	@Reference
 	private DynamicClassLoaderManager dynamicClassLoaderManager;
 
+	@Override
 	public Class<?> getModelClass(String resourceType) throws ClassNotFoundException {
 		final Map<String, Object> definition = getDefinition(resourceType);
-		if (definition != null) { // definition may not be available for types like cq:Page
-			final String className = (String) definition.get("slice:model");
-			if (StringUtils.isBlank(className)) {
-				return null;
-			} else {
-				return dynamicClassLoaderManager.getDynamicClassLoader().loadClass(className);
-			}
-		}
-		return null;
+		return loadDefinition(definition);
 	}
 
 	@Override
 	public Class<?> getModelClass(Resource resource) throws ClassNotFoundException {
+		if (resource == null || resource instanceof NonExistingResource) {
+			return null;
+		}
 		final Map<String, Object> definition = getDefinition(resource);
+		return loadDefinition(definition);
+	}
+
+	private Class<?> loadDefinition(final Map<String, Object> definition) throws ClassNotFoundException {
 		if (definition != null) { // definition may not be available for types like cq:Page
 			final String className = (String) definition.get("slice:model");
 			if (StringUtils.isBlank(className)) {
@@ -78,22 +83,26 @@ public class SliceModelClassResolver implements ModelClassResolver {
 		return null;
 	}
 
-	private Map<String, Object> getDefinition(String resourceType) throws ClassNotFoundException {
+	private Map<String, Object> getDefinition(Resource resource) throws ClassNotFoundException {
+		final Map<String, Object> definition;
+		if (componentDefinitionProvider == null) {
+			String resourceType = resource.getResourceType();
+			definition = getDefinition(resourceType);
+		} else {
+			definition = componentDefinitionProvider.getComponentDefinition(resource);
+		}
+		return definition;
+	}
+
+	/**
+	 * The old way, to be removed in Slice 5
+	 */
+	private Map<String, Object> getDefinition(String resourceType) {
 		final Map<String, Object> definition;
 		if (componentDefinitionResolver == null) {
 			definition = getDefinitionWithResolver(resourceType);
 		} else {
 			definition = componentDefinitionResolver.getComponentDefinition(resourceType);
-		}
-		return definition;
-	}
-
-	private Map<String, Object> getDefinition(Resource resource) throws ClassNotFoundException {
-		final Map<String, Object> definition;
-		if (componentDefinitionResolver == null) {
-			definition = getDefinitionWithResolver(resource.getResourceType());
-		} else {
-			definition = componentDefinitionResolver.getComponentDefinition(resource);
 		}
 		return definition;
 	}
