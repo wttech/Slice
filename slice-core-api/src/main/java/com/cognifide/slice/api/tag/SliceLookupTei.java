@@ -50,7 +50,7 @@ public class SliceLookupTei extends TagExtraInfo {
 	 */
 	@Override
 	public VariableInfo[] getVariableInfo(TagData data) {
-		String type = data.getAttributeString(ATTRIBUTE_TYPE);
+		String type = String.valueOf(data.getAttribute(ATTRIBUTE_TYPE));
 		Matcher matcher = typePattern.matcher(type);
 
 		String className = DEFAULT_TYPE;
