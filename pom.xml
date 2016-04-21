@@ -510,6 +510,10 @@
 						<artifactId>tools</artifactId>
 						<groupId>com.sun</groupId>
 					</exclusion>
+					<exclusion>
+						<groupId>ch.qos.logback</groupId>
+						<artifactId>logback-classic</artifactId>
+					</exclusion>
 				</exclusions>
 			</dependency>
 
@@ -524,12 +528,6 @@
 				<groupId>org.mockito</groupId>
 				<artifactId>mockito-all</artifactId>
 				<version>1.10.19</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-simple</artifactId>
-				<version>1.6.4</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
@@ -573,10 +571,6 @@
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.assertj</groupId>
