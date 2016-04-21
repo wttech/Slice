@@ -19,25 +19,32 @@
  */
 package com.cognifide.slice.mapper.annotation;
 
-import org.apache.commons.lang3.StringUtils;
-
-/**
- * @author Krzysztof Watral
- */
 @SliceResource
-public class PostMappingModel {
+public class PrePostMappingModel {
 
 	@JcrProperty
-	protected String field;
+	protected String field = "def";
 
-	protected String postfix;
+	private String pre;
+
+	private String post;
+
+	@PreMapping
+	void preMapping() {
+		pre = "pre+" + field;
+	}
 
 	@PostMapping
 	void postMapping() {
-		postfix = "_TEST";
+		post = field + "+post";
 	}
 
-	public String getField() {
-		return field + postfix;
+	public String getPre() {
+		return pre;
 	}
+
+	public String getPost() {
+		return post;
+	}
+
 }

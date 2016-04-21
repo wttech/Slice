@@ -33,12 +33,16 @@ class PreMappingTest extends BaseSetup {
 			test("cq:PageContent") { "jcr:content"("field": "some value") }
 		}
 
-		when: "Get a model instance by path"
-		PreMappingModel preMappingModel = modelProvider.get(PreMappingModel.class, "/content/test/jcr:content")
+		when: "Get a model instance by existing path"
+		PrePostMappingModel model = modelProvider.get(PrePostMappingModel.class, "/content/test/jcr:content")
 
-		then: "Model has been property initialized"
-		Assert.assertNotNull(preMappingModel)
+		then: "Model has been initialized with values from repo"
+		Assert.assertNotNull(model)
+		and: "Pre mapping has been applied"
 		Assert.assertEquals("Pre-mapping annotation did not change object's state",
-				"SOME VALUE", preMappingModel.getField())
+				"pre+def", model.getPre())
+		and: "Post mapping has been applied"
+		Assert.assertEquals("Post-mapping annotation did not change object's state",
+				"some value+post", model.getPost())
 	}
 }
