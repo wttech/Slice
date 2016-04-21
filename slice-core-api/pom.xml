@@ -65,14 +65,6 @@
 			<groupId>org.ops4j</groupId>
 			<artifactId>peaberry</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>javax.inject</groupId>
-			<artifactId>com.springsource.javax.inject</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.aopalliance</groupId>
-			<artifactId>com.springsource.org.aopalliance</artifactId>
-		</dependency>
 
 		<!-- OSGi -->
 		<dependency>
@@ -81,10 +73,6 @@
 		</dependency>
 
 		<!-- javax -->
-		<dependency>
-			<groupId>javax.jcr</groupId>
-			<artifactId>jcr</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jsp-api</artifactId>
