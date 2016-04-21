@@ -492,6 +492,13 @@
 				<scope>provided</scope>
 			</dependency>
 
+			<!-- Logging -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>1.7.5</version>
+			</dependency>
+
 			<!-- Code Coverage -->
 			<dependency>
 				<groupId>net.sourceforge.cobertura</groupId>
@@ -512,6 +519,12 @@
 
 			<!-- Test -->
 			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.10</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
 				<groupId>org.mockito</groupId>
 				<artifactId>mockito-all</artifactId>
 				<version>1.10.19</version>
@@ -521,6 +534,12 @@
 				<groupId>org.assertj</groupId>
 				<artifactId>assertj-core</artifactId>
 				<version>2.0.0</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>19.0</version>
 				<scope>test</scope>
 			</dependency>
 		</dependencies>
