@@ -60,8 +60,6 @@ public class InjectorHierarchy {
 
 	private static final Logger LOG = LoggerFactory.getLogger(InjectorHierarchy.class);
 
-	private static final String MODULE_OVERRIDE_CLASS_SUFFIX = "Override";
-
 	@Reference(cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, referenceInterface = InjectorConfig.class, policy = ReferencePolicy.DYNAMIC, bind = "bindConfig", unbind = "unbindConfig")
 	private final Map<String, InjectorConfig> configByName = new HashMap<String, InjectorConfig>();
 
@@ -211,11 +209,17 @@ public class InjectorHierarchy {
 		}
 	}
 
+	/**
+	 * Overrides regular modules by {@link OsgiToGuiceAutoBindModule} if exists
+	 *
+	 * @param modules modules list
+	 * @return overrated module list
+	 */
 	private List<Module> handleModuleOverrides(List<Module> modules) {
 		List<Module> regulars = new ArrayList<Module>();
 		List<Module> overrides = new ArrayList<Module>();
 		for (Module module : modules) {
-			if (isModuleOverride(module)) {
+			if (module instanceof OsgiToGuiceAutoBindModule) {
 				overrides.add(module);
 			} else {
 				regulars.add(module);
@@ -239,11 +243,6 @@ public class InjectorHierarchy {
 			}
 		}
 		return Collections.singletonList(overridden);
-	}
-
-	private boolean isModuleOverride(Module module) {
-		return module instanceof OsgiToGuiceAutoBindModule
-				|| module.getClass().getName().endsWith(MODULE_OVERRIDE_CLASS_SUFFIX);
 	}
 
 	private Collection<InjectorConfig> getChildren(InjectorConfig parent) {
