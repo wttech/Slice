@@ -70,7 +70,30 @@
 			
 		</moduleSet>
 	</moduleSets>
-	
+
+	<!-- add dependencies - framework classes -->
+	<dependencySets>
+		<dependencySet>
+			<unpack>false</unpack>
+			<scope>runtime</scope>
+			<outputDirectory>/jcr_root/apps/slice/install/20</outputDirectory>
+			<includes>
+				<include>org.aopalliance</include>
+				<include>com.google.inject</include>
+				<include>com.google.inject.extensions</include>
+				<include>org.ops4j</include>
+			</includes>
+		</dependencySet>
+		<dependencySet>
+			<unpack>false</unpack>
+			<scope>runtime</scope>
+			<outputDirectory>/jcr_root/apps/slice/install/19</outputDirectory>
+			<includes>
+				<include>javax.inject</include>
+				<include>servlet-api</include>
+			</includes>
+		</dependencySet>
+	</dependencySets>
 
 	<!-- other files from parent project -->
 	<fileSets>
