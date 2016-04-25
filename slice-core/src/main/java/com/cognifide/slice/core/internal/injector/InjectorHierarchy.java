@@ -197,7 +197,7 @@ public class InjectorHierarchy {
 			current = parent;
 		} while (current != null);
 		try {
-			Injector injector = Guice.createInjector(handleModuleOverrides(modules));
+			Injector injector = Guice.createInjector(overrideOsgiToGuiceAutoBindModule(modules));
 			for (InjectorLifecycleListener listener : listeners) {
 				listener.injectorCreated(injector, config);
 			}
@@ -215,7 +215,7 @@ public class InjectorHierarchy {
 	 * @param modules modules list
 	 * @return overrated module list
 	 */
-	private List<Module> handleModuleOverrides(List<Module> modules) {
+	private List<Module> overrideOsgiToGuiceAutoBindModule(List<Module> modules) {
 		List<Module> regulars = new ArrayList<Module>();
 		List<Module> overrides = new ArrayList<Module>();
 		for (Module module : modules) {
