@@ -1,6 +1,6 @@
 /*-
  * #%L
- * Slice - Mapper API
+ * Slice - Mapper Tests
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -17,7 +17,34 @@
  * limitations under the License.
  * #L%
  */
-@Version("4.3.0")
 package com.cognifide.slice.mapper.annotation;
 
-import aQute.bnd.annotation.Version;
+@SliceResource
+public class PrePostMappingModel {
+
+	@JcrProperty
+	protected String field = "def";
+
+	private String pre;
+
+	private String post;
+
+	@PreMapping
+	void preMapping() {
+		pre = "pre+" + field;
+	}
+
+	@PostMapping
+	void postMapping() {
+		post = field + "+post";
+	}
+
+	public String getPre() {
+		return pre;
+	}
+
+	public String getPost() {
+		return post;
+	}
+
+}
