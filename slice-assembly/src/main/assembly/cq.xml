@@ -90,7 +90,6 @@
 			<outputDirectory>/jcr_root/apps/slice/install/19</outputDirectory>
 			<includes>
 				<include>javax.inject</include>
-				<include>servlet-api</include>
 			</includes>
 		</dependencySet>
 	</dependencySets>
