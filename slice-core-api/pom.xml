@@ -65,14 +65,6 @@
 			<groupId>org.ops4j</groupId>
 			<artifactId>peaberry</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>javax.inject</groupId>
-			<artifactId>com.springsource.javax.inject</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.aopalliance</groupId>
-			<artifactId>com.springsource.org.aopalliance</artifactId>
-		</dependency>
 
 		<!-- OSGi -->
 		<dependency>
@@ -82,22 +74,29 @@
 
 		<!-- javax -->
 		<dependency>
-			<groupId>javax.jcr</groupId>
-			<artifactId>jcr</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jsp-api</artifactId>
 		</dependency>
-
-		<!-- Apache felix scr -->
 		<dependency>
-			<groupId>org.apache.felix</groupId>
-			<artifactId>org.apache.felix.scr</artifactId>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
 		</dependency>
+
+		<!-- Apache felix scr annotations-->
 		<dependency>
 			<groupId>org.apache.felix</groupId>
 			<artifactId>org.apache.felix.scr.annotations</artifactId>
+		</dependency>
+
+		<!-- Logging -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
 		</dependency>
 	</dependencies>
 

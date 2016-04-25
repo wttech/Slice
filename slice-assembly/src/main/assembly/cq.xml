@@ -70,7 +70,7 @@
 			
 		</moduleSet>
 	</moduleSets>
-	
+
 	<!-- add dependencies - framework classes -->
 	<dependencySets>
 		<dependencySet>
@@ -93,7 +93,7 @@
 			</includes>
 		</dependencySet>
 	</dependencySets>
-	
+
 	<!-- other files from parent project -->
 	<fileSets>
 		<fileSet>
