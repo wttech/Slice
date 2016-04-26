@@ -24,12 +24,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.ReferenceCardinality;
-import org.apache.felix.scr.annotations.ReferencePolicy;
-import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 
@@ -39,15 +35,11 @@ import com.cognifide.slice.persistence.api.ObjectSerializer;
 import com.cognifide.slice.persistence.api.Serializer;
 import com.cognifide.slice.persistence.api.SerializerContext;
 import com.cognifide.slice.persistence.api.SerializerFacade;
+import com.google.inject.Inject;
 
-@Component(immediate = true)
-@Service(SerializerFacade.class)
 public class SerializerFacadeService implements SerializerFacade {
 
-	@Reference(referenceInterface = Serializer.class,
-			policy = ReferencePolicy.DYNAMIC,
-			cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE)
-	private List<Serializer> serializers = new ArrayList<Serializer>();
+	private final List<Serializer> serializers;
 
 	private static final ObjectSerializer EMPTY_OBJECT_SERIALIZER = new ObjectSerializer() {
 
@@ -78,6 +70,12 @@ public class SerializerFacadeService implements SerializerFacade {
 		}
 	};
 
+	@Inject
+	public SerializerFacadeService(Set<Serializer> serializers) {
+		this.serializers = new ArrayList<Serializer>(serializers);
+		Collections.sort(this.serializers, PRIORITY_SERIALIZER_COMPARATOR);
+	}
+
 	@Override
 	public void serializeObject(String objectName, Object object, Resource parent, SerializerContext ctx)
 			throws PersistenceException {
@@ -90,15 +88,6 @@ public class SerializerFacadeService implements SerializerFacade {
 			SerializerContext ctx) throws PersistenceException {
 		final FieldSerializer serializer = findFieldSerializer(field);
 		serializer.serialize(field, propertyName, fieldValue, parent, ctx);
-	}
-
-	protected void bindSerializers(Serializer serializer) {
-		serializers.add(serializer);
-		Collections.sort(serializers, PRIORITY_SERIALIZER_COMPARATOR);
-	}
-
-	protected void unbindSerializers(Serializer serializer) {
-		serializers.remove(serializer);
 	}
 
 	private FieldSerializer findFieldSerializer(Field field) {

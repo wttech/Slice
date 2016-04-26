@@ -19,26 +19,43 @@
  */
 package com.cognifide.slice.persistence.api;
 
+import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.Map;
+
+import org.apache.jackrabbit.JcrConstants;
+
+import aQute.bnd.annotation.ProviderType;
 
 /**
  * Serialization context, provides a state to the serialization process.
  *
  * @author Tomasz Rękawek
  */
-public interface SerializerContext {
+@ProviderType
+public class SerializerContext {
+
+	private final Map<Object, Object> alreadySerialized;
+
+	private final SerializerFacade facade;
+
+	public SerializerContext(SerializerFacade facade) {
+		this.alreadySerialized = new IdentityHashMap<Object, Object>();
+		this.facade = facade;
+	}
+
+	public boolean alreadySerialized(Object object) {
+		return Boolean.TRUE.equals(alreadySerialized.put(object, Boolean.TRUE));
+	}
+
+	public static Map<String, Object> getInitialProperties() {
+		return Collections.singletonMap(JcrConstants.JCR_PRIMARYTYPE, (Object) JcrConstants.NT_UNSTRUCTURED);
+	}
 
 	/**
-	 * Add the object to the list of already serialized entities. Return true if the objects was already
-	 * included in the list.
-	 *
-	 * @param object
-	 * @return true if the object was already serialized
-	 */
-	boolean alreadySerialized(Object object);
-
-	/**
-	 * A map of properties used to create a new resource.
-	 */
-	Map<String, Object> getInitialProperties();
+	 * Returns the {@link SerializerFacade} object.
+	 **/
+	public SerializerFacade getFacade() {
+		return facade;
+	}
 }

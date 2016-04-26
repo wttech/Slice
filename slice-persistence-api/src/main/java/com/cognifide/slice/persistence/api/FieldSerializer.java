@@ -42,6 +42,13 @@ public interface FieldSerializer extends Serializer {
 
 	/**
 	 * Serializer an object into repository
+	 *
+	 * @param field Field in the Slice model class
+	 * @param propertyName Name of the field
+	 * @param fieldValue Value of the field
+	 * @param parent Resource to save the field
+	 * @param ctx Serialization context
+	 * @throws PersistenceException
 	 */
 	void serialize(Field field, String propertyName, Object fieldValue, Resource parent,
 			SerializerContext ctx) throws PersistenceException;

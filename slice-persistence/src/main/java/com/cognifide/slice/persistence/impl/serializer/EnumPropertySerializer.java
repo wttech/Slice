@@ -19,18 +19,13 @@
  */
 package com.cognifide.slice.persistence.impl.serializer;
 
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 
 import com.cognifide.slice.persistence.api.ObjectSerializer;
-import com.cognifide.slice.persistence.api.Serializer;
 import com.cognifide.slice.persistence.api.SerializerContext;
 
-@Component(immediate = true)
-@Service(Serializer.class)
 public class EnumPropertySerializer implements ObjectSerializer {
 
 	@Override

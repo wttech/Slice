@@ -23,7 +23,6 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 
 import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
@@ -32,14 +31,10 @@ import com.cognifide.slice.mapper.annotation.Children;
 import com.cognifide.slice.persistence.api.FieldSerializer;
 import com.cognifide.slice.persistence.api.Serializer;
 import com.cognifide.slice.persistence.api.SerializerContext;
-import com.cognifide.slice.persistence.api.SerializerFacade;
 
 @Component(immediate = true)
 @Service(Serializer.class)
 public class ChildrenArraySerializer extends ChildrenSerializer implements FieldSerializer {
-
-	@Reference
-	private SerializerFacade facade;
 
 	@Override
 	public int getPriority() {
@@ -56,9 +51,8 @@ public class ChildrenArraySerializer extends ChildrenSerializer implements Field
 			throws PersistenceException {
 		final int arrayLength = Array.getLength(fieldValue);
 		for (int i = 0; i < arrayLength; i++) {
-			facade.serializeObject(generateChildName(childName, i + 1), Array.get(fieldValue, i), child, ctx);
+			ctx.getFacade().serializeObject(String.format("%s_%d", childName, i + 1), Array.get(fieldValue, i),
+					child, ctx);
 		}
 	}
-
-
 }

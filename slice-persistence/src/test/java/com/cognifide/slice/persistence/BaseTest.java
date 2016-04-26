@@ -21,33 +21,19 @@ package com.cognifide.slice.persistence;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.util.Dictionary;
-
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.ResourceResolver;
-import org.apache.sling.testing.mock.osgi.MockOsgi;
 import org.apache.sling.testing.mock.sling.MockSling;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.junit.Before;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
 
 import com.cognifide.slice.persistence.api.ModelPersister;
-import com.cognifide.slice.persistence.api.Serializer;
-import com.cognifide.slice.persistence.api.SerializerFacade;
 import com.cognifide.slice.persistence.impl.ModelPersisterService;
-import com.cognifide.slice.persistence.impl.SerializerFacadeService;
-import com.cognifide.slice.persistence.impl.serializer.ChildrenArraySerializer;
-import com.cognifide.slice.persistence.impl.serializer.ChildrenCollectionSerializer;
-import com.cognifide.slice.persistence.impl.serializer.EnumPropertySerializer;
-import com.cognifide.slice.persistence.impl.serializer.NativeArraySerializer;
-import com.cognifide.slice.persistence.impl.serializer.NativeCollectionSerializer;
-import com.cognifide.slice.persistence.impl.serializer.NativePropertySerializer;
-import com.cognifide.slice.persistence.impl.serializer.RecursiveSerializer;
+import com.cognifide.slice.persistence.impl.module.PersistenceModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
 public abstract class BaseTest {
-
-	protected BundleContext bundleContext;
 
 	protected ResourceResolver resolver;
 
@@ -56,36 +42,10 @@ public abstract class BaseTest {
 	@SuppressWarnings("deprecation")
 	@Before
 	public void setup() throws LoginException {
-		bundleContext = MockOsgi.newBundleContext();
-		assertNotNull(bundleContext);
-
-		register(bundleContext, SerializerFacade.class, new SerializerFacadeService());
-
-		register(bundleContext, Serializer.class, new ChildrenArraySerializer());
-		register(bundleContext, Serializer.class, new ChildrenCollectionSerializer());
-		register(bundleContext, Serializer.class, new EnumPropertySerializer());
-		register(bundleContext, Serializer.class, new NativeArraySerializer());
-		register(bundleContext, Serializer.class, new NativeCollectionSerializer());
-		register(bundleContext, Serializer.class, new NativePropertySerializer());
-		register(bundleContext, Serializer.class, new RecursiveSerializer());
-
-		register(bundleContext, ModelPersister.class, new ModelPersisterService());
-
-		resolver = MockSling.newResourceResolverFactory(ResourceResolverType.JCR_MOCK, bundleContext)
+		resolver = MockSling.newResourceResolverFactory(ResourceResolverType.JCR_MOCK)
 				.getAdministrativeResourceResolver(null);
 		assertNotNull(resolver);
-
-		ServiceReference modelPersisterReference = bundleContext
-				.getServiceReference(ModelPersister.class.getName());
-		assertNotNull(modelPersisterReference);
-
-		modelPersister = (ModelPersister) bundleContext.getService(modelPersisterReference);
-		assertNotNull(modelPersister);
-	}
-
-	private void register(BundleContext bundleContext, Class<?> clazz, Object service) {
-		MockOsgi.injectServices(service, bundleContext);
-		MockOsgi.activate(service, bundleContext, (Dictionary<String, Object>) null);
-		bundleContext.registerService(clazz.getName(), service, null);
+		Injector injector = Guice.createInjector(new PersistenceModule());
+		modelPersister = injector.getInstance(ModelPersisterService.class);
 	}
 }

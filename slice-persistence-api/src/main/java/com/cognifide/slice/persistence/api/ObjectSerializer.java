@@ -22,12 +22,15 @@ package com.cognifide.slice.persistence.api;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 
+import aQute.bnd.annotation.ConsumerType;
+
 /**
  * Serializes an object into resource. Unlike the {@link FieldSerializer} it doesn't have access to the field
  * information.
  *
  * @author Tomasz Rękawek
  */
+@ConsumerType
 public interface ObjectSerializer extends Serializer {
 
 	/**

@@ -19,21 +19,21 @@
  */
 package com.cognifide.slice.persistence.impl;
 
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 
 import com.cognifide.slice.persistence.api.ModelPersister;
-import com.cognifide.slice.persistence.api.SerializerFacade;
+import com.cognifide.slice.persistence.api.SerializerContext;
+import com.google.inject.Inject;
 
-@Component(immediate = true)
-@Service(ModelPersister.class)
 public class ModelPersisterService implements ModelPersister {
 
-	@Reference
-	private SerializerFacade facade;
+	private SerializerFacadeService facade;
+
+	@Inject
+	public ModelPersisterService(SerializerFacadeService facade) {
+		this.facade = facade;
+		}
 
 	@Override
 	public void persist(Object object, Resource destinationResource) throws PersistenceException {
@@ -42,7 +42,7 @@ public class ModelPersisterService implements ModelPersister {
 
 	@Override
 	public void persist(Object object, String childName, Resource parent) throws PersistenceException {
-		final DefaultSerializerContext ctx = new DefaultSerializerContext();
-		facade.serializeObject(childName, object, parent, ctx);
+		final SerializerContext ctx = new SerializerContext(facade);
+			facade.serializeObject(childName, object, parent, ctx);
 	}
 }

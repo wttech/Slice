@@ -22,24 +22,14 @@ package com.cognifide.slice.persistence.impl.serializer;
 import java.lang.reflect.Field;
 import java.util.Collection;
 
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 
 import com.cognifide.slice.mapper.annotation.Children;
 import com.cognifide.slice.persistence.api.FieldSerializer;
-import com.cognifide.slice.persistence.api.Serializer;
 import com.cognifide.slice.persistence.api.SerializerContext;
-import com.cognifide.slice.persistence.api.SerializerFacade;
 
-@Component(immediate = true)
-@Service(Serializer.class)
 public class ChildrenCollectionSerializer extends ChildrenSerializer implements FieldSerializer {
-
-	@Reference
-	private SerializerFacade facade;
 
 	@Override
 	public int getPriority() {
@@ -48,8 +38,8 @@ public class ChildrenCollectionSerializer extends ChildrenSerializer implements 
 
 	@Override
 	public boolean accepts(Field field) {
-		return field.isAnnotationPresent(Children.class) && Collection.class
-				.isAssignableFrom(field.getType());
+		return field.isAnnotationPresent(Children.class)
+				&& Collection.class.isAssignableFrom(field.getType());
 	}
 
 	@Override
@@ -57,7 +47,7 @@ public class ChildrenCollectionSerializer extends ChildrenSerializer implements 
 			throws PersistenceException {
 		int i = 1;
 		for (Object o : (Collection) fieldValue) {
-			facade.serializeObject(generateChildName(childName, i++), o, child, ctx);
+			ctx.getFacade().serializeObject(generateChildName(childName, i++), o, child, ctx);
 		}
 	}
 }
