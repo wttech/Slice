@@ -48,7 +48,7 @@ public class SerializerContext {
 		return Boolean.TRUE.equals(alreadySerialized.put(object, Boolean.TRUE));
 	}
 
-	public static Map<String, Object> getInitialProperties() {
+	public Map<String, Object> getInitialProperties() {
 		return Collections.singletonMap(JcrConstants.JCR_PRIMARYTYPE, (Object) JcrConstants.NT_UNSTRUCTURED);
 	}
 
