@@ -22,18 +22,13 @@ package com.cognifide.slice.persistence.impl.serializer;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 
 import com.cognifide.slice.mapper.annotation.Children;
 import com.cognifide.slice.persistence.api.FieldSerializer;
-import com.cognifide.slice.persistence.api.Serializer;
 import com.cognifide.slice.persistence.api.SerializerContext;
 
-@Component(immediate = true)
-@Service(Serializer.class)
 public class ChildrenArraySerializer extends ChildrenSerializer implements FieldSerializer {
 
 	@Override

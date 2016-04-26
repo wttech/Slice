@@ -23,10 +23,6 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-scr-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
 				<configuration>
 					<instructions>
@@ -75,22 +71,12 @@
 			<groupId>org.aopalliance</groupId>
 			<artifactId>com.springsource.org.aopalliance</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.ops4j</groupId>
-			<artifactId>peaberry</artifactId>
-		</dependency>
-
-		<!-- jcr -->
-		<dependency>
-			<groupId>javax.jcr</groupId>
-			<artifactId>jcr</artifactId>
-		</dependency>
 
 		<!-- test -->
 		<dependency>
 			<groupId>org.apache.sling</groupId>
 			<artifactId>org.apache.sling.testing.sling-mock</artifactId>
-			<version>1.2.0</version>
+			<version>1.6.2</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
