@@ -89,7 +89,9 @@ public class ContextRequestFilter implements Filter, RequestContextProvider {
 			contexts.set(current);
 			chain.doFilter(request, response);
 		} finally {
-			contexts.set(previous);
+			if(previous != null) {
+				contexts.set(previous);
+			}
 		}
 	}
 
