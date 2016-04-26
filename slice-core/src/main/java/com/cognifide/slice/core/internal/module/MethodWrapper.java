@@ -1,6 +1,6 @@
 /*-
  * #%L
- * Slice - Core API
+ * Slice - Core
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -17,8 +17,25 @@
  * limitations under the License.
  * #L%
  */
-@Version("4.3.0")
-package com.cognifide.slice.api.provider;
+package com.cognifide.slice.core.internal.module;
 
-import aQute.bnd.annotation.Version;
+import java.lang.reflect.Method;
 
+class MethodWrapper {
+
+	public static final MethodWrapper EMPTY = new MethodWrapper(null);
+
+	private final Method method;
+
+	MethodWrapper(Method method) {
+		this.method = method;
+	}
+
+	public Method get() {
+		return method;
+	}
+
+	public boolean isPresent() {
+		return method != null;
+	}
+}

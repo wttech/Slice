@@ -250,7 +250,7 @@ public class SliceModelProvider implements ModelProvider {
 	 */
 	@Override
 	public Object get(Resource resource) throws ClassNotFoundException {
-		final Class<?> clazz = modelClassResolver.getModelClass(resource.getResourceType());
+		final Class<?> clazz = modelClassResolver.getModelClass(resource);
 		if (clazz == null) {
 			return null;
 		}

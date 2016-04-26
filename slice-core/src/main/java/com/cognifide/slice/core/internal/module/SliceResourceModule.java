@@ -27,6 +27,8 @@ import org.apache.sling.api.resource.Resource;
 
 import com.cognifide.slice.api.model.InitializableModel;
 import com.cognifide.slice.core.internal.provider.CurrentResourceProvider;
+import com.cognifide.slice.mapper.annotation.PostMapping;
+import com.cognifide.slice.mapper.annotation.PreMapping;
 import com.cognifide.slice.mapper.annotation.SliceResource;
 import com.cognifide.slice.mapper.api.Mapper;
 import com.google.inject.AbstractModule;
@@ -88,8 +90,13 @@ public class SliceResourceModule extends AbstractModule {
 			if (resource == null) {
 				return;
 			}
+
 			Mapper mapper = mapperProvider.get();
+
+			MethodLauncher.INSTANCE.invokeMethodFor(PreMapping.class, injectee);
 			mapper.get(resource, injectee);
+			MethodLauncher.INSTANCE.invokeMethodFor(PostMapping.class, injectee);
+
 			if (injectee instanceof InitializableModel) {
 				((InitializableModel) injectee).afterCreated();
 			}
