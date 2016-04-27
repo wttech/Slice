@@ -257,4 +257,17 @@ class SliceModelProviderTest extends BaseSetup {
 		and: "Model should have a null value for property 'prop1' set"
 		Assert.assertNull(model.getProp1())
 	}
+	
+	def "Get model by resource - non-existing (null) resource"() {
+		def nonExistingPath = "/content/nonexisting"
+
+		setup: "Get non-existing resource"
+		def resource = resourceResolver.getResource(nonExistingPath)
+
+		when: "Creating model for non-existing (null) resource"
+		def model = modelProvider.get(resource);
+
+		then: "Model is not created"
+		Assert.assertNull(model)
+	}
 }

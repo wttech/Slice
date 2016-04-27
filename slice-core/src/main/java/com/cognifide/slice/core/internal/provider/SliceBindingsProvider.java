@@ -47,7 +47,7 @@ public class SliceBindingsProvider implements BindingsValuesProvider {
 			return;
 		}
 		try {
-			final Class<?> modelClass = modelClassNameResolver.getModelClass(resource.getResourceType());
+			final Class<?> modelClass = modelClassNameResolver.getModelClass(resource);
 			if (modelClass != null) {
 				bindings.put("model", resource.adaptTo(modelClass));
 			}
