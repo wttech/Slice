@@ -1,0 +1,83 @@
+<project
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>slice-persistence</artifactId>
+	<parent>
+		<groupId>com.cognifide.slice</groupId>
+		<artifactId>slice-parent</artifactId>
+		<version>4.3.0-SNAPSHOT</version>
+	</parent>
+	<name>Slice - Persistence</name>
+	<description>Slice - Persistence</description>
+	<packaging>bundle</packaging>
+	<properties>
+		<site.root>${project.parent.build.sourceDirectory}/../resources</site.root>
+	</properties>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.sling</groupId>
+				<artifactId>maven-sling-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<configuration>
+					<instructions>
+						<Export-Package>
+							com.cognifide.slice.persistence*
+						</Export-Package>
+					</instructions>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.mycila</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<configuration>
+					<header>${project.parent.basedir}/license-template.txt</header>
+					<headerDefinitions>
+						<header>${project.parent.basedir}/license-header-definition.txt</header>
+					</headerDefinitions>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<!-- Slice -->
+		<dependency>
+			<groupId>com.cognifide.slice</groupId>
+			<artifactId>slice-mapper-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.cognifide.slice</groupId>
+			<artifactId>slice-persistence-api</artifactId>
+			<version>4.3.0-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Guice -->
+		<dependency>
+			<groupId>com.google.inject</groupId>
+			<artifactId>guice</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-multibindings</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.aopalliance</groupId>
+			<artifactId>com.springsource.org.aopalliance</artifactId>
+		</dependency>
+
+		<!-- test -->
+		<dependency>
+			<groupId>org.apache.sling</groupId>
+			<artifactId>org.apache.sling.testing.sling-mock</artifactId>
+			<version>1.6.2</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>
