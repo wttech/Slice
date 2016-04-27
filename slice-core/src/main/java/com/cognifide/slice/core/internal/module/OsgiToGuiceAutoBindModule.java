@@ -25,6 +25,7 @@ import org.ops4j.peaberry.Peaberry;
 import org.ops4j.peaberry.builders.DecoratedServiceBuilder;
 import org.osgi.framework.BundleContext;
 
+import com.cognifide.slice.api.scope.ContextScoped;
 import com.cognifide.slice.core.internal.scanner.OsgiServiceScanner;
 import com.google.inject.AbstractModule;
 import com.google.inject.binder.AnnotatedBindingBuilder;
@@ -46,7 +47,8 @@ public class OsgiToGuiceAutoBindModule extends AbstractModule {
 
 	private final BundleContext bundleContext;
 
-	public OsgiToGuiceAutoBindModule(BundleContext bundleContext, String bundleNameFilter, String basePackage) {
+	public OsgiToGuiceAutoBindModule(BundleContext bundleContext, String bundleNameFilter,
+			String basePackage) {
 		this.bundleNameFilter = bundleNameFilter;
 		this.basePackage = basePackage;
 		this.bundleContext = bundleContext;
@@ -59,7 +61,8 @@ public class OsgiToGuiceAutoBindModule extends AbstractModule {
 		Collection<Class<?>> requestedOsgiClasses = scanner.findResources(bundleNameFilter, basePackage);
 		for (Class<?> clazz : requestedOsgiClasses) {
 			((AnnotatedBindingBuilder<Object>) bind(clazz))
-					.toProvider(((DecoratedServiceBuilder<Object>) Peaberry.service(clazz)).single());
+					.toProvider(((DecoratedServiceBuilder<Object>) Peaberry.service(clazz)).single())
+					.in(ContextScoped.class);
 		}
 	}
 }
