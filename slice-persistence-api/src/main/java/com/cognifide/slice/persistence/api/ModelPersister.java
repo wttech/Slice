@@ -27,7 +27,7 @@ import aQute.bnd.annotation.ProviderType;
 /**
  * An entrypoint to the Slice persistence service.
  *
- * @author Tomasz Rękawek
+ * @since 4.3
  */
 @ProviderType
 public interface ModelPersister {

@@ -17,31 +17,8 @@
  * limitations under the License.
  * #L%
  */
+@Version("4.3.0")
 package com.cognifide.slice.persistence.api;
 
-import org.apache.sling.api.resource.PersistenceException;
-import org.apache.sling.api.resource.Resource;
+import aQute.bnd.annotation.Version;
 
-import aQute.bnd.annotation.ConsumerType;
-
-/**
- * Serializes an object into resource. Unlike the {@link FieldSerializer} it doesn't have access to the field
- * information.
- *
- * @author Tomasz Rękawek
- */
-@ConsumerType
-public interface ObjectSerializer extends Serializer {
-
-	/**
-	 * Serializer will return {@code true} if it's able to handle such class
-	 */
-	boolean accepts(Class<?> objectClass);
-
-	/**
-	 * Serializes an object into repository
-	 */
-	void serialize(String propertyName, Object object, Resource parent, SerializerContext ctx)
-			throws PersistenceException;
-
-}

@@ -31,8 +31,8 @@ import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 
-import com.cognifide.slice.persistence.api.FieldSerializer;
 import com.cognifide.slice.persistence.api.SerializerContext;
+import com.cognifide.slice.persistence.api.serializer.FieldSerializer;
 
 public class NativeCollectionSerializer implements FieldSerializer {
 

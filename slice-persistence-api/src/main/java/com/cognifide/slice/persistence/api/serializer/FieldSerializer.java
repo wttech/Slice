@@ -17,12 +17,14 @@
  * limitations under the License.
  * #L%
  */
-package com.cognifide.slice.persistence.api;
+package com.cognifide.slice.persistence.api.serializer;
 
 import java.lang.reflect.Field;
 
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
+
+import com.cognifide.slice.persistence.api.SerializerContext;
 
 import aQute.bnd.annotation.ConsumerType;
 
@@ -30,7 +32,7 @@ import aQute.bnd.annotation.ConsumerType;
  * This type handles saving a single object field into repository. It has access to the reflection
  * {@link Field} value, so it can read its name, type, etc.
  *
- * @author Tomasz Rękawek
+ * @since 4.3
  */
 @ConsumerType
 public interface FieldSerializer extends Serializer {

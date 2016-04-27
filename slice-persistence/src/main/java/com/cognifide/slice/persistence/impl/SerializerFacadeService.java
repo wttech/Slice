@@ -29,12 +29,12 @@ import java.util.Set;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 
-import com.cognifide.slice.persistence.api.FieldSerializer;
-import com.cognifide.slice.persistence.api.FieldSerializerAdapter;
-import com.cognifide.slice.persistence.api.ObjectSerializer;
-import com.cognifide.slice.persistence.api.Serializer;
 import com.cognifide.slice.persistence.api.SerializerContext;
 import com.cognifide.slice.persistence.api.SerializerFacade;
+import com.cognifide.slice.persistence.api.serializer.FieldSerializer;
+import com.cognifide.slice.persistence.api.serializer.FieldSerializerAdapter;
+import com.cognifide.slice.persistence.api.serializer.ObjectSerializer;
+import com.cognifide.slice.persistence.api.serializer.Serializer;
 import com.google.inject.Inject;
 
 public class SerializerFacadeService implements SerializerFacade {

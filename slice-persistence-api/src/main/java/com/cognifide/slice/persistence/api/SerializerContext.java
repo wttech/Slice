@@ -30,7 +30,7 @@ import aQute.bnd.annotation.ProviderType;
 /**
  * Serialization context, provides a state to the serialization process.
  *
- * @author Tomasz Rękawek
+ * @since 4.3
  */
 @ProviderType
 public class SerializerContext {

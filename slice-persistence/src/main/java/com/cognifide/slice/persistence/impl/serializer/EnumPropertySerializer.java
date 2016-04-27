@@ -23,8 +23,8 @@ import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 
-import com.cognifide.slice.persistence.api.ObjectSerializer;
 import com.cognifide.slice.persistence.api.SerializerContext;
+import com.cognifide.slice.persistence.api.serializer.ObjectSerializer;
 
 public class EnumPropertySerializer implements ObjectSerializer {
 

@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package com.cognifide.slice.persistence.api;
+package com.cognifide.slice.persistence.api.serializer;
 
 import aQute.bnd.annotation.ConsumerType;
 
@@ -25,7 +25,7 @@ import aQute.bnd.annotation.ConsumerType;
  * An abstract serializer. This type shouldn't be implemented directly - use either {@link FieldSerializer} or
  * {@link ObjectSerializer}.
  *
- * @author Tomasz Rękawek
+ * @since 4.3
 
  */
 @ConsumerType

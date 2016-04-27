@@ -33,7 +33,7 @@ public class ModelPersisterService implements ModelPersister {
 	@Inject
 	public ModelPersisterService(SerializerFacadeService facade) {
 		this.facade = facade;
-		}
+	}
 
 	@Override
 	public void persist(Object object, Resource destinationResource) throws PersistenceException {
@@ -43,6 +43,6 @@ public class ModelPersisterService implements ModelPersister {
 	@Override
 	public void persist(Object object, String childName, Resource parent) throws PersistenceException {
 		final SerializerContext ctx = new SerializerContext(facade);
-			facade.serializeObject(childName, object, parent, ctx);
+		facade.serializeObject(childName, object, parent, ctx);
 	}
 }

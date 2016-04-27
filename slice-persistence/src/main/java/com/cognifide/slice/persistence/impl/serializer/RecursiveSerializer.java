@@ -28,8 +28,8 @@ import org.apache.sling.api.resource.Resource;
 
 import com.cognifide.slice.mapper.annotation.JcrProperty;
 import com.cognifide.slice.mapper.annotation.SliceResource;
-import com.cognifide.slice.persistence.api.ObjectSerializer;
 import com.cognifide.slice.persistence.api.SerializerContext;
+import com.cognifide.slice.persistence.api.serializer.ObjectSerializer;
 
 public class RecursiveSerializer implements ObjectSerializer {
 

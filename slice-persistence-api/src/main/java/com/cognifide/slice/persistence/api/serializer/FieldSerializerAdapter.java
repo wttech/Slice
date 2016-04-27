@@ -1,6 +1,6 @@
 /*-
  * #%L
- * Slice - Persistence
+ * Slice - Persistence API
  * %%
  * Copyright (C) 2012 Cognifide Limited
  * %%
@@ -17,40 +17,37 @@
  * limitations under the License.
  * #L%
  */
-package com.cognifide.slice.persistence.impl.serializer;
+package com.cognifide.slice.persistence.api.serializer;
 
-import org.apache.sling.api.resource.ModifiableValueMap;
+import java.lang.reflect.Field;
+
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 
 import com.cognifide.slice.persistence.api.SerializerContext;
-import com.cognifide.slice.persistence.api.serializer.ObjectSerializer;
 
-public class NativeArraySerializer implements ObjectSerializer {
+public class FieldSerializerAdapter implements FieldSerializer {
+
+	private final ObjectSerializer objectSerializer;
+
+	public FieldSerializerAdapter(ObjectSerializer fieldSerializer) {
+		this.objectSerializer = fieldSerializer;
+	}
 
 	@Override
 	public int getPriority() {
-		return 100;
+		return objectSerializer.getPriority();
 	}
 
 	@Override
-	public boolean accepts(Class<?> clazz) {
-		if (!clazz.isArray()) {
-			return false;
-		}
-		final Class<?> arrayType = clazz.getComponentType();
-		return NativePropertySerializer.isNativeJcrClass(arrayType);
+	public boolean accepts(Field field) {
+		return objectSerializer.accepts(field.getType());
 	}
 
 	@Override
-	public void serialize(String propertyName, Object object, Resource parent, SerializerContext ctx)
-			throws PersistenceException {
-		final ModifiableValueMap map = parent.adaptTo(ModifiableValueMap.class);
-
-		if (object == null) {
-			map.remove(propertyName);
-		} else {
-			map.put(propertyName, object);
-		}
+	public void serialize(Field field, String propertyName, Object fieldValue, Resource parent,
+			SerializerContext ctx) throws PersistenceException {
+		objectSerializer.serialize(propertyName, fieldValue, parent, ctx);
 	}
+
 }

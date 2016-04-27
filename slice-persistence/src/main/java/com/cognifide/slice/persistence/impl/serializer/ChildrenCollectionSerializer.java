@@ -26,8 +26,8 @@ import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 
 import com.cognifide.slice.mapper.annotation.Children;
-import com.cognifide.slice.persistence.api.FieldSerializer;
 import com.cognifide.slice.persistence.api.SerializerContext;
+import com.cognifide.slice.persistence.api.serializer.FieldSerializer;
 
 public class ChildrenCollectionSerializer extends ChildrenSerializer implements FieldSerializer {
 
@@ -46,7 +46,7 @@ public class ChildrenCollectionSerializer extends ChildrenSerializer implements 
 	protected void createChildren(String childName, Object fieldValue, SerializerContext ctx, Resource child)
 			throws PersistenceException {
 		int i = 1;
-		for (Object o : (Collection) fieldValue) {
+		for (Object o : (Collection<?>) fieldValue) {
 			ctx.getFacade().serializeObject(generateChildName(childName, i++), o, child, ctx);
 		}
 	}

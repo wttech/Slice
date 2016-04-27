@@ -17,35 +17,33 @@
  * limitations under the License.
  * #L%
  */
-package com.cognifide.slice.persistence.api;
-
-import java.lang.reflect.Field;
+package com.cognifide.slice.persistence.api.serializer;
 
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 
-public class FieldSerializerAdapter implements FieldSerializer {
+import com.cognifide.slice.persistence.api.SerializerContext;
 
-	private final ObjectSerializer objectSerializer;
+import aQute.bnd.annotation.ConsumerType;
 
-	public FieldSerializerAdapter(ObjectSerializer fieldSerializer) {
-		this.objectSerializer = fieldSerializer;
-	}
+/**
+ * Serializes an object into resource. Unlike the {@link FieldSerializer} it doesn't have access to the field
+ * information.
+ *
+ * @since 4.3
+ */
+@ConsumerType
+public interface ObjectSerializer extends Serializer {
 
-	@Override
-	public int getPriority() {
-		return objectSerializer.getPriority();
-	}
+	/**
+	 * Serializer will return {@code true} if it's able to handle such class
+	 */
+	boolean accepts(Class<?> objectClass);
 
-	@Override
-	public boolean accepts(Field field) {
-		return objectSerializer.accepts(field.getType());
-	}
-
-	@Override
-	public void serialize(Field field, String propertyName, Object fieldValue, Resource parent,
-			SerializerContext ctx) throws PersistenceException {
-		objectSerializer.serialize(propertyName, fieldValue, parent, ctx);
-	}
+	/**
+	 * Serializes an object into repository
+	 */
+	void serialize(String propertyName, Object object, Resource parent, SerializerContext ctx)
+			throws PersistenceException;
 
 }

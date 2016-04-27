@@ -26,8 +26,8 @@ import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 
 import com.cognifide.slice.mapper.annotation.Children;
-import com.cognifide.slice.persistence.api.FieldSerializer;
 import com.cognifide.slice.persistence.api.SerializerContext;
+import com.cognifide.slice.persistence.api.serializer.FieldSerializer;
 
 public class ChildrenArraySerializer extends ChildrenSerializer implements FieldSerializer {
 

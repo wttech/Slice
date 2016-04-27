@@ -19,7 +19,7 @@
  */
 package com.cognifide.slice.persistence.impl.module;
 
-import com.cognifide.slice.persistence.api.Serializer;
+import com.cognifide.slice.persistence.api.serializer.Serializer;
 import com.cognifide.slice.persistence.impl.serializer.ChildrenArraySerializer;
 import com.cognifide.slice.persistence.impl.serializer.ChildrenCollectionSerializer;
 import com.cognifide.slice.persistence.impl.serializer.EnumPropertySerializer;
