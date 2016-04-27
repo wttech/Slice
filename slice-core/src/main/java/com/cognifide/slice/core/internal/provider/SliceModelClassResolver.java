@@ -27,6 +27,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.ReferenceCardinality;
+import org.apache.felix.scr.annotations.ReferencePolicyOption;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.NonExistingResource;
@@ -47,7 +48,7 @@ public class SliceModelClassResolver implements ModelClassResolver {
 	@Reference(cardinality = ReferenceCardinality.OPTIONAL_UNARY)
 	private ComponentDefinitionResolver componentDefinitionResolver;
 
-	@Reference(cardinality = ReferenceCardinality.OPTIONAL_UNARY)
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL_UNARY, policyOption= ReferencePolicyOption.GREEDY)
 	private ComponentDefinitionProvider componentDefinitionProvider;
 
 	@Reference
