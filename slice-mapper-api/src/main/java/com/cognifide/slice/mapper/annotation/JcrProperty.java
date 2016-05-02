@@ -59,7 +59,7 @@ public @interface JcrProperty {
 	/**
 	 * Custom property name. If empty, property name is read from field's name. Relative paths are allowed
 	 * 
-	 * @return
+	 * @return value
 	 */
 	String value() default "";
 

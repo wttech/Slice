@@ -44,9 +44,10 @@ public interface ContextFactory {
 	public static final String COMMON_CONTEXT_NAME = ContextFactory.class.getName() + ".commonContext";
 
 	/**
-	 * Create Context from request and response objects. Returned Context will delegate it stored/reads to
+	 * @return Created Context from request and response objects. Returned Context will delegate it stored/reads to
 	 * request object.
-	 * 
+	 * @param request request
+	 * @param response response
 	 * @deprecated Use method with explicit injector name
 	 * {@code ContextFactory#getServletRequestContext(String, ServletRequest, ServletResponse)}
 	 */

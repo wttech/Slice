@@ -25,7 +25,6 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 
-import com.cognifide.slice.api.injector.InjectorRunner;
 import com.cognifide.slice.api.injector.InjectorsRepository;
 
 /**
@@ -33,7 +32,7 @@ import com.cognifide.slice.api.injector.InjectorsRepository;
  * 
  * @author rafal.malinowski
  * @author Jan Kuźniak
- * @deprecated since 4.1. User {@link InjectorsRepository} instead
+ * @deprecated since 4.1. Use {@link InjectorsRepository} instead
  */
 @Deprecated
 public final class InjectorNameUtil {
@@ -45,8 +44,9 @@ public final class InjectorNameUtil {
 	}
 
 	/**
-	 * Gets injector name for resource from specified request . It is name of path item directly after apps.
-	 * For /apps/slice/... it will return slice.
+	 * @param request request
+	 * @return injector name for resource from specified request . It is name of path item directly after
+	 * apps. For /apps/slice/... it will return slice.
 	 * 
 	 * @deprecated use {@link InjectorsRepository#getInjectorNameForResource(String)} instead
 	 */
@@ -64,7 +64,7 @@ public final class InjectorNameUtil {
 	 * <code>myapp</code> <br>
 	 * <br>
 	 * Please note that this method is deprecated and it doesn't support injectors registered for a given path
-	 * (with use of {@link InjectorRunner#setInjectorPath(String)})
+	 * (with use of InjectorRunner#setInjectorPath(String))
 	 * 
 	 * @deprecated use {@link InjectorsRepository#getInjectorNameForResource(String)} instead
 	 * 

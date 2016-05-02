@@ -26,14 +26,9 @@ import com.cognifide.slice.core.internal.provider.DirectContextScopeProvider;
 import com.google.inject.AbstractModule;
 import com.google.inject.Key;
 
-// @formatter:off
 /**
- * @author Rafał Malinowski
- * @class ScopedModule
- * 
  * Module that allows binding classes to ContextScope with ease.
  */
-// @formatter:on
 public abstract class ContextScopeModule extends AbstractModule {
 
 	private final ContextScope contextScope;
@@ -42,6 +37,7 @@ public abstract class ContextScopeModule extends AbstractModule {
 	 * Create new instance of ContextScopeModule.
 	 * 
 	 * All classes bound by bindToContextScope() will be bound to contextScope instance.
+	 * @param contextScope context scope
 	 */
 	public ContextScopeModule(final ContextScope contextScope) {
 		this.contextScope = contextScope;
@@ -52,7 +48,8 @@ public abstract class ContextScopeModule extends AbstractModule {
 	}
 
 	/**
-	 * @param key eky to bind to ContextScope
+	 * @param key key to bind to ContextScope
+	 * @param <T> class of the object
 	 * 
 	 * Binds class to ContextScope. Instances of binded class must be manually set in Context instance to be
 	 * available in Injector.

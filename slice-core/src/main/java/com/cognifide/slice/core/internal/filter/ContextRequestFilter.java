@@ -49,7 +49,6 @@ import com.cognifide.slice.core.internal.context.SliceContextFactory;
 /**
  * @author Witold Szczerba
  * @author Rafał Malinowski
- * @class ContextRequstFilter
  * 
  * This filter is run for on each request. Each time it stores a Context instance with ServletRequest and
  * ServletResponse values in per-thread variable. This Context is later accessible by getContext() and can be
@@ -96,9 +95,8 @@ public class ContextRequestFilter implements Filter, RequestContextProvider {
 	}
 
 	/**
-	 * @returns Context instance for current thread
-	 * 
-	 * Return Context instance for current thread. It contains most current ServletRequest and ServletResponse
+	 * @param injectorName name of the injector 
+	 * @return Return Context instance for current thread. It contains most current ServletRequest and ServletResponse
 	 * instances.
 	 */
 	@Override

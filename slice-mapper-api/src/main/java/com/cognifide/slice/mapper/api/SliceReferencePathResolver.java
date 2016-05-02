@@ -22,9 +22,9 @@ package com.cognifide.slice.mapper.api;
 
 import java.lang.annotation.Annotation;
 
-import aQute.bnd.annotation.ConsumerType;
-
 import com.cognifide.slice.mapper.annotation.SliceReference;
+
+import aQute.bnd.annotation.ConsumerType;
 
 /**
  * Stores placeholders which are used to resolves paths used within {@link SliceReference}. It also resolve
@@ -38,7 +38,7 @@ public interface SliceReferencePathResolver {
 
 	/**
 	 * Adds a placeholder and bind it to a specified annotation. The specified annotation must be a
-	 * {@link BindingAnnotation} and must be used for providing a String value by some module. Each
+	 * BindingAnnotation and must be used for providing a String value by some module. Each
 	 * placeholder stored using this method will be resolved by replacing it by a value returned by a provider
 	 * of a String annotated with the specified annotation.
 	 * 
@@ -65,7 +65,7 @@ public interface SliceReferencePathResolver {
 	/**
 	 * Resolve the specified path by replacing all placeholders. At first, there is an attempt to resolve
 	 * placeholders using annotations. If a placeholder is not bound to any annotation, then there is an
-	 * attempt to replace it by a String value specified by {@link #addReference(String, String)} method. If
+	 * attempt to replace it by a String value specified by {@link #addPlaceholder(String, String)} method. If
 	 * this attempt fails, the placeholder will not be resolved and the final path will contain it.
 	 * 
 	 * @param initialPath path with placeholders to be replaced, e.g.

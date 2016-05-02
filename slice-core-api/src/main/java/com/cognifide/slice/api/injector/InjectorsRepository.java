@@ -22,22 +22,17 @@ package com.cognifide.slice.api.injector;
 
 import java.util.Collection;
 
-import aQute.bnd.annotation.ProviderType;
-
 import com.google.inject.Injector;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
- * <p/>
  * Helper class to get Injector instances. Slice supports multiple injectors installed on a single Sling/AEM
  * instance, with each injector being tagged with name of the application that created it. By default, the
- * application name is the name of its folder under /apps.
- * <p/>
- * Injector can be retrieved in two different ways:
- * <ul>
- * <li>by specifying injector / application name ({@link #getInjector(String injectorName)}),</li>
- * <li>by specifying resource path for which an injector has been registered (
- * {@link #getInjectorForResource(String resourcePath)}).</li>
- * </ul>
+ * application name is the name of its folder under /apps. <br>
+ * <br>
+ * Injector can be retrieved by: specifying injector / application name (
+ * {@link #getInjector(String injectorName)})
  */
 @ProviderType
 public interface InjectorsRepository {
@@ -52,17 +47,15 @@ public interface InjectorsRepository {
 	InjectorWithContext getInjector(final String injectorName);
 
 	/**
-	 * Returns name of the given injector.
+	 * @return name of the given injector.
 	 * 
-	 * @param injector
-	 * @return
+	 * @param injector injector
 	 */
 	String getInjectorName(Injector injector);
 
 	/**
-	 * Returns names of all registered injectors
+	 * @return names of all registered injectors
 	 * 
-	 * @return
 	 */
 	Collection<String> getInjectorNames();
 
@@ -74,6 +67,7 @@ public interface InjectorsRepository {
 	 * "/apps/appname". If no injector can be found for a given resourcePath, <code>null</code> is returned.
 	 * 
 	 * @return injector name if found, <code>null</code> otherwise
+	 * @param resourcePath path to the resource
 	 */
 	String getInjectorNameForResource(final String resourcePath);
 }

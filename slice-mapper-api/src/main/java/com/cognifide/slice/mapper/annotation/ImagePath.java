@@ -28,8 +28,8 @@ import java.lang.annotation.Target;
 /**
  * Indicates that a SliceResource's field represents an image resource. Images are not basic JCR types, so
  * logic for accessing them is different. Should be used for fields of type <tt>String</tt>; using it for
- * fields of {@link com.day.cq.wcm.foundation.Image} is not necessary - they are mapped by default. For
- * strings - image's source will be mapped, for {@link com.day.cq.wcm.foundation.Image}s - whole image object.
+ * fields of com.day.cq.wcm.foundation.Image is not necessary - they are mapped by default. For
+ * strings - image's source will be mapped, for com.day.cq.wcm.foundation.Image's - whole image object.
  *
  * <pre>
  * {@literal @}SliceResource

@@ -32,32 +32,30 @@ import aQute.bnd.annotation.ConsumerType;
 /**
  * Defines if a field can be mapped to a specified field and performs actual mapping. Class which implements
  * this interface should be added to list of processors in
- * {@link com.cognifide.slice.mapper.MapperBuilder#addFieldProcessor(FieldProcessor fieldProcessor)}
+ * com.cognifide.slice.mapper.MapperBuilder#addFieldProcessor(FieldProcessor fieldProcessor)
  * 
  */
 @ConsumerType
 public interface FieldProcessor {
 
 	/**
-	 * Returns <code>true</code> if the specified field can be mapped by this processor, <code>false</code>
+	 * @return <code>true</code> if the specified field can be mapped by this processor, <code>false</code>
 	 * otherwise.
 	 * 
-	 * @param resource
-	 * @param field
-	 * @return
+	 * @param resource resource being mapped to the object
+	 * @param field field being mapped
 	 */
 	boolean accepts(Resource resource, Field field);
 
 	/**
-	 * Returns value which should be set in specified field. The original value should be read from specified
+	 * @return value which should be set in specified field. The original value should be read from specified
 	 * valueMap using specified propertyName
 	 * 
-	 * @param resource
+	 * @param resource resource being mapped to the object
 	 * @param valueMap obtained from resource - may be null, if resource is a {@link SyntheticResource} or
 	 * {@link NonExistingResource}
-	 * @param field
-	 * @param propertyName
-	 * @return
+	 * @param field field being mapped
+	 * @param propertyName name of the property to which a value should be assigned to.
 	 */
 	Object mapResourceToField(Resource resource, ValueMap valueMap, Field field, String propertyName);
 

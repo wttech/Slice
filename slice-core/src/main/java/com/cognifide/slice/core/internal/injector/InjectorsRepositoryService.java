@@ -40,13 +40,13 @@ import com.google.inject.Injector;
  * @author Witold Szczerba
  * @author Rafał Malinowski
  * @author Jan Kuźniak
- * @class InjectorsRepositoryService
  */
 @Component(immediate = true)
 @Service
 // @formatter:off
-@Properties({ @Property(name = Constants.SERVICE_DESCRIPTION, value = "Repository of all Slice injectors."),
-		@Property(name = Constants.SERVICE_VENDOR, value = "Cognifide") })
+@Properties({
+	@Property(name = Constants.SERVICE_DESCRIPTION, value = "Repository of all Slice injectors."),
+	@Property(name = Constants.SERVICE_VENDOR, value = "Cognifide") })
 // @formatter:on
 public final class InjectorsRepositoryService implements InjectorsRepository {
 

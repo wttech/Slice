@@ -27,31 +27,29 @@ import org.apache.sling.api.resource.Resource;
 import aQute.bnd.annotation.ConsumerType;
 
 /**
- * Defines if a value can be processed and performs actual processing. Class which implements
- * this interface should be added to list of post processors in
- * {@link com.cognifide.slice.mapper.MapperBuilder#addFieldPostProcessor(FieldPostProcessor fieldPostProcessor)}
+ * Defines if a value can be processed and performs actual processing. Class which implements this interface
+ * should be added to list of post processors in
+ * com.cognifide.slice.mapper.MapperBuilder#addFieldPostProcessor(FieldPostProcessor fieldPostProcessor)
  */
 @ConsumerType
 public interface FieldPostProcessor {
 
 	/**
-	 * Returns <code>true</code> if specified value can be processed by this post-processor,
+	 * @return <code>true</code> if specified value can be processed by this post-processor,
 	 * <code>false</code> otherwise.
 	 * 
-	 * @param resource
-	 * @param field
-	 * @param value
-	 * @return
+	 * @param resource resource being mapped to the object
+	 * @param field field being mapped
+	 * @param value value read from resource and being set to a field
 	 */
 	boolean accepts(final Resource resource, final Field field, final Object value);
 
 	/**
-	 * Returns a processed object basing on specified value
+	 * @return a processed object basing on specified value
 	 * 
-	 * @param resource
-	 * @param field
-	 * @param value
-	 * @return
+	 * @param resource resource being mapped to the object
+	 * @param field field being mapped
+	 * @param value value read from resource and being set to a fielde
 	 */
 	Object processValue(final Resource resource, final Field field, final Object value);
 

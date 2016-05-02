@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.jcr.Node;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
@@ -43,7 +44,7 @@ public final class ReflectionHelper {
 		// hidden constructor
 	}
 
-	/** force access value for {@link #writeField(Field, Object, Object, boolean)} */
+	/** force access value for writeField(Field, Object, Object, boolean) */
 	public static final boolean FORCE_ACCESS = true;
 
 	/**

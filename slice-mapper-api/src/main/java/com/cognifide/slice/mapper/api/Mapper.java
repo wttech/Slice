@@ -39,6 +39,7 @@ public interface Mapper {
 	 * 
 	 * @param resource resource representing repository node, cannot be null
 	 * @param object an empty object to be mapped
+	 * @param <T> class of the object to be mapped
 	 * @return specified object with appropriate fields mapped from specified resource
 	 */
 	<T> T get(Resource resource, T object);

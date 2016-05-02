@@ -20,8 +20,9 @@
 
 package com.cognifide.slice.mapper.strategy;
 
-
 import java.lang.reflect.Field;
+
+import com.cognifide.slice.mapper.api.Mapper;
 
 /**
  * Defines if given fields should be mapped by {@link Mapper}.
@@ -29,11 +30,10 @@ import java.lang.reflect.Field;
 public interface MapperStrategy {
 
 	/**
-	 * Returns <code>true</code> if the specified field should be mapped by {@link Mapper}, otherwise returns
+	 * @return <code>true</code> if the specified field should be mapped by {@link Mapper}, otherwise returns
 	 * <code>false</code>
 	 * 
 	 * @param field field to be checked
-	 * @return
 	 */
 	boolean shouldFieldBeMapped(Field field);
 }

@@ -38,31 +38,33 @@ import com.cognifide.slice.api.provider.ModelProvider;
 public interface ExecutionContextStack {
 
 	/**
-	 * Get current ExecutionContext without removing it from a stack.
+	 * @return current ExecutionContext without removing it from a stack.
 	 */
 	ExecutionContext peek();
 
 	/**
 	 * Push new ExecutionContext on top of a stack.
+	 * @param executionContext context to be pushed
 	 */
 	void push(ExecutionContext executionContext);
 
 	/**
-	 * Pop ExecutionContext from top of a stack.
+	 * @return ExecutionContext from top of a stack.
 	 */
 	ExecutionContext pop();
 
 	/**
-	 * Return current size of a stack.
+	 * @return current size of a stack.
 	 */
 	int size();
 
 	/**
-	 * Return absolute path from given path. If path is already absolute then it will be returned unchanged.
+	 * @return absolute path from given path. If path is already absolute then it will be returned unchanged.
 	 * If it is relative (starting with ./) then it will be appended (after removing ./) to path of current
 	 * top of this stack.
 	 * 
 	 * InvalidExecutionContextException with be thrown in case when stack is empty and path is relative.
+	 * @param path path to be transformed
 	 */
 	String getAbsolutePath(String path);
 

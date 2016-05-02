@@ -28,11 +28,12 @@ import java.lang.annotation.Target;
 /**
  * Allows mapper to map all child resources of a parent resource into array, <tt>List</tt>, <tt>Set</tt>,
  * <tt>SortedSet</tt> or <tt>Collection</tt>. When mapping to <tt>SortedSet</tt> child model must implement
- * the <tt>Comparable</tt> interface.<br/>
- * The parent resource is the one indicated by the name of the field or {@link JcrProperty}.
- * If the child resource doesn't exist, then the collection will be empty, but never <code>null</code>.
+ * the <tt>Comparable</tt> interface.<br>
+ * The parent resource is the one indicated by the name of the field or {@link JcrProperty}. If the child
+ * resource doesn't exist, then the collection will be empty, but never <code>null</code>.
  *
  * <pre>
+ * {@code
  * {@literal @}SliceResource
  * public class ExampleModel {
  *
@@ -40,6 +41,7 @@ import java.lang.annotation.Target;
  *   {@literal @}JcrProperty
  *   private List<LinkModel> links;
  *
+ * }
  * }
  * </pre>
  *
@@ -49,8 +51,9 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface Children {
 	/**
-	 * Expected type of models which all child resources will be mapped to. It must be the same as used in
-	 * generic type of the collection, or component type for arrays.
+	 * @return Expected type of models which all child resources will be mapped to. It must be the same as
+	 * used in generic type of the collection, or component type for arrays.
+	 * 
 	 */
 	Class<?> value();
 }

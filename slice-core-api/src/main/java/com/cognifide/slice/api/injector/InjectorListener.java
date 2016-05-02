@@ -28,7 +28,7 @@ import aQute.bnd.annotation.ConsumerType;
  * in their initial logic, as it can't be done in the component {@code @Activate} method:
  * 
  * <pre>
- * {@literal @}Component
+ * {@code {@literal @}Component
  * {@literal @}Service
  * public class MyComponent implements InjectorListener {
  * 
@@ -47,6 +47,7 @@ import aQute.bnd.annotation.ConsumerType;
  *             // do something clever with the injector
  *         }
  *     }
+ * }
  * }
  * </pre>
  * 

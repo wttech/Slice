@@ -61,7 +61,7 @@ public class CustomProcessorsCollector {
 	 * <li>then all {@link FieldProcessor}</li>
 	 * </ol>
 	 * 
-	 * @return
+	 * @return list of field processors
 	 */
 	public LinkedList<FieldProcessor> getFieldProcessors() {
 		LinkedList<FieldProcessor> result = new LinkedList<FieldProcessor>();
@@ -79,7 +79,7 @@ public class CustomProcessorsCollector {
 	 * <li>than all {@link FieldPostProcessor}</li>
 	 * </ol>
 	 * 
-	 * @return
+	 * @return list of field post processors
 	 */
 	public LinkedList<FieldPostProcessor> getHighPriorityFieldPostProcessors() {
 		LinkedList<FieldPostProcessor> result = new LinkedList<FieldPostProcessor>();
@@ -92,7 +92,7 @@ public class CustomProcessorsCollector {
 	 * Returns a list of all custom field post-processors registered with multibindings with positive order.
 	 * The list is sorted according to the order.
 	 * 
-	 * @return
+	 * @return list of field post processors
 	 */
 	public LinkedList<FieldPostProcessor> getLowPriorityFieldPostProcessors() {
 		LinkedList<FieldPostProcessor> result = new LinkedList<FieldPostProcessor>();

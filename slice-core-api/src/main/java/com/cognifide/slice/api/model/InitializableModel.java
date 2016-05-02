@@ -20,6 +20,8 @@
 
 package com.cognifide.slice.api.model;
 
+import com.cognifide.slice.mapper.api.Mapper;
+
 import aQute.bnd.annotation.ConsumerType;
 
 /**

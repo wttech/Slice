@@ -72,7 +72,7 @@ public final class MapperBuilder {
 	 * This method creates new instance of {@link GenericSlingMapper}. Field processors should be added before
 	 * this method.
 	 * 
-	 * @return
+	 * @return created mapper
 	 */
 	public Mapper build() {
 		return new GenericSlingMapper(this);
@@ -81,8 +81,8 @@ public final class MapperBuilder {
 	/**
 	 * Adds {@link FieldProcessor} at the beginning of processors list.
 	 * 
-	 * @param fieldProcessor
-	 * @return
+	 * @param fieldProcessor field processor to be added
+	 * @return this builder
 	 */
 	public MapperBuilder addFieldProcessor(FieldProcessor fieldProcessor) {
 		processors.addFirst(fieldProcessor);
@@ -92,8 +92,8 @@ public final class MapperBuilder {
 	/**
 	 * Adds {@link FieldPostProcessor} at the beginning of post-processors list.
 	 * 
-	 * @param fieldPostProcessor
-	 * @return
+	 * @param fieldPostProcessor post processor to be added
+	 * @return this builder
 	 */
 	public MapperBuilder addFieldPostProcessor(FieldPostProcessor fieldPostProcessor) {
 		postProcessors.addFirst(fieldPostProcessor);
@@ -103,7 +103,7 @@ public final class MapperBuilder {
 	/**
 	 * Adds default processors and post processors at the end of processors and post-processors list.
 	 * 
-	 * @return
+	 * @return this builder
 	 */
 	public MapperBuilder addDefaultSliceProcessors() {
 		addSliceProcessors();
@@ -114,7 +114,7 @@ public final class MapperBuilder {
 	/**
 	 * Adds default processors at the end of processors list.
 	 * 
-	 * @return
+	 * @return this builder
 	 */
 	public MapperBuilder addSliceProcessors() {
 		processors.add(sliceReferenceFieldProcessor); // @SliceReference
@@ -130,7 +130,7 @@ public final class MapperBuilder {
 	/**
 	 * Adds default post-processors at the end of processors list.
 	 * 
-	 * @return
+	 * @return this builder
 	 */
 	public MapperBuilder addSlicePostProcessors() {
 		postProcessors.add(new EscapeValuePostProcessor());
@@ -155,7 +155,7 @@ public final class MapperBuilder {
 	 * registered with multibindings always take precedence over those added with
 	 * {@link #addSliceProcessors()}) and {@link #addFieldProcessor(FieldProcessor)}.
 	 * 
-	 * @return this
+	 * @return this builder
 	 */
 	public MapperBuilder addCustomProcessors() {
 		customProcessorsAdded = true;
@@ -181,7 +181,7 @@ public final class MapperBuilder {
 	 * multibindings are always added before or after those added with {@link #addSliceProcessors()}) and
 	 * {@link #addFieldPostProcessor(FieldPostProcessor)}.
 	 * 
-	 * @return this
+	 * @return this builder
 	 */
 	public MapperBuilder addCustomPostProcessors() {
 		customPostProcessorsAdded = true;

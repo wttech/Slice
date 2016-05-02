@@ -40,12 +40,12 @@ import aQute.bnd.annotation.ProviderType;
 public interface ExecutionContext {
 
 	/**
-	 * Get Resource of this ExecutionItem. This value can be null.
+	 * @return Resource of this ExecutionItem. This value can be null.
 	 */
 	Resource getResource();
 
 	/**
-	 * Get path of this ExecutionItem. This value can not be null.
+	 * @return path of this ExecutionItem. This value can not be null.
 	 */
 	String getPath();
 

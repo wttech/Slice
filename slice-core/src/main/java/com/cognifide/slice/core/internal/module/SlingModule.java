@@ -41,6 +41,8 @@ import com.cognifide.slice.api.qualifier.Selectors;
 import com.cognifide.slice.api.qualifier.Suffix;
 import com.cognifide.slice.api.scope.ContextScoped;
 import com.cognifide.slice.commons.module.ContextScopeModule;
+import com.cognifide.slice.core.internal.context.MapContext;
+import com.cognifide.slice.core.internal.context.SliceContextFactory;
 import com.cognifide.slice.core.internal.provider.CurrentResourceProvider;
 import com.cognifide.slice.util.ServletRequestResponseUtil;
 import com.google.inject.Key;
@@ -73,9 +75,10 @@ public final class SlingModule extends ContextScopeModule {
 	}
 
 	/**
-	 * Returns {@link ResourceResolver}. If using {@link MapContext} obtained by
+	 * @return {@link ResourceResolver}. If using {@link MapContext} obtained by
 	 * {@link SliceContextFactory#getResourceResolverContext(ResourceResolver)}, resourceResolver will be returned
 	 * by context, not by this method
+	 * @param request request
 	 */
 	@Provides
 	@ContextScoped

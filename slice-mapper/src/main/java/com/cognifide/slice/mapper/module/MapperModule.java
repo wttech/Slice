@@ -29,7 +29,7 @@ import com.google.inject.Provides;
 
 /**
  * The module is responsible for finding all classes annotated by {@link SliceResource}. Found classes are
- * bound to their {@link SliceResourceProvider} providers
+ * bound to their providers
  * 
  */
 public class MapperModule extends AbstractModule {
@@ -40,6 +40,7 @@ public class MapperModule extends AbstractModule {
 
 	/**
 	 * Builds and provides {@link Mapper}
+	 * @param mapperBuilder mapper builder
 	 * 
 	 * @return Sling mapper object
 	 */

@@ -52,7 +52,6 @@ import java.lang.annotation.Target;
  * 	pathResolver.addReference("home", "/content/test/home");
  * 	return pathResolver;
  * }
- * </code>
  * </pre>
  *
  * Example usage:
@@ -77,7 +76,7 @@ public @interface SliceReference {
 	/**
 	 * Path to a resource for which the model will be built. It may contain placeholders.
 	 * 
-	 * @return
+	 * @return value
 	 */
 	String value();
 }

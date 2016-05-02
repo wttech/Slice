@@ -57,7 +57,7 @@ public class SliceModulesFactory {
 	 * <li>{@link JcrModule}</li>
 	 * <li>{@link SliceResourceModule}</li>
 	 * </ul>
-	 * 
+	 * @param bundleContext bundle Context
 	 * @return list of Slice-related modules
 	 */
 	public static List<Module> createModules(final BundleContext bundleContext) {

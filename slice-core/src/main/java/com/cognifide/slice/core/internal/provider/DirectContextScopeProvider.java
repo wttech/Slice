@@ -24,15 +24,12 @@ import com.cognifide.slice.api.context.ContextScope;
 import com.google.inject.Key;
 import com.google.inject.Provider;
 
-// @formatter:off
 /**
  * @author Rafał Malinowski
- * @class ContextScopeProvider
  * 
  * Generic provider for classes that are only stored manually in Context instances. This class requires
  * ContextScope to get Context from and get required instance from it.
  */
-// @formatter:on
 public class DirectContextScopeProvider<T> implements Provider<T> {
 
 	private final ContextScope contextScope;

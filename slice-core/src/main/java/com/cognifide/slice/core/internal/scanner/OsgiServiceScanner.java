@@ -42,10 +42,13 @@ public class OsgiServiceScanner {
 	}
 
 	/**
-	 * Returns collection of all classes that match given bundle filter and package.
+	 * @param bundleNameFilter filter of bundles to be scanned
+	 * @param basePackage base package to be scanned
+	 * @return collection of all classes that match given bundle filter and package.
 	 */
 	public Collection<Class<?>> findResources(String bundleNameFilter, String basePackage) {
-		BundleFinder bundleFinder = new BundleFinder(new BundleInfo(bundleNameFilter, basePackage), bundleContext);
+		BundleFinder bundleFinder = new BundleFinder(new BundleInfo(bundleNameFilter, basePackage),
+				bundleContext);
 		BundleClassesFinder classFinder = new BundleClassesFinder(basePackage);
 		classFinder.addFilter(new ClassFilter() {
 

@@ -34,10 +34,12 @@ import com.cognifide.slice.api.scope.ContextScoped;
 import com.google.inject.Inject;
 
 /**
- * @deprecated See {@link com.cognifide.slice.api.provider.ModelProvider} and one of its methods: <li>
- * {@link com.cognifide.slice.api.provider.ModelProvider#getChildModels(Class, String)} <li>
- * {@link com.cognifide.slice.api.provider.ModelProvider#getChildModels(Class, Resource)} <li>
- * {@link com.cognifide.slice.api.provider.ModelProvider#getList(Class, java.util.Iterator)}
+ * @deprecated See {@link com.cognifide.slice.api.provider.ModelProvider} and one of its methods: <ul><li>
+ * {@link com.cognifide.slice.api.provider.ModelProvider#getChildModels(Class, String)}</li>
+ * <li>
+ * {@link com.cognifide.slice.api.provider.ModelProvider#getChildModels(Class, Resource)}</li>
+ * <li>
+ * {@link com.cognifide.slice.api.provider.ModelProvider#getList(Class, java.util.Iterator)}</li></ul>
  */
 @Deprecated
 @ContextScoped

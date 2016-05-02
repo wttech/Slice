@@ -22,11 +22,11 @@ package com.cognifide.slice.api.injector;
 
 import java.io.Closeable;
 
-import aQute.bnd.annotation.ProviderType;
-
 import com.cognifide.slice.api.context.ContextProvider;
 import com.google.inject.Injector;
 import com.google.inject.Key;
+
+import aQute.bnd.annotation.ProviderType;
 
 /**
  * Decoration for Guice Injector class with simple access to modyfing and restoring ContextProvider. This
@@ -36,17 +36,20 @@ import com.google.inject.Key;
 public interface InjectorWithContext extends Closeable {
 
 	/**
-	 * Return Guice Injector behind this InjectorWithContext.
+	 * @return Guice Injector behind this InjectorWithContext.
 	 */
 	Injector getInjector();
 
 	/**
 	 * Push new ContextProvider on ContextProvider stack and set it as current on Guice Injector.
+	 * 
+	 * @param contextProvider context provider to be pushed
 	 */
 	void pushContextProvider(final ContextProvider contextProvider);
 
 	/**
-	 * Pop top ContextProvider from ContextProvider stack and set previous one as current on Guice Injector.
+	 * @return top ContextProvider from ContextProvider stack and set previous one as current on Guice
+	 * Injector.
 	 */
 	ContextProvider popContextProvider();
 
@@ -56,12 +59,15 @@ public interface InjectorWithContext extends Closeable {
 	void close();
 
 	/**
-	 * Return new instance of given class using Guice Injector.
+	 * @return new instance of given class using Guice Injector.
+	 * @param <T> class of the object instance to be returned
+	 * @param clazz instance of given class
 	 */
 	<T> T getInstance(final Class<T> clazz);
 
 	/**
-	 * Return new instance by given key using Guice Injector.
+	 * @return new instance by given key using Guice Injector.
+	 * @param key Guice's key
 	 */
 	Object getInstance(final Key<?> key);
 

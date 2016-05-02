@@ -39,6 +39,7 @@ public interface Context {
 	 * Check if value for given key is stored in this Context.
 	 * 
 	 * @param key key to check
+	 * @param <T> class of the key
 	 * @return true if value for key is stored
 	 */
 	<T> boolean contains(Key<T> key);
@@ -48,6 +49,7 @@ public interface Context {
 	 * 
 	 * @param key key to store new object under
 	 * @param object new object to store or null
+	 * @param <T> class of the key
 	 */
 	<T> void put(Key<T> key, T object);
 
@@ -56,6 +58,7 @@ public interface Context {
 	 * Use contains() to differentiate between these two cases.
 	 * 
 	 * @param key key to get value for
+	 * @param <T> class of the key
 	 * @return value for given key
 	 */
 	<T> T get(Key<T> key);

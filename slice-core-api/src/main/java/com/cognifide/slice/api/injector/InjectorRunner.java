@@ -40,8 +40,7 @@ import com.google.inject.Module;
  * Example:
  * 
  * <pre>
- * 
- * public class Activator implements BundleActivator {
+ * {@code public class Activator implements BundleActivator {
  * 
  * {@literal @}Override
  * public void start(BundleContext bundleContext) throws Exception {
@@ -59,7 +58,7 @@ import com.google.inject.Module;
  * 	injectorRunner.start();
  * }
  * }
- * 
+ * }
  * </pre>
  */
 public class InjectorRunner implements InjectorCreationFailListener {
@@ -87,6 +86,9 @@ public class InjectorRunner implements InjectorCreationFailListener {
 	/**
 	 * @param bundleContext Context used to get access to the OSGi
 	 * @param injectorName Name of the new injector
+	 * @param applicationPath path to the application, e.g. "/apps/myapp"
+	 * @param bundleNameFilter filter used to scan bundles
+	 * @param basePackage base package for classes to be scanned
 	 */
 	public InjectorRunner(final BundleContext bundleContext, final String injectorName,
 			final String applicationPath, final String bundleNameFilter, final String basePackage) {
@@ -97,6 +99,8 @@ public class InjectorRunner implements InjectorCreationFailListener {
 	/**
 	 * @param bundleContext Context used to get access to the OSGi
 	 * @param injectorName Name of the new injector
+	 * @param bundleNameFilter filter used to scan bundles
+	 * @param basePackage base package for classes to be scanned
 	 */
 	public InjectorRunner(final BundleContext bundleContext, final String injectorName,
 			final String bundleNameFilter, final String basePackage) {
@@ -112,14 +116,16 @@ public class InjectorRunner implements InjectorCreationFailListener {
 
 	public void installModule(final Module newModule) {
 		if (started) {
-			throw new IllegalStateException("Installing new modules is not allowed after Injector was stared");
+			throw new IllegalStateException(
+					"Installing new modules is not allowed after Injector was stared");
 		}
 		modules.add(newModule);
 	}
 
 	public void installModules(final List<? extends Module> newModules) {
 		if (started) {
-			throw new IllegalStateException("Installing new modules is not allowed after Injector was stared");
+			throw new IllegalStateException(
+					"Installing new modules is not allowed after Injector was stared");
 		}
 		modules.addAll(newModules);
 	}

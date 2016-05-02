@@ -21,7 +21,7 @@ package com.cognifide.slice.mapper.api.processor;
 
 /**
  * Its purpose is to add a possibility to register custom post-processors with defined priority. Objects of
- * this class should be registered with Guice's multibindings.<br/>
+ * this class should be registered with Guice's multibindings.<br>
  * The priority parameter is used to sort processors. Priority post-processors with priority greater or equal
  * to 0 will take precedence over any other {@link FieldPostProcessor}s. Any {@link FieldPostProcessor}s will
  * take precedence over priority post-processors added with the priority lower than 0.

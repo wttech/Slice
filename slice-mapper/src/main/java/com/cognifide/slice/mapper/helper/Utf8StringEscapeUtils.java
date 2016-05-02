@@ -24,7 +24,7 @@ package com.cognifide.slice.mapper.helper;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * Contains methods for escaping string, like {@link StringEscapeUtils}, but with regard to e.g. UTF-8 encoded
+ * Contains methods for escaping string, like StringEscapeUtils, but with regard to e.g. UTF-8 encoded
  * HTMLs.
  * 
  * @author Albert Cenkier
@@ -44,9 +44,9 @@ public final class Utf8StringEscapeUtils {
 	}
 
 	/**
-	 * Escapes HTML encoded in UTF-8 range, as opposed to {@link StringEscapeUtils#escapeHtml(String)} that
+	 * Escapes HTML encoded in UTF-8 range, as opposed to StringEscapeUtils#escapeHtml(String) that
 	 * escapes everything outside ASCII range. This method is more like
-	 * {@link StringEscapeUtils#escapeXml(String)}, but the <tt>&apos;</tt> entity is not used because it's
+	 * StringEscapeUtils#escapeXml(String), but the <tt>'</tt> entity is not used because it's
 	 * not a legal HTML entity.
 	 * 
 	 * @param input the <tt>String</tt> to escape, may be null

@@ -38,8 +38,8 @@ public class SliceReferencePathResolverFactory {
 	/**
 	 * Provides default implementation of {@link SliceReferencePathResolver}
 	 * 
-	 * @param injector
-	 * @return
+	 * @param injector injector
+	 * @return new instance of {@link SliceReferencePathResolver}
 	 */
 	public static SliceReferencePathResolver createResolver(Injector injector) {
 		return new SliceReferencePathResolverImpl(injector);

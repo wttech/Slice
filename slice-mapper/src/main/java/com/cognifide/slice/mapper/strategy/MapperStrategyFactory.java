@@ -41,11 +41,11 @@ public class MapperStrategyFactory {
 			256);
 
 	/**
-	 * Returns appropriate {@link MapperStrategy} for specified class. The decision which strategy to choose
+	 * @return appropriate {@link MapperStrategy} for specified class. The decision which strategy to choose
 	 * is made basing on {@link SliceResource} parameter
 	 * 
-	 * @param type
-	 * @return mapperStrategy
+	 * @param type type of the class
+	 * @return mapperStrategy mapper strategy
 	 */
 	public MapperStrategy getMapperStrategy(Class<?> type) {
 		MapperStrategy defaultStrategy = annotatedFieldMapperStrategy;

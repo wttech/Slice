@@ -47,7 +47,7 @@ public final class SliceTagUtils {
 	 *
 	 * @param pageContext allows to access resource path, request context and injector instance
 	 * @param type of model that should be created
-	 * @param <T>
+	 * @param <T> type of object to be returned
 	 * @return a model of type T of the page indicated by pageContext
 	 */
 	public static <T> T getFromCurrentPath(final PageContext pageContext, final Class<T> type) {
@@ -60,7 +60,7 @@ public final class SliceTagUtils {
 	 * @param pageContext allows to access resource path, request context and injector instance
 	 * @param type of model that should be created
 	 * @param appName - name of application needed to find a proper injector in multi-app environment
-	 * @param <T>
+	 * @param <T> type of object to be returned
 	 * @return a model of type T of the page indicated by pageContext
 	 */
 	public static <T> T getFromCurrentPath(final PageContext pageContext, final Class<T> type,
@@ -76,11 +76,11 @@ public final class SliceTagUtils {
 	/**
 	 * A helper method that returns a model of the Sling resource related to given request
 	 *
-	 * @param request
-	 * @param injectorsRepository
-	 * @param requestContextProvider
-	 * @param type
-	 * @param <T>
+	 * @param request request
+	 * @param injectorsRepository injectors repository
+	 * @param requestContextProvider conetxt provider
+	 * @param type of model that should be created
+	 * @param <T> type of object to be returned
 	 * @return a model of type T
 	 */
 	public static <T> T getFromCurrentPath(final SlingHttpServletRequest request,
@@ -145,6 +145,12 @@ public final class SliceTagUtils {
 	}
 
 	/**
+	 * @param request request
+	 * @param injectorsRepository injectors repository
+	 * @param type of model that should be created
+	 * @param <T> type of object to be returned
+	 * @param contextProvider context provider
+	 * @return a model of type T
 	 * @deprecated Use
 	 * {@code #getFromCurrentPath(SlingHttpServletRequest, InjectorsRepository, RequestContextProvider, Class)}
 	 */
@@ -156,6 +162,14 @@ public final class SliceTagUtils {
 	}
 
 	/**
+	 * @param request request
+	 * @param injectorsRepository injectors repository
+	 * @param type of model that should be created
+	 * @param <T> type of object to be returned
+	 * @param contextProvider context provider
+	 * @param appName application name
+	 * @return a model of type T
+	 * 
 	 * @deprecated Use
 	 * {@code #getFromCurrentPath(SlingHttpServletRequest, InjectorsRepository, RequestContextProvider, Class, String)}
 	 */

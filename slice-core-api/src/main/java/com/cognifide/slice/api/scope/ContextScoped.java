@@ -41,7 +41,7 @@ import com.google.inject.ScopeAnnotation;
  * (background processing, scheduled jobs, etc), you can still scope your objects for given processing. While
  * creating injector, you can apply context containing resource resolver, so all classes annotated by this
  * annotation will be created once per given processing. See
- * {@link InjectorUtil#getInjector(String, org.apache.sling.api.resource.ResourceResolver)}</li></li>
+ * {@link InjectorUtil#getInjector(String, org.apache.sling.api.resource.ResourceResolver)}</li>
  * </ul>
  * By using context scope you can share your code between request processing and background processing - your
  * objects will be created only once and stored either within request attributes (if request is available) or

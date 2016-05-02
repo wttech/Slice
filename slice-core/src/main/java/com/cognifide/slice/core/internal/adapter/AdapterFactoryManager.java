@@ -53,8 +53,7 @@ import com.google.inject.Injector;
 /**
  * This component is responsible for creation and destruction of the AdapterFactory services. Every time a
  * injector is created, it looks for all classes annotated with SliceResource annotation and creates a
- * separate AdapterFactory for each bundle containing matching classes.
- * <p/>
+ * separate AdapterFactory for each bundle containing matching classes.<br>
  * Each time a bundle is restarted, corresponding AdapterFactory is updated with the most recent list of
  * adapters.
  * 

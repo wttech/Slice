@@ -32,8 +32,6 @@ import com.google.inject.binder.AnnotatedBindingBuilder;
 
 /**
  * @author Jaromir Celejewski
- * @class OsgiToGuiceAutoBindModule
- * <p/>
  * This module class will scan given bundles and automatically bind all OSGi services marked with @OsgiService
  * annotation using Peaberry. Instance of this module should be installed in injector:
  * injectorRunner.installModule(new OsgiToGuiceAutoBindModule(bundleContext, bundle_name_filter,

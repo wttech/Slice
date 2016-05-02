@@ -30,7 +30,6 @@ import com.google.inject.Key;
 
 /**
  * @author Rafał Malinowski
- * @class InjectorWithContext
  * 
  * Decoration for Guice Injector class with simple access to modyfing and restoring ContextProvider. For use
  * in Servlets or Services use following idiom:

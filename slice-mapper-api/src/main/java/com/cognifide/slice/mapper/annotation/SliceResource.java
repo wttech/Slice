@@ -44,7 +44,7 @@ public @interface SliceResource {
 	 * Defines what mapping strategy of fields mapping should be used. By default
 	 * {@link MappingStrategy#ANNOTATED} is used.
 	 * 
-	 * @return
+	 * @return value
 	 * @see MappingStrategy
 	 */
 	MappingStrategy value() default MappingStrategy.ANNOTATED;

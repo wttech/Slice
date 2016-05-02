@@ -20,10 +20,11 @@
 
 package com.cognifide.slice.core.internal.injector;
 
-import aQute.bnd.annotation.ConsumerType;
-
 import com.cognifide.slice.api.injector.InjectorConfig;
+import com.cognifide.slice.api.injector.InjectorListener;
 import com.google.inject.Injector;
+
+import aQute.bnd.annotation.ConsumerType;
 
 /**
  * OSGi services implementing this interface will be informed about events related to the Slice injector

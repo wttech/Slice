@@ -47,7 +47,7 @@ import com.google.inject.Key;
  * In above example, Slice automatically creates and binds (while creating application injector) a Peaberry
  * provider for the AnyOsgiService class. Therefore the AnyOsgiService can be injected in any class.
  * 
- * This functionality requires {@link com.cognifide.slice.core.internal.module.OsgiToGuiceAutoBindModule} to
+ * This functionality requires com.cognifide.slice.core.internal.module.OsgiToGuiceAutoBindModule to
  * be installed in injector.
  */
 
