@@ -33,7 +33,6 @@
 		<description>Model tag.</description>
 		<name>lookup</name>
 		<tag-class>com.cognifide.slice.api.tag.SliceLookupTag</tag-class>
-		<tei-class>com.cognifide.slice.api.tag.SliceLookupTei</tei-class>
 		<body-content>empty</body-content>
 		<attribute>
 			<description>Variable</description>
