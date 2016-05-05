@@ -26,6 +26,14 @@ import javax.servlet.jsp.tagext.TagData;
 import javax.servlet.jsp.tagext.TagExtraInfo;
 import javax.servlet.jsp.tagext.VariableInfo;
 
+/**
+ * This implementation is buggy and must not be used in slice.tld <br>
+ * Will be removed in next major version<br>
+ * <br>
+ * See https://cognifide.atlassian.net/browse/SLICE-138 for reference
+ *
+ */
+@Deprecated
 public class SliceLookupTei extends TagExtraInfo {
 
 	private static final int VARIABLE_SCOPE = VariableInfo.AT_BEGIN;
@@ -57,7 +65,6 @@ public class SliceLookupTei extends TagExtraInfo {
 		if (matcher.matches()) {
 			className = matcher.group(1);
 		}
-
 		String variableName = data.getAttributeString(ATTRIBUTE_VAR);
 
 		return new VariableInfo[] {
