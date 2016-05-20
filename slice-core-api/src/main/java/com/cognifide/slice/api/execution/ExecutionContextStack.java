@@ -22,6 +22,8 @@ package com.cognifide.slice.api.execution;
 
 import aQute.bnd.annotation.ProviderType;
 
+import java.util.LinkedList;
+
 import com.cognifide.slice.api.provider.ModelProvider;
 
 /**
@@ -57,7 +59,13 @@ public interface ExecutionContextStack {
 	 * @return current size of a stack.
 	 */
 	int size();
-
+	
+	/**
+	 * 
+	 * @return all stack elements
+	 */
+	LinkedList<ExecutionContext> getItems();
+	
 	/**
 	 * @return absolute path from given path. If path is already absolute then it will be returned unchanged.
 	 * If it is relative (starting with ./) then it will be appended (after removing ./) to path of current

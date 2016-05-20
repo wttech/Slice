@@ -20,13 +20,14 @@
 
 package com.cognifide.slice.core.internal.execution;
 
+import java.util.LinkedList;
 import java.util.Stack;
 
 import org.apache.commons.lang.StringUtils;
 
 import com.cognifide.slice.api.exceptions.InvalidExecutionContextException;
-import com.cognifide.slice.api.execution.ExecutionContextStack;
 import com.cognifide.slice.api.execution.ExecutionContext;
+import com.cognifide.slice.api.execution.ExecutionContextStack;
 
 /**
  * This is internal class, should not be used outside of framework.
@@ -74,6 +75,10 @@ public final class ExecutionContextStackImpl implements ExecutionContextStack {
 	private String joinPath(final Object... args) {
 		return StringUtils.join(args, "/").replace("//", "/");
 	}
+	
+	public LinkedList<ExecutionContext> getItems() {
+		return new LinkedList<ExecutionContext>(items);
+	}
 
 	@Override
 	public String getAbsolutePath(final String path) {
@@ -92,5 +97,4 @@ public final class ExecutionContextStackImpl implements ExecutionContextStack {
 		// remove "./" from path
 		return joinPath(peek().getPath(), path.substring(2));
 	}
-
 }

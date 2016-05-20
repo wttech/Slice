@@ -42,6 +42,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.cognifide.slice.api.injector.InjectorConfig;
+import com.cognifide.slice.api.injector.InjectorNameModule;
+import com.cognifide.slice.api.qualifier.InjectorName;
 import com.cognifide.slice.core.internal.module.OsgiToGuiceAutoBindModule;
 import com.google.inject.CreationException;
 import com.google.inject.Guice;
@@ -220,6 +222,8 @@ public class InjectorHierarchy {
 		List<Module> overrides = new ArrayList<Module>();
 		for (Module module : modules) {
 			if (module instanceof OsgiToGuiceAutoBindModule) {
+				overrides.add(module);
+			} else if (module instanceof InjectorNameModule) {
 				overrides.add(module);
 			} else {
 				regulars.add(module);

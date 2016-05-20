@@ -36,6 +36,8 @@ import com.cognifide.slice.api.execution.ExecutionContextStack;
 import com.cognifide.slice.api.provider.ModelProvider;
 import com.cognifide.slice.api.scope.ContextScoped;
 import com.cognifide.slice.core.internal.execution.ExecutionContextImpl;
+import com.cognifide.slice.core.internal.monitoring.InjectionMonitoringContext;
+import com.cognifide.slice.core.internal.monitoring.InjectorStatisticsRepository;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -65,13 +67,15 @@ public class SliceModelProvider implements ModelProvider {
 
 	private final SliceModelClassResolver modelClassResolver;
 
+	private final InjectorStatisticsRepository sliceStats;
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Inject
 	public SliceModelProvider(final Injector injector, final ContextScope contextScope,
 			final ClassToKeyMapper classToKeyMapper, final ExecutionContextStack currentExecutionContext,
-			final ResourceResolver resourceResolver, SliceModelClassResolver modelClassResolver) {
+			final ResourceResolver resourceResolver, SliceModelClassResolver modelClassResolver, InjectorStatisticsRepository sliceStats) {
 		this.injector = injector;
 		this.contextScope = contextScope;
 		this.contextProvider = contextScope.getContextProvider();
@@ -79,6 +83,7 @@ public class SliceModelProvider implements ModelProvider {
 		this.currentExecutionContext = currentExecutionContext;
 		this.resourceResolver = resourceResolver;
 		this.modelClassResolver = modelClassResolver;
+		this.sliceStats = sliceStats;
 	}
 
 	/**
@@ -229,17 +234,21 @@ public class SliceModelProvider implements ModelProvider {
 	}
 
 	private <T> T get(Key<T> key, ExecutionContextImpl executionItem) {
+		InjectionMonitoringContext monitoringContext = sliceStats.startMonitoring();
+		monitoringContext.setInjecteeClass(key.getTypeLiteral().getRawType());
 		final ContextProvider oldContextProvider = contextScope.getContextProvider();
 		contextScope.setContextProvider(contextProvider);
 
 		if ((executionItem.getResource() == null) && (executionItem.getPath() != null)) {
 			executionItem.setPath(currentExecutionContext.getAbsolutePath(executionItem.getPath()));
 		}
-
+		executionItem.setInjecteeClass(key.getTypeLiteral().getRawType());
 		currentExecutionContext.push(executionItem);
+		monitoringContext.setModelsStack(currentExecutionContext.getItems());
 		try {
 			return injector.getInstance(key);
 		} finally {
+			sliceStats.save(monitoringContext);
 			currentExecutionContext.pop();
 			contextScope.setContextProvider(oldContextProvider);
 		}
