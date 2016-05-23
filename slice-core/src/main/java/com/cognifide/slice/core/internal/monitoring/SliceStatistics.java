@@ -23,6 +23,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -32,7 +33,7 @@ import com.google.inject.Injector;
 
 public class SliceStatistics {
 
-	private Map<String, ModelUsageData> modelUsageData = new HashMap<String, ModelUsageData>();
+	private Map<String, ModelUsageData> modelUsageData = new TreeMap<String, ModelUsageData>();
 
 	private SliceStatistics(Map<String, ModelUsageData> modelUsageData) {
 		this.modelUsageData = modelUsageData;

@@ -44,9 +44,9 @@ public class StatisticsHtmlTablesRenderer {
 		for (Entry<String, ModelUsageData> injectorEntry : report.getStatistics().entrySet()) {
 			String header = injectorEntry.getKey();
 			String id = header.replaceAll(" > ", "-").replaceAll(" ", "_");
-			
+
 			renderFlatTable(tableBuilder, id, header, injectorEntry.getValue());
-			renderTreeTable(tableBuilder, id, header , injectorEntry.getValue());
+			renderTreeTable(tableBuilder, id, header, injectorEntry.getValue());
 			tableBuilder.append("<hr style='margin-bottom: 20px'>");
 		}
 		tableBuilder.append("<hr><hr>");
@@ -59,7 +59,7 @@ public class StatisticsHtmlTablesRenderer {
 	}
 
 	private void renderFlatTable(StringBuilder tableBuilder, String id, String header, ModelUsageData treeItem) {
-		
+
 		tableBuilder.append("<table id='summary-" + id + "' class='tablesorter nicetable noauto'>");
 		tableBuilder.append(renderCaption(id, header, true));
 		tableBuilder.append(
@@ -112,8 +112,7 @@ public class StatisticsHtmlTablesRenderer {
 		}
 		tableBuilder.append("</tbody></table>");
 
-		tableBuilder
-				.append("<script>$(document).ready(function() {$('#hierarchy-" + id + "').treetable()});</script>");
+		tableBuilder.append("<script>$(document).ready(function() {$('#hierarchy-" + id + "').treetable()});</script>");
 	}
 
 	private int printChildren(int rowCounter, ModelUsageData parentNode, StringBuilder tableBuilder) {
