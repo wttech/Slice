@@ -39,8 +39,9 @@ import com.cognifide.slice.core.internal.monitoring.SliceStatistics;
 
 @Component
 @Service
-@Properties({ @Property(name = "felix.webconsole.title", value = "Slice Injections Report"),
-		@Property(name = "felix.webconsole.label", value = "slicemon") })
+@Properties({ @Property(name = "felix.webconsole.title", value = "Slice Statistics"),
+		@Property(name = "felix.webconsole.category", value = "Status"),
+		@Property(name = "felix.webconsole.label", value = "slicestats") })
 public class SliceStatisticsOSGiWebConsole extends HttpServlet {
 
 	private static final long serialVersionUID = -7025333484150354044L;
@@ -52,7 +53,7 @@ public class SliceStatisticsOSGiWebConsole extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if (request.getParameter("reset") != null) {
 			reset();
-			response.sendRedirect("/system/console/slicemon");
+			response.sendRedirect("/system/console/slicestats");
 		} else {
 			printInjectionHistory(response);
 		}
