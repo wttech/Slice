@@ -142,7 +142,6 @@ public class InjectorRunner implements InjectorCreationFailListener {
 	}
 
 	public void start() throws BundleException {
-		modules.add(new InjectorNameModule(this));
 		final InjectorConfig config = new InjectorConfig(this);
 
 		Dictionary<String, Object> properties = new Hashtable<String, Object>();
