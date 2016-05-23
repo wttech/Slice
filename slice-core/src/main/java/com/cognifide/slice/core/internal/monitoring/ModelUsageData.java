@@ -48,14 +48,14 @@ public class ModelUsageData extends HashMap<Class<?>, ModelUsageData> {
 	}
 
 	public void add(ModelUsageData statistics) {
-		this.count += statistics.getCount();
-		this.totalTime += statistics.getTotalTime();
+		this.count += statistics.count;
+		this.totalTime += statistics.totalTime;
 	}
 
 	public ModelUsageData copy() {
 		ModelUsageData copy = new ModelUsageData();
-		copy.count = count;
-		copy.totalTime = totalTime;
+		copy.count = this.count;
+		copy.totalTime = this.totalTime;
 		return copy;
 	}
 }
