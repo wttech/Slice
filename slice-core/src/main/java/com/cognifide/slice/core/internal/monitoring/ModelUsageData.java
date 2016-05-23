@@ -19,43 +19,118 @@
  */
 package com.cognifide.slice.core.internal.monitoring;
 
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
-public class ModelUsageData extends HashMap<Class<?>, ModelUsageData> {
+public class ModelUsageData implements Map<Class<?>, ModelUsageData> {
 
-	private static final long serialVersionUID = -1658020830178783629L;
+	private final Map<Class<?>, ModelUsageData> subModels = new ConcurrentHashMap<Class<?>, ModelUsageData>();
 
-	private long count;
+	private AtomicLong count = new AtomicLong();
 
-	private long totalTime;
+	private AtomicLong totalTime = new AtomicLong();
 
 	public void addTimeMeasurement(Long timeMeasurement) {
-		count++;
-		totalTime += timeMeasurement;
+		count.incrementAndGet();
+		totalTime.addAndGet(timeMeasurement);
 	}
 
 	public long getCount() {
-		return count;
+		return count.get();
 	}
 
 	public long getTotalTime() {
-		return TimeUnit.NANOSECONDS.toMillis(totalTime);
+		return TimeUnit.NANOSECONDS.toMillis(totalTime.get());
 	}
 
 	public double getAverageTime() {
-		return totalTime / (double) count / 1000000;
+		return totalTime.get() / (double) count.get() / 1000000;
 	}
 
 	public void add(ModelUsageData statistics) {
-		this.count += statistics.count;
-		this.totalTime += statistics.totalTime;
+		this.count.addAndGet(statistics.count.get());
+		this.totalTime.addAndGet(statistics.totalTime.get());
 	}
 
 	public ModelUsageData copy() {
 		ModelUsageData copy = new ModelUsageData();
-		copy.count = this.count;
-		copy.totalTime = this.totalTime;
+		copy.count.set(this.count.get());
+		copy.totalTime.set(this.totalTime.get());
 		return copy;
 	}
+
+	@Override
+	public int size() {
+		return subModels.size();
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return subModels.isEmpty();
+	}
+
+	@Override
+	public boolean containsKey(Object key) {
+		return subModels.containsKey(key);
+	}
+
+	@Override
+	public boolean containsValue(Object value) {
+		return subModels.containsValue(value);
+	}
+
+	@Override
+	public ModelUsageData get(Object key) {
+		return subModels.get(key);
+	}
+
+	@Override
+	public ModelUsageData put(Class<?> key, ModelUsageData value) {
+		return subModels.put(key, value);
+	}
+
+	@Override
+	public ModelUsageData remove(Object key) {
+		return subModels.remove(key);
+	}
+
+	@Override
+	public void putAll(Map<? extends Class<?>, ? extends ModelUsageData> m) {
+		subModels.putAll(m);
+	}
+
+	@Override
+	public void clear() {
+		subModels.clear();
+	}
+
+	@Override
+	public Set<Class<?>> keySet() {
+		return subModels.keySet();
+	}
+
+	@Override
+	public Collection<ModelUsageData> values() {
+		return subModels.values();
+	}
+
+	@Override
+	public Set<java.util.Map.Entry<Class<?>, ModelUsageData>> entrySet() {
+		return subModels.entrySet();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		return subModels.equals(o);
+	}
+
+	@Override
+	public int hashCode() {
+		return subModels.hashCode();
+	}
+
 }

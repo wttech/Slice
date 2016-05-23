@@ -39,13 +39,14 @@ public class InjectorStatisticsRepositoryImpl implements InjectorStatisticsRepos
 		saveEvent(ctx.getInjecteeClass(), ctx.getElapsedTime(), ctx.getModelsStack());
 	}
 
-	private synchronized void saveEvent(Class<?> type, Long timeMeasurement,
-			Queue<ExecutionContext> modelHierarchyContext) {
+	private void saveEvent(Class<?> type, Long timeMeasurement, Queue<ExecutionContext> modelHierarchyContext) {
 		ModelUsageData properItemInHierarchy = modelUsageDataRoot;
 		while (modelHierarchyContext.peek() != null) {
 			Class<?> ctx = modelHierarchyContext.poll().getInjecteeClass();
-			if (!properItemInHierarchy.containsKey(ctx)) {
-				properItemInHierarchy.put(ctx, new ModelUsageData());
+			synchronized (this) {
+				if (!properItemInHierarchy.containsKey(ctx)) {
+					properItemInHierarchy.put(ctx, new ModelUsageData());
+				}
 			}
 			properItemInHierarchy = properItemInHierarchy.get(ctx);
 		}
