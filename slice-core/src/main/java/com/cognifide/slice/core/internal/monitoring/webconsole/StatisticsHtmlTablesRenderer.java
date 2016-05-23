@@ -42,8 +42,11 @@ public class StatisticsHtmlTablesRenderer {
 		tableBuilder.append(
 				"<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-treetable/3.2.0/jquery.treetable.js'></script>");
 		for (Entry<String, ModelUsageData> injectorEntry : report.getStatistics().entrySet()) {
-			renderFlatTable(tableBuilder, injectorEntry.getKey(), injectorEntry.getValue());
-			renderTreeTable(tableBuilder, injectorEntry.getKey(), injectorEntry.getValue());
+			String header = injectorEntry.getKey();
+			String id = header.replaceAll(" > ", "-").replaceAll(" ", "_");
+			
+			renderFlatTable(tableBuilder, id, header, injectorEntry.getValue());
+			renderTreeTable(tableBuilder, id, header , injectorEntry.getValue());
 			tableBuilder.append("<hr style='margin-bottom: 20px'>");
 		}
 		tableBuilder.append("<hr><hr>");
@@ -55,9 +58,10 @@ public class StatisticsHtmlTablesRenderer {
 		return tableBuilder.toString();
 	}
 
-	private void renderFlatTable(StringBuilder tableBuilder, String header, ModelUsageData treeItem) {
-		tableBuilder.append("<table id='summary-" + header + "' class='tablesorter nicetable noauto'>");
-		tableBuilder.append(renderCaption(header));
+	private void renderFlatTable(StringBuilder tableBuilder, String id, String header, ModelUsageData treeItem) {
+		
+		tableBuilder.append("<table id='summary-" + id + "' class='tablesorter nicetable noauto'>");
+		tableBuilder.append(renderCaption(id, header, true));
 		tableBuilder.append(
 				"<thead><tr><th>Class</th><th>Instances Injected</th><th>Total Init Time [ms]</th class=\"{sorter: 'floating'}\"><th>Avg. Init Time [ms]</th></tr></thead><tbody>");
 		for (Entry<Class<?>, ModelUsageData> entry : flattenStats(treeItem).entrySet()) {
@@ -77,17 +81,17 @@ public class StatisticsHtmlTablesRenderer {
 		}
 		tableBuilder.append("</tbody></table>");
 
-		tableBuilder.append("<script>$(document).ready(function() {$('#summary-" + header
+		tableBuilder.append("<script>$(document).ready(function() {$('#summary-" + id
 				+ "').tablesorter({sortList:[[2,1]]})});</script>");
 	}
 
-	private void renderTreeTable(StringBuilder tableBuilder, String header, ModelUsageData treeItem) {
+	private void renderTreeTable(StringBuilder tableBuilder, String id, String header, ModelUsageData treeItem) {
 		int rowCounter = 1;
 		tableBuilder
 				.append("<table id='hierarchy-" + header + "' class='ui-helper-hidden tablesorter nicetable noauto'>");
-		tableBuilder.append(renderCaption(header));
+		tableBuilder.append(renderCaption(id, header, false));
 		tableBuilder.append(
-				"<thead><tr><th>Class</th><th>Instances Injected</th><th>Total Init Time [ms]</th class=\"{sorter: 'floating'}\"><th>Avg. Init Time [ms]</th></tr></thead><tbody>");
+				"<thead><tr><th>Class</th><th class=\"sortInitialOrder-desc\">Instances Injected</th><th class=\"sortInitialOrder-desc\">Total Init Time [ms]</th class=\"sortInitialOrder-desc {sorter: 'floating'}\"><th class=\"sortInitialOrder-desc\">Avg. Init Time [ms]</th></tr></thead><tbody>");
 
 		for (Entry<Class<?>, ModelUsageData> entry : treeItem.entrySet()) {
 			ModelUsageData stats = entry.getValue();
@@ -109,7 +113,7 @@ public class StatisticsHtmlTablesRenderer {
 		tableBuilder.append("</tbody></table>");
 
 		tableBuilder
-				.append("<script>$(document).ready(function() {$('#hierarchy-" + header + "').treetable()});</script>");
+				.append("<script>$(document).ready(function() {$('#hierarchy-" + id + "').treetable()});</script>");
 	}
 
 	private int printChildren(int rowCounter, ModelUsageData parentNode, StringBuilder tableBuilder) {
@@ -136,7 +140,7 @@ public class StatisticsHtmlTablesRenderer {
 		return 1 + localRowCounter;
 	}
 
-	private String renderCaption(String header) {
+	private String renderCaption(String id, String header, boolean forFlatTable) {
 		StringBuilder caption = new StringBuilder();
 		caption.append(
 				"<caption class=\"ui-widget-header ui-corner-top buttonGroup\"><span style=\"float: left; margin-left: 1em\">");
@@ -144,12 +148,12 @@ public class StatisticsHtmlTablesRenderer {
 		caption.append("</span>");
 
 		caption.append(String.format(
-				"<button class=\"ui-state-default ui-corner-all\" onclick=\"$('#hierarchy-%s').toggle(true);$('#summary-%s').toggle(false);\">Hierarchy Tree</button>",
-				header, header));
+				"<button class=\"ui-state-default ui-corner-all\" onclick=\"$('#hierarchy-%s').toggle(false);$('#summary-%s').toggle(true)\" style=\"%s\">Flat List</button>",
+				id, id, forFlatTable ? "font-weight: bold;" : ""));
 		caption.append("<span> | </span>");
 		caption.append(String.format(
-				"<button class=\"ui-state-default ui-corner-all\" onclick=\"$('#hierarchy-%s').toggle(false);$('#summary-%s').toggle(true);\">Flat List</button>",
-				header, header));
+				"<button class=\"ui-state-default ui-corner-all\" onclick=\"$('#hierarchy-%s').toggle(true);$('#summary-%s').toggle(false);\" style=\"%s\">Hierarchy Tree</button>",
+				id, id, forFlatTable ? "padding: 0 8px;" : "padding: 0 8px;font-weight: bold;"));
 		caption.append("</caption>");
 		return caption.toString();
 	}
