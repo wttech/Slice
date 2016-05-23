@@ -19,26 +19,15 @@
  */
 package com.cognifide.slice.core.internal.monitoring;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Queue;
 
 import com.cognifide.slice.api.execution.ExecutionContext;
-import com.cognifide.slice.api.injector.InjectorNameProvider;
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
 public class InjectorStatisticsRepositoryImpl implements InjectorStatisticsRepository {
 
-	private final Map<String, ModelUsageData> injectionsStatistics = new HashMap<String, ModelUsageData>();
-
-	private final String injectorName;
-	
-	@Inject
-	public InjectorStatisticsRepositoryImpl(InjectorNameProvider nameProvider) {
-		injectorName = nameProvider.getInjectorName();
-	}
+	private final ModelUsageData modelUsageDataRoot = new ModelUsageData();
 
 	@Override
 	public InjectionMonitoringContext startMonitoring() {
@@ -52,7 +41,7 @@ public class InjectorStatisticsRepositoryImpl implements InjectorStatisticsRepos
 
 	private synchronized void saveEvent(Class<?> type, Long timeMeasurement,
 			Queue<ExecutionContext> modelHierarchyContext) {
-		ModelUsageData properItemInHierarchy = getInjectorStatisticsRoot(injectorName);
+		ModelUsageData properItemInHierarchy = modelUsageDataRoot;
 		while (modelHierarchyContext.peek() != null) {
 			Class<?> ctx = modelHierarchyContext.poll().getInjecteeClass();
 			if (!properItemInHierarchy.containsKey(ctx)) {
@@ -63,20 +52,11 @@ public class InjectorStatisticsRepositoryImpl implements InjectorStatisticsRepos
 		properItemInHierarchy.addTimeMeasurement(timeMeasurement);
 	}
 
-	private ModelUsageData getInjectorStatisticsRoot(String injectorName) {
-		ModelUsageData root = injectionsStatistics.get(injectorName);
-		if (root == null) {
-			root = new ModelUsageData();
-			injectionsStatistics.put(injectorName, root);
-		}
-		return root;
+	public synchronized ModelUsageData getStatistics() {
+		return modelUsageDataRoot;
 	}
-	
-	public synchronized Map<String, ModelUsageData> getStatistics() {
-		return new HashMap<String, ModelUsageData>(injectionsStatistics);
-	}
-	
+
 	public synchronized void clearHistory() {
-		injectionsStatistics.clear();
+		modelUsageDataRoot.clear();
 	}
 }

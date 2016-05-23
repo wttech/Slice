@@ -40,21 +40,21 @@ public class SliceStatistics {
 	}
 
 	public static SliceStatistics fromInjectors(InjectorHierarchy injectorHierarchy) {
-		Map<String, ModelUsageData> statsHistory = new HashMap<String, ModelUsageData>();
+		Map<String, ModelUsageData> statsHistory = new TreeMap<String, ModelUsageData>();
 
 		for (String injectorName : injectorHierarchy.getInjectorNames()) {
-			Map<String, ModelUsageData> injectorStats = getStatistics(injectorHierarchy, injectorName);
+			ModelUsageData injectorStats = getStatistics(injectorHierarchy, injectorName);
 			String injectorFullName = resolveInjectoNameInheritanceStructure(injectorName, injectorHierarchy);
 
 			if (!injectorStats.isEmpty()) {
-				statsHistory.put(injectorFullName, injectorStats.get(injectorName));
+				statsHistory.put(injectorFullName, injectorStats);
 			}
 		}
 
 		return new SliceStatistics(statsHistory);
 	}
 
-	private static Map<String, ModelUsageData> getStatistics(InjectorHierarchy injectorHierarchy, String injectorName) {
+	private static ModelUsageData getStatistics(InjectorHierarchy injectorHierarchy, String injectorName) {
 		Injector injector = injectorHierarchy.getInjectorByName(injectorName);
 		InjectorStatisticsRepository statisticsRepository = injector.getInstance(InjectorStatisticsRepository.class);
 		return statisticsRepository.getStatistics();

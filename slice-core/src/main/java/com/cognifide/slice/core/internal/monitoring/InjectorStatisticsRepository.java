@@ -19,8 +19,6 @@
  */
 package com.cognifide.slice.core.internal.monitoring;
 
-import java.util.Map;
-
 import com.google.inject.ImplementedBy;
 
 @ImplementedBy(InjectorStatisticsRepositoryImpl.class)
@@ -30,7 +28,7 @@ public interface InjectorStatisticsRepository {
 
 	void save(InjectionMonitoringContext monitoringContext);
 
-	Map<String, ModelUsageData> getStatistics();
+	ModelUsageData getStatistics();
 
 	void clearHistory();
 }
