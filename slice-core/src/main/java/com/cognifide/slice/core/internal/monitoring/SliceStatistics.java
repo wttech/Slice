@@ -21,7 +21,6 @@ package com.cognifide.slice.core.internal.monitoring;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -33,7 +32,7 @@ import com.google.inject.Injector;
 
 public class SliceStatistics {
 
-	private Map<String, ModelUsageData> modelUsageData = new TreeMap<String, ModelUsageData>();
+	private Map<String, ModelUsageData> modelUsageData;
 
 	private SliceStatistics(Map<String, ModelUsageData> modelUsageData) {
 		this.modelUsageData = modelUsageData;
