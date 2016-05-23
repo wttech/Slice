@@ -37,8 +37,10 @@ public class StatisticsHtmlTablesRenderer {
 	@Override
 	public String toString() {
 		StringBuilder tableBuilder = new StringBuilder();
-		tableBuilder.append("<script>$('head').append('<link rel=\"stylesheet\" type=\"text/css\" href=\"https://cdnjs.cloudflare.com/ajax/libs/jquery-treetable/3.2.0/css/jquery.treetable.css\">');</script>");
-		tableBuilder.append("<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-treetable/3.2.0/jquery.treetable.js'></script>");
+		tableBuilder.append(
+				"<script>$('head').append('<link rel=\"stylesheet\" type=\"text/css\" href=\"https://cdnjs.cloudflare.com/ajax/libs/jquery-treetable/3.2.0/css/jquery.treetable.css\">');</script>");
+		tableBuilder.append(
+				"<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-treetable/3.2.0/jquery.treetable.js'></script>");
 		for (Entry<String, ModelUsageData> injectorEntry : report.getStatistics().entrySet()) {
 			renderFlatTable(tableBuilder, injectorEntry.getKey(), injectorEntry.getValue());
 			renderTreeTable(tableBuilder, injectorEntry.getKey(), injectorEntry.getValue());
@@ -47,22 +49,22 @@ public class StatisticsHtmlTablesRenderer {
 		tableBuilder.append("<hr><hr>");
 		tableBuilder.append(
 				"<form action='' method='get'><input type='hidden' name='reset'><button type='submit'>RESET</button></form>");
-		//remove root children indentation 
-		tableBuilder.append("<script>$(document).ready(function() {$(\"tr\").find(\"td:first\").find(\"span[style='padding-left: 0px;']\").remove();});</script>");
+		// remove root children indentation
+		tableBuilder.append(
+				"<script>$(document).ready(function() {$(\"tr\").find(\"td:first\").find(\"span[style='padding-left: 0px;']\").remove();});</script>");
 		return tableBuilder.toString();
 	}
 
 	private void renderFlatTable(StringBuilder tableBuilder, String header, ModelUsageData treeItem) {
-		tableBuilder.append("<a href='#' onclick=\"$('#hierarchy-" + header + "').toggle();$('#summary-" + header + "').toggle();\">[Show/Hide Hierarchy]</a>");
 		tableBuilder.append("<table id='summary-" + header + "' class='tablesorter nicetable noauto'>");
-		tableBuilder.append("<caption><b>" + header + "</b></caption>");
+		tableBuilder.append(renderCaption(header));
 		tableBuilder.append(
-				"<thead><tr><th>Class</th><th>Instances Injected</th><th>Total Init Time [ms]</th class=\"{sorter: 'floating'}\"><th>Avg. Init Time [ms]</th></tr></thead><tbody>");		
+				"<thead><tr><th>Class</th><th>Instances Injected</th><th>Total Init Time [ms]</th class=\"{sorter: 'floating'}\"><th>Avg. Init Time [ms]</th></tr></thead><tbody>");
 		for (Entry<Class<?>, ModelUsageData> entry : flattenStats(treeItem).entrySet()) {
 			ModelUsageData stats = entry.getValue();
 			Long instancesCount = stats.getCount();
 			Long totalTime = stats.getTotalTime();
-			double  avgTime = stats.getAverageTime();
+			double avgTime = stats.getAverageTime();
 			tableBuilder.append("<tr><td>");
 			tableBuilder.append(entry.getKey().getName());
 			tableBuilder.append("</td><td>");
@@ -74,15 +76,16 @@ public class StatisticsHtmlTablesRenderer {
 			tableBuilder.append("</td><tr>");
 		}
 		tableBuilder.append("</tbody></table>");
-		
-		 tableBuilder.append("<script>$(document).ready(function() {$('#summary-" + header +
-		 "').tablesorter({sortList:[[2,1]]})});</script>");
+
+		tableBuilder.append("<script>$(document).ready(function() {$('#summary-" + header
+				+ "').tablesorter({sortList:[[2,1]]})});</script>");
 	}
 
 	private void renderTreeTable(StringBuilder tableBuilder, String header, ModelUsageData treeItem) {
 		int rowCounter = 1;
-		tableBuilder.append("<table id='hierarchy-" + header + "' class='ui-helper-hidden tablesorter nicetable noauto'>");
-		tableBuilder.append("<caption class=\"ui-widget-header ui-corner-top buttonGroup\"><span style=\"float: left; margin-left: 1em\">" + header + "</span></caption>");
+		tableBuilder
+				.append("<table id='hierarchy-" + header + "' class='ui-helper-hidden tablesorter nicetable noauto'>");
+		tableBuilder.append(renderCaption(header));
 		tableBuilder.append(
 				"<thead><tr><th>Class</th><th>Instances Injected</th><th>Total Init Time [ms]</th class=\"{sorter: 'floating'}\"><th>Avg. Init Time [ms]</th></tr></thead><tbody>");
 
@@ -90,7 +93,7 @@ public class StatisticsHtmlTablesRenderer {
 			ModelUsageData stats = entry.getValue();
 			Long instancesCount = stats.getCount();
 			Long totalTime = stats.getTotalTime();
-			double  avgTime = stats.getAverageTime();
+			double avgTime = stats.getAverageTime();
 			tableBuilder.append("<tr data-tt-id='" + rowCounter + "'><td>");
 			tableBuilder.append(entry.getKey().getName());
 			tableBuilder.append("</td><td>");
@@ -104,9 +107,9 @@ public class StatisticsHtmlTablesRenderer {
 			rowCounter = printChildren(rowCounter, stats, tableBuilder);
 		}
 		tableBuilder.append("</tbody></table>");
-		
-		tableBuilder.append(
-				"<script>$(document).ready(function() {$('#hierarchy-" + header + "').treetable()});</script>");
+
+		tableBuilder
+				.append("<script>$(document).ready(function() {$('#hierarchy-" + header + "').treetable()});</script>");
 	}
 
 	private int printChildren(int rowCounter, ModelUsageData parentNode, StringBuilder tableBuilder) {
@@ -116,9 +119,9 @@ public class StatisticsHtmlTablesRenderer {
 			ModelUsageData stats = entry.getValue();
 			Long instancesCount = stats.getCount();
 			Long totalTime = stats.getTotalTime();
-			double  avgTime = stats.getAverageTime();
-			tableBuilder.append(
-					"<tr data-tt-id='" + ++localRowCounter + "' data-tt-parent-id='" + parentNodeId + "'><td>");
+			double avgTime = stats.getAverageTime();
+			tableBuilder
+					.append("<tr data-tt-id='" + ++localRowCounter + "' data-tt-parent-id='" + parentNodeId + "'><td>");
 			tableBuilder.append(entry.getKey().getName());
 			tableBuilder.append("</td><td>");
 			tableBuilder.append(instancesCount.toString());
@@ -131,6 +134,24 @@ public class StatisticsHtmlTablesRenderer {
 			localRowCounter = printChildren(localRowCounter, stats, tableBuilder);
 		}
 		return 1 + localRowCounter;
+	}
+
+	private String renderCaption(String header) {
+		StringBuilder caption = new StringBuilder();
+		caption.append(
+				"<caption class=\"ui-widget-header ui-corner-top buttonGroup\"><span style=\"float: left; margin-left: 1em\">");
+		caption.append(header);
+		caption.append("</span>");
+
+		caption.append(String.format(
+				"<button class=\"ui-state-default ui-corner-all\" onclick=\"$('#hierarchy-%s').toggle(true);$('#summary-%s').toggle(false);\">Hierarchy Tree</button>",
+				header, header));
+		caption.append("<span> | </span>");
+		caption.append(String.format(
+				"<button class=\"ui-state-default ui-corner-all\" onclick=\"$('#hierarchy-%s').toggle(false);$('#summary-%s').toggle(true);\">Flat List</button>",
+				header, header));
+		caption.append("</caption>");
+		return caption.toString();
 	}
 
 	private Map<Class<?>, ModelUsageData> flattenStats(ModelUsageData treeItem) {
