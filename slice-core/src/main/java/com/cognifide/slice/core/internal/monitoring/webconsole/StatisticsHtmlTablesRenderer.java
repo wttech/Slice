@@ -77,7 +77,7 @@ public class StatisticsHtmlTablesRenderer {
 			tableBuilder.append(totalTime.toString());
 			tableBuilder.append("</td><td>");
 			tableBuilder.append(String.format("%.3f", avgTime));
-			tableBuilder.append("</td><tr>");
+			tableBuilder.append("</td></tr>");
 		}
 		tableBuilder.append("</tbody></table>");
 
