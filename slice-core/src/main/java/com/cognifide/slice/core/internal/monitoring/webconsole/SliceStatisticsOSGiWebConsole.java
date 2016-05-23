@@ -33,9 +33,9 @@ import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 
-import com.cognifide.slice.api.injector.InjectorsRepository;
-import com.cognifide.slice.core.internal.monitoring.SliceStatistics;
+import com.cognifide.slice.core.internal.injector.InjectorHierarchy;
 import com.cognifide.slice.core.internal.monitoring.InjectorStatisticsRepository;
+import com.cognifide.slice.core.internal.monitoring.SliceStatistics;
 
 @Component
 @Service
@@ -46,11 +46,10 @@ public class SliceStatisticsOSGiWebConsole extends HttpServlet {
 	private static final long serialVersionUID = -7025333484150354044L;
 
 	@Reference
-	private InjectorsRepository injectorsRepository;
+	private InjectorHierarchy injectorHierarchy;
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if (request.getParameter("reset") != null) {
 			reset();
 			response.sendRedirect("/system/console/slicemon");
@@ -62,7 +61,7 @@ public class SliceStatisticsOSGiWebConsole extends HttpServlet {
 	private void printInjectionHistory(HttpServletResponse response) throws IOException {
 		PrintWriter writer = response.getWriter();
 
-		SliceStatistics report = SliceStatistics.fromInjectors(injectorsRepository);
+		SliceStatistics report = SliceStatistics.fromInjectors(injectorHierarchy);
 		if (report.isEmpty()) {
 			writer.write("No injection history available.");
 		} else {
@@ -71,8 +70,9 @@ public class SliceStatisticsOSGiWebConsole extends HttpServlet {
 	}
 
 	private void reset() {
-		for (String injectorName : injectorsRepository.getInjectorNames()) {
-			injectorsRepository.getInjector(injectorName).getInstance(InjectorStatisticsRepository.class).clearHistory();
+		for (String injectorName : injectorHierarchy.getInjectorNames()) {
+			injectorHierarchy.getInjectorByName(injectorName).getInstance(InjectorStatisticsRepository.class)
+					.clearHistory();
 		}
 	}
 }

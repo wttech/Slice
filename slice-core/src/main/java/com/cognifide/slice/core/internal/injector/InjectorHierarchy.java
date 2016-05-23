@@ -43,7 +43,6 @@ import org.slf4j.LoggerFactory;
 
 import com.cognifide.slice.api.injector.InjectorConfig;
 import com.cognifide.slice.api.injector.InjectorNameModule;
-import com.cognifide.slice.api.qualifier.InjectorName;
 import com.cognifide.slice.core.internal.module.OsgiToGuiceAutoBindModule;
 import com.google.inject.CreationException;
 import com.google.inject.Guice;
@@ -115,6 +114,16 @@ public class InjectorHierarchy {
 		configByName.remove(config.getName());
 		refreshNameLookupMap();
 		refreshNamesByPathMap();
+	}
+
+	/**
+	 * Return injector config object for given name
+	 * 
+	 * @param injectorName Injector name
+	 * @return InjectorConfig or null if there is no such injector config
+	 */
+	public synchronized InjectorConfig getInjectorConfigByName(String injectorName) {
+		return configByName.get(injectorName);
 	}
 
 	/**

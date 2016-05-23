@@ -19,15 +19,17 @@
  */
 package com.cognifide.slice.core.internal.monitoring;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.cognifide.slice.api.injector.InjectorWithContext;
-import com.cognifide.slice.api.injector.InjectorsRepository;
-import com.google.inject.Injector;
-import com.google.inject.Singleton;
+import org.apache.commons.lang.StringUtils;
 
-@Singleton
+import com.cognifide.slice.api.injector.InjectorConfig;
+import com.cognifide.slice.core.internal.injector.InjectorHierarchy;
+import com.google.inject.Injector;
+
 public class SliceStatistics {
 
 	private Map<String, ModelUsageData> modelUsageData = new HashMap<String, ModelUsageData>();
@@ -36,35 +38,43 @@ public class SliceStatistics {
 		this.modelUsageData = modelUsageData;
 	}
 
-	public static SliceStatistics fromInjectors(InjectorsRepository injectorsRepository) {
+	public static SliceStatistics fromInjectors(InjectorHierarchy injectorHierarchy) {
 		Map<String, ModelUsageData> statsHistory = new HashMap<String, ModelUsageData>();
-		for (String injectorName : injectorsRepository.getInjectorNames()) {
-			InjectorWithContext injector = injectorsRepository.getInjector(injectorName);
-			InjectorStatisticsRepository stats = injector.getInstance(InjectorStatisticsRepository.class);
-			Map<String, ModelUsageData> injectorStats = stats.getStatistics();
-			statsHistory.putAll(injectorStats);
-		}
-		SliceStatistics injectionsReport = new SliceStatistics(statsHistory);
-		injectionsReport.resolveInjectorsHierarchy(injectorsRepository);
-		return injectionsReport;
-	}
 
-	private void resolveInjectorsHierarchy(InjectorsRepository injectorsRepository) {
-		for (String injectorName : modelUsageData.keySet()) {
-			Injector currentParent = null;
-			Injector injector = injectorsRepository.getInjector(injectorName).getInjector();
-			String newName = injectorName;
-			do {
-				currentParent = injector.getParent();
-				if (currentParent != null) {
-					newName = injectorsRepository.getInjectorName(currentParent) + '>' + newName;
-					injector = currentParent;
-				}
-			} while (currentParent != null);
-			if (!newName.equals(injectorName)) {
-				modelUsageData.put(newName, modelUsageData.get(injectorName));
+		for (String injectorName : injectorHierarchy.getInjectorNames()) {
+			Map<String, ModelUsageData> injectorStats = getStatistics(injectorHierarchy, injectorName);
+			String injectorFullName = resolveInjectoNameInheritanceStructure(injectorName, injectorHierarchy);
+
+			if (!injectorStats.isEmpty()) {
+				statsHistory.put(injectorFullName, injectorStats.get(injectorName));
 			}
 		}
+
+		return new SliceStatistics(statsHistory);
+	}
+
+	private static Map<String, ModelUsageData> getStatistics(InjectorHierarchy injectorHierarchy, String injectorName) {
+		Injector injector = injectorHierarchy.getInjectorByName(injectorName);
+		InjectorStatisticsRepository statisticsRepository = injector.getInstance(InjectorStatisticsRepository.class);
+		return statisticsRepository.getStatistics();
+	}
+
+	private static String resolveInjectoNameInheritanceStructure(String injectorName,
+			InjectorHierarchy injectorHierarchy) {
+		Deque<String> injectorNamesStructure = new ArrayDeque<String>();
+
+		String currentInjectorName = injectorName;
+		injectorNamesStructure.push(currentInjectorName);
+
+		InjectorConfig currentInjectorConfig = injectorHierarchy.getInjectorConfigByName(currentInjectorName);
+		while (currentInjectorConfig.hasParent()) {
+			currentInjectorName = currentInjectorConfig.getParentName();
+			injectorNamesStructure.push(currentInjectorName);
+
+			currentInjectorConfig = injectorHierarchy.getInjectorConfigByName(currentInjectorName);
+		}
+
+		return StringUtils.join(injectorNamesStructure, " > ");
 	}
 
 	public Map<String, ModelUsageData> getStatistics() {
