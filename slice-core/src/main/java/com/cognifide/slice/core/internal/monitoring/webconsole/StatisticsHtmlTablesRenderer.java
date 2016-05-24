@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.cognifide.slice.core.internal.monitoring.ModelUsageData;
-import com.cognifide.slice.core.internal.monitoring.SliceStatistics;
+import com.cognifide.slice.core.internal.monitoring.SliceStatisticsFactory.SliceStatistics;
 
 public class StatisticsHtmlTablesRenderer {
 

@@ -25,20 +25,22 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Reference;
+import org.apache.felix.scr.annotations.Service;
 
 import com.cognifide.slice.api.injector.InjectorConfig;
 import com.cognifide.slice.core.internal.injector.InjectorHierarchy;
 import com.google.inject.Injector;
 
-public class SliceStatistics {
+@Component
+@Service(SliceStatisticsFactory.class)
+public class SliceStatisticsFactory {
 
-	private Map<String, ModelUsageData> modelUsageData;
+	@Reference
+	private InjectorHierarchy injectorHierarchy;
 
-	private SliceStatistics(Map<String, ModelUsageData> modelUsageData) {
-		this.modelUsageData = modelUsageData;
-	}
-
-	public static SliceStatistics fromInjectors(InjectorHierarchy injectorHierarchy) {
+	public SliceStatistics collectStatistics() {
 		Map<String, ModelUsageData> statsHistory = new TreeMap<String, ModelUsageData>();
 
 		for (String injectorName : injectorHierarchy.getInjectorNames()) {
@@ -77,11 +79,19 @@ public class SliceStatistics {
 		return StringUtils.join(injectorNamesStructure, " > ");
 	}
 
-	public Map<String, ModelUsageData> getStatistics() {
-		return modelUsageData;
-	}
+	public class SliceStatistics {
+		private Map<String, ModelUsageData> modelUsageData;
 
-	public boolean isEmpty() {
-		return getStatistics().isEmpty();
+		private SliceStatistics(Map<String, ModelUsageData> modelUsageData) {
+			this.modelUsageData = modelUsageData;
+		}
+
+		public Map<String, ModelUsageData> getStatistics() {
+			return modelUsageData;
+		}
+
+		public boolean isEmpty() {
+			return getStatistics().isEmpty();
+		}
 	}
 }
