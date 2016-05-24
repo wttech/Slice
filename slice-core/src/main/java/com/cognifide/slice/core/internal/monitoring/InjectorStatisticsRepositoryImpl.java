@@ -20,6 +20,7 @@
 package com.cognifide.slice.core.internal.monitoring;
 
 import java.util.Queue;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.cognifide.slice.api.execution.ExecutionContext;
 import com.google.inject.Singleton;
@@ -36,28 +37,27 @@ public class InjectorStatisticsRepositoryImpl implements InjectorStatisticsRepos
 
 	@Override
 	public void save(InjectionMonitoringContext ctx) {
-		saveEvent(ctx.getInjecteeClass(), ctx.getElapsedTime(), ctx.getModelsStack());
+		saveEvent(ctx.getElapsedTime(), ctx.getModelsStack());
 	}
 
-	private void saveEvent(Class<?> type, Long timeMeasurement, Queue<ExecutionContext> modelHierarchyContext) {
+	private void saveEvent(Long timeMeasurement, Queue<ExecutionContext> modelHierarchyContext) {
 		ModelUsageData properItemInHierarchy = modelUsageDataRoot;
 		while (modelHierarchyContext.peek() != null) {
 			Class<?> ctx = modelHierarchyContext.poll().getInjecteeClass();
-			synchronized (this) {
-				if (!properItemInHierarchy.containsKey(ctx)) {
-					properItemInHierarchy.put(ctx, new ModelUsageData());
-				}
+			ConcurrentHashMap<Class<?>, ModelUsageData> subModels = properItemInHierarchy.getSubModels();
+			if (!subModels.containsKey(ctx)) {
+				subModels.putIfAbsent(ctx, new ModelUsageData());
 			}
-			properItemInHierarchy = properItemInHierarchy.get(ctx);
+			properItemInHierarchy = subModels.get(ctx);
 		}
 		properItemInHierarchy.addTimeMeasurement(timeMeasurement);
 	}
 
-	public synchronized ModelUsageData getStatistics() {
+	public ModelUsageData getStatistics() {
 		return modelUsageDataRoot;
 	}
 
-	public synchronized void clearHistory() {
-		modelUsageDataRoot.clear();
+	public void clear() {
+		modelUsageDataRoot.clearSubModels();
 	}
 }

@@ -42,15 +42,7 @@ public class InjectionMonitoringContext {
 		this.modelsStack = models;
 	}
 
-	public void setInjecteeClass(Class<?> rawType) {
-		this.injecteeClass = rawType;
-	}
-
 	public LinkedList<ExecutionContext> getModelsStack() {
 		return modelsStack;
-	}
-
-	public Class<?> getInjecteeClass() {
-		return injecteeClass;
 	}
 }

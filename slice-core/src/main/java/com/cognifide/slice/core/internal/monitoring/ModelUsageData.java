@@ -19,16 +19,13 @@
  */
 package com.cognifide.slice.core.internal.monitoring;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class ModelUsageData implements Map<Class<?>, ModelUsageData> {
+public class ModelUsageData {
 
-	private final Map<Class<?>, ModelUsageData> subModels = new ConcurrentHashMap<Class<?>, ModelUsageData>();
+	private ConcurrentHashMap<Class<?>, ModelUsageData> subModels = new ConcurrentHashMap<Class<?>, ModelUsageData>();
 
 	private AtomicLong count = new AtomicLong();
 
@@ -47,6 +44,10 @@ public class ModelUsageData implements Map<Class<?>, ModelUsageData> {
 		return TimeUnit.NANOSECONDS.toMillis(totalTime.get());
 	}
 
+	public ConcurrentHashMap<Class<?>, ModelUsageData> getSubModels() {
+		return subModels;
+	}
+
 	public double getAverageTime() {
 		return totalTime.get() / (double) count.get() / 1000000;
 	}
@@ -63,74 +64,7 @@ public class ModelUsageData implements Map<Class<?>, ModelUsageData> {
 		return copy;
 	}
 
-	@Override
-	public int size() {
-		return subModels.size();
+	public void clearSubModels() {
+		subModels = new ConcurrentHashMap<Class<?>, ModelUsageData>();
 	}
-
-	@Override
-	public boolean isEmpty() {
-		return subModels.isEmpty();
-	}
-
-	@Override
-	public boolean containsKey(Object key) {
-		return subModels.containsKey(key);
-	}
-
-	@Override
-	public boolean containsValue(Object value) {
-		return subModels.containsValue(value);
-	}
-
-	@Override
-	public ModelUsageData get(Object key) {
-		return subModels.get(key);
-	}
-
-	@Override
-	public ModelUsageData put(Class<?> key, ModelUsageData value) {
-		return subModels.put(key, value);
-	}
-
-	@Override
-	public ModelUsageData remove(Object key) {
-		return subModels.remove(key);
-	}
-
-	@Override
-	public void putAll(Map<? extends Class<?>, ? extends ModelUsageData> m) {
-		subModels.putAll(m);
-	}
-
-	@Override
-	public void clear() {
-		subModels.clear();
-	}
-
-	@Override
-	public Set<Class<?>> keySet() {
-		return subModels.keySet();
-	}
-
-	@Override
-	public Collection<ModelUsageData> values() {
-		return subModels.values();
-	}
-
-	@Override
-	public Set<java.util.Map.Entry<Class<?>, ModelUsageData>> entrySet() {
-		return subModels.entrySet();
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		return subModels.equals(o);
-	}
-
-	@Override
-	public int hashCode() {
-		return subModels.hashCode();
-	}
-
 }

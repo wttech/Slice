@@ -93,7 +93,7 @@ public class StatisticsHtmlTablesRenderer {
 		tableBuilder.append(
 				"<thead><tr><th>Class</th><th class=\"sortInitialOrder-desc\">Instances Injected</th><th class=\"sortInitialOrder-desc\">Total Init Time [ms]</th class=\"sortInitialOrder-desc {sorter: 'floating'}\"><th class=\"sortInitialOrder-desc\">Avg. Init Time [ms]</th></tr></thead><tbody>");
 
-		for (Entry<Class<?>, ModelUsageData> entry : treeItem.entrySet()) {
+		for (Entry<Class<?>, ModelUsageData> entry : treeItem.getSubModels().entrySet()) {
 			ModelUsageData stats = entry.getValue();
 			Long instancesCount = stats.getCount();
 			Long totalTime = stats.getTotalTime();
@@ -118,7 +118,7 @@ public class StatisticsHtmlTablesRenderer {
 	private int printChildren(int rowCounter, ModelUsageData parentNode, StringBuilder tableBuilder) {
 		int parentNodeId = rowCounter;
 		int localRowCounter = rowCounter;
-		for (Entry<Class<?>, ModelUsageData> entry : parentNode.entrySet()) {
+		for (Entry<Class<?>, ModelUsageData> entry : parentNode.getSubModels().entrySet()) {
 			ModelUsageData stats = entry.getValue();
 			Long instancesCount = stats.getCount();
 			Long totalTime = stats.getTotalTime();
@@ -162,7 +162,7 @@ public class StatisticsHtmlTablesRenderer {
 	}
 
 	private Map<Class<?>, ModelUsageData> flattenStats(ModelUsageData treeItem, Map<Class<?>, ModelUsageData> result) {
-		for (Entry<Class<?>, ModelUsageData> entry : treeItem.entrySet()) {
+		for (Entry<Class<?>, ModelUsageData> entry : treeItem.getSubModels().entrySet()) {
 			if (!result.containsKey(entry.getKey())) {
 				result.put(entry.getKey(), entry.getValue().copy());
 			} else {

@@ -30,5 +30,5 @@ public interface InjectorStatisticsRepository {
 
 	ModelUsageData getStatistics();
 
-	void clearHistory();
+	void clear();
 }

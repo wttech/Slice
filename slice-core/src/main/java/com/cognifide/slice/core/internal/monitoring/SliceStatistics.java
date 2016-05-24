@@ -45,7 +45,7 @@ public class SliceStatistics {
 			ModelUsageData injectorStats = getStatistics(injectorHierarchy, injectorName);
 			String injectorFullName = resolveInjectoNameInheritanceStructure(injectorName, injectorHierarchy);
 
-			if (!injectorStats.isEmpty()) {
+			if (!injectorStats.getSubModels().isEmpty()) {
 				statsHistory.put(injectorFullName, injectorStats);
 			}
 		}

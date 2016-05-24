@@ -235,7 +235,6 @@ public class SliceModelProvider implements ModelProvider {
 
 	private <T> T get(Key<T> key, ExecutionContextImpl executionItem) {
 		InjectionMonitoringContext monitoringContext = sliceStats.startMonitoring();
-		monitoringContext.setInjecteeClass(key.getTypeLiteral().getRawType());
 		final ContextProvider oldContextProvider = contextScope.getContextProvider();
 		contextScope.setContextProvider(contextProvider);
 

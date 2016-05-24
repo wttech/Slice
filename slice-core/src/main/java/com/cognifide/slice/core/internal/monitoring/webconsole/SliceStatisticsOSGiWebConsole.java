@@ -46,14 +46,21 @@ public class SliceStatisticsOSGiWebConsole extends HttpServlet {
 
 	private static final long serialVersionUID = -7025333484150354044L;
 
+	private static final String SLICE_STATS_CONSOLE_URL = "/system/console/slicestats";
+
+	private static final String RESET_PARAMETER_NAME = "reset";
+
+	private static final String NO_STATISTICS_AVAILABLE_MESSAGE = "No injection statistics available.";
+
 	@Reference
 	private InjectorHierarchy injectorHierarchy;
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if (request.getParameter("reset") != null) {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		if (request.getParameter(RESET_PARAMETER_NAME) != null) {
 			reset();
-			response.sendRedirect("/system/console/slicestats");
+			response.sendRedirect(SLICE_STATS_CONSOLE_URL);
 		} else {
 			printInjectionHistory(response);
 		}
@@ -64,7 +71,7 @@ public class SliceStatisticsOSGiWebConsole extends HttpServlet {
 
 		SliceStatistics report = SliceStatistics.fromInjectors(injectorHierarchy);
 		if (report.isEmpty()) {
-			writer.write("No injection history available.");
+			writer.write(NO_STATISTICS_AVAILABLE_MESSAGE);
 		} else {
 			writer.print(new StatisticsHtmlTablesRenderer(report));
 		}
@@ -73,7 +80,7 @@ public class SliceStatisticsOSGiWebConsole extends HttpServlet {
 	private void reset() {
 		for (String injectorName : injectorHierarchy.getInjectorNames()) {
 			injectorHierarchy.getInjectorByName(injectorName).getInstance(InjectorStatisticsRepository.class)
-					.clearHistory();
+					.clear();
 		}
 	}
 }
