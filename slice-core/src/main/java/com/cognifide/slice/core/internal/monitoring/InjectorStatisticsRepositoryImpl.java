@@ -22,7 +22,6 @@ package com.cognifide.slice.core.internal.monitoring;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.cognifide.slice.api.annotation.OsgiService;
 import com.cognifide.slice.api.execution.ExecutionContext;
 import com.google.inject.Singleton;
 
@@ -30,9 +29,6 @@ import com.google.inject.Singleton;
 public class InjectorStatisticsRepositoryImpl implements InjectorStatisticsRepository {
 
 	private final ModelUsageData modelUsageDataRoot = new ModelUsageData();
-	
-	@OsgiService
-	private MonitoringConfiguration config;
 
 	@Override
 	public InjectionMonitoringContext startMonitoring() {
@@ -41,9 +37,7 @@ public class InjectorStatisticsRepositoryImpl implements InjectorStatisticsRepos
 
 	@Override
 	public void save(InjectionMonitoringContext ctx) {
-		if (config.isMonitoringEnabled()) {
-			saveEvent(ctx.getElapsedTime(), ctx.getModelsStack());
-		}
+		saveEvent(ctx.getElapsedTime(), ctx.getModelsStack());
 	}
 
 	private void saveEvent(Long timeMeasurement, Queue<ExecutionContext> modelHierarchyContext) {
