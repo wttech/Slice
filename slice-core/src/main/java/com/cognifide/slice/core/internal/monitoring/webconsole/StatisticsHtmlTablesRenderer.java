@@ -19,6 +19,10 @@
  */
 package com.cognifide.slice.core.internal.monitoring.webconsole;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -37,10 +41,7 @@ public class StatisticsHtmlTablesRenderer {
 	@Override
 	public String toString() {
 		StringBuilder tableBuilder = new StringBuilder();
-		tableBuilder.append(
-				"<script>$('head').append('<link rel=\"stylesheet\" type=\"text/css\" href=\"https://cdnjs.cloudflare.com/ajax/libs/jquery-treetable/3.2.0/css/jquery.treetable.css\">');</script>");
-		tableBuilder.append(
-				"<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-treetable/3.2.0/jquery.treetable.js'></script>");
+		tableBuilder.append("<style type='text/css'>" + getResourceAsString("jquery.treetable.css") + "</style>");
 		for (Entry<String, ModelUsageData> injectorEntry : report.getStatistics().entrySet()) {
 			String header = injectorEntry.getKey();
 			String id = header.replaceAll(" > ", "-").replaceAll(" ", "_");
@@ -55,6 +56,8 @@ public class StatisticsHtmlTablesRenderer {
 		// remove root children indentation
 		tableBuilder.append(
 				"<script>$(document).ready(function() {$(\"tr\").find(\"td:first\").find(\"span[style='padding-left: 0px;']\").remove();});</script>");
+		tableBuilder
+				.append("<script type='text/javascript'>" + getResourceAsString("jquery.treetable.js") + "</script>");
 		return tableBuilder.toString();
 	}
 
@@ -171,5 +174,27 @@ public class StatisticsHtmlTablesRenderer {
 			flattenStats(entry.getValue(), result);
 		}
 		return result;
+	}
+
+	private String getResourceAsString(String resourceName) {
+		StringBuilder resourceContent = new StringBuilder();
+		InputStream resourceInputStream = getClass().getClassLoader().getResourceAsStream(resourceName);
+		if (resourceInputStream != null) {
+			try {
+				InputStreamReader inR = new InputStreamReader(resourceInputStream);
+				BufferedReader buf = new BufferedReader(inR);
+				String line;
+				while ((line = buf.readLine()) != null) {
+					resourceContent.append(line).append('\n');
+				}
+			} catch (IOException e) {
+			} finally {
+				try {
+					resourceInputStream.close();
+				} catch (IOException e) {
+				}
+			}
+		}
+		return resourceContent.toString();
 	}
 }
