@@ -21,6 +21,7 @@ package com.cognifide.slice.core.internal.monitoring.webconsole;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -35,8 +36,8 @@ import org.apache.felix.scr.annotations.Service;
 
 import com.cognifide.slice.core.internal.injector.InjectorHierarchy;
 import com.cognifide.slice.core.internal.monitoring.InjectorStatisticsRepository;
-import com.cognifide.slice.core.internal.monitoring.SliceStatisticsFactory;
-import com.cognifide.slice.core.internal.monitoring.SliceStatisticsFactory.SliceStatistics;
+import com.cognifide.slice.core.internal.monitoring.ModelUsageData;
+import com.cognifide.slice.core.internal.monitoring.SliceStatistics;
 
 @Component
 @Service
@@ -57,7 +58,7 @@ public class SliceStatisticsOSGiWebConsole extends HttpServlet {
 	private InjectorHierarchy injectorHierarchy;
 	
 	@Reference
-	private SliceStatisticsFactory sliceStatisticsFactory;
+	private SliceStatistics sliceStatisticsFactory;
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -73,7 +74,7 @@ public class SliceStatisticsOSGiWebConsole extends HttpServlet {
 	private void printInjectionHistory(HttpServletResponse response) throws IOException {
 		PrintWriter writer = response.getWriter();
 
-		SliceStatistics report = sliceStatisticsFactory.collectStatistics();
+		Map<String, ModelUsageData> report = sliceStatisticsFactory.collectStatistics();
 		if (report.isEmpty()) {
 			writer.write(NO_STATISTICS_AVAILABLE_MESSAGE);
 		} else {

@@ -28,24 +28,22 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.cognifide.slice.core.internal.monitoring.ModelUsageData;
-import com.cognifide.slice.core.internal.monitoring.SliceStatisticsFactory.SliceStatistics;
 
 public class StatisticsHtmlTablesRenderer {
 
-	private SliceStatistics report;
+	private Map<String, ModelUsageData> injectorsStatistics;
 
-	public StatisticsHtmlTablesRenderer(SliceStatistics report) {
-		this.report = report;
+	public StatisticsHtmlTablesRenderer(Map<String, ModelUsageData> injectorsStatistics) {
+		this.injectorsStatistics = injectorsStatistics;
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder tableBuilder = new StringBuilder();
 		tableBuilder.append("<style type='text/css'>" + getResourceAsString("jquery.treetable.css") + "</style>");
-		for (Entry<String, ModelUsageData> injectorEntry : report.getStatistics().entrySet()) {
+		for (Entry<String, ModelUsageData> injectorEntry : injectorsStatistics.entrySet()) {
 			String header = injectorEntry.getKey();
 			String id = header.replaceAll(" > ", "-").replaceAll(" ", "_");
-
 			renderFlatTable(tableBuilder, id, header, injectorEntry.getValue());
 			renderTreeTable(tableBuilder, id, header, injectorEntry.getValue());
 			tableBuilder.append("<hr style='margin-bottom: 20px'>");
