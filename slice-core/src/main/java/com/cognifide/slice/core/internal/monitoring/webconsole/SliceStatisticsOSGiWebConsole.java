@@ -22,6 +22,7 @@ package com.cognifide.slice.core.internal.monitoring.webconsole;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -50,28 +51,41 @@ public class SliceStatisticsOSGiWebConsole extends HttpServlet {
 
 	private static final String SLICE_STATS_CONSOLE_URL = "/system/console/slicestats";
 
+	private static final String ENABLED_PARAMETER_ENABLED = "enabled";
+
 	private static final String RESET_PARAMETER_NAME = "reset";
 
 	private static final String NO_STATISTICS_AVAILABLE_MESSAGE = "No injection statistics available.";
 
 	@Reference
 	private InjectorHierarchy injectorHierarchy;
-	
+
 	@Reference
 	private SliceStatistics sliceStatisticsFactory;
+
+	private AtomicBoolean statisticsEnabled = new AtomicBoolean(false);
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		if (request.getParameter(RESET_PARAMETER_NAME) != null) {
+		String enabledParam = request.getParameter(ENABLED_PARAMETER_ENABLED);
+		if (enabledParam != null) {
+			boolean enabledParamValue = Boolean.valueOf(enabledParam);
+			if (enabledParamValue != statisticsEnabled.get()) {
+				statisticsEnabled.set(enabledParamValue);
+				updateStatisticsRepositories();
+			}
+			response.sendRedirect(SLICE_STATS_CONSOLE_URL);
+		} else if (request.getParameter(RESET_PARAMETER_NAME) != null) {
 			reset();
 			response.sendRedirect(SLICE_STATS_CONSOLE_URL);
 		} else {
-			printInjectionHistory(response);
+			printStatisticsStatusButtons(response);
+			printInjectionHistory(response, statisticsEnabled.get());
 		}
 	}
 
-	private void printInjectionHistory(HttpServletResponse response) throws IOException {
+	private void printInjectionHistory(HttpServletResponse response, boolean statisticsEnabled) throws IOException {
 		PrintWriter writer = response.getWriter();
 
 		Map<String, ModelUsageData> report = sliceStatisticsFactory.collectStatistics();
@@ -82,10 +96,28 @@ public class SliceStatisticsOSGiWebConsole extends HttpServlet {
 		}
 	}
 
-	private void reset() {
+	private void printStatisticsStatusButtons(HttpServletResponse response) throws IOException {
+		boolean statisticsEnabledLocal = statisticsEnabled.get();
+		String paramValue = statisticsEnabledLocal ? "false" : "true";
+		String labelValue = statisticsEnabledLocal ? "Disable" : "Enable";
+		response.getWriter()
+				.write(String.format(
+						"<form action='' method='get'><input type='hidden' name='enabled' value='%s'><button type='submit'>%s</button></form>",
+						paramValue, labelValue));
+	}
+
+	private void updateStatisticsRepositories() {
+		boolean localEnabled = statisticsEnabled.get();
 		for (String injectorName : injectorHierarchy.getInjectorNames()) {
 			injectorHierarchy.getInjectorByName(injectorName).getInstance(InjectorStatisticsRepository.class)
-					.clear();
+					.setEnabled(localEnabled);
 		}
 	}
+
+	private void reset() {
+		for (String injectorName : injectorHierarchy.getInjectorNames()) {
+			injectorHierarchy.getInjectorByName(injectorName).getInstance(InjectorStatisticsRepository.class).clear();
+		}
+	}
+
 }

@@ -19,11 +19,8 @@
  */
 package com.cognifide.slice.core.internal.monitoring;
 
-import java.util.Queue;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.cognifide.slice.api.execution.ExecutionContext;
-import com.google.inject.Key;
 import com.google.inject.Singleton;
 
 @Singleton
@@ -31,35 +28,29 @@ public class InjectorStatisticsRepositoryImpl implements InjectorStatisticsRepos
 
 	private final ModelUsageData modelUsageDataRoot = new ModelUsageData();
 
+	private AtomicBoolean enabled = new AtomicBoolean(false);
+
 	@Override
 	public InjectionMonitoringContext startMonitoring() {
 		return new InjectionMonitoringContext();
 	}
 
-	@Override
-	public void save(InjectionMonitoringContext ctx) {
-		saveEvent(ctx.getElapsedTime(), ctx.getModelsStack());
-	}
-
 	public ModelUsageData getRootModelUsageData() {
 		return this.modelUsageDataRoot;
-	}
-	
-	private void saveEvent(Long timeMeasurement, Queue<ExecutionContext> modelHierarchyContext) {
-		ModelUsageData properItemInHierarchy = modelUsageDataRoot;
-		while (modelHierarchyContext.peek() != null) {
-			Class<?> ctx = modelHierarchyContext.poll().getInjecteeClass();
-			ConcurrentHashMap<Class<?>, ModelUsageData> subModels = properItemInHierarchy.getSubModels();
-			if (!subModels.containsKey(ctx)) {
-				subModels.putIfAbsent(ctx, new ModelUsageData());
-			}
-			properItemInHierarchy = subModels.get(ctx);
-		}
-		properItemInHierarchy.addTimeMeasurement(timeMeasurement);
 	}
 
 	public ModelUsageData getStatistics() {
 		return modelUsageDataRoot;
+	}
+
+	@Override
+	public void setEnabled(boolean enabled) {
+		this.enabled.set(enabled);
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return enabled.get();
 	}
 
 	public void clear() {

@@ -44,7 +44,8 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 
 /**
- * This class creates object or list of objects of given injectable type using Guice injector.
+ * This class creates object or list of objects of given injectable type using
+ * Guice injector.
  * 
  * @author Witold Szczerba
  * @author Rafał Malinowski
@@ -63,7 +64,7 @@ public class SliceModelProvider implements ModelProvider {
 	private final ClassToKeyMapper classToKeyMapper;
 
 	private final ExecutionContextStack currentExecutionContext;
-	
+
 	private final ExecutionStatisticsStack executionStatisticsStack;
 
 	private final ResourceResolver resourceResolver;
@@ -97,11 +98,11 @@ public class SliceModelProvider implements ModelProvider {
 	@Override
 	public final <T> T get(final Class<T> type, final String path) {
 		/*
-		 * This method is not synchronized on purpose, the only case where concurrency issues may occur is
-		 * when the contentPathContext variable is used from different threads, and since the
-		 * CurrentPathContext is request scoped it would mean multiple threads in same request which then is
-		 * against servlet specification.
-		 */
+		* This method is not synchronized on purpose, the only case where concurrency issues may occur is
+		* when the contentPathContext variable is used from different threads, and since the
+		* CurrentPathContext is request scoped it would mean multiple threads in same request which then is
+		* against servlet specification.
+		*/
 		ExecutionContextImpl executionItem = new ExecutionContextImpl(path);
 		LOG.debug("creating new instance of {} from {}", new Object[] { type.getName(), path });
 		return get(type, executionItem);
@@ -239,8 +240,10 @@ public class SliceModelProvider implements ModelProvider {
 	}
 
 	private <T> T get(Key<T> key, ExecutionContextImpl executionItem) {
-		//final InjectionMonitoringContext monitoringContext = injectorStatistics.startMonitoring();
-		this.executionStatisticsStack.startMeasurement(key);
+		boolean statisticsEnabled = injectorStatistics.isEnabled();
+		if (statisticsEnabled) {
+			this.executionStatisticsStack.startMeasurement(key);
+		}
 
 		final ContextProvider oldContextProvider = contextScope.getContextProvider();
 		contextScope.setContextProvider(contextProvider);
@@ -249,16 +252,14 @@ public class SliceModelProvider implements ModelProvider {
 			executionItem.setPath(currentExecutionContext.getAbsolutePath(executionItem.getPath()));
 		}
 
-		//executionItem.setInjecteeClass(key.getTypeLiteral().getRawType());
 		currentExecutionContext.push(executionItem);
-
-		//monitoringContext.setModelsStack(currentExecutionContext.getItems());
 
 		try {
 			return injector.getInstance(key);
 		} finally {
-			//injectorStatistics.save(monitoringContext);
-			this.executionStatisticsStack.endAndStoreMeasurement();
+			if (statisticsEnabled) {
+				this.executionStatisticsStack.endAndStoreMeasurement();
+			}
 			currentExecutionContext.pop();
 			contextScope.setContextProvider(oldContextProvider);
 		}

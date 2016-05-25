@@ -88,8 +88,7 @@ public class StatisticsHtmlTablesRenderer {
 
 	private void renderTreeTable(StringBuilder tableBuilder, String id, String header, ModelUsageData treeItem) {
 		int rowCounter = 1;
-		tableBuilder
-				.append("<table id='hierarchy-" + id + "' class='ui-helper-hidden tablesorter nicetable noauto'>");
+		tableBuilder.append("<table id='hierarchy-" + id + "' class='ui-helper-hidden tablesorter nicetable noauto'>");
 		tableBuilder.append(renderCaption(id, header, false));
 		tableBuilder.append(
 				"<thead><tr><th>Class</th><th class=\"sortInitialOrder-desc\">Instances Injected</th><th class=\"sortInitialOrder-desc\">Total Init Time [ms]</th class=\"sortInitialOrder-desc {sorter: 'floating'}\"><th class=\"sortInitialOrder-desc\">Avg. Init Time [ms]</th></tr></thead><tbody>");

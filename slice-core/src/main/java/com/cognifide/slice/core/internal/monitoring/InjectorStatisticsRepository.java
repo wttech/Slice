@@ -26,12 +26,13 @@ public interface InjectorStatisticsRepository {
 
 	InjectionMonitoringContext startMonitoring();
 
-	void save(InjectionMonitoringContext monitoringContext);
-
 	ModelUsageData getStatistics();
 
-	void clear();
-	
 	ModelUsageData getRootModelUsageData();
 
+	void clear();
+
+	void setEnabled(boolean enabled);
+
+	boolean isEnabled();
 }
