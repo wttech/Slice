@@ -21,7 +21,6 @@ package com.cognifide.slice.core.internal.monitoring;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.concurrent.ConcurrentHashMap;
 
 import com.google.inject.Inject;
 import com.google.inject.Key;

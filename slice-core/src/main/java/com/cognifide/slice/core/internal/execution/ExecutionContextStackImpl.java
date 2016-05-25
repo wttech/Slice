@@ -20,7 +20,6 @@
 
 package com.cognifide.slice.core.internal.execution;
 
-import java.util.LinkedList;
 import java.util.Stack;
 
 import org.apache.commons.lang.StringUtils;
@@ -74,10 +73,6 @@ public final class ExecutionContextStackImpl implements ExecutionContextStack {
 
 	private String joinPath(final Object... args) {
 		return StringUtils.join(args, "/").replace("//", "/");
-	}
-	
-	public LinkedList<ExecutionContext> getItems() {
-		return new LinkedList<ExecutionContext>(items);
 	}
 
 	@Override

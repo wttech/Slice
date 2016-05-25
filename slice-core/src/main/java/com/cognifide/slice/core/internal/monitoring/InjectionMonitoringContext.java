@@ -19,16 +19,8 @@
  */
 package com.cognifide.slice.core.internal.monitoring;
 
-import java.util.LinkedList;
-
-import com.cognifide.slice.api.execution.ExecutionContext;
-
 public class InjectionMonitoringContext {
 	private long startTime;
-
-	private LinkedList<ExecutionContext> modelsStack;
-
-	private Class<?> injecteeClass;
 
 	public InjectionMonitoringContext() {
 		startTime = System.nanoTime();
@@ -36,13 +28,5 @@ public class InjectionMonitoringContext {
 
 	public long getElapsedTime() {
 		return System.nanoTime() - startTime;
-	}
-
-	public void setModelsStack(LinkedList<ExecutionContext> models) {
-		this.modelsStack = models;
-	}
-
-	public LinkedList<ExecutionContext> getModelsStack() {
-		return modelsStack;
 	}
 }

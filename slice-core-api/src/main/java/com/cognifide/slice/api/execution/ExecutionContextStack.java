@@ -20,11 +20,9 @@
 
 package com.cognifide.slice.api.execution;
 
-import aQute.bnd.annotation.ProviderType;
-
-import java.util.LinkedList;
-
 import com.cognifide.slice.api.provider.ModelProvider;
+
+import aQute.bnd.annotation.ProviderType;
 
 /**
  * Execution context stack of Slice Injector. New ExecutionContext is put on this stack each time a new call
@@ -59,12 +57,7 @@ public interface ExecutionContextStack {
 	 * @return current size of a stack.
 	 */
 	int size();
-	
-	/**
-	 * 
-	 * @return all stack elements
-	 */
-	LinkedList<ExecutionContext> getItems();
+
 	
 	/**
 	 * @return absolute path from given path. If path is already absolute then it will be returned unchanged.

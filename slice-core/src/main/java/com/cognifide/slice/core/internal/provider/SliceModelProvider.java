@@ -37,7 +37,6 @@ import com.cognifide.slice.api.provider.ModelProvider;
 import com.cognifide.slice.api.scope.ContextScoped;
 import com.cognifide.slice.core.internal.execution.ExecutionContextImpl;
 import com.cognifide.slice.core.internal.monitoring.ExecutionStatisticsStack;
-import com.cognifide.slice.core.internal.monitoring.InjectionMonitoringContext;
 import com.cognifide.slice.core.internal.monitoring.InjectorStatisticsRepository;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
