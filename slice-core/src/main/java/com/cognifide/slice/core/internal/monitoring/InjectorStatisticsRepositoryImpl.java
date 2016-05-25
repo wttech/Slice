@@ -35,7 +35,7 @@ public class InjectorStatisticsRepositoryImpl implements InjectorStatisticsRepos
 		return new InjectionMonitoringContext();
 	}
 
-	public ModelUsageData getRootModelUsageData() {
+	public ModelUsageData getModelUsageDataRoot() {
 		return this.modelUsageDataRoot;
 	}
 

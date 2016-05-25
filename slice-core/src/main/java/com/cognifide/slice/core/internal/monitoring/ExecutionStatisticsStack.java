@@ -37,19 +37,13 @@ public class ExecutionStatisticsStack {
 	@Inject
 	public ExecutionStatisticsStack(InjectorStatisticsRepository injectorStatistics) {
 		this.injectorStatistics = injectorStatistics;
-		this.modelUsageDataStack.push(this.injectorStatistics.getRootModelUsageData());
+		this.modelUsageDataStack.push(this.injectorStatistics.getModelUsageDataRoot());
 	}
 
 	public <T> void startMeasurement(Key<T> key) {
 		InjectionMonitoringContext imx = this.injectorStatistics.startMonitoring();
 
-		// TODO: consider extracting the code bellow to ModelUserData.getChildForKey(Key key) or sth
-		Class<?> ctx = key.getTypeLiteral().getRawType();
-		ConcurrentHashMap<Class<?>, ModelUsageData> subModels = this.modelUsageDataStack.peek().getSubModels();
-		if (!subModels.containsKey(ctx)) {
-			subModels.putIfAbsent(ctx, new ModelUsageData());
-		}
-		ModelUsageData currentModelUsageData = subModels.get(ctx);
+		ModelUsageData currentModelUsageData = modelUsageDataStack.peek().getChildForKey(key);
 
 		this.monitoringContexts.push(imx);
 		this.modelUsageDataStack.push(currentModelUsageData);

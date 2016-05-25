@@ -40,7 +40,7 @@ public class SliceStatistics {
 	@Reference
 	private InjectorHierarchy injectorHierarchy;
 
-	public  Map<String, ModelUsageData> collectStatistics() {
+	public Map<String, ModelUsageData> collectStatistics() {
 		Map<String, ModelUsageData> statsHistory = new TreeMap<String, ModelUsageData>();
 
 		for (String injectorName : injectorHierarchy.getInjectorNames()) {
@@ -58,7 +58,7 @@ public class SliceStatistics {
 	private static ModelUsageData getStatistics(InjectorHierarchy injectorHierarchy, String injectorName) {
 		Injector injector = injectorHierarchy.getInjectorByName(injectorName);
 		InjectorStatisticsRepository statisticsRepository = injector.getInstance(InjectorStatisticsRepository.class);
-		return statisticsRepository.getStatistics();
+		return statisticsRepository.getModelUsageDataRoot();
 	}
 
 	private static String resolveInjectoNameInheritanceStructure(String injectorName,

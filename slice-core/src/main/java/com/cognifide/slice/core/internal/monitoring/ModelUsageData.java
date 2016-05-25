@@ -23,6 +23,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
+import com.google.inject.Key;
+
 public class ModelUsageData {
 
 	private ConcurrentHashMap<Class<?>, ModelUsageData> subModels = new ConcurrentHashMap<Class<?>, ModelUsageData>();
@@ -66,5 +68,13 @@ public class ModelUsageData {
 
 	public void clearSubModels() {
 		subModels = new ConcurrentHashMap<Class<?>, ModelUsageData>();
+	}
+
+	public ModelUsageData getChildForKey(Key<?> key) {
+		Class<?> ctx = key.getTypeLiteral().getRawType();
+		if (!subModels.containsKey(ctx)) {
+			subModels.putIfAbsent(ctx, new ModelUsageData());
+		}
+		return subModels.get(ctx);
 	}
 }

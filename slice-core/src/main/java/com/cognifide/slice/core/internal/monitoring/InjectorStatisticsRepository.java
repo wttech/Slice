@@ -26,9 +26,7 @@ public interface InjectorStatisticsRepository {
 
 	InjectionMonitoringContext startMonitoring();
 
-	ModelUsageData getStatistics();
-
-	ModelUsageData getRootModelUsageData();
+	ModelUsageData getModelUsageDataRoot();
 
 	void clear();
 
