@@ -36,7 +36,6 @@ import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 
 import com.cognifide.slice.core.internal.injector.InjectorHierarchy;
-import com.cognifide.slice.core.internal.monitoring.InjectorStatisticsRepository;
 import com.cognifide.slice.core.internal.monitoring.ModelUsageData;
 import com.cognifide.slice.core.internal.monitoring.SliceStatistics;
 
@@ -61,7 +60,7 @@ public class SliceStatisticsOSGiWebConsole extends HttpServlet {
 	private InjectorHierarchy injectorHierarchy;
 
 	@Reference
-	private SliceStatistics sliceStatisticsFactory;
+	private SliceStatistics sliceStatistics;
 
 	private AtomicBoolean statisticsEnabled = new AtomicBoolean(false);
 
@@ -73,11 +72,11 @@ public class SliceStatisticsOSGiWebConsole extends HttpServlet {
 			boolean enabledParamValue = Boolean.valueOf(enabledParam);
 			if (enabledParamValue != statisticsEnabled.get()) {
 				statisticsEnabled.set(enabledParamValue);
-				updateStatisticsRepositories();
+				sliceStatistics.updateStatisticsRepositories(statisticsEnabled.get());
 			}
 			response.sendRedirect(SLICE_STATS_CONSOLE_URL);
 		} else if (request.getParameter(RESET_PARAMETER_NAME) != null) {
-			reset();
+			sliceStatistics.reset();
 			response.sendRedirect(SLICE_STATS_CONSOLE_URL);
 		} else {
 			printStatisticsStatusButtons(response);
@@ -88,7 +87,7 @@ public class SliceStatisticsOSGiWebConsole extends HttpServlet {
 	private void printInjectionHistory(HttpServletResponse response, boolean statisticsEnabled) throws IOException {
 		PrintWriter writer = response.getWriter();
 
-		Map<String, ModelUsageData> report = sliceStatisticsFactory.collectStatistics();
+		Map<String, ModelUsageData> report = sliceStatistics.collectStatistics();
 		if (report.isEmpty()) {
 			writer.write(NO_STATISTICS_AVAILABLE_MESSAGE);
 		} else {
@@ -105,19 +104,4 @@ public class SliceStatisticsOSGiWebConsole extends HttpServlet {
 						"<form action='' method='get'><input type='hidden' name='enabled' value='%s'><button type='submit'>%s</button></form>",
 						paramValue, labelValue));
 	}
-
-	private void updateStatisticsRepositories() {
-		boolean localEnabled = statisticsEnabled.get();
-		for (String injectorName : injectorHierarchy.getInjectorNames()) {
-			injectorHierarchy.getInjectorByName(injectorName).getInstance(InjectorStatisticsRepository.class)
-					.setEnabled(localEnabled);
-		}
-	}
-
-	private void reset() {
-		for (String injectorName : injectorHierarchy.getInjectorNames()) {
-			injectorHierarchy.getInjectorByName(injectorName).getInstance(InjectorStatisticsRepository.class).clear();
-		}
-	}
-
 }

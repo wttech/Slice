@@ -78,4 +78,17 @@ public class SliceStatistics {
 
 		return StringUtils.join(injectorNamesStructure, " > ");
 	}
+
+	public void updateStatisticsRepositories(boolean statisticsEnabled) {
+		for (String injectorName : injectorHierarchy.getInjectorNames()) {
+			injectorHierarchy.getInjectorByName(injectorName).getInstance(InjectorStatisticsRepository.class)
+					.setEnabled(statisticsEnabled);
+		}
+	}
+
+	public void reset() {
+		for (String injectorName : injectorHierarchy.getInjectorNames()) {
+			injectorHierarchy.getInjectorByName(injectorName).getInstance(InjectorStatisticsRepository.class).clear();
+		}
+	}
 }
