@@ -48,7 +48,5 @@ public interface ExecutionContext {
 	 * @return path of this ExecutionItem. This value can not be null.
 	 */
 	String getPath();
-	
-	
-	Class<?> getInjecteeClass();
+
 }

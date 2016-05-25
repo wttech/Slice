@@ -20,9 +20,9 @@
 
 package com.cognifide.slice.api.execution;
 
-import com.cognifide.slice.api.provider.ModelProvider;
-
 import aQute.bnd.annotation.ProviderType;
+
+import com.cognifide.slice.api.provider.ModelProvider;
 
 /**
  * Execution context stack of Slice Injector. New ExecutionContext is put on this stack each time a new call
@@ -58,7 +58,6 @@ public interface ExecutionContextStack {
 	 */
 	int size();
 
-	
 	/**
 	 * @return absolute path from given path. If path is already absolute then it will be returned unchanged.
 	 * If it is relative (starting with ./) then it will be appended (after removing ./) to path of current

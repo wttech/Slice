@@ -25,8 +25,8 @@ import java.util.Stack;
 import org.apache.commons.lang.StringUtils;
 
 import com.cognifide.slice.api.exceptions.InvalidExecutionContextException;
-import com.cognifide.slice.api.execution.ExecutionContext;
 import com.cognifide.slice.api.execution.ExecutionContextStack;
+import com.cognifide.slice.api.execution.ExecutionContext;
 
 /**
  * This is internal class, should not be used outside of framework.
@@ -92,4 +92,5 @@ public final class ExecutionContextStackImpl implements ExecutionContextStack {
 		// remove "./" from path
 		return joinPath(peek().getPath(), path.substring(2));
 	}
+
 }

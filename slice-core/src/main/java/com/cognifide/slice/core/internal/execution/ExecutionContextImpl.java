@@ -29,8 +29,6 @@ public class ExecutionContextImpl implements ExecutionContext {
 	private String path;
 
 	private Resource resource;
-	
-	private Class<?> injecteeClass;
 
 	public ExecutionContextImpl(final String path) {
 		this.path = path;
@@ -62,11 +60,4 @@ public class ExecutionContextImpl implements ExecutionContext {
 		this.resource = resource;
 	}
 
-	public Class<?> getInjecteeClass() {
-		return injecteeClass;
-	}
-
-	public void setInjecteeClass(Class<?> injecteeClass) {
-		this.injecteeClass = injecteeClass;
-	}
 }
