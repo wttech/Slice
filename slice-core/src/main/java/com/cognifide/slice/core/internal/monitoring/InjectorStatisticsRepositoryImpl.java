@@ -23,6 +23,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.cognifide.slice.api.execution.ExecutionContext;
+import com.google.inject.Key;
 import com.google.inject.Singleton;
 
 @Singleton
@@ -40,6 +41,10 @@ public class InjectorStatisticsRepositoryImpl implements InjectorStatisticsRepos
 		saveEvent(ctx.getElapsedTime(), ctx.getModelsStack());
 	}
 
+	public ModelUsageData getRootModelUsageData() {
+		return this.modelUsageDataRoot;
+	}
+	
 	private void saveEvent(Long timeMeasurement, Queue<ExecutionContext> modelHierarchyContext) {
 		ModelUsageData properItemInHierarchy = modelUsageDataRoot;
 		while (modelHierarchyContext.peek() != null) {

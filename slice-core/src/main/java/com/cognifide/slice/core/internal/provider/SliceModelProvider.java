@@ -36,6 +36,7 @@ import com.cognifide.slice.api.execution.ExecutionContextStack;
 import com.cognifide.slice.api.provider.ModelProvider;
 import com.cognifide.slice.api.scope.ContextScoped;
 import com.cognifide.slice.core.internal.execution.ExecutionContextImpl;
+import com.cognifide.slice.core.internal.monitoring.ExecutionStatisticsStack;
 import com.cognifide.slice.core.internal.monitoring.InjectionMonitoringContext;
 import com.cognifide.slice.core.internal.monitoring.InjectorStatisticsRepository;
 import com.google.inject.Inject;
@@ -62,12 +63,14 @@ public class SliceModelProvider implements ModelProvider {
 	private final ClassToKeyMapper classToKeyMapper;
 
 	private final ExecutionContextStack currentExecutionContext;
+	
+	private final ExecutionStatisticsStack executionStatisticsStack;
 
 	private final ResourceResolver resourceResolver;
 
 	private final SliceModelClassResolver modelClassResolver;
 
-	private final InjectorStatisticsRepository sliceStats;
+	private final InjectorStatisticsRepository injectorStatistics;
 
 	/**
 	 * {@inheritDoc}
@@ -75,15 +78,17 @@ public class SliceModelProvider implements ModelProvider {
 	@Inject
 	public SliceModelProvider(final Injector injector, final ContextScope contextScope,
 			final ClassToKeyMapper classToKeyMapper, final ExecutionContextStack currentExecutionContext,
-			final ResourceResolver resourceResolver, SliceModelClassResolver modelClassResolver, InjectorStatisticsRepository sliceStats) {
+			final ResourceResolver resourceResolver, SliceModelClassResolver modelClassResolver,
+			InjectorStatisticsRepository sliceStats, ExecutionStatisticsStack executionStatisticsStack) {
 		this.injector = injector;
 		this.contextScope = contextScope;
 		this.contextProvider = contextScope.getContextProvider();
 		this.classToKeyMapper = classToKeyMapper;
 		this.currentExecutionContext = currentExecutionContext;
+		this.executionStatisticsStack = executionStatisticsStack;
 		this.resourceResolver = resourceResolver;
 		this.modelClassResolver = modelClassResolver;
-		this.sliceStats = sliceStats;
+		this.injectorStatistics = sliceStats;
 	}
 
 	/**
@@ -234,20 +239,26 @@ public class SliceModelProvider implements ModelProvider {
 	}
 
 	private <T> T get(Key<T> key, ExecutionContextImpl executionItem) {
-		InjectionMonitoringContext monitoringContext = sliceStats.startMonitoring();
+		//final InjectionMonitoringContext monitoringContext = injectorStatistics.startMonitoring();
+		this.executionStatisticsStack.startMeasurement(key);
+
 		final ContextProvider oldContextProvider = contextScope.getContextProvider();
 		contextScope.setContextProvider(contextProvider);
 
 		if ((executionItem.getResource() == null) && (executionItem.getPath() != null)) {
 			executionItem.setPath(currentExecutionContext.getAbsolutePath(executionItem.getPath()));
 		}
-		executionItem.setInjecteeClass(key.getTypeLiteral().getRawType());
+
+		//executionItem.setInjecteeClass(key.getTypeLiteral().getRawType());
 		currentExecutionContext.push(executionItem);
-		monitoringContext.setModelsStack(currentExecutionContext.getItems());
+
+		//monitoringContext.setModelsStack(currentExecutionContext.getItems());
+
 		try {
 			return injector.getInstance(key);
 		} finally {
-			sliceStats.save(monitoringContext);
+			//injectorStatistics.save(monitoringContext);
+			this.executionStatisticsStack.endAndStoreMeasurement();
 			currentExecutionContext.pop();
 			contextScope.setContextProvider(oldContextProvider);
 		}
