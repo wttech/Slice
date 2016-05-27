@@ -21,6 +21,7 @@ package com.cognifide.slice.core.internal.module;
 
 import com.cognifide.slice.core.internal.monitoring.MethodMonitoringInterceptor;
 import com.cognifide.slice.core.internal.monitoring.Monitored;
+import com.cognifide.slice.core.internal.monitoring.StatisticsStackProvider;
 import com.google.inject.AbstractModule;
 import com.google.inject.matcher.Matchers;
 
@@ -28,6 +29,7 @@ public class SliceMonitoringModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bindInterceptor(Matchers.any(), Matchers.annotatedWith(Monitored.class), new MethodMonitoringInterceptor());
+		bindInterceptor(Matchers.subclassesOf(StatisticsStackProvider.class), Matchers.annotatedWith(Monitored.class),
+				new MethodMonitoringInterceptor());
 	}
 }

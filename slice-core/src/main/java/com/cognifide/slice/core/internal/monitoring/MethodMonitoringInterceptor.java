@@ -28,11 +28,6 @@ public class MethodMonitoringInterceptor implements MethodInterceptor {
 
 	@Override
 	public Object invoke(MethodInvocation invocation) throws Throwable {
-		Object invocationObject = invocation.getThis();
-		if (!(invocationObject instanceof StatisticsStackProvider)) {
-			throw new IllegalArgumentException(
-					"Monitored instance has to implement " + StatisticsStackProvider.class.getName());
-		}
 		ExecutionStatisticsStack stack = ((StatisticsStackProvider) invocation.getThis()).getExecutionStatisticsStack();
 		Key<?> key = findKey(invocation);
 		stack.startMeasurement(key);
