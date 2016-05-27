@@ -98,7 +98,7 @@ public class SliceStatisticsOSGiWebConsole extends HttpServlet {
 	private void printStatisticsStatusButtons(HttpServletResponse response) throws IOException {
 		boolean statisticsEnabledLocal = statisticsEnabled.get();
 		String paramValue = statisticsEnabledLocal ? "false" : "true";
-		String labelValue = statisticsEnabledLocal ? "Disable" : "Enable";
+		String labelValue = statisticsEnabledLocal ? "Stop" : "Start";
 		response.getWriter()
 				.write(String.format(
 						"<form action='' method='get'><input type='hidden' name='enabled' value='%s'><button type='submit'>%s</button></form>",
