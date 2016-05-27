@@ -27,9 +27,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.cognifide.slice.core.internal.monitoring.ModelUsageData;
 
 public class StatisticsHtmlTablesRenderer {
+
+	private final Logger log = LoggerFactory.getLogger(StatisticsHtmlTablesRenderer.class);
 
 	private Map<String, ModelUsageData> injectorsStatistics;
 
@@ -98,15 +103,12 @@ public class StatisticsHtmlTablesRenderer {
 			Long instancesCount = stats.getCount();
 			Long totalTime = stats.getTotalTime();
 			double avgTime = stats.getAverageTime();
-			tableBuilder.append("<tr data-tt-id='" + rowCounter + "'><td>");
-			tableBuilder.append(entry.getKey().getName());
-			tableBuilder.append("</td><td>");
-			tableBuilder.append(instancesCount.toString());
-			tableBuilder.append("</td><td>");
-			tableBuilder.append(totalTime.toString());
-			tableBuilder.append("</td><td>");
-			tableBuilder.append(String.format("%.3f", avgTime));
-			tableBuilder.append("</td><tr>");
+			tableBuilder.append("<tr data-tt-id='" + rowCounter + "'>");
+			renderTableCell(tableBuilder, entry.getKey().getName());
+			renderTableCell(tableBuilder, instancesCount.toString());
+			renderTableCell(tableBuilder, totalTime.toString());
+			renderTableCell(tableBuilder, String.format("%.3f", avgTime));
+			tableBuilder.append("<tr>");
 
 			rowCounter = printChildren(rowCounter, stats, tableBuilder);
 		}
@@ -123,17 +125,12 @@ public class StatisticsHtmlTablesRenderer {
 			Long instancesCount = stats.getCount();
 			Long totalTime = stats.getTotalTime();
 			double avgTime = stats.getAverageTime();
-			tableBuilder
-					.append("<tr data-tt-id='" + ++localRowCounter + "' data-tt-parent-id='" + parentNodeId + "'><td>");
-			tableBuilder.append(entry.getKey().getName());
-			tableBuilder.append("</td><td>");
-			tableBuilder.append(instancesCount.toString());
-			tableBuilder.append("</td><td>");
-			tableBuilder.append(totalTime.toString());
-			tableBuilder.append("</td><td>");
-			tableBuilder.append(String.format("%.3f", avgTime));
-			tableBuilder.append("</td><tr>");
-
+			tableBuilder.append("<tr data-tt-id='" + ++localRowCounter + "' data-tt-parent-id='" + parentNodeId + "'>");
+			renderTableCell(tableBuilder, entry.getKey().getName());
+			renderTableCell(tableBuilder, instancesCount.toString());
+			renderTableCell(tableBuilder, totalTime.toString());
+			renderTableCell(tableBuilder, String.format("%.3f", avgTime));
+			tableBuilder.append("<tr>");
 			localRowCounter = printChildren(localRowCounter, stats, tableBuilder);
 		}
 		return 1 + localRowCounter;
@@ -161,6 +158,10 @@ public class StatisticsHtmlTablesRenderer {
 		return flattenStats(treeItem, new HashMap<Class<?>, ModelUsageData>());
 	}
 
+	private void renderTableCell(StringBuilder tableBuilder, String innerHtml) {
+		tableBuilder.append("<td>").append(innerHtml).append("</td>");
+	}
+
 	private Map<Class<?>, ModelUsageData> flattenStats(ModelUsageData treeItem, Map<Class<?>, ModelUsageData> result) {
 		for (Entry<Class<?>, ModelUsageData> entry : treeItem.getSubModels().entrySet()) {
 			if (!result.containsKey(entry.getKey())) {
@@ -184,11 +185,13 @@ public class StatisticsHtmlTablesRenderer {
 				while ((line = buf.readLine()) != null) {
 					resourceContent.append(line).append('\n');
 				}
-			} catch (IOException e) {
+			} catch (IOException ioe) {
+				log.error("Failed to embed resource: " + resourceName, ioe);
 			} finally {
 				try {
 					resourceInputStream.close();
-				} catch (IOException e) {
+				} catch (IOException ioe) {
+					log.error("Failed to close resource: " + resourceName, ioe);
 				}
 			}
 		}

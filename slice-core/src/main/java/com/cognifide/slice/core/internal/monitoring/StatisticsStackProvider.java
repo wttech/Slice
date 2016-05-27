@@ -19,16 +19,7 @@
  */
 package com.cognifide.slice.core.internal.monitoring;
 
-import com.google.inject.ImplementedBy;
-
-@ImplementedBy(InjectorStatisticsRepositoryImpl.class)
-public interface InjectorStatisticsRepository {
-
-	ModelUsageData getModelUsageDataRoot();
-
-	void clear();
-
-	void setEnabled(boolean enabled);
-
-	boolean isEnabled();
+public interface StatisticsStackProvider {
+	
+	ExecutionStatisticsStack getExecutionStatisticsStack();
 }

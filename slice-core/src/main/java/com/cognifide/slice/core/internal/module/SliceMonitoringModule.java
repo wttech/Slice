@@ -17,18 +17,17 @@
  * limitations under the License.
  * #L%
  */
-package com.cognifide.slice.core.internal.monitoring;
+package com.cognifide.slice.core.internal.module;
 
-import com.google.inject.ImplementedBy;
+import com.cognifide.slice.core.internal.monitoring.MethodMonitoringInterceptor;
+import com.cognifide.slice.core.internal.monitoring.Monitored;
+import com.google.inject.AbstractModule;
+import com.google.inject.matcher.Matchers;
 
-@ImplementedBy(InjectorStatisticsRepositoryImpl.class)
-public interface InjectorStatisticsRepository {
+public class SliceMonitoringModule extends AbstractModule {
 
-	ModelUsageData getModelUsageDataRoot();
-
-	void clear();
-
-	void setEnabled(boolean enabled);
-
-	boolean isEnabled();
+	@Override
+	protected void configure() {
+		bindInterceptor(Matchers.any(), Matchers.annotatedWith(Monitored.class), new MethodMonitoringInterceptor());
+	}
 }

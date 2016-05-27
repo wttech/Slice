@@ -20,6 +20,7 @@
 package com.cognifide.slice.core.internal.monitoring;
 
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -46,7 +47,7 @@ public class ModelUsageData {
 		return TimeUnit.NANOSECONDS.toMillis(totalTime.get());
 	}
 
-	public ConcurrentHashMap<Class<?>, ModelUsageData> getSubModels() {
+	public ConcurrentMap<Class<?>, ModelUsageData> getSubModels() {
 		return subModels;
 	}
 

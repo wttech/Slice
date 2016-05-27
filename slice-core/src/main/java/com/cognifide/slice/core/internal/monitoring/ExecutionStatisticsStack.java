@@ -27,6 +27,8 @@ import com.google.inject.Key;
 
 public class ExecutionStatisticsStack {
 
+	private final boolean monitoringEnabled;
+
 	private InjectorStatisticsRepository injectorStatistics;
 
 	private Deque<InjectionMonitoringContext> monitoringContexts = new ArrayDeque<InjectionMonitoringContext>();
@@ -37,20 +39,23 @@ public class ExecutionStatisticsStack {
 	public ExecutionStatisticsStack(InjectorStatisticsRepository injectorStatistics) {
 		this.injectorStatistics = injectorStatistics;
 		this.modelUsageDataStack.push(this.injectorStatistics.getModelUsageDataRoot());
+		this.monitoringEnabled = injectorStatistics.isEnabled();
 	}
 
 	public <T> void startMeasurement(Key<T> key) {
-		InjectionMonitoringContext imx = this.injectorStatistics.startMonitoring();
+		if (monitoringEnabled) {
+			ModelUsageData currentModelUsageData = modelUsageDataStack.peek().getChildForKey(key);
 
-		ModelUsageData currentModelUsageData = modelUsageDataStack.peek().getChildForKey(key);
-
-		this.monitoringContexts.push(imx);
-		this.modelUsageDataStack.push(currentModelUsageData);
+			this.monitoringContexts.push(new InjectionMonitoringContext());
+			this.modelUsageDataStack.push(currentModelUsageData);
+		}
 	}
 
 	public void endAndStoreMeasurement() {
-		InjectionMonitoringContext injectionMonitoringContext = this.monitoringContexts.pop();
-		this.modelUsageDataStack.pop().addTimeMeasurement(injectionMonitoringContext.getElapsedTime());
+		if (monitoringEnabled) {
+			InjectionMonitoringContext injectionMonitoringContext = this.monitoringContexts.pop();
+			this.modelUsageDataStack.pop().addTimeMeasurement(injectionMonitoringContext.getElapsedTime());
+		}
 	}
 
 }

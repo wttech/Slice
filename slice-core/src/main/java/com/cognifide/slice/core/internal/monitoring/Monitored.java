@@ -19,16 +19,15 @@
  */
 package com.cognifide.slice.core.internal.monitoring;
 
-import com.google.inject.ImplementedBy;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@ImplementedBy(InjectorStatisticsRepositoryImpl.class)
-public interface InjectorStatisticsRepository {
+import com.google.inject.BindingAnnotation;
 
-	ModelUsageData getModelUsageDataRoot();
-
-	void clear();
-
-	void setEnabled(boolean enabled);
-
-	boolean isEnabled();
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@BindingAnnotation
+public @interface Monitored {
 }

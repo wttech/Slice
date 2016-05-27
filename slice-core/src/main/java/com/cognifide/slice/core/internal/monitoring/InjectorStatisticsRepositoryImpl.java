@@ -30,11 +30,6 @@ public class InjectorStatisticsRepositoryImpl implements InjectorStatisticsRepos
 
 	private AtomicBoolean enabled = new AtomicBoolean(false);
 
-	@Override
-	public InjectionMonitoringContext startMonitoring() {
-		return new InjectionMonitoringContext();
-	}
-
 	public ModelUsageData getModelUsageDataRoot() {
 		return this.modelUsageDataRoot;
 	}

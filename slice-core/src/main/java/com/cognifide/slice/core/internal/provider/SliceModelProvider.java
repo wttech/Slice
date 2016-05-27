@@ -38,6 +38,8 @@ import com.cognifide.slice.api.scope.ContextScoped;
 import com.cognifide.slice.core.internal.execution.ExecutionContextImpl;
 import com.cognifide.slice.core.internal.monitoring.ExecutionStatisticsStack;
 import com.cognifide.slice.core.internal.monitoring.InjectorStatisticsRepository;
+import com.cognifide.slice.core.internal.monitoring.Monitored;
+import com.cognifide.slice.core.internal.monitoring.StatisticsStackProvider;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -49,7 +51,7 @@ import com.google.inject.Key;
  * @author Rafał Malinowski
  */
 @ContextScoped
-public class SliceModelProvider implements ModelProvider {
+public class SliceModelProvider implements ModelProvider, StatisticsStackProvider {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SliceModelProvider.class);
 
@@ -69,8 +71,6 @@ public class SliceModelProvider implements ModelProvider {
 
 	private final SliceModelClassResolver modelClassResolver;
 
-	private final InjectorStatisticsRepository injectorStatistics;
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -87,7 +87,6 @@ public class SliceModelProvider implements ModelProvider {
 		this.executionStatisticsStack = executionStatisticsStack;
 		this.resourceResolver = resourceResolver;
 		this.modelClassResolver = modelClassResolver;
-		this.injectorStatistics = sliceStats;
 	}
 
 	/**
@@ -236,13 +235,9 @@ public class SliceModelProvider implements ModelProvider {
 	private <T> T get(Class<T> type, ExecutionContextImpl executionItem) {
 		return get(Key.get(type), executionItem);
 	}
-
-	private <T> T get(Key<T> key, ExecutionContextImpl executionItem) {
-		boolean statisticsEnabled = injectorStatistics.isEnabled();
-		if (statisticsEnabled) {
-			this.executionStatisticsStack.startMeasurement(key);
-		}
-
+	
+	@Monitored
+	public <T> T get(Key<T> key, ExecutionContextImpl executionItem) {
 		final ContextProvider oldContextProvider = contextScope.getContextProvider();
 		contextScope.setContextProvider(contextProvider);
 
@@ -255,9 +250,6 @@ public class SliceModelProvider implements ModelProvider {
 		try {
 			return injector.getInstance(key);
 		} finally {
-			if (statisticsEnabled) {
-				this.executionStatisticsStack.endAndStoreMeasurement();
-			}
 			currentExecutionContext.pop();
 			contextScope.setContextProvider(oldContextProvider);
 		}
@@ -273,5 +265,10 @@ public class SliceModelProvider implements ModelProvider {
 			return null;
 		}
 		return get(clazz, resource);
+	}
+
+	@Override
+	public ExecutionStatisticsStack getExecutionStatisticsStack() {
+		return executionStatisticsStack;
 	}
 }
