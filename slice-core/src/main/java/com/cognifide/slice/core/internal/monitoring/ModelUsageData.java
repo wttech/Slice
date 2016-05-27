@@ -26,6 +26,13 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import com.google.inject.Key;
 
+/**
+ * Slice models hierarchy aware container for injection statistics of given
+ * Slice model. Aggregates information about injections duration and holds
+ * information about injections of children models.
+ * 
+ * @author Jakub Przybytek, Jacek Fohs
+ */
 public class ModelUsageData {
 
 	private ConcurrentHashMap<Class<?>, ModelUsageData> subModels = new ConcurrentHashMap<Class<?>, ModelUsageData>();

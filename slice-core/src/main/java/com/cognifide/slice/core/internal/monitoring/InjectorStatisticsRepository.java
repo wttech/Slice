@@ -21,14 +21,33 @@ package com.cognifide.slice.core.internal.monitoring;
 
 import com.google.inject.ImplementedBy;
 
+/**
+ * Container for single injector's Slice models statistics
+ * 
+ * @author Jakub Przybytek, Jacek Fohs
+ */
+
 @ImplementedBy(InjectorStatisticsRepositoryImpl.class)
 public interface InjectorStatisticsRepository {
 
+	/**
+	 * @return related injector's statistics tree root
+	 */
+
 	ModelUsageData getModelUsageDataRoot();
 
+	/**
+	 * Clears statistics gathered so far
+	 */
 	void clear();
 
+	/**
+	 * @param enabled flag indicating if Slice statistics should be gathered
+	 */
 	void setEnabled(boolean enabled);
 
+	/**
+	 * @return flag indicating if Slice statistics should be gathered
+	 */
 	boolean isEnabled();
 }
