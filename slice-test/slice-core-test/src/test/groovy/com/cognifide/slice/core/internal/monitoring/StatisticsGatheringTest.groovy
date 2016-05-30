@@ -19,14 +19,18 @@
  */
 package com.cognifide.slice.core.internal.monitoring;
 
+import java.lang.reflect.Field
+
 import org.junit.Assert
 import org.mockito.Mockito
 
+import com.cognifide.slice.api.injector.InjectorConfig
+import com.cognifide.slice.api.injector.InjectorRunner
 import com.cognifide.slice.api.provider.ModelProvider
 import com.cognifide.slice.core.internal.injector.InjectorHierarchy
 import com.cognifide.slice.core.internal.provider.SliceModelProvider
 import com.cognifide.slice.test.module.CompositeModel
-import com.cognifide.slice.test.module.SimpleModel;
+import com.cognifide.slice.test.module.SimpleModel
 import com.cognifide.slice.test.setup.BaseSetup
 
 /**
@@ -61,11 +65,7 @@ class StatisticsGatheringTest extends BaseSetup {
 		InjectorStatisticsRepository statsRepo = injector.getInstance(InjectorStatisticsRepository.class);
 		statsRepo.setEnabled(true);
 		SliceModelProvider sliceProvider = modelProvider;
-		// Simulate new context start
-		def enabledField = ExecutionStatisticsStack.class.getDeclaredField("monitoringEnabled")
-		enabledField.setAccessible(true);
-		enabledField.setBoolean(sliceProvider.executionStatisticsStack, statsRepo.isEnabled());
-		// Simulate new context end
+		enableMonitoring(sliceProvider);
 		ModelUsageData root = statsRepo.modelUsageDataRoot;
 		Assert.assertNotNull(root);
 		Assert.assertNotNull(root.subModels);
@@ -84,8 +84,43 @@ class StatisticsGatheringTest extends BaseSetup {
 		ModelUsageData simple = composite.getSubModels().get(SimpleModel.class);
 		Assert.assertTrue(simple.getCount() == 2);
 		Assert.assertTrue(simple.getTotalTime() <= composite.getTotalTime());
-		
+
 		statsRepo.clear();
 		Assert.assertTrue(root.subModels.isEmpty());
+	}
+
+	def "Get models with enabled statistics with SliceStatistics"() {
+		setup:
+		SliceModelProvider sliceProvider = modelProvider;
+		enableMonitoring(sliceProvider);
+
+		Collection<String> injectorNames = new ArrayList<String>(1);
+		injectorNames.add("testInjector");
+
+		InjectorHierarchy injectorHierarchyMock = Mockito.mock(InjectorHierarchy.class);
+		Mockito.when(injectorHierarchyMock.getInjectorNames()).thenReturn(injectorNames);
+		Mockito.when(injectorHierarchyMock.getInjectorByName(Mockito.anyString())).thenReturn(injector);
+
+		InjectorConfig cfg = Mockito.mock(InjectorConfig.class);
+		Mockito.when(cfg.hasParent()).thenReturn(false);
+
+		Mockito.when(injectorHierarchyMock.getInjectorConfigByName(Mockito.anyString())).thenReturn(cfg);
+
+		SliceStatistics stats = new SliceStatistics();
+		Field injectorHierarchy = SliceStatistics.class.getDeclaredField("injectorHierarchy");
+		injectorHierarchy.setAccessible(true);
+		injectorHierarchy.set(stats, injectorHierarchyMock);
+
+		modelProvider.get(CompositeModel.class, "/content");
+		Map<String, ModelUsageData> result = stats.collectStatistics();
+		Assert.assertFalse(stats.collectStatistics().isEmpty());
+		stats.reset();
+		Assert.assertTrue(stats.collectStatistics().isEmpty());
+	}
+
+	def enableMonitoring(SliceModelProvider sliceProvider) {
+		def enabledField = ExecutionStatisticsStack.class.getDeclaredField("monitoringEnabled")
+		enabledField.setAccessible(true);
+		enabledField.setBoolean(sliceProvider.executionStatisticsStack, true);
 	}
 }
