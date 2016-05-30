@@ -19,6 +19,8 @@
  */
 package com.cognifide.slice.test.setup
 
+import spock.lang.Shared
+
 import com.citytechinc.aem.prosper.specs.ProsperSpec
 import com.cognifide.slice.api.context.ConstantContextProvider
 import com.cognifide.slice.api.context.Context
@@ -28,6 +30,7 @@ import com.cognifide.slice.api.provider.ModelProvider
 import com.cognifide.slice.core.internal.context.SliceContextScope
 import com.cognifide.slice.core.internal.module.JcrModule
 import com.cognifide.slice.core.internal.module.SliceModule
+import com.cognifide.slice.core.internal.module.SliceMonitoringModule
 import com.cognifide.slice.core.internal.module.SliceResourceModule
 import com.cognifide.slice.core.internal.module.SlingModule
 import com.cognifide.slice.mapper.module.MapperModule
@@ -35,8 +38,6 @@ import com.cognifide.slice.test.module.TestModule
 import com.google.inject.Guice
 import com.google.inject.Injector
 import com.google.inject.Module
-
-import spock.lang.Shared;
 
 /**
  * @author Mariusz Kubiś
@@ -76,6 +77,7 @@ class BaseSetup extends ProsperSpec {
 		modules.add(mapperModule = new MapperModule())
 		modules.add(sliceResourceModule = new SliceResourceModule())
 		modules.add(new TestModule())
+		modules.add(new SliceMonitoringModule())
 
 		injector = Guice.createInjector(modules)
 
