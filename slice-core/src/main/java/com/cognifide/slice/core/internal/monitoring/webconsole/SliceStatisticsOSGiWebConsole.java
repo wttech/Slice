@@ -62,10 +62,10 @@ public class SliceStatisticsOSGiWebConsole extends HttpServlet {
 	@Reference
 	private SliceStatistics sliceStatistics;
 
-	private AtomicBoolean statisticsEnabled = new AtomicBoolean(false);
+	private final AtomicBoolean statisticsEnabled = new AtomicBoolean(false);
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+	protected synchronized void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String enabledParam = request.getParameter(ENABLED_PARAMETER_ENABLED);
 		if (enabledParam != null) {

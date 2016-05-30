@@ -36,7 +36,7 @@ public class StatisticsHtmlTablesRenderer {
 
 	private final Logger log = LoggerFactory.getLogger(StatisticsHtmlTablesRenderer.class);
 
-	private Map<String, ModelUsageData> injectorsStatistics;
+	private final Map<String, ModelUsageData> injectorsStatistics;
 
 	public StatisticsHtmlTablesRenderer(Map<String, ModelUsageData> injectorsStatistics) {
 		this.injectorsStatistics = injectorsStatistics;

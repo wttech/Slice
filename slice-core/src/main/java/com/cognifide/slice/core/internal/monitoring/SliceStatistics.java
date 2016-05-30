@@ -33,6 +33,13 @@ import com.cognifide.slice.api.injector.InjectorConfig;
 import com.cognifide.slice.core.internal.injector.InjectorHierarchy;
 import com.google.inject.Injector;
 
+/**
+ * Facade providing simplified interface for accessing statistics data and
+ * delegating settings changes to InjectorStatisticsRepositories.
+ * 
+ * @author Jakub Przybytek, Jacek Fohs
+ */
+
 @Component
 @Service(SliceStatistics.class)
 public class SliceStatistics {
@@ -40,6 +47,14 @@ public class SliceStatistics {
 	@Reference
 	private InjectorHierarchy injectorHierarchy;
 
+	/**
+	 * Collects all statistics available and groups them by injector hierarchy
+	 * String. Injector hierarchy is resolved to String by joing its name with
+	 * its consecutive parents names.
+	 * 
+	 * @return map mapping injetors hierarchy string to related model injection
+	 *         roots; see {@link ModelUsageData}.
+	 */
 	public Map<String, ModelUsageData> collectStatistics() {
 		Map<String, ModelUsageData> statsHistory = new TreeMap<String, ModelUsageData>();
 
@@ -61,8 +76,7 @@ public class SliceStatistics {
 		return statisticsRepository.getModelUsageDataRoot();
 	}
 
-	private static String resolveInjectoNameInheritanceStructure(String injectorName,
-			InjectorHierarchy injectorHierarchy) {
+	private String resolveInjectoNameInheritanceStructure(String injectorName, InjectorHierarchy injectorHierarchy) {
 		Deque<String> injectorNamesStructure = new ArrayDeque<String>();
 
 		String currentInjectorName = injectorName;
@@ -79,6 +93,11 @@ public class SliceStatistics {
 		return StringUtils.join(injectorNamesStructure, " > ");
 	}
 
+	/**
+	 * Enables or disables statistics monitoring. Statistics collected so far are not affected.
+	 * 
+	 * @param statisticsEnabled flag indicating whether to enable or disable statistics monitoring.
+	 */
 	public void updateStatisticsRepositories(boolean statisticsEnabled) {
 		for (String injectorName : injectorHierarchy.getInjectorNames()) {
 			injectorHierarchy.getInjectorByName(injectorName).getInstance(InjectorStatisticsRepository.class)
@@ -86,6 +105,9 @@ public class SliceStatistics {
 		}
 	}
 
+	/**
+	 * Deletes all statistics collected so far.
+	 */
 	public void reset() {
 		for (String injectorName : injectorHierarchy.getInjectorNames()) {
 			injectorHierarchy.getInjectorByName(injectorName).getInstance(InjectorStatisticsRepository.class).clear();

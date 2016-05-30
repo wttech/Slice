@@ -19,10 +19,10 @@
  */
 package com.cognifide.slice.core.internal.monitoring;
 
-public class InjectionMonitoringContext {
+public class TimeMeasurement {
 	private long startTime;
 
-	public InjectionMonitoringContext() {
+	public TimeMeasurement() {
 		startTime = System.nanoTime();
 	}
 

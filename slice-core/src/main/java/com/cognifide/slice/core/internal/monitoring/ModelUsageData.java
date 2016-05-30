@@ -37,9 +37,9 @@ public class ModelUsageData {
 
 	private ConcurrentHashMap<Class<?>, ModelUsageData> subModels = new ConcurrentHashMap<Class<?>, ModelUsageData>();
 
-	private AtomicLong count = new AtomicLong();
+	private final AtomicLong count = new AtomicLong();
 
-	private AtomicLong totalTime = new AtomicLong();
+	private final AtomicLong totalTime = new AtomicLong();
 
 	public void addTimeMeasurement(Long timeMeasurement) {
 		count.incrementAndGet();

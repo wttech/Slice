@@ -28,7 +28,7 @@ public class InjectorStatisticsRepositoryImpl implements InjectorStatisticsRepos
 
 	private final ModelUsageData modelUsageDataRoot = new ModelUsageData();
 
-	private AtomicBoolean enabled = new AtomicBoolean(false);
+	private final AtomicBoolean enabled = new AtomicBoolean(false);
 
 	public ModelUsageData getModelUsageDataRoot() {
 		return this.modelUsageDataRoot;

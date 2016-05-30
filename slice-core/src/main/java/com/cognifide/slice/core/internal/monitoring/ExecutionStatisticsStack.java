@@ -29,11 +29,11 @@ public class ExecutionStatisticsStack {
 
 	private final boolean monitoringEnabled;
 
-	private InjectorStatisticsRepository injectorStatistics;
+	private final InjectorStatisticsRepository injectorStatistics;
 
-	private Deque<InjectionMonitoringContext> monitoringContexts = new ArrayDeque<InjectionMonitoringContext>();
+	private final Deque<TimeMeasurement> monitoringContexts = new ArrayDeque<TimeMeasurement>();
 
-	private Deque<ModelUsageData> modelUsageDataStack = new ArrayDeque<ModelUsageData>();
+	private final Deque<ModelUsageData> modelUsageDataStack = new ArrayDeque<ModelUsageData>();
 
 	@Inject
 	public ExecutionStatisticsStack(InjectorStatisticsRepository injectorStatistics) {
@@ -46,15 +46,15 @@ public class ExecutionStatisticsStack {
 		if (monitoringEnabled) {
 			ModelUsageData currentModelUsageData = modelUsageDataStack.peek().getChildForKey(key);
 
-			this.monitoringContexts.push(new InjectionMonitoringContext());
+			this.monitoringContexts.push(new TimeMeasurement());
 			this.modelUsageDataStack.push(currentModelUsageData);
 		}
 	}
 
 	public void endAndStoreMeasurement() {
 		if (monitoringEnabled) {
-			InjectionMonitoringContext injectionMonitoringContext = this.monitoringContexts.pop();
-			this.modelUsageDataStack.pop().addTimeMeasurement(injectionMonitoringContext.getElapsedTime());
+			TimeMeasurement timeMeasurement = this.monitoringContexts.pop();
+			this.modelUsageDataStack.pop().addTimeMeasurement(timeMeasurement.getElapsedTime());
 		}
 	}
 
