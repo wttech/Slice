@@ -78,7 +78,7 @@ public class SliceModelProvider implements ModelProvider, StatisticsStackProvide
 	public SliceModelProvider(final Injector injector, final ContextScope contextScope,
 			final ClassToKeyMapper classToKeyMapper, final ExecutionContextStack currentExecutionContext,
 			final ResourceResolver resourceResolver, SliceModelClassResolver modelClassResolver,
-			InjectorStatisticsRepository sliceStats, ExecutionStatisticsStack executionStatisticsStack) {
+			final ExecutionStatisticsStack executionStatisticsStack) {
 		this.injector = injector;
 		this.contextScope = contextScope;
 		this.contextProvider = contextScope.getContextProvider();
