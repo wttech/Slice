@@ -29,16 +29,13 @@ public class ExecutionStatisticsStack {
 
 	private final boolean monitoringEnabled;
 
-	private final InjectorStatisticsRepository injectorStatistics;
-
 	private final Deque<TimeMeasurement> monitoringContexts = new ArrayDeque<TimeMeasurement>();
 
 	private final Deque<ModelUsageData> modelUsageDataStack = new ArrayDeque<ModelUsageData>();
 
 	@Inject
 	public ExecutionStatisticsStack(InjectorStatisticsRepository injectorStatistics) {
-		this.injectorStatistics = injectorStatistics;
-		this.modelUsageDataStack.push(this.injectorStatistics.getModelUsageDataRoot());
+		this.modelUsageDataStack.push(injectorStatistics.getModelUsageDataRoot());
 		this.monitoringEnabled = injectorStatistics.isEnabled();
 	}
 
