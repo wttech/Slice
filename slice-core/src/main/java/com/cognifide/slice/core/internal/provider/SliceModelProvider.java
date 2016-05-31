@@ -36,10 +36,7 @@ import com.cognifide.slice.api.execution.ExecutionContextStack;
 import com.cognifide.slice.api.provider.ModelProvider;
 import com.cognifide.slice.api.scope.ContextScoped;
 import com.cognifide.slice.core.internal.execution.ExecutionContextImpl;
-import com.cognifide.slice.core.internal.monitoring.ExecutionStatisticsStack;
-import com.cognifide.slice.core.internal.monitoring.InjectorStatisticsRepository;
 import com.cognifide.slice.core.internal.monitoring.Monitored;
-import com.cognifide.slice.core.internal.monitoring.StatisticsStackProvider;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -51,7 +48,7 @@ import com.google.inject.Key;
  * @author Rafał Malinowski
  */
 @ContextScoped
-public class SliceModelProvider implements ModelProvider, StatisticsStackProvider {
+public class SliceModelProvider implements ModelProvider {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SliceModelProvider.class);
 
@@ -64,8 +61,6 @@ public class SliceModelProvider implements ModelProvider, StatisticsStackProvide
 	private final ClassToKeyMapper classToKeyMapper;
 
 	private final ExecutionContextStack currentExecutionContext;
-	
-	private final ExecutionStatisticsStack executionStatisticsStack;
 
 	private final ResourceResolver resourceResolver;
 
@@ -77,14 +72,12 @@ public class SliceModelProvider implements ModelProvider, StatisticsStackProvide
 	@Inject
 	public SliceModelProvider(final Injector injector, final ContextScope contextScope,
 			final ClassToKeyMapper classToKeyMapper, final ExecutionContextStack currentExecutionContext,
-			final ResourceResolver resourceResolver, SliceModelClassResolver modelClassResolver,
-			final ExecutionStatisticsStack executionStatisticsStack) {
+			final ResourceResolver resourceResolver, SliceModelClassResolver modelClassResolver) {
 		this.injector = injector;
 		this.contextScope = contextScope;
 		this.contextProvider = contextScope.getContextProvider();
 		this.classToKeyMapper = classToKeyMapper;
 		this.currentExecutionContext = currentExecutionContext;
-		this.executionStatisticsStack = executionStatisticsStack;
 		this.resourceResolver = resourceResolver;
 		this.modelClassResolver = modelClassResolver;
 	}
@@ -235,7 +228,7 @@ public class SliceModelProvider implements ModelProvider, StatisticsStackProvide
 	private <T> T get(Class<T> type, ExecutionContextImpl executionItem) {
 		return get(Key.get(type), executionItem);
 	}
-	
+
 	@Monitored
 	public <T> T get(Key<T> key, ExecutionContextImpl executionItem) {
 		final ContextProvider oldContextProvider = contextScope.getContextProvider();
@@ -267,8 +260,4 @@ public class SliceModelProvider implements ModelProvider, StatisticsStackProvide
 		return get(clazz, resource);
 	}
 
-	@Override
-	public ExecutionStatisticsStack getExecutionStatisticsStack() {
-		return executionStatisticsStack;
-	}
 }

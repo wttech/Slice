@@ -19,17 +19,20 @@
  */
 package com.cognifide.slice.core.internal.module;
 
+import com.cognifide.slice.core.internal.monitoring.ExecutionStatisticsStack;
 import com.cognifide.slice.core.internal.monitoring.MethodMonitoringInterceptor;
 import com.cognifide.slice.core.internal.monitoring.Monitored;
-import com.cognifide.slice.core.internal.monitoring.StatisticsStackProvider;
+import com.cognifide.slice.core.internal.provider.SliceModelProvider;
 import com.google.inject.AbstractModule;
+import com.google.inject.Provider;
 import com.google.inject.matcher.Matchers;
 
 public class SliceMonitoringModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bindInterceptor(Matchers.subclassesOf(StatisticsStackProvider.class), Matchers.annotatedWith(Monitored.class),
-				new MethodMonitoringInterceptor());
+		Provider<ExecutionStatisticsStack> statisticsProvider = getProvider(ExecutionStatisticsStack.class);
+		bindInterceptor(Matchers.subclassesOf(SliceModelProvider.class),
+				Matchers.annotatedWith(Monitored.class), new MethodMonitoringInterceptor(statisticsProvider));
 	}
 }

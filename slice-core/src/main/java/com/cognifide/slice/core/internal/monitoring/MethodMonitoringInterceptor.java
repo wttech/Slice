@@ -23,12 +23,19 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
 import com.google.inject.Key;
+import com.google.inject.Provider;
 
 public class MethodMonitoringInterceptor implements MethodInterceptor {
 
+	private Provider<ExecutionStatisticsStack> provider;
+
+	public MethodMonitoringInterceptor(Provider<ExecutionStatisticsStack> provider) {
+		this.provider = provider;
+	}
+
 	@Override
 	public Object invoke(MethodInvocation invocation) throws Throwable {
-		ExecutionStatisticsStack stack = ((StatisticsStackProvider) invocation.getThis()).getExecutionStatisticsStack();
+		ExecutionStatisticsStack stack = provider.get();
 		Key<?> key = findKey(invocation);
 		stack.startMeasurement(key);
 		try {

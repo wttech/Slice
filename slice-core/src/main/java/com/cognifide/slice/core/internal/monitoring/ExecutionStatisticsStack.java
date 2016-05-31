@@ -22,9 +22,11 @@ package com.cognifide.slice.core.internal.monitoring;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+import com.cognifide.slice.api.scope.ContextScoped;
 import com.google.inject.Inject;
 import com.google.inject.Key;
 
+@ContextScoped
 public class ExecutionStatisticsStack {
 
 	private final boolean monitoringEnabled;
