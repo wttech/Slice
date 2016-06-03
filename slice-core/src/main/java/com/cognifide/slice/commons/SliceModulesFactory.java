@@ -56,7 +56,6 @@ public class SliceModulesFactory {
 	 * <li>{@link SlingModule}</li>
 	 * <li>{@link JcrModule}</li>
 	 * <li>{@link SliceResourceModule}</li>
-	 * <li>{@link SliceMonitoringModule}</li>
 	 * </ul>
 	 * @param bundleContext bundle Context
 	 * @return list of Slice-related modules
