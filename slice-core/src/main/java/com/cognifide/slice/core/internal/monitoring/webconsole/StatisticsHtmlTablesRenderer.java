@@ -73,8 +73,8 @@ public class StatisticsHtmlTablesRenderer {
 		for (Entry<Class<?>, ModelUsageData> entry : flattenStats(treeItem).entrySet()) {
 			ModelUsageData stats = entry.getValue();
 			Long instancesCount = stats.getCount();
-			Long totalTime = stats.getTotalTime();
-			double avgTime = stats.getAverageTime();
+			Long totalTime = stats.getTotalTimeInMillis();
+			double avgTime = stats.getAverageTimeInMillis();
 			tableBuilder.append("<tr><td>");
 			tableBuilder.append(entry.getKey().getName());
 			tableBuilder.append("</td><td>");
@@ -101,8 +101,8 @@ public class StatisticsHtmlTablesRenderer {
 		for (Entry<Class<?>, ModelUsageData> entry : treeItem.getSubModels().entrySet()) {
 			ModelUsageData stats = entry.getValue();
 			Long instancesCount = stats.getCount();
-			Long totalTime = stats.getTotalTime();
-			double avgTime = stats.getAverageTime();
+			Long totalTime = stats.getTotalTimeInMillis();
+			double avgTime = stats.getAverageTimeInMillis();
 			tableBuilder.append("<tr data-tt-id='" + rowCounter + "'>");
 			renderTableCell(tableBuilder, entry.getKey().getName());
 			renderTableCell(tableBuilder, instancesCount.toString());
@@ -123,8 +123,8 @@ public class StatisticsHtmlTablesRenderer {
 		for (Entry<Class<?>, ModelUsageData> entry : parentNode.getSubModels().entrySet()) {
 			ModelUsageData stats = entry.getValue();
 			Long instancesCount = stats.getCount();
-			Long totalTime = stats.getTotalTime();
-			double avgTime = stats.getAverageTime();
+			Long totalTime = stats.getTotalTimeInMillis();
+			double avgTime = stats.getAverageTimeInMillis();
 			tableBuilder.append("<tr data-tt-id='" + ++localRowCounter + "' data-tt-parent-id='" + parentNodeId + "'>");
 			renderTableCell(tableBuilder, entry.getKey().getName());
 			renderTableCell(tableBuilder, instancesCount.toString());

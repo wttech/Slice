@@ -50,21 +50,21 @@ public class ModelUsageData {
 		return count.get();
 	}
 
-	public long getTotalTime() {
+	public long getTotalTimeInMillis() {
 		return TimeUnit.NANOSECONDS.toMillis(totalTime.get());
+	}
+
+	public double getAverageTimeInMillis() {
+		return totalTime.get() / (double) count.get() / 1000000;
 	}
 
 	public ConcurrentMap<Class<?>, ModelUsageData> getSubModels() {
 		return subModels;
 	}
 
-	public double getAverageTime() {
-		return totalTime.get() / (double) count.get() / 1000000;
-	}
-
-	public void add(ModelUsageData statistics) {
-		this.count.addAndGet(statistics.count.get());
-		this.totalTime.addAndGet(statistics.totalTime.get());
+	public void add(ModelUsageData modelUsageData) {
+		this.count.addAndGet(modelUsageData.count.get());
+		this.totalTime.addAndGet(modelUsageData.totalTime.get());
 	}
 
 	public ModelUsageData copy() {

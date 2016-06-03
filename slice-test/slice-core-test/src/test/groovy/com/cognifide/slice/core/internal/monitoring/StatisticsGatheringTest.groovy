@@ -84,7 +84,7 @@ class StatisticsGatheringTest extends BaseSetup {
 		Assert.assertTrue(composite.getSubModels().containsKey(SimpleModel.class));
 		ModelUsageData simple = composite.getSubModels().get(SimpleModel.class);
 		Assert.assertTrue(simple.getCount() == 2);
-		Assert.assertTrue(simple.getTotalTime() <= composite.getTotalTime());
+		Assert.assertTrue(simple.getTotalTimeInMillis() <= composite.getTotalTimeInMillis());
 
 		statsRepo.clear();
 		Assert.assertTrue(root.subModels.isEmpty());
