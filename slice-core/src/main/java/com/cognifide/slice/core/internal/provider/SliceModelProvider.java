@@ -36,7 +36,7 @@ import com.cognifide.slice.api.execution.ExecutionContextStack;
 import com.cognifide.slice.api.provider.ModelProvider;
 import com.cognifide.slice.api.scope.ContextScoped;
 import com.cognifide.slice.core.internal.execution.ExecutionContextImpl;
-import com.cognifide.slice.core.internal.monitoring.Monitored;
+import com.cognifide.slice.core.internal.monitoring.annotation.Monitored;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Key;

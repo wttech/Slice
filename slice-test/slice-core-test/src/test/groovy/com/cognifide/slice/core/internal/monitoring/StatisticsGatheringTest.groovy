@@ -23,6 +23,7 @@ import java.lang.reflect.Field
 
 import org.junit.Assert
 import org.mockito.Mockito
+import org.springframework.test.annotation.DirtiesContext;
 
 import com.cognifide.slice.api.injector.InjectorConfig
 import com.cognifide.slice.api.injector.InjectorRunner
@@ -64,8 +65,7 @@ class StatisticsGatheringTest extends BaseSetup {
 		setup:
 		InjectorStatisticsRepository statsRepo = injector.getInstance(InjectorStatisticsRepository.class);
 		statsRepo.setEnabled(true);
-		SliceModelProvider sliceProvider = modelProvider;
-		enableMonitoring(sliceProvider);
+
 		ModelUsageData root = statsRepo.modelUsageDataRoot;
 		Assert.assertNotNull(root);
 		Assert.assertNotNull(root.subModels);
@@ -91,8 +91,8 @@ class StatisticsGatheringTest extends BaseSetup {
 
 	def "Get models with enabled statistics with SliceStatistics"() {
 		setup:
-		SliceModelProvider sliceProvider = modelProvider;
-		enableMonitoring(sliceProvider);
+		InjectorStatisticsRepository statsRepo = injector.getInstance(InjectorStatisticsRepository.class);
+		statsRepo.setEnabled(true);
 
 		Collection<String> injectorNames = new ArrayList<String>(1);
 		injectorNames.add("testInjector");
@@ -118,9 +118,4 @@ class StatisticsGatheringTest extends BaseSetup {
 		Assert.assertTrue(stats.collectStatistics().isEmpty());
 	}
 
-	def enableMonitoring(SliceModelProvider sliceProvider) {
-		def enabledField = ExecutionStatisticsStack.class.getDeclaredField("monitoringEnabled")
-		enabledField.setAccessible(true);
-		enabledField.setBoolean(sliceProvider.executionStatisticsStack, true);
-	}
 }

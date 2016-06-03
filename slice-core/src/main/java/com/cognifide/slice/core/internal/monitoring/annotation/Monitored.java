@@ -17,20 +17,20 @@
  * limitations under the License.
  * #L%
  */
-package com.cognifide.slice.core.internal.monitoring;
+package com.cognifide.slice.core.internal.monitoring.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.cognifide.slice.core.internal.provider.SliceModelProvider;
 import com.google.inject.BindingAnnotation;
 
 /**
- * Execution time of methods annotated with this annotation will be monitored,
- * gathered and displayed in related OSGi Web Console. Eligible methods need to
- * be members of class implementing {@link StatisticsStackProvider} and accept
- * {@link com.google.inject.Key} as argument.
+ * Execution time of methods annotated with this annotation will be monitored, gathered and displayed in
+ * related OSGi Web Console. Eligible methods need to be members of class implementing
+ * {@link SliceModelProvider} and accept {@link com.google.inject.Key} as argument.
  * 
  * @author Jacek Fohs
  */

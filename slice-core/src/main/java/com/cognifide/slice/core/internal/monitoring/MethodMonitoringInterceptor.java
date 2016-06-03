@@ -21,11 +21,16 @@ package com.cognifide.slice.core.internal.monitoring;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.cognifide.slice.core.internal.monitoring.annotation.Monitored;
 import com.google.inject.Key;
 import com.google.inject.Provider;
 
 public class MethodMonitoringInterceptor implements MethodInterceptor {
+
+	final static Logger LOG = LoggerFactory.getLogger(MethodMonitoringInterceptor.class);
 
 	private Provider<ExecutionStatisticsStack> provider;
 
@@ -36,6 +41,14 @@ public class MethodMonitoringInterceptor implements MethodInterceptor {
 	@Override
 	public Object invoke(MethodInvocation invocation) throws Throwable {
 		ExecutionStatisticsStack stack = provider.get();
+
+		if (stack == null) {
+			// Note that, in theory, 'stact' should never be null. It clearly indicates a bug in Slice.
+			LOG.warn("Cannot store statistics for given key, execution statc stact is not available: "
+					+ findKey(invocation));
+			return invocation.proceed();
+		}
+
 		Key<?> key = findKey(invocation);
 		stack.startMeasurement(key);
 		try {

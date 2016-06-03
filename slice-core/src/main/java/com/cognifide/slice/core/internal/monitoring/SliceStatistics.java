@@ -34,8 +34,8 @@ import com.cognifide.slice.core.internal.injector.InjectorHierarchy;
 import com.google.inject.Injector;
 
 /**
- * Facade providing simplified interface for accessing statistics data and
- * delegating settings changes to InjectorStatisticsRepositories.
+ * Facade providing interface for accessing statistics data for all injectors and delegating settings changes
+ * to InjectorStatisticsRepositories.
  * 
  * @author Jakub Przybytek, Jacek Fohs
  */
@@ -48,12 +48,11 @@ public class SliceStatistics {
 	private InjectorHierarchy injectorHierarchy;
 
 	/**
-	 * Collects all statistics available and groups them by injector hierarchy
-	 * String. Injector hierarchy is resolved to String by joing its name with
-	 * its consecutive parents names.
+	 * Collects all statistics available and groups them by injector hierarchy String. Injector hierarchy is
+	 * resolved to String by joing its name with its consecutive parents names.
 	 * 
-	 * @return map mapping injetors hierarchy string to related model injection
-	 *         roots; see {@link ModelUsageData}.
+	 * @return map mapping injetors hierarchy string to related model injection roots; see
+	 * {@link ModelUsageData}.
 	 */
 	public Map<String, ModelUsageData> collectStatistics() {
 		Map<String, ModelUsageData> statsHistory = new TreeMap<String, ModelUsageData>();

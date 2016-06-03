@@ -21,7 +21,7 @@ package com.cognifide.slice.core.internal.module;
 
 import com.cognifide.slice.core.internal.monitoring.ExecutionStatisticsStack;
 import com.cognifide.slice.core.internal.monitoring.MethodMonitoringInterceptor;
-import com.cognifide.slice.core.internal.monitoring.Monitored;
+import com.cognifide.slice.core.internal.monitoring.annotation.Monitored;
 import com.cognifide.slice.core.internal.provider.SliceModelProvider;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provider;

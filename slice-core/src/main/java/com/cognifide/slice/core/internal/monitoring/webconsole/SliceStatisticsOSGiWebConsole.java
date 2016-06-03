@@ -35,7 +35,6 @@ import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 
-import com.cognifide.slice.core.internal.injector.InjectorHierarchy;
 import com.cognifide.slice.core.internal.monitoring.ModelUsageData;
 import com.cognifide.slice.core.internal.monitoring.SliceStatistics;
 
@@ -55,9 +54,6 @@ public class SliceStatisticsOSGiWebConsole extends HttpServlet {
 	private static final String RESET_PARAMETER_NAME = "reset";
 
 	private static final String NO_STATISTICS_AVAILABLE_MESSAGE = "No injection statistics available.";
-
-	@Reference
-	private InjectorHierarchy injectorHierarchy;
 
 	@Reference
 	private SliceStatistics sliceStatistics;
@@ -100,8 +96,8 @@ public class SliceStatisticsOSGiWebConsole extends HttpServlet {
 		String paramValue = statisticsEnabledLocal ? "false" : "true";
 		String labelValue = statisticsEnabledLocal ? "Stop" : "Start";
 		response.getWriter()
-				.write(String.format(
-						"<form action='' method='get'><input type='hidden' name='enabled' value='%s'><button type='submit'>%s</button></form>",
-						paramValue, labelValue));
+				.write(String
+						.format("<form action='' method='get'><input type='hidden' name='enabled' value='%s'><button type='submit'>%s</button></form>",
+								paramValue, labelValue));
 	}
 }
