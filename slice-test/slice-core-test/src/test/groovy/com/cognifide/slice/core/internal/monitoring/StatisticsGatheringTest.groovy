@@ -65,6 +65,7 @@ class StatisticsGatheringTest extends BaseSetup {
 		setup:
 		InjectorStatisticsRepository statsRepo = injector.getInstance(InjectorStatisticsRepository.class);
 		statsRepo.setEnabled(true);
+		setupModelProvider();
 
 		ModelUsageData root = statsRepo.modelUsageDataRoot;
 		Assert.assertNotNull(root);
@@ -93,6 +94,7 @@ class StatisticsGatheringTest extends BaseSetup {
 		setup:
 		InjectorStatisticsRepository statsRepo = injector.getInstance(InjectorStatisticsRepository.class);
 		statsRepo.setEnabled(true);
+		setupModelProvider();
 
 		Collection<String> injectorNames = new ArrayList<String>(1);
 		injectorNames.add("testInjector");

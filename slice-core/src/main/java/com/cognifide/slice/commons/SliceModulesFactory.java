@@ -29,7 +29,6 @@ import org.osgi.framework.BundleContext;
 import com.cognifide.slice.api.context.ContextScope;
 import com.cognifide.slice.core.internal.context.SliceContextScope;
 import com.cognifide.slice.core.internal.module.JcrModule;
-import com.cognifide.slice.core.internal.module.SliceMonitoringModule;
 import com.cognifide.slice.core.internal.module.SliceModule;
 import com.cognifide.slice.core.internal.module.SliceResourceModule;
 import com.cognifide.slice.core.internal.module.SlingModule;
@@ -71,7 +70,6 @@ public class SliceModulesFactory {
 		modules.add(new JcrModule());
 		modules.add(new SliceResourceModule());
 		modules.add(new PersistenceModule());
-		modules.add(new SliceMonitoringModule());
 		return modules;
 	}
 }

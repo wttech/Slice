@@ -97,7 +97,7 @@ public class SliceStatisticsOSGiWebConsole extends HttpServlet {
 		String labelValue = statisticsEnabledLocal ? "Stop" : "Start";
 		response.getWriter()
 				.write(String
-						.format("<form action='' method='get'><input type='hidden' name='enabled' value='%s'><button type='submit'>%s</button></form>",
+						.format("<form action='' method='get' style='margin: 8px 0 8px 0;'><input type='hidden' name='enabled' value='%s'><button type='submit'>%s</button></form>",
 								paramValue, labelValue));
 	}
 }

@@ -30,7 +30,6 @@ import com.cognifide.slice.api.provider.ModelProvider
 import com.cognifide.slice.core.internal.context.SliceContextScope
 import com.cognifide.slice.core.internal.module.JcrModule
 import com.cognifide.slice.core.internal.module.SliceModule
-import com.cognifide.slice.core.internal.module.SliceMonitoringModule
 import com.cognifide.slice.core.internal.module.SliceResourceModule
 import com.cognifide.slice.core.internal.module.SlingModule
 import com.cognifide.slice.mapper.module.MapperModule
@@ -51,6 +50,9 @@ class BaseSetup extends ProsperSpec {
 	protected Injector injector
 
 	@Shared
+	protected ContextScope contextScope
+
+	@Shared
 	protected ModelProvider modelProvider
 
 	@Shared
@@ -69,7 +71,7 @@ class BaseSetup extends ProsperSpec {
 	protected SliceResourceModule sliceResourceModule
 
 	def setup() {
-		ContextScope contextScope = new SliceContextScope()
+		contextScope = new SliceContextScope()
 		List<Module> modules = new ArrayList<Module>()
 		modules.add(sliceModule = new SliceModule(contextScope, null))
 		modules.add(slingModule = new SlingModule(contextScope))
@@ -77,14 +79,18 @@ class BaseSetup extends ProsperSpec {
 		modules.add(mapperModule = new MapperModule())
 		modules.add(sliceResourceModule = new SliceResourceModule())
 		modules.add(new TestModule())
-		modules.add(new SliceMonitoringModule())
 
 		injector = Guice.createInjector(modules)
 
+		setupModelProvider()
+	}
+	
+	def setupModelProvider() {
 		ContextFactory factory = injector.getInstance(ContextFactory.class)
 		Context context = factory.getResourceResolverContext(resourceResolver)
 		contextScope.setContextProvider(new ConstantContextProvider(context))
 
 		modelProvider = injector.getInstance(ModelProvider.class)
 	}
+
 }
