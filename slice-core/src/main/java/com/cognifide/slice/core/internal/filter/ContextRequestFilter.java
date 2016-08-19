@@ -60,7 +60,7 @@ import com.cognifide.slice.core.internal.context.SliceContextFactory;
 		@Property(name = Constants.SERVICE_DESCRIPTION, value = "Filter that is injected into request chain to provide access to request, resource and response."),
 		@Property(name = Constants.SERVICE_VENDOR, value = "Cognifide"),
 		@Property(name = Constants.SERVICE_RANKING, intValue = ContextRequestFilter.RANKING),
-		@Property(name = "filter.scope", value = {"request","forward"}) })
+		@Property(name = "filter.scope", value = {"request","forward", "error"}) })
 // @formatter:on
 public class ContextRequestFilter implements Filter, RequestContextProvider {
 
