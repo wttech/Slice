@@ -74,6 +74,14 @@ public final class SliceTagUtils {
 		return getFromCurrentPath(request, injectorsRepository, requestContextProvider, type, appName);
 	}
 
+	/**
+	 * A helper method that returns the {@link Class} object, resolving it via it's Canonical Name.
+	 *
+	 * @param pageContext allows to access request context
+	 * @param type canonical name of the modal object, whose {@link Class} object needs to be returned
+	 * @return {@link Class} object pertaining to {@code type} as it's canonical name
+	 * @throws ClassNotFoundException if the class was not found
+	 */
 	public static Class<?> getClassFromType(final PageContext pageContext, final String type) throws ClassNotFoundException {
 		final SlingBindings bindings = (SlingBindings) pageContext.getRequest().getAttribute(
 				SlingBindings.class.getName());

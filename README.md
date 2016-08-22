@@ -220,7 +220,7 @@ Add dependencies to your POM file:
 <dependency>
 	<groupId>com.cognifide.slice</groupId>
 	<artifactId>slice-core-api</artifactId>
-	<version>4.3.0</version>
+	<version>5.0.0</version>
 </dependency>
 <dependency>
 	<groupId>com.cognifide.slice</groupId>
