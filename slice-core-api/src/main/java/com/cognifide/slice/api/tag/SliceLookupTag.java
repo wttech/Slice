@@ -33,7 +33,7 @@ public class SliceLookupTag extends SimpleTagSupport {
 
 	private String appName; // auto-detected when null
 
-	private Class<?> type;
+	private String type;
 
 	private void clean() {
 		type = null;
@@ -49,14 +49,17 @@ public class SliceLookupTag extends SimpleTagSupport {
 			}
 
 			final PageContext pageContext = (PageContext) getJspContext();
-			final Object model = SliceTagUtils.getFromCurrentPath(pageContext, type, appName);
+			final Class typeClass = SliceTagUtils.getClassFromType(pageContext, type);
+			final Object model = SliceTagUtils.getFromCurrentPath(pageContext, typeClass, appName);
 			pageContext.setAttribute(var, model, PageContext.PAGE_SCOPE);
+		} catch (ClassNotFoundException e) {
+			throw new JspTagException("Could not get class for " + type);
 		} finally {
 			clean();
 		}
 	}
 
-	public void setType(Class<?> type) {
+	public void setType(String type) {
 		this.type = type;
 	}
 

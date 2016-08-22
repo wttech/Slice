@@ -35,6 +35,7 @@ import com.cognifide.slice.api.context.RequestContextProvider;
 import com.cognifide.slice.api.injector.InjectorWithContext;
 import com.cognifide.slice.api.injector.InjectorsRepository;
 import com.cognifide.slice.api.provider.ModelProvider;
+import org.apache.sling.commons.classloader.DynamicClassLoaderManager;
 
 public final class SliceTagUtils {
 
@@ -71,6 +72,16 @@ public final class SliceTagUtils {
 				.requestContextProviderFrom(pageContext);
 
 		return getFromCurrentPath(request, injectorsRepository, requestContextProvider, type, appName);
+	}
+
+	public static Class<?> getClassFromType(final PageContext pageContext, final String type) throws ClassNotFoundException {
+		final SlingBindings bindings = (SlingBindings) pageContext.getRequest().getAttribute(
+				SlingBindings.class.getName());
+		final SlingScriptHelper scriptHelper = bindings.getSling();
+		final DynamicClassLoaderManager dynamicClassLoaderManager = scriptHelper
+				.getService(DynamicClassLoaderManager.class);
+		final ClassLoader classLoader = dynamicClassLoaderManager.getDynamicClassLoader();
+		return classLoader.loadClass(type);
 	}
 
 	/**

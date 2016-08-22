@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-@Version("4.3.0")
+@Version("5.0.0")
 package com.cognifide.slice.api.tag;
 
 import aQute.bnd.annotation.Version;
