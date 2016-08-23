@@ -37,6 +37,7 @@ import java.lang.reflect.Method
 class SliceTagUtilsTest extends BaseSetup {
 
     def "Get Class object, given the String type"() {
+
         given:
         final PageContext pageContext = Mock(PageContext){
             getRequest()>>  Mock(ServletRequest){
@@ -44,7 +45,7 @@ class SliceTagUtilsTest extends BaseSetup {
                     getSling() >> Mock(SlingScriptHelper) {
                         getService(_ as Class) >> Mock(DynamicClassLoaderManager) {
                             getDynamicClassLoader() >> Mock(ClassLoader) {
-                                loadClass(_ as String) >> SliceTagUtils.class
+                                loadClass(_ as String) >> Class.forName(classList.className)
                             }
                         }
                     }
@@ -53,10 +54,18 @@ class SliceTagUtilsTest extends BaseSetup {
         }
 
         when:
-        Class aClass = SliceTagUtils.getClassFromType(pageContext, "com.cognifide.slice.api.tag.SliceTagUtils");
+        Class classObject = SliceTagUtils.getClassFromType(pageContext, classList.className);
 
-        then: "aClass object should not be null and should be equal to expected Class"
-        Assert.assertNotNull(aClass)
-        Assert.assertEquals(SliceTagUtils.class, aClass);
+        then: "classObject should not be null and should be equal to expected Class"
+        Assert.assertNotNull(classObject)
+        Assert.assertEquals(classList.classObject, classObject);
+
+        where:
+        classList << [
+                [
+                        className : "com.cognifide.slice.api.tag.SliceTagUtils",
+                        classObject : SliceTagUtils.class
+                ]
+        ]
     }
 }
