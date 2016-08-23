@@ -83,9 +83,7 @@ public final class SliceTagUtils {
 	 * @throws ClassNotFoundException if the class was not found
 	 */
 	public static Class<?> getClassFromType(final PageContext pageContext, final String type) throws ClassNotFoundException {
-		final SlingBindings bindings = (SlingBindings) pageContext.getRequest().getAttribute(
-				SlingBindings.class.getName());
-		final SlingScriptHelper scriptHelper = bindings.getSling();
+		final SlingScriptHelper scriptHelper = getSlingScriptHelper(pageContext);
 		final DynamicClassLoaderManager dynamicClassLoaderManager = scriptHelper
 				.getService(DynamicClassLoaderManager.class);
 		final ClassLoader classLoader = dynamicClassLoaderManager.getDynamicClassLoader();
