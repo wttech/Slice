@@ -31,7 +31,7 @@ No more business logic in your view (JSP, Sightly scripts) - business logic's pl
 
 **JSPs made clean and tidy** - no more these ugly scriptlets.
 ```jsp
-<slice:lookup var="model" type="<%=com.example.components.text.TextModel%>" />
+<slice:lookup var="model" type="com.example.components.text.TextModel" />
 <p>${model.text}</p>
 ```
 
