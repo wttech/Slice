@@ -35,7 +35,6 @@ import com.cognifide.slice.api.context.RequestContextProvider;
 import com.cognifide.slice.api.injector.InjectorWithContext;
 import com.cognifide.slice.api.injector.InjectorsRepository;
 import com.cognifide.slice.api.provider.ModelProvider;
-import org.apache.sling.commons.classloader.DynamicClassLoaderManager;
 
 public final class SliceTagUtils {
 
@@ -83,11 +82,24 @@ public final class SliceTagUtils {
 	 * @throws ClassNotFoundException if the class was not found
 	 */
 	public static Class<?> getClassFromType(final PageContext pageContext, final String type) throws ClassNotFoundException {
-		final SlingScriptHelper scriptHelper = getSlingScriptHelper(pageContext);
-		final DynamicClassLoaderManager dynamicClassLoaderManager = scriptHelper
-				.getService(DynamicClassLoaderManager.class);
-		final ClassLoader classLoader = dynamicClassLoaderManager.getDynamicClassLoader();
-		return classLoader.loadClass(type);
+		final SlingHttpServletRequest request = SliceTagUtils.slingRequestFrom(pageContext);
+		final InjectorsRepository injectorsRepository = SliceTagUtils.injectorsRepositoryFrom(pageContext);
+
+		final String injectorName = getInjectorName(request, null, injectorsRepository);
+
+		final InjectorWithContext injector = injectorsRepository.getInjector(injectorName);
+		if (injector == null) {
+			throw new IllegalStateException("Guice injector not found: " + injectorName);
+		}
+		injector.pushContextProvider(contextProviderFrom(pageContext));
+
+		final ModelProvider modelProvider = injector.getInstance(ModelProvider.class);
+
+		try {
+			return modelProvider.get(type, request.getResource()).getClass();
+		} finally {
+			injector.popContextProvider();
+		}
 	}
 
 	/**

@@ -72,11 +72,6 @@
 			<artifactId>org.osgi.core</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>org.apache.sling</groupId>
-			<artifactId>org.apache.sling.commons.classloader</artifactId>
-		</dependency>
-
 		<!-- javax -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
