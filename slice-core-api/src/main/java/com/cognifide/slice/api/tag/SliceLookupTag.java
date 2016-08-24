@@ -49,8 +49,7 @@ public class SliceLookupTag extends SimpleTagSupport {
 			}
 
 			final PageContext pageContext = (PageContext) getJspContext();
-			final Class classObject = SliceTagUtils.getClassFromType(pageContext, type);
-			final Object model = SliceTagUtils.getFromCurrentPath(pageContext, classObject, appName);
+			final Object model = SliceTagUtils.getFromCurrentPath(pageContext, type, appName);
 			pageContext.setAttribute(var, model, PageContext.PAGE_SCOPE);
 		} catch (ClassNotFoundException cause) {
 			throw new JspTagException("Could not get class for " + type);

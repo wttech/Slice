@@ -74,31 +74,41 @@ public final class SliceTagUtils {
 	}
 
 	/**
-	 * A helper method that returns the {@link Class} object, resolving it via it's Canonical Name.
+	 * A helper method that returns the model of {@code type}
 	 *
 	 * @param pageContext allows to access request context
-	 * @param type canonical name of the modal object, whose {@link Class} object needs to be returned
-	 * @return {@link Class} object pertaining to {@code type} as it's canonical name
+	 * @param type canonical name of the class, whose model object needs to be returned
+	 * @return Model object pertaining to {@code type} as it's canonical name
 	 * @throws ClassNotFoundException if the class was not found
 	 */
-	public static Class<?> getClassFromType(final PageContext pageContext, final String type) throws ClassNotFoundException {
-		final SlingHttpServletRequest request = SliceTagUtils.slingRequestFrom(pageContext);
-		final InjectorsRepository injectorsRepository = SliceTagUtils.injectorsRepositoryFrom(pageContext);
+	public static Object getFromCurrentPath(final PageContext pageContext, final String type,
+				final String appName) throws ClassNotFoundException {
+		final SlingHttpServletRequest request = slingRequestFrom(pageContext);
+		final InjectorWithContext injector = getInjectorWithContext(pageContext, request, appName);
 
-		final String injectorName = getInjectorName(request, null, injectorsRepository);
-
-		final InjectorWithContext injector = injectorsRepository.getInjector(injectorName);
-		if (injector == null) {
-			throw new IllegalStateException("Guice injector not found: " + injectorName);
-		}
 		injector.pushContextProvider(contextProviderFrom(pageContext));
 
 		final ModelProvider modelProvider = injector.getInstance(ModelProvider.class);
 
 		try {
-			return modelProvider.get(type, request.getResource()).getClass();
+			return modelProvider.get(type, request.getResource());
 		} finally {
 			injector.popContextProvider();
+		}
+	}
+
+	private static InjectorWithContext getInjectorWithContext(final PageContext pageContext,
+				final SlingHttpServletRequest request, final String appName){
+		final InjectorsRepository injectorsRepository = injectorsRepositoryFrom(pageContext);
+
+		final String injectorName = getInjectorName(request, appName, injectorsRepository);
+
+		InjectorWithContext injector = injectorsRepository.getInjector(injectorName);
+
+		if (injector == null) {
+			throw new IllegalStateException("Guice injector not found for app: " + appName);
+		} else {
+			return injector;
 		}
 	}
 
