@@ -84,14 +84,6 @@
 				<include>org.ops4j</include>
 			</includes>
 		</dependencySet>
-		<dependencySet>
-			<unpack>false</unpack>
-			<scope>runtime</scope>
-			<outputDirectory>/jcr_root/apps/slice/install/19</outputDirectory>
-			<includes>
-				<include>javax.inject</include>
-			</includes>
-		</dependencySet>
 	</dependencySets>
 
 	<!-- other files from parent project -->

@@ -410,6 +410,12 @@
 				<artifactId>com.springsource.org.aopalliance</artifactId>
 				<version>1.0.0</version>
 			</dependency>
+			<dependency>
+				<groupId>javax.inject</groupId>
+				<artifactId>com.springsource.javax.inject</artifactId>
+				<version>1.0.0</version>
+				<scope>provided</scope>
+			</dependency>
 
 			<!-- OSGi -->
 			<dependency>
