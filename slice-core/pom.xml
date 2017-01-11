@@ -104,10 +104,6 @@
 			<groupId>org.aopalliance</groupId>
 			<artifactId>com.springsource.org.aopalliance</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>javax.inject</groupId>
-			<artifactId>com.springsource.javax.inject</artifactId>
-		</dependency>
 
 		<!-- OSGi -->
 		<dependency>
