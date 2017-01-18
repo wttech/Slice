@@ -59,11 +59,13 @@ public class SliceBindingsProvider implements BindingsValuesProvider {
 
 	private Class<?> getModel(Resource resource) throws ClassNotFoundException {
 		Class<?> modelClass = modelClassNameResolver.getModelClass(resource.getResourceType());
-		if (modelClass == null) {
+		while (modelClass == null) {
 			String resourceSuperType = ResourceUtil.findResourceSuperType(resource);
-			if (resourceSuperType != null) {
-				modelClass = modelClassNameResolver.getModelClass(resourceSuperType);
+			if (resourceSuperType == null) {
+				break;
 			}
+			modelClass = modelClassNameResolver.getModelClass(resourceSuperType);
+			resource = resource.getResourceResolver().getResource(resourceSuperType);
 		}
 		return modelClass;
 	}
