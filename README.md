@@ -20,22 +20,22 @@ Slice is a framework which simplifies Sling/Adobe AEM development by using depen
 
 ## Features
 ### Separation of concerns
-No more business logic in your view (JSP, Sightly scripts) - business logic's place is in Java classes and Slice knows it!
+No more business logic in your view (JSP, [HTL](https://docs.adobe.com/docs/en/htl/overview.html) scripts) - business logic's place is in Java classes and Slice knows it!
 
-**Slice loves Sightly**. Sightly loves Slice. Both are perfect match. Seamless integration you will love:
+**Slice loves HTL**. HTL loves Slice. They go together like strawberries and cream! Seamless integration you will love:
 ```html
 <div data-sly-use.model="com.example.components.text.TextModel">
     <p>${model.text}<p>
 </div>
 ```
 
-**JSPs made clean and tidy** - no more these ugly scriptlets.
+**JSPs made clean and tidy** - no more ugly scriptlets.
 ```jsp
 <slice:lookup var="model" type="<%=com.example.components.text.TextModel%>" />
 <p>${model.text}</p>
 ```
 
-**Reusable Java models** which expose data for your view - note same model can be used for Sightly and JSP components - one model to feed them all!
+**Reusable Java models** which expose data for your view - note that the same model can be used by HTL and JSP components - one model to feed them all!
 ```java
 @SliceResource
 public class TextModel {
@@ -51,16 +51,16 @@ public class TextModel {
 
 Interested in details? Read about [Slice concepts](https://cognifide.atlassian.net/wiki/display/SLICE/Slice+concepts+-+4.3) and [how it works internally](https://cognifide.atlassian.net/wiki/pages/viewpage.action?pageId=18579473) on our Wiki.
 
-### Mapping resources into Java objects
+### Mapping resources to Java objects
 
-Slice allows you to map a resource into plain Java object. It's annotation-driven, very easy to use and fully extensible, so you can write your own ways of mapping if a set of available features is not enough for your needs. Slice supports mapping of:
- * simple properties (String, Long, Boolean, etc) into primitives and objects
+Slice allows you to map a resource to a plain Java object. It's annotation-driven, very easy to use and fully extensible, so you can write your own ways of mapping if a set of available features is not enough for your needs. Slice supports mapping of:
+ * simple properties (`String`, `Long`, `Boolean`, etc.) into primitives and objects
  * simple properties into enums.
- * multi-value properties into arrays or lists
- * child resources into a Java object or list of objects
+ * multi-value properties to arrays or lists
+ * child resources to a Java object or list of objects
  * nested resources/classes hierarchy
  
-The following code snippet demonstrates all above features in one model. It's simple - just annotate a class with @SliceResource and its fields with @JcrProperty to get auto mapping of resource properties to class fields:
+The following code snippet demonstrates all of the above features in one model. It's simple - just annotate a class with `@SliceResource` and its fields with `@JcrProperty` to get auto mapping of resource properties to class fields:
 
 ```java
 @SliceResource
@@ -199,7 +199,7 @@ public class MyModule extends AbstractModule {
 
 ## Installation
 
-Slice is available from Maven Central Repo. However if you want to check out the newest development version, do the following:
+Slice is available from the Maven Central Repo. However if you want to check out the newest development version, do the following:
 
 Checkout the source code:
 
@@ -240,10 +240,10 @@ Add dependencies to your POM file:
 (...)
 ```
 
-Last thing you need to do is preparing Injector of your application in BundleActivator. Read more on how to do this on our [Wiki](https://cognifide.atlassian.net/wiki/display/SLICE/Setting+up+-+4.3)
+The last thing you need to do is to prepare an `Injector` of your application in its `BundleActivator`. Read more on how to do this on our [Wiki](https://cognifide.atlassian.net/wiki/display/SLICE/Setting+up+-+4.3)
 
 Since Slice 3.1 the AEM/CQ related modules have been extracted to separate projects:
-* Slice AEM v6.0 and 6.1 Addon: https://github.com/Cognifide/Slice-AEM60
+* Slice AEM v6.0, 6.1 and 6.2 Addon: https://github.com/Cognifide/Slice-AEM60
 * Slice CQ v5.6 Addon: https://github.com/Cognifide/Slice-CQ56/
 * Slice CQ v5.5 Addon: https://github.com/Cognifide/Slice-CQ55/
 
