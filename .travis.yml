@@ -2,10 +2,7 @@ language: java
 script: mvn clean package
 
 after_success:
-  - ant instrument
-  - mvn test
-  - ant report-xml
-  - mvn coveralls:report
+  - mvn cobertura:check coveralls:report
 
 env:
   global:
