@@ -3,7 +3,7 @@
 
 	<groupId>com.cognifide.slice</groupId>
 	<artifactId>slice-parent</artifactId>
-	<version>4.3.2-SNAPSHOT</version>
+	<version>4.3.3-SNAPSHOT</version>
 
 	<name>Slice - Parent</name>
 	<url>http://cognifide.com/</url>
@@ -356,22 +356,22 @@
 			<dependency>
 				<groupId>com.cognifide.slice</groupId>
 				<artifactId>slice-core-api</artifactId>
-				<version>4.3.2-SNAPSHOT</version>
+				<version>4.3.3-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>com.cognifide.slice</groupId>
 				<artifactId>slice-core</artifactId>
-				<version>4.3.2-SNAPSHOT</version>
+				<version>4.3.3-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>com.cognifide.slice</groupId>
 				<artifactId>slice-mapper-api</artifactId>
-				<version>4.3.2-SNAPSHOT</version>
+				<version>4.3.3-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>com.cognifide.slice</groupId>
 				<artifactId>slice-mapper</artifactId>
-				<version>4.3.2-SNAPSHOT</version>
+				<version>4.3.3-SNAPSHOT</version>
 			</dependency>
 
 			<!-- Guice -->
@@ -414,6 +414,7 @@
 				<groupId>javax.inject</groupId>
 				<artifactId>com.springsource.javax.inject</artifactId>
 				<version>1.0.0</version>
+				<scope>provided</scope>
 			</dependency>
 
 			<!-- OSGi -->
@@ -503,7 +504,7 @@
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
-				<version>1.7.5</version>
+				<version>1.6.4</version>
 			</dependency>
 
 			<!-- Code Coverage -->

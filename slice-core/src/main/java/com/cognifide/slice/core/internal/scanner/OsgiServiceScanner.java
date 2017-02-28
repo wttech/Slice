@@ -33,7 +33,7 @@ import com.cognifide.slice.core.internal.scanner.BundleClassesFinder.ClassFilter
  */
 public class OsgiServiceScanner {
 
-	private static final Logger LOG = LoggerFactory.getLogger(SliceResourceScanner.class);
+	private static final Logger LOG = LoggerFactory.getLogger(OsgiServiceScanner.class);
 
 	private final BundleContext bundleContext;
 

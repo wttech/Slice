@@ -19,17 +19,16 @@
  */
 package com.cognifide.slice.persistence.impl.serializer;
 
-import java.lang.reflect.Field;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.sling.api.resource.ModifiableValueMap;
-import org.apache.sling.api.resource.PersistenceException;
-import org.apache.sling.api.resource.Resource;
-
 import com.cognifide.slice.mapper.annotation.JcrProperty;
 import com.cognifide.slice.mapper.annotation.SliceResource;
 import com.cognifide.slice.persistence.api.SerializerContext;
 import com.cognifide.slice.persistence.api.serializer.ObjectSerializer;
+import org.apache.commons.lang.StringUtils;
+import org.apache.sling.api.resource.ModifiableValueMap;
+import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.api.resource.Resource;
+
+import java.lang.reflect.Field;
 
 public class RecursiveSerializer implements ObjectSerializer {
 
