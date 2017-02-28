@@ -107,6 +107,7 @@
 		<dependency>
 			<groupId>javax.inject</groupId>
 			<artifactId>com.springsource.javax.inject</artifactId>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- OSGi -->

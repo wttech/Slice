@@ -414,6 +414,7 @@
 				<groupId>javax.inject</groupId>
 				<artifactId>com.springsource.javax.inject</artifactId>
 				<version>1.0.0</version>
+				<scope>provided</scope>
 			</dependency>
 
 			<!-- OSGi -->

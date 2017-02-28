@@ -64,7 +64,7 @@
 			
 			<!-- compiled java classes - jars -->
 			<binaries>
-				<outputDirectory>/jcr_root/apps/slice/install/20</outputDirectory>
+				<outputDirectory>/jcr_root/apps/slice/install</outputDirectory>
 				<unpack>false</unpack>
 			</binaries>
 			
@@ -76,20 +76,12 @@
 		<dependencySet>
 			<unpack>false</unpack>
 			<scope>runtime</scope>
-			<outputDirectory>/jcr_root/apps/slice/install/20</outputDirectory>
+			<outputDirectory>/jcr_root/apps/slice/install</outputDirectory>
 			<includes>
 				<include>org.aopalliance</include>
 				<include>com.google.inject</include>
 				<include>com.google.inject.extensions</include>
 				<include>org.ops4j</include>
-			</includes>
-		</dependencySet>
-		<dependencySet>
-			<unpack>false</unpack>
-			<scope>runtime</scope>
-			<outputDirectory>/jcr_root/apps/slice/install/19</outputDirectory>
-			<includes>
-				<include>javax.inject</include>
 			</includes>
 		</dependencySet>
 	</dependencySets>
