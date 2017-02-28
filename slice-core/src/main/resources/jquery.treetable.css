@@ -1,0 +1,8 @@
+/*
+ * jQuery treetable Plugin 3.2.0
+ * http://ludo.cubicphuse.nl/jquery-treetable
+ *
+ * Copyright 2013, Ludo van den Boom
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ */
+table.treetable span.indenter{display:inline-block;margin:0;padding:0;text-align:right;user-select:none;-khtml-user-select:none;-moz-user-select:none;-o-user-select:none;-webkit-user-select:none;-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;width:19px}table.treetable span.indenter a{background-position:left center;background-repeat:no-repeat;display:inline-block;text-decoration:none;width:19px}

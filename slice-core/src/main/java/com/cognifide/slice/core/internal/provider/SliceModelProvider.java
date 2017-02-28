@@ -36,6 +36,7 @@ import com.cognifide.slice.api.execution.ExecutionContextStack;
 import com.cognifide.slice.api.provider.ModelProvider;
 import com.cognifide.slice.api.scope.ContextScoped;
 import com.cognifide.slice.core.internal.execution.ExecutionContextImpl;
+import com.cognifide.slice.core.internal.monitoring.ExecutionStatisticsStack;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -61,6 +62,8 @@ public class SliceModelProvider implements ModelProvider {
 
 	private final ExecutionContextStack currentExecutionContext;
 
+	private final ExecutionStatisticsStack executionStatisticsStack;
+
 	private final ResourceResolver resourceResolver;
 
 	private final SliceModelClassResolver modelClassResolver;
@@ -71,12 +74,14 @@ public class SliceModelProvider implements ModelProvider {
 	@Inject
 	public SliceModelProvider(final Injector injector, final ContextScope contextScope,
 			final ClassToKeyMapper classToKeyMapper, final ExecutionContextStack currentExecutionContext,
-			final ResourceResolver resourceResolver, SliceModelClassResolver modelClassResolver) {
+			final ExecutionStatisticsStack executionStatisticsStack, final ResourceResolver resourceResolver,
+			SliceModelClassResolver modelClassResolver) {
 		this.injector = injector;
 		this.contextScope = contextScope;
 		this.contextProvider = contextScope.getContextProvider();
 		this.classToKeyMapper = classToKeyMapper;
 		this.currentExecutionContext = currentExecutionContext;
+		this.executionStatisticsStack = executionStatisticsStack;
 		this.resourceResolver = resourceResolver;
 		this.modelClassResolver = modelClassResolver;
 	}
@@ -228,7 +233,9 @@ public class SliceModelProvider implements ModelProvider {
 		return get(Key.get(type), executionItem);
 	}
 
-	private <T> T get(Key<T> key, ExecutionContextImpl executionItem) {
+	public <T> T get(Key<T> key, ExecutionContextImpl executionItem) {
+		executionStatisticsStack.startMeasurement(key);
+
 		final ContextProvider oldContextProvider = contextScope.getContextProvider();
 		contextScope.setContextProvider(contextProvider);
 
@@ -237,11 +244,13 @@ public class SliceModelProvider implements ModelProvider {
 		}
 
 		currentExecutionContext.push(executionItem);
+
 		try {
 			return injector.getInstance(key);
 		} finally {
 			currentExecutionContext.pop();
 			contextScope.setContextProvider(oldContextProvider);
+			executionStatisticsStack.endAndStoreMeasurement();
 		}
 	}
 
@@ -256,4 +265,5 @@ public class SliceModelProvider implements ModelProvider {
 		}
 		return get(clazz, resource);
 	}
+
 }

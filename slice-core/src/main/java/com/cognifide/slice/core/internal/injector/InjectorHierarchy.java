@@ -116,6 +116,16 @@ public class InjectorHierarchy {
 	}
 
 	/**
+	 * Return injector config object for given name
+	 * 
+	 * @param injectorName Injector name
+	 * @return InjectorConfig or null if there is no such injector config
+	 */
+	public synchronized InjectorConfig getInjectorConfigByName(String injectorName) {
+		return configByName.get(injectorName);
+	}
+
+	/**
 	 * Return injector with given name
 	 * 
 	 * @param injectorName Injector name
