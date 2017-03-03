@@ -52,7 +52,7 @@ public class SliceBindingsProvider implements BindingsValuesProvider {
 				bindings.put("model", resource.adaptTo(modelClass));
 			}
 		} catch (ClassNotFoundException e) {
-			LOG.error("Can't resolver Slice model class", e);
+			LOG.error("Can't resolve Slice model class", e);
 		}
 	}
 
