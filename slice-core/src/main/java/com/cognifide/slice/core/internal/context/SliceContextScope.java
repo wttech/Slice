@@ -46,10 +46,12 @@ public class SliceContextScope implements ContextScope {
 		threadContextProvider = new ThreadLocal<ContextProvider>();
 	}
 
+	@Override
 	public void setContextProvider(final ContextProvider contextProvider) {
 		threadContextProvider.set(contextProvider);
 	}
 
+	@Override
 	public ContextProvider getContextProvider() {
 		return threadContextProvider.get();
 	}

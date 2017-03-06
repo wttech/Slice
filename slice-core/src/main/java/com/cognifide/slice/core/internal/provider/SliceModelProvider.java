@@ -52,6 +52,8 @@ public class SliceModelProvider implements ModelProvider {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SliceModelProvider.class);
 
+	public static final String NEW_INSTANCE_FROM_ADAPTABLE_MESSAGE = "creating new instance of {} from {}";
+
 	private final Injector injector;
 
 	private final ContextScope contextScope;
@@ -98,7 +100,7 @@ public class SliceModelProvider implements ModelProvider {
 		 * against servlet specification.
 		 */
 		ExecutionContextImpl executionItem = new ExecutionContextImpl(path);
-		LOG.debug("creating new instance of {} from {}", new Object[] { type.getName(), path });
+		LOG.debug(NEW_INSTANCE_FROM_ADAPTABLE_MESSAGE, new Object[] { type.getName(), path });
 		return get(type, executionItem);
 	}
 
@@ -108,7 +110,7 @@ public class SliceModelProvider implements ModelProvider {
 	@Override
 	public <T> T get(Class<T> type, Resource resource) {
 		ExecutionContextImpl executionItem = new ExecutionContextImpl(resource);
-		LOG.debug("creating new instance of {} from {}", new Object[] { type.getName(), resource });
+		LOG.debug(NEW_INSTANCE_FROM_ADAPTABLE_MESSAGE, new Object[] { type.getName(), resource });
 		return get(type, executionItem);
 	}
 
@@ -118,7 +120,7 @@ public class SliceModelProvider implements ModelProvider {
 	@Override
 	public <T> T get(Key<T> key, Resource resource) {
 		ExecutionContextImpl executionItem = new ExecutionContextImpl(resource);
-		LOG.debug("creating new instance of {} from {}", new Object[] { key.toString(), resource });
+		LOG.debug(NEW_INSTANCE_FROM_ADAPTABLE_MESSAGE, new Object[] { key.toString(), resource });
 		return get(key, executionItem);
 	}
 
@@ -128,7 +130,7 @@ public class SliceModelProvider implements ModelProvider {
 	@Override
 	public <T> T get(Key<T> key, String path) {
 		ExecutionContextImpl executionItem = new ExecutionContextImpl(path);
-		LOG.debug("creating new instance of {} from {}", new Object[] { key.toString(), path });
+		LOG.debug(NEW_INSTANCE_FROM_ADAPTABLE_MESSAGE, new Object[] { key.toString(), path });
 		return get(key, executionItem);
 	}
 
