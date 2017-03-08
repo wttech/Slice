@@ -48,6 +48,7 @@ public class SliceContextFactory implements ContextFactory {
 	 * @deprecated Use method with explicit injector name
 	 * {@code ContextFactory#getServletRequestContext(String, ServletRequest, ServletResponse)}
 	 */
+	@Deprecated
 	@Override
 	public Context getServletRequestContext(ServletRequest request, ServletResponse response) {
 		return getServletRequestContext(COMMON_CONTEXT_NAME, request, response);

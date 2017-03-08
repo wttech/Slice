@@ -118,10 +118,12 @@ public class ContextRequestFilter implements Filter, RequestContextProvider {
 
 	@Override
 	public void init(final FilterConfig filterConfig) throws ServletException {
+		// required by the Filter interface but no implementation is needed in this case
 	}
 
 	@Override
 	public void destroy() {
+		// required by the Filter interface but no implementation is needed in this case
 	}
 
 }
