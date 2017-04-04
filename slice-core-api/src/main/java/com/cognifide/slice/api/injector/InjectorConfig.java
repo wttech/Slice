@@ -43,7 +43,7 @@ public class InjectorConfig {
 
 	private final String name;
 
-	private final String applicationPath;
+	private final List<String> applicationPaths;
 
 	private final String parentName;
 
@@ -57,12 +57,18 @@ public class InjectorConfig {
 		// we don't allow to change the module list after creating the configuration
 		modules = Collections.unmodifiableList(new ArrayList<Module>(runner.getModules()));
 		name = runner.getInjectorName();
-		applicationPath = StringUtils.defaultIfEmpty(runner.getApplicationPath(), DEFAULT_INJECTOR_PATH
-				+ name);
+		applicationPaths = getApplicationPaths(runner);
 		parentName = runner.getParentName();
 		basePackage = runner.getBasePackage();
 		bundleFilter = runner.getBundleNameFilter();
 		listener = runner;
+	}
+
+	private List<String> getApplicationPaths(InjectorRunner runner) {
+		if (runner.getApplicationPaths() == null){
+			return Collections.singletonList(DEFAULT_INJECTOR_PATH + name);
+		}
+		return runner.getApplicationPaths();
 	}
 
 	public String getName() {
@@ -89,8 +95,8 @@ public class InjectorConfig {
 		return bundleFilter;
 	}
 
-	public String getApplicationPath() {
-		return applicationPath;
+	public List<String> getApplicationPaths() {
+		return applicationPaths;
 	}
 
 	public InjectorCreationFailListener getListener() {
