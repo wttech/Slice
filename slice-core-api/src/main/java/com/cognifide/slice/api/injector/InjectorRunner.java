@@ -21,6 +21,7 @@
 package com.cognifide.slice.api.injector;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
@@ -79,7 +80,7 @@ public class InjectorRunner implements InjectorCreationFailListener {
 
 	private String parentInjectorName;
 
-	private String applicationPath;
+	private List<String> applicationPaths;
 
 	private boolean injectorCreationSuccess = true;
 
@@ -93,7 +94,20 @@ public class InjectorRunner implements InjectorCreationFailListener {
 	public InjectorRunner(final BundleContext bundleContext, final String injectorName,
 			final String applicationPath, final String bundleNameFilter, final String basePackage) {
 		this(bundleContext, injectorName, bundleNameFilter, basePackage);
-		this.applicationPath = applicationPath;
+		this.applicationPaths = Collections.singletonList(applicationPath);
+	}
+
+	/**
+	 * @param bundleContext Context used to get access to the OSGi
+	 * @param injectorName Name of the new injector
+	 * @param applicationPaths paths to the application, e.g. {"/apps/myapp1", "/apps/myapp2"}
+	 * @param bundleNameFilter filter used to scan bundles
+	 * @param basePackage base package for classes to be scanned
+	 */
+	public InjectorRunner(final BundleContext bundleContext, final String injectorName,
+			final List<String> applicationPaths, final String bundleNameFilter, final String basePackage) {
+		this(bundleContext, injectorName, bundleNameFilter, basePackage);
+		this.applicationPaths = applicationPaths;
 	}
 
 	/**
@@ -178,7 +192,7 @@ public class InjectorRunner implements InjectorCreationFailListener {
 		return parentInjectorName;
 	}
 
-	String getApplicationPath() {
-		return applicationPath;
+	List<String> getApplicationPaths() {
+		return applicationPaths;
 	}
 }
