@@ -43,17 +43,22 @@ public class ExecutionStatisticsStack {
 
 	public <T> void startMeasurement(Key<T> key) {
 		if (monitoringEnabled) {
-			ModelUsageData currentModelUsageData = modelUsageDataStack.peek().getChildForKey(key);
+			ModelUsageData peek = modelUsageDataStack.peek();
+			if (peek != null) {
+				ModelUsageData currentModelUsageData = peek.getChildForKey(key);
 
-			this.monitoringContexts.push(new TimeMeasurement());
-			this.modelUsageDataStack.push(currentModelUsageData);
+				monitoringContexts.push(new TimeMeasurement());
+				modelUsageDataStack.push(currentModelUsageData);
+			}
 		}
 	}
 
 	public void endAndStoreMeasurement() {
 		if (monitoringEnabled) {
 			TimeMeasurement timeMeasurement = this.monitoringContexts.pop();
-			this.modelUsageDataStack.pop().addTimeMeasurement(timeMeasurement.getElapsedTime());
+			if (timeMeasurement != null) {
+				modelUsageDataStack.pop().addTimeMeasurement(timeMeasurement.getElapsedTime());
+			}
 		}
 	}
 
