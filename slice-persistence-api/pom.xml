@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.cognifide.slice</groupId>
 		<artifactId>slice-parent</artifactId>
-		<version>4.4.0-SNAPSHOT</version>
+		<version>4.4.0</version>
 	</parent>
 	<name>Slice - Persistence API</name>
 	<description>Slice - Persistence API</description>
