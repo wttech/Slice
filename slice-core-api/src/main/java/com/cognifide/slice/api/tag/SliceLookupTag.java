@@ -33,31 +33,40 @@ public class SliceLookupTag extends SimpleTagSupport {
 
 	private String appName; // auto-detected when null
 
+	private String name;
+
 	private Class<?> type;
 
 	private void clean() {
 		type = null;
 		var = null;
 		appName = null;
+		name = null;
 	}
 
 	@Override
 	public void doTag() throws JspException {
 		try {
-			if (StringUtils.isBlank(var) || (type == null)) {
+			if (StringUtils.isBlank(var) || (type == null && StringUtils.isEmpty(name))) {
 				throw new JspTagException("Var and Type must be set " + appName);
 			}
 
 			final PageContext pageContext = (PageContext) getJspContext();
-			final Object model = SliceTagUtils.getFromCurrentPath(pageContext, type, appName);
+			final Object model = StringUtils.isEmpty(name) ? SliceTagUtils.getFromCurrentPath(pageContext, type, appName) : SliceTagUtils.getFromCurrentPath(pageContext, name, appName);
 			pageContext.setAttribute(var, model, PageContext.PAGE_SCOPE);
+		} catch (ClassNotFoundException cause) {
+			throw new JspTagException("Could not get class for " + name + cause.getMessage());
 		} finally {
 			clean();
 		}
 	}
 
-	public void setType(Class<?> type) {
-		this.type = type;
+	public void setType(Object type) {
+		if(type instanceof Class){
+			this.type = (Class)type;
+		}else if(type instanceof String){
+			this.name = (String)type;
+		}
 	}
 
 	public void setVar(String var) {

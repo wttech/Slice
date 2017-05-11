@@ -34,7 +34,12 @@ No more business logic in your view (JSP, [HTL](https://docs.adobe.com/docs/en/h
 
 **JSPs made clean and tidy** - no more ugly scriptlets.
 ```jsp
-<slice:lookup var="model" type="<%=com.example.components.text.TextModel%>" />
+<slice:lookup var="model" type="<%= com.example.components.text.TextModel.class %>" />
+<p>${model.text}</p>
+```
+or it can be 
+```jsp
+<slice:lookup var="model" type="com.example.components.text.TextModel" />
 <p>${model.text}</p>
 ```
 
@@ -223,7 +228,7 @@ Add dependencies to your POM file:
 <dependency>
 	<groupId>com.cognifide.slice</groupId>
 	<artifactId>slice-core-api</artifactId>
-	<version>4.3.0</version>
+	<version>5.0.0</version>
 </dependency>
 <dependency>
 	<groupId>com.cognifide.slice</groupId>

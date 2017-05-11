@@ -74,6 +74,45 @@ public final class SliceTagUtils {
 	}
 
 	/**
+	 * A helper method that returns the model of {@code type}
+	 *
+	 * @param pageContext allows to access request context
+	 * @param type canonical name of the class, whose model object needs to be returned
+	 * @return Model object pertaining to {@code type} as it's canonical name
+	 * @throws ClassNotFoundException if the class was not found
+	 */
+	public static Object getFromCurrentPath(final PageContext pageContext, final String type,
+				final String appName) throws ClassNotFoundException {
+		final SlingHttpServletRequest request = slingRequestFrom(pageContext);
+		final InjectorWithContext injector = getInjectorWithContext(pageContext, request, appName);
+
+		injector.pushContextProvider(contextProviderFrom(pageContext));
+
+		final ModelProvider modelProvider = injector.getInstance(ModelProvider.class);
+
+		try {
+			return modelProvider.get(type, request.getResource());
+		} finally {
+			injector.popContextProvider();
+		}
+	}
+
+	private static InjectorWithContext getInjectorWithContext(final PageContext pageContext,
+				final SlingHttpServletRequest request, final String appName){
+		final InjectorsRepository injectorsRepository = injectorsRepositoryFrom(pageContext);
+
+		final String injectorName = getInjectorName(request, appName, injectorsRepository);
+
+		InjectorWithContext injector = injectorsRepository.getInjector(injectorName);
+
+		if (injector == null) {
+			throw new IllegalStateException("Guice injector not found for app: " + appName);
+		} else {
+			return injector;
+		}
+	}
+
+	/**
 	 * A helper method that returns a model of the Sling resource related to given request
 	 *
 	 * @param request request
