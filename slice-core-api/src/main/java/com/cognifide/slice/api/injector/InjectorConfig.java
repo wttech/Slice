@@ -95,10 +95,10 @@ public class InjectorConfig {
 		return bundleFilter;
 	}
 
-    /**
-     * @deprecated The application path is made multi value, please use ${@link #getApplicationPaths()} from now on.
-     */
-    @Deprecated
+	/**
+	 * @deprecated The application path is made multi value, please use ${@link #getApplicationPaths()} from now on.
+	 */
+	@Deprecated
 	public String getApplicationPath() {
 		if(!applicationPaths.isEmpty()) {
 			return applicationPaths.get(0);

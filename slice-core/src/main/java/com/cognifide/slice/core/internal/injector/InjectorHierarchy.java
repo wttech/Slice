@@ -277,7 +277,7 @@ public class InjectorHierarchy {
 	private void refreshNamesByPathMap() {
 		Map<String, String> map = new HashMap<String, String>();
 		for (Entry<String, InjectorConfig> entry : configByName.entrySet()) {
-			for(String applicationPath : entry.getValue().getApplicationPaths()) {
+			for (String applicationPath: entry.getValue().getApplicationPaths()) {
 				map.put(applicationPath, entry.getKey());
 			}
 		}

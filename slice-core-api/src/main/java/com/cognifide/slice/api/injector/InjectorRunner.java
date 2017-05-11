@@ -105,7 +105,7 @@ public class InjectorRunner implements InjectorCreationFailListener {
 	 * @param basePackage base package for classes to be scanned
 	 */
 	public InjectorRunner(final BundleContext bundleContext, final String injectorName,
-						  final List<String> applicationPaths, final String bundleNameFilter, final String basePackage) {
+			final List<String> applicationPaths, final String bundleNameFilter, final String basePackage) {
 		this(bundleContext, injectorName, bundleNameFilter, basePackage);
 		this.applicationPaths = applicationPaths;
 	}
