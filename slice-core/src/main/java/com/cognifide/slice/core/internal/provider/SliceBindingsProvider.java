@@ -25,6 +25,7 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceUtil;
 import org.apache.sling.scripting.api.BindingsValuesProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,13 +48,26 @@ public class SliceBindingsProvider implements BindingsValuesProvider {
 			return;
 		}
 		try {
-			final Class<?> modelClass = modelClassNameResolver.getModelClass(resource);
+			final Class<?> modelClass = getModel(resource);
 			if (modelClass != null) {
 				bindings.put("model", resource.adaptTo(modelClass));
 			}
 		} catch (ClassNotFoundException e) {
 			LOG.error("Can't resolve Slice model class", e);
 		}
+	}
+
+	private Class<?> getModel(Resource resource) throws ClassNotFoundException {
+		Class<?> modelClass = modelClassNameResolver.getModelClass(resource.getResourceType());
+		while (modelClass == null) {
+			String resourceSuperType = ResourceUtil.findResourceSuperType(resource);
+			if (resourceSuperType == null) {
+				break;
+			}
+			modelClass = modelClassNameResolver.getModelClass(resourceSuperType);
+			resource = resource.getResourceResolver().getResource(resourceSuperType);
+		}
+		return modelClass;
 	}
 
 }
