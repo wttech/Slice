@@ -9,7 +9,7 @@
 
 <br>
 <p align="center">
-  <img src="assets/slice_logo.png.png" alt="Slice Logo"/>
+  <img src="assets/slice_logo.png" alt="Slice Logo"/>
 </p>
 <br>
 
