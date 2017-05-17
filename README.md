@@ -5,9 +5,13 @@
 [![Coverage Status](https://coveralls.io/repos/Cognifide/Slice/badge.svg)](https://coveralls.io/r/Cognifide/Slice)
 [![Latest release](https://maven-badges.herokuapp.com/maven-central/com.cognifide.slice/slice-assembly/badge.svg)](http://mvnrepository.com/artifact/com.cognifide.slice/slice-assembly)
 
-![Slice logo](assets/slice_logo.png)
+# Slice
 
-# About Slice
+<br>
+<p align="center">
+  <img src="assets/slice_logo.png.png" alt="Slice Logo"/>
+</p>
+<br>
 
 ## Purpose
 
