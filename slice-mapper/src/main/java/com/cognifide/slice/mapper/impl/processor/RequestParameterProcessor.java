@@ -19,23 +19,24 @@
  */
 package com.cognifide.slice.mapper.impl.processor;
 
+import com.cognifide.slice.api.qualifier.Nullable;
 import com.cognifide.slice.mapper.annotation.RequestParameter;
 import com.cognifide.slice.mapper.api.processor.FieldProcessor;
 import com.google.inject.Inject;
 import org.apache.commons.lang.StringUtils;
-import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 
+import javax.servlet.ServletRequest;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 public class RequestParameterProcessor implements FieldProcessor {
 
     @Inject
-    private SlingHttpServletRequest slingRequest;
+    @Nullable
+    private ServletRequest servletRequest;
 
     @Override
     public boolean accepts(final Resource resource, final Field field) {
@@ -45,28 +46,20 @@ public class RequestParameterProcessor implements FieldProcessor {
 
     @Override
     public Object mapResourceToField(Resource resource, ValueMap valueMap, Field field, String propertyName) {
+        if (servletRequest == null) {
+            return null;
+        }
         String parameterName = getParameterName(field);
         Class<?> fieldType = field.getType();
         if (Collection.class.isAssignableFrom(fieldType)) {
-            org.apache.sling.api.request.RequestParameter[] parameters = slingRequest.getRequestParameters(parameterName);
+            String[] parameters = servletRequest.getParameterValues(parameterName);
             if (parameters != null) {
-                return getParameterValues(parameters);
+                return Arrays.asList(parameters);
             }
         } else {
-            org.apache.sling.api.request.RequestParameter parameter = slingRequest.getRequestParameter(parameterName);
-            if (parameter != null) {
-                return parameter.getString();
-            }
+            return servletRequest.getParameter(parameterName);
         }
         return null;
-    }
-
-    private List<String> getParameterValues(org.apache.sling.api.request.RequestParameter[] parameters) {
-        List<String> result = new ArrayList<String>();
-        for (org.apache.sling.api.request.RequestParameter parameter : parameters) {
-            result.add(parameter.getString());
-        }
-        return result;
     }
 
     private String getParameterName(Field field) {
