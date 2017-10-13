@@ -63,6 +63,9 @@ public final class MapperBuilder {
 	private RequestAttributeProcessor requestAttributeProcessor;
 
 	@Inject
+	private RequestParameterProcessor requestParameterProcessor;
+
+	@Inject
 	private CustomProcessorsCollector customProcessorsCollector;
 
 	/**
@@ -118,6 +121,7 @@ public final class MapperBuilder {
 		processors.add(sliceResourceFieldProcessor); // @SliceResource
 		processors.add(childrenFieldProcessor); // child models @Children
 		processors.add(requestAttributeProcessor); // @RequestAttribute
+		processors.add(requestParameterProcessor); // @RequestParameter
 		processors.add(new ListFieldProcessor()); // Subclasses of Collection<?> and arrays
 		processors.add(new BooleanFieldProcessor()); // booleans
 		processors.add(new EnumFieldProcessor()); // enums

@@ -24,11 +24,12 @@ import java.lang.reflect.Field;
 
 import com.cognifide.slice.mapper.annotation.JcrProperty;
 import com.cognifide.slice.mapper.annotation.RequestAttribute;
+import com.cognifide.slice.mapper.annotation.RequestParameter;
 import com.cognifide.slice.mapper.strategy.MapperStrategy;
 
 /**
  * AnnotatedFieldMapperStrategy defines a strategy where only fields annotated by
- * {@link JcrProperty}, {@link RequestAttribute} are mapped.
+ * {@link JcrProperty}, {@link RequestAttribute} or {@link RequestParameter} are mapped.
  *
  */
 public class AnnotatedFieldMapperStrategy implements MapperStrategy {
@@ -36,7 +37,8 @@ public class AnnotatedFieldMapperStrategy implements MapperStrategy {
 	@Override
 	public boolean shouldFieldBeMapped(Field field) {
 		return (field.isAnnotationPresent(JcrProperty.class)
-                || field.isAnnotationPresent(RequestAttribute.class));
+                || field.isAnnotationPresent(RequestAttribute.class)
+				|| field.isAnnotationPresent(RequestParameter.class));
 	}
 
 }
