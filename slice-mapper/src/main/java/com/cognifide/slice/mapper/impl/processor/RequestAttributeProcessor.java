@@ -23,16 +23,16 @@ import com.cognifide.slice.mapper.annotation.RequestAttribute;
 import com.cognifide.slice.mapper.api.processor.FieldProcessor;
 import com.google.inject.Inject;
 import org.apache.commons.lang.StringUtils;
-import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 
+import javax.servlet.ServletRequest;
 import java.lang.reflect.Field;
 
 public class RequestAttributeProcessor implements FieldProcessor {
 
     @Inject
-    private SlingHttpServletRequest slingRequest;
+    private ServletRequest servletRequest;
 
     @Override
     public boolean accepts(final Resource resource, final Field field) {
@@ -42,7 +42,7 @@ public class RequestAttributeProcessor implements FieldProcessor {
     @Override
     public Object mapResourceToField(Resource resource, ValueMap valueMap, Field field, String propertyName) {
         String attributeName = getAttributeName(field);
-        return slingRequest.getAttribute(attributeName);
+        return servletRequest.getAttribute(attributeName);
     }
 
     private String getAttributeName(Field field) {
