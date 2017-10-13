@@ -19,6 +19,7 @@
  */
 package com.cognifide.slice.mapper.impl.processor;
 
+import com.cognifide.slice.api.qualifier.Nullable;
 import com.cognifide.slice.mapper.annotation.RequestAttribute;
 import com.cognifide.slice.mapper.api.processor.FieldProcessor;
 import com.google.inject.Inject;
@@ -32,6 +33,7 @@ import java.lang.reflect.Field;
 public class RequestAttributeProcessor implements FieldProcessor {
 
     @Inject
+    @Nullable
     private ServletRequest servletRequest;
 
     @Override
@@ -41,8 +43,11 @@ public class RequestAttributeProcessor implements FieldProcessor {
 
     @Override
     public Object mapResourceToField(Resource resource, ValueMap valueMap, Field field, String propertyName) {
-        String attributeName = getAttributeName(field);
-        return servletRequest.getAttribute(attributeName);
+        if (servletRequest != null) {
+            String attributeName = getAttributeName(field);
+            return servletRequest.getAttribute(attributeName);
+        }
+        return null;
     }
 
     private String getAttributeName(Field field) {
