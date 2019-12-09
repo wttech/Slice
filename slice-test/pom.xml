@@ -83,6 +83,7 @@
 				<version>2.9.2-01</version>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${maven.compiler.pluggin.version}</version>
 				<configuration>
