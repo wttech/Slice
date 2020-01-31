@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>slice-test</artifactId>
 		<groupId>com.cognifide.slice</groupId>
-		<version>4.5.0</version>
+		<version>4.4.1-SNAPSHOT</version>
 	</parent>
 	<name>Slice - Mapper Tests</name>
 	<description>Slice Mapper Test</description>
@@ -14,14 +14,14 @@
 		<dependency>
 			<groupId>com.cognifide.slice</groupId>
 			<artifactId>slice-base-test</artifactId>
-			<version>4.5.0</version>
+			<version>4.4.1-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.cognifide.slice</groupId>
 			<artifactId>slice-base-test</artifactId>
 			<type>test-jar</type>
-			<version>4.5.0</version>
+			<version>4.4.1-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
