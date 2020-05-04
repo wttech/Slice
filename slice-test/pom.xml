@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>slice-parent</artifactId>
 		<groupId>com.cognifide.slice</groupId>
-		<version>4.4.1-SNAPSHOT</version>
+		<version>4.5.1-SNAPSHOT</version>
 	</parent>
 	<name>Slice - Tests (Parent)</name>
 	<description>Slice integration tests (parent)</description>
@@ -83,6 +83,7 @@
 				<version>2.9.2-01</version>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${maven.compiler.pluggin.version}</version>
 				<configuration>

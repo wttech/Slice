@@ -39,7 +39,7 @@ public class AnnotationReader extends ClassVisitor {
 	private List<String> annotations = new ArrayList<String>();
 
 	public AnnotationReader() {
-		super(Opcodes.ASM5);
+		super(Opcodes.ASM7);
 	}
 
 	@Override
