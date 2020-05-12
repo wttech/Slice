@@ -40,10 +40,14 @@ import org.apache.sling.commons.classloader.DynamicClassLoaderManager;
 import com.cognifide.slice.api.model.ModelClassResolver;
 import com.cognifide.slice.api.provider.ComponentDefinitionProvider;
 import com.cognifide.slice.api.provider.ComponentDefinitionResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Component
 @Service
 public class SliceModelClassResolver implements ModelClassResolver {
+
+	private static final Logger LOG = LoggerFactory.getLogger(SliceModelClassResolver.class);
 
 	@Reference(cardinality = ReferenceCardinality.OPTIONAL_UNARY,policyOption = ReferencePolicyOption.GREEDY)
 	private ComponentDefinitionResolver componentDefinitionResolver;
@@ -111,6 +115,10 @@ public class SliceModelClassResolver implements ModelClassResolver {
 	private Map<String, Object> getDefinitionWithResolver(String resourceType) {
 		ResourceResolver resolver = null;
 		try {
+			/*
+				FIXME: This method has been deprecated as of Sling 2.4 (bundle version 2.5.0)
+							 consider replacing it with getServiceResourceResolver
+			 */
 			resolver = resourceResolverFactory.getAdministrativeResourceResolver(null);
 			final Resource componentDefinition = resolver.getResource(resourceType);
 			if (componentDefinition != null) {
@@ -121,6 +129,7 @@ public class SliceModelClassResolver implements ModelClassResolver {
 			}
 			return null;
 		} catch (LoginException e) {
+			LOG.error("Failed to load definition due to insufficient permissions.", e);
 			return null;
 		} finally {
 			if (resolver != null) {
