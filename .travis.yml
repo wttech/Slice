@@ -1,4 +1,10 @@
 language: java
+
+before_script:
+- chmod +x ./check_coverity_authorization.sh
+- branch_name=`./check_coverity_authorization.sh`
+- echo $branch_name
+
 script: mvn clean package
 
 after_success:
@@ -21,4 +27,4 @@ addons:
       description: "Build submitted via Travis CI"
     notification_email: maciej.majchrzak@cognifide.com
     build_command: "mvn clean package"
-    branch_pattern: master
+    branch_pattern: $branch_name
