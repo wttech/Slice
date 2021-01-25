@@ -1,4 +1,4 @@
-![Cognifide logo](https://assets.cognifide.com/github/cognifide-logo.png)
+![Wunderman Thompson Technology logo](./assets/wtt-logo.png)
 
 [![Build Status](https://travis-ci.org/Cognifide/Slice.svg?branch=master)](https://travis-ci.org/Cognifide/Slice)
 [![Coverity Status](https://scan.coverity.com/projects/4863/badge.svg)](https://scan.coverity.com/projects/4863)
@@ -211,7 +211,7 @@ Slice is available from the Maven Central Repo. However if you want to check out
 Checkout the source code:
 
     cd [folder of your choice]
-    git clone git://github.com/Cognifide/Slice.git
+    git clone git://github.com/wttech/Slice.git
     cd Slice
 
 Compile and install:
