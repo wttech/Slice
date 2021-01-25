@@ -1,4 +1,4 @@
-![Cognifide logo](http://cognifide.github.io/Carty/assets/media/cognifide_logo.png)
+![Wunderman Thompson Technology logo](../assets/wtt-logo.png)
 
 # Slice persistence
 

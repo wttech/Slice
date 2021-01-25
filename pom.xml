@@ -12,7 +12,7 @@
 
 	<inceptionYear>2012</inceptionYear>
 	<organization>
-		<name>Cognifide Limited</name>
+		<name>Wunderman Thompson Technology</name>
 		<url>http://www.cognifide.com</url>
 	</organization>
 	<licenses>
@@ -58,9 +58,9 @@
 	</properties>
 
 	<scm>
-		<connection>scm:git:https://github.com/Cognifide/Slice.git</connection>
-		<url>scm:git:https://github.com/Cognifide/Slice.git</url>
-		<developerConnection>scm:git|https://github.com/Cognifide/Slice.git</developerConnection>
+		<connection>scm:git:https://github.com/wttech/Slice.git</connection>
+		<url>scm:git:https://github.com/wttech/Slice.git</url>
+		<developerConnection>scm:git|https://github.com/wttech/Slice.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 
@@ -271,7 +271,7 @@
 						<instructions>
 							<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
 							<Bundle-Name>${project.name}</Bundle-Name>
-							<Bundle-Vendor>Cognifide Ltd.</Bundle-Vendor>
+							<Bundle-Vendor>Wunderman Thompson Technology</Bundle-Vendor>
 						</instructions>
 					</configuration>
 					<executions>
