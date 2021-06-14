@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>slice-parent</artifactId>
 		<groupId>com.cognifide.slice</groupId>
-		<version>4.5.1</version>
+		<version>4.5.2-SNAPSHOT</version>
 	</parent>
 	<name>Slice - Tests (Parent)</name>
 	<description>Slice integration tests (parent)</description>
