@@ -3,7 +3,7 @@
 
 	<groupId>com.cognifide.slice</groupId>
 	<artifactId>slice-parent</artifactId>
-	<version>4.3.2</version>
+	<version>4.3.4-SNAPSHOT</version>
 
 	<name>Slice - Parent</name>
 	<url>http://cognifide.com/</url>
@@ -356,22 +356,22 @@
 			<dependency>
 				<groupId>com.cognifide.slice</groupId>
 				<artifactId>slice-core-api</artifactId>
-				<version>4.3.2</version>
+				<version>4.3.4-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>com.cognifide.slice</groupId>
 				<artifactId>slice-core</artifactId>
-				<version>4.3.2</version>
+				<version>4.3.4-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>com.cognifide.slice</groupId>
 				<artifactId>slice-mapper-api</artifactId>
-				<version>4.3.2</version>
+				<version>4.3.4-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>com.cognifide.slice</groupId>
 				<artifactId>slice-mapper</artifactId>
-				<version>4.3.2</version>
+				<version>4.3.4-SNAPSHOT</version>
 			</dependency>
 
 			<!-- Guice -->
@@ -654,7 +654,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.1</version>
+						<version>3.0.1</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>

@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>slice-parent</artifactId>
 		<groupId>com.cognifide.slice</groupId>
-		<version>4.3.2</version>
+		<version>4.3.4-SNAPSHOT</version>
 	</parent>
 	<name>Slice - Tests (Parent)</name>
 	<description>Slice integration tests (parent)</description>
@@ -106,7 +106,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.19.1</version>
+				<version>3.0.0-M5</version>
 				<configuration>
 					<includes>
 						<include>**/*Test*</include>
