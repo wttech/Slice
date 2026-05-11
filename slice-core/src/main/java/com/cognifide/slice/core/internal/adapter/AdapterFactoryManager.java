@@ -31,6 +31,7 @@ import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Deactivate;
 import org.apache.felix.scr.annotations.Service;
+import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.AdapterFactory;
 import org.apache.sling.api.resource.Resource;
 import org.osgi.framework.Bundle;
@@ -145,7 +146,7 @@ public class AdapterFactoryManager implements InjectorLifecycleListener, BundleL
 		SliceAdapterFactory factory = new SliceAdapterFactory(name);
 
 		Dictionary<String, Object> properties = new Hashtable<String, Object>();
-		properties.put(AdapterFactory.ADAPTABLE_CLASSES, new String[] { Resource.class.getName() });
+		properties.put(AdapterFactory.ADAPTABLE_CLASSES, new String[] { Resource.class.getName(), SlingHttpServletRequest.class.getName() });
 		properties.put(AdapterFactory.ADAPTER_CLASSES, adapterClassNames);
 		return bundleContext.registerService(AdapterFactory.class.getName(), factory, properties);
 	}

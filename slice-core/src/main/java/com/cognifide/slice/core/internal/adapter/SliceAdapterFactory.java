@@ -20,6 +20,7 @@
 
 package com.cognifide.slice.core.internal.adapter;
 
+import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.AdapterFactory;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -47,10 +48,16 @@ public class SliceAdapterFactory implements AdapterFactory {
 
 	@Override
 	public <AdapterType> AdapterType getAdapter(Object adaptable, Class<AdapterType> type) {
-		if (!(adaptable instanceof Resource)) {
+		if (!((adaptable instanceof Resource) || (adaptable instanceof SlingHttpServletRequest))) {
 			return null;
 		}
-		Resource resource = (Resource) adaptable;
+
+		Resource resource;
+		if(adaptable instanceof Resource) {
+            resource = (Resource) adaptable;
+		} else {
+			resource = ((SlingHttpServletRequest) adaptable).getResource();
+		}
 
 		InjectorWithContext injector = getInjector(resource);
 		if (injector != null) {
@@ -67,7 +74,7 @@ public class SliceAdapterFactory implements AdapterFactory {
 		}
 	}
 
-	private InjectorWithContext getInjector(Resource resource) {
+    private InjectorWithContext getInjector(Resource resource) {
 		ResourceResolver resourceResolver = resource.getResourceResolver();
 		InjectorsRepository repository = resourceResolver.adaptTo(InjectorsRepository.class);
 		if (repository == null) {
