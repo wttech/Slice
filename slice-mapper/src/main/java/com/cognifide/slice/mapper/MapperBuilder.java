@@ -30,13 +30,7 @@ import com.cognifide.slice.mapper.api.processor.PriorityFieldPostProcessor;
 import com.cognifide.slice.mapper.api.processor.PriorityFieldProcessor;
 import com.cognifide.slice.mapper.impl.CustomProcessorsCollector;
 import com.cognifide.slice.mapper.impl.postprocessor.EscapeValuePostProcessor;
-import com.cognifide.slice.mapper.impl.processor.BooleanFieldProcessor;
-import com.cognifide.slice.mapper.impl.processor.ChildrenFieldProcessor;
-import com.cognifide.slice.mapper.impl.processor.DefaultFieldProcessor;
-import com.cognifide.slice.mapper.impl.processor.EnumFieldProcessor;
-import com.cognifide.slice.mapper.impl.processor.ListFieldProcessor;
-import com.cognifide.slice.mapper.impl.processor.SliceReferenceFieldProcessor;
-import com.cognifide.slice.mapper.impl.processor.SliceResourceFieldProcessor;
+import com.cognifide.slice.mapper.impl.processor.*;
 import com.google.inject.Inject;
 import com.google.inject.Module;
 
@@ -64,6 +58,9 @@ public final class MapperBuilder {
 
 	@Inject
 	private ChildrenFieldProcessor childrenFieldProcessor;
+
+	@Inject
+	private RequestAttributeProcessor requestAttributeProcessor;
 
 	@Inject
 	private CustomProcessorsCollector customProcessorsCollector;
@@ -120,6 +117,7 @@ public final class MapperBuilder {
 		processors.add(sliceReferenceFieldProcessor); // @SliceReference
 		processors.add(sliceResourceFieldProcessor); // @SliceResource
 		processors.add(childrenFieldProcessor); // child models @Children
+		processors.add(requestAttributeProcessor); // @RequestAttribute
 		processors.add(new ListFieldProcessor()); // Subclasses of Collection<?> and arrays
 		processors.add(new BooleanFieldProcessor()); // booleans
 		processors.add(new EnumFieldProcessor()); // enums

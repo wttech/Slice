@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-@Version("4.3.0")
+@Version("4.4.0")
 package com.cognifide.slice.mapper.annotation;
 
 import aQute.bnd.annotation.Version;
